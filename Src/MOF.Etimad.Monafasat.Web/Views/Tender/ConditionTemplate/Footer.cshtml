@@ -1,0 +1,17 @@
+@*<div style='text-align:center; font-size: 10px; width:100%'>Page number <span class="pageNumber"></span>&nbsp;of&nbsp;<span class="totalPages"></span></div>*@
+@model MOF.Etimad.Monafasat.ViewModel.GetConditionTemplateModel
+
+<div style='width:100%; font-size: 12px; ' dir="rtl">
+   <hr />
+
+   <div style="float:right;width:33%; text-align:center" dir="rtl">
+      @string.Format("تاريخ الإصدار")<p style="font-size:14px" class="text-center m-0">@Model.DeliveryDate</p>
+   </div>
+   <div style="float:right;width:33%; text-align:center" dir="rtl">
+      @string.Format("رقم النسخة")<p style="font-size:14px" class="text-center m-0">@string.Format("الأولى")</p>
+   </div>
+   <div style="float:right;width:33%; text-align:center" dir="rtl">
+      @string.Format("رقم الكراسة")<p style="font-size:14px" class="text-center m-0">@Model.TenderNumber</p>
+   </div>
+   <hr style="float:right;width:100%" />
+</div>

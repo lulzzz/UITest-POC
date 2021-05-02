@@ -1,0 +1,78 @@
+@using res = MOF.Etimad.Monafasat.Resources
+<div class="col-12" id="DIVfiles">
+   <div class="row">
+      <div class="card">
+         <div class="alert alert-warning" style="z-index:0">
+            <div class="container">
+               <div class="alert-icon">
+                  <i class="material-icons">warning</i> 
+               </div>
+               @res.OfferResources.Messages.AttachAllFilesAsAdvertisement
+            </div>
+            <span class="badge badge-pill badge-warning"> </span>
+         </div>
+         <div class="card-body">
+
+            <div id="attachmentDelete">
+               <table class="table table-striped">
+                  <caption>المرفقات</caption>
+                  <thead style="background-color: #e0efe8;">
+                     <tr>
+                        <th scope="col">@res.SharedResources.DisplayInputs.FileName </th>
+                        <th scope="col">@res.SharedResources.DisplayInputs.AttachementType </th>
+                        <th scope="col">@res.SharedResources.DisplayInputs.Options</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr v-for="(tbl,index) in attachments">
+                        <td data-label=" Milestone">
+
+                           <a href="#" @@click="RedirectURL(index);return false;" target="_blank"> {{tbl.fileName}} </a>
+                        </td>
+                        <td data-label=" Quantity">
+                           <span v-if="tbl.type==15">@res.OfferResources.DisplayInputs.FinancialAndTechnicalOffer </span>
+                           <span v-if="tbl.type==19">@res.OfferResources.DisplayInputs.TechnicalOffer</span>
+                           <span v-if="tbl.type==18">@res.OfferResources.DisplayInputs.FinancialOffer</span>
+                           <span v-if="tbl.type==17">@res.OfferResources.DisplayInputs.CombinationLetter</span>
+                        </td>
+                        <td data-label="Details">
+                           @if (User.IsInRole(RoleNames.supplier) && Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established || Model.OfferStatusId == (int)Enums.OfferStatus.Canceled)
+                           {
+                              <div class="dropdown pull-right">
+                                 <button @@click="DeleteAttach(index)" class="btn btn-round btn-sm btn-danger"><i class="material-icons">clear</i>  @res.SharedResources.DisplayInputs.Delete</button>
+                              </div>
+                           }
+                        </td>
+                     </tr>
+                  </tbody>
+                  <tfoot>
+                     @if (User.IsInRole(RoleNames.supplier) && (Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established || Model.OfferStatusId == (int)Enums.OfferStatus.Canceled))
+                     {
+                        <tr>
+                           <td colspan="3"> <button type="button" onclick="resetFileUpload()" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal2">@res.SharedResources.DisplayInputs.UploadFile </button></td>
+                        </tr>
+                     }
+                  </tfoot>
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div>
+
+   @{
+
+      if (Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase)
+      {
+         @Html.Partial("~/Views/Offer/Partial/ApplyOffer/_ApplyOfferActions.cshtml")
+      }
+      else
+      {
+         <button type="button" class="btn btn-default  prev-tab" @@click="prevTab">@res.TenderResources.DisplayInputs.Previous</button>
+         <button type="button" class="btn btn-primary  next-tab" @@click="nextTab" :disabled="isEdit">@res.SharedResources.DisplayInputs.Next</button>
+      }
+
+   }
+</div>

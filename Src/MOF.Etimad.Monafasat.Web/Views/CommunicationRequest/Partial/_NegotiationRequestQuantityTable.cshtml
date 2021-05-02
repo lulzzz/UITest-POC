@@ -1,0 +1,74 @@
+@model MOF.Etimad.Monafasat.ViewModel.QuantitiesTemplateModel
+@{
+   var count = 0;
+}
+<input type="hidden" id="hdnnformid" value="0" />
+
+<input type="hidden" id="hdnntenderId" value="0" />
+ 
+
+@foreach (var item in Model.grids)
+{
+   count++;
+   <div class="card-header" role="tab" id='headingOne@(count)'>
+      <h4 class="m-0 p-2">
+         <a data-toggle="collapse" name="collapseHeader" href="#collapse@(count)" aria-expanded="false" aria-controls="collapse@(count)" onclick="loadTables(this, @Model.TenderID,  @(item.gridTables.Count() > 0 ? item.gridTables[0].TableId : "0"), @item.FormId)">
+            @(item.FormName + (string.IsNullOrEmpty(item.TemplateName) ? " " : (" - " + item.TemplateName)))
+            <i class="material-icons pull-left">keyboard_arrow_down</i>
+         </a>
+      </h4>
+   </div>
+   <div id="collapse@(count)" class="collapse" role="tabpanel" aria-labelledby='collapse@(count)' data-parent="#accordion">
+      <div class="row">
+         <div class="col-12">
+            <ul id="tableHeaderContainer_@item.FormId" class="nav nav-pills">
+               @foreach (var obj in item.gridTables.Where(a => !string.IsNullOrEmpty(a.TableId) && a.TableId != "0").ToList())
+               {
+                  <li class="nav-item"><a class="nav-link text-center" id="tableIndex_@obj.TableId" href="#tableIndex_@obj.TableId" onclick="changeTable(event,@Model.TenderID, @obj.TableId, @obj.FormId)" data-toggle="tab">@obj.TableName</a></li>
+               }
+            </ul>
+         </div>
+      </div>
+      <div id="tableContainDiv_@(item.FormId)">
+      </div>
+   </div>
+}
+@{ count++; }
+ 
+<script>
+   function changeTable(event, tenderId, tableId, formId) {
+      debugger;
+      
+         Tender.resource_url = '/CommunicationRequest/GetNegotiationTableQuantityItemsAsync?tenderId=' + tenderId + '&OfferId= @Model.OfferId' + '&quantityTableId=' + tableId + '&formId=' + formId + '&isReadOnly=@Model.IsReadOnly&negotiationId=@Model.negotiationId';
+       
+   }
+   
+   function loadTables(e, tenderId, tableId, formId) {
+      debugger;
+      $('#hdnnformid').val(formId);
+      $('#hdnntenderId').val(tenderId);
+      if ($(e).attr('aria-expanded') == 'true') {
+         $("#tableContainDiv_" + formId).html('');
+         return;
+      }
+      else if (e != null )
+         $('a[name=collapseHeader][aria-expanded=true]').click();
+      $('#loader').show();
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $.post('/CommunicationRequest/GetNegotiationQuantityTableViewComponent?tenderId=' + tenderId + '&offerId=@Model.OfferId' + '&tableId=' + tableId + '&formId=' + formId + '&isReadOnly=@Model.IsReadOnly' + '&negotiationId=@Model.negotiationId', {
+         __RequestVerificationToken: token,
+      }).done(function (data) {
+         $("#tableContainDiv_" + formId).html(data);
+         $('#tableHeaderContainer_' + formId + ' li a').removeClass('active');
+         $('#tableHeaderContainer_' + formId + ' li a').removeClass('show');
+
+
+         $('#tableHeaderContainer_' + formId + ' li a').first().addClass('active');
+         $('#tableHeaderContainer_' + formId + ' li a').first().addClass('show');
+         $('#loader').hide();
+      }).fail(function () {
+         $('#LoadingSite').fadeOut();
+         AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+      });
+   }
+</script>

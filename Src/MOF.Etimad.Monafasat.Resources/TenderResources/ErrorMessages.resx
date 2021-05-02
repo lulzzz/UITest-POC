@@ -1,0 +1,735 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CheckWithAuditor" xml:space="preserve">
+    <value>الرجاء التواصل مع مدقق البيانات</value>
+  </data>
+  <data name="CommitteeNameExist" xml:space="preserve">
+    <value>اسم اللجنة موجود من قبل</value>
+  </data>
+  <data name="CommitteeNotFound" xml:space="preserve">
+    <value>اللجنة غير موجودة</value>
+  </data>
+  <data name="ConditionBookNotZero" xml:space="preserve">
+    <value>الرجاء ادخال قيمة اكبر من الصفر</value>
+  </data>
+  <data name="EmailExist" xml:space="preserve">
+    <value>الايميل موجود بالفعل</value>
+  </data>
+  <data name="EnterConditionBook" xml:space="preserve">
+    <value>الرجاء ادخال سعر كراسة الشروط</value>
+  </data>
+  <data name="EnterEmail" xml:space="preserve">
+    <value>يجب كتابة ايميل</value>
+  </data>
+  <data name="EnterLastEnqueriesDate" xml:space="preserve">
+    <value>الرجاء ادخال اخر موعد لاستلام الاستفسارات</value>
+  </data>
+  <data name="EnterLastOfferPresentationDate" xml:space="preserve">
+    <value>الرجاء ادخال اخر موعد لتقديم العروض</value>
+  </data>
+  <data name="EnterLastOfferPresentationTime" xml:space="preserve">
+    <value>الرجاء ادخال اخر وقت لتقديم العروض</value>
+  </data>
+  <data name="EnterOfferPresentationPlace" xml:space="preserve">
+    <value>الرجاء ادخال مكان تقديم العروض</value>
+  </data>
+  <data name="EnterOffersOpeningAddress" xml:space="preserve">
+    <value>الرجاء ادخال مكان فتح العروض</value>
+  </data>
+  <data name="EnterOffersOpeningDate" xml:space="preserve">
+    <value>الرجاء ادخال تاريخ فتح العروض</value>
+  </data>
+  <data name="EnterDeliveryDate" xml:space="preserve">
+    <value>الرجاء ادخال تاريخ التسليم</value>
+  </data>
+  <data name="EnterOffersOpeningTime" xml:space="preserve">
+    <value>الرجاء ادخال وقت فتح العروض</value>
+  </data>
+  <data name="EnterDeliveryTime" xml:space="preserve">
+    <value>الرجاء ادخال وقت التسليم</value>
+  </data>
+  <data name="EnterConditionsBookletDeliveryAddress" xml:space="preserve">
+    <value>الرجاء ادخال عنوان استلام كراسة الشروط</value>
+  </data>
+  <data name="EnterPhone" xml:space="preserve">
+    <value>يجب كتابة رقم الجوال</value>
+  </data>
+  <data name="EnterTechnicalCommittee" xml:space="preserve">
+    <value>الرجاء اختيار اسم الجهه الفنيه</value>
+  </data>
+  <data name="EnterTenderActivities" xml:space="preserve">
+    <value>الرجاء اختيار النشاطات</value>
+  </data>
+  <data name="EnterDetails" xml:space="preserve">
+    <value>الرجاء ادخال التفاصيل</value>
+  </data>
+  <data name="EnterTenderConstructionWorks" xml:space="preserve">
+    <value>الرجاء اختيار أعمال الإنشاء</value>
+  </data>
+  <data name="EnterTenderMentainanceRunnigWorks" xml:space="preserve">
+    <value>الرجاء اختيار أعمال الصيانة والتشغيل</value>
+  </data>
+  <data name="EnterActivityDescription" xml:space="preserve">
+    <value>الرجاء اختيار وصف النشاط</value>
+  </data>
+  <data name="EnterTenderAreas" xml:space="preserve">
+    <value>الرجاء اختيار المناطق</value>
+  </data>
+  <data name="EnterTenderName" xml:space="preserve">
+    <value>الرجاء ادخال اسم المنافسة</value>
+  </data>
+  <data name="EnterTenderNumber" xml:space="preserve">
+    <value>الرجاء ادخال رقم المنافسة</value>
+  </data>
+  <data name="ModelDataError" xml:space="preserve">
+    <value>الرجاء مراجعة البيانات والمحاولة مرة اخرى</value>
+  </data>
+  <data name="PhoneExist" xml:space="preserve">
+    <value>رقم الجوال موجود بالفعل</value>
+  </data>
+  <data name="TenderSentFailed" xml:space="preserve">
+    <value>خطا فى الارسال</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>حدث خطأ غير متوقع، الرجاء المحاولة مرة اخرى</value>
+  </data>
+  <data name="WrongEmail" xml:space="preserve">
+    <value>الايميل غير صحيح</value>
+  </data>
+  <data name="DataEntryPermissions" xml:space="preserve">
+    <value>مدخل البيانات فقط الذى يستطيع أن ينشئ أو يعدل المنافسة</value>
+  </data>
+  <data name="EnterQuantitiesTable" xml:space="preserve">
+    <value>الرجاء إدخال جدول كميات على الأقل</value>
+  </data>
+  <data name="EnterQuantitiesTableItem" xml:space="preserve">
+    <value>الرجاء إدخال عنصر واحد على الأقل فى جدول الكميات</value>
+  </data>
+  <data name="OfficialVacationDate" xml:space="preserve">
+    <value>التاريخ يجب ألا يكون أجازة رسمية</value>
+  </data>
+  <data name="TenderNotExist" xml:space="preserve">
+    <value>المنافسة غير موجودة</value>
+  </data>
+  <data name="WeekendDate" xml:space="preserve">
+    <value>التاريخ المختار أجازة </value>
+  </data>
+  <data name="TechnicalOrganizationRequired" xml:space="preserve">
+    <value>الرجاء إدخال إسم الجهة الفنية</value>
+  </data>
+  <data name="DateLessThanToday" xml:space="preserve">
+    <value>التاريخ يجب أن يكون أكبر من تاريخ اليوم</value>
+  </data>
+  <data name="InvalidLastEnqueriesDate" xml:space="preserve">
+    <value>اخر موعد لإستلام استفسارات الموردين يجب أن يكون أقل من تاريخ فتح العروض وتاريخ تقديم العروض</value>
+  </data>
+  <data name="EnterFourtyCharacters" xml:space="preserve">
+    <value>الرجاء إدخال أربعين حرف علي الأقل</value>
+  </data>
+  <data name="EnterTenderPurpose" xml:space="preserve">
+    <value>الرجاء ادخال الغرض من المنافسة</value>
+  </data>
+  <data name="EnterSamplesAdress" xml:space="preserve">
+    <value>الرجاء إدخال عنوان تسليم العينات</value>
+  </data>
+  <data name="PartialAwardingMessage" xml:space="preserve">
+    <value>لا يمكن اختيار اكثر من عرض</value>
+  </data>
+  <data name="ExpiredActivationCode" xml:space="preserve">
+    <value>رمز التحقق خطأ الرجاء إعادة ارسال رمز التحقق</value>
+  </data>
+  <data name="AttachmentsNotAdded" xml:space="preserve">
+    <value>لم يتم إضافة المرفقات</value>
+  </data>
+  <data name="QuantityTableMustHaveOneItem" xml:space="preserve">
+    <value>يجب أن يحتوى كل جدول كميات علي صنف واحد على الأقل</value>
+  </data>
+  <data name="QuantityTablesNotAdded" xml:space="preserve">
+    <value>جداول الكميات غير مضافة</value>
+  </data>
+  <data name="TenderNotFound" xml:space="preserve">
+    <value>المنافسة غير موجودة</value>
+  </data>
+  <data name="TenderStatusIsNotApproved" xml:space="preserve">
+    <value>المنافسة غير معتمدة</value>
+  </data>
+  <data name="AlreadyDeletedTable" xml:space="preserve">
+    <value> لذلك لن تسطيع تعديل الجدول</value>
+  </data>
+  <data name="DeletedQuantityTable" xml:space="preserve">
+    <value>جدول الكميات غير فعال أو محذوف</value>
+  </data>
+  <data name="EnterConditionsBookletAttachments" xml:space="preserve">
+    <value>الرجاء إضافة كراسة الشروط و المرفقات</value>
+  </data>
+  <data name="PurposeValiation" xml:space="preserve">
+    <value>يجب أن يكون طول الحقل علي الأقل 40 حرف</value>
+  </data>
+  <data name="InvalidOfferValue" xml:space="preserve">
+    <value>القيمة يجب أن تكون أكبر من صفر </value>
+  </data>
+  <data name="EnterConditionsBookletAttachments1" xml:space="preserve">
+    <value>يرجى إرفاق كراسة الشروط</value>
+  </data>
+  <data name="EnterTenderAttachments" xml:space="preserve">
+    <value>يرجى إرفاق ملفات المنافسة</value>
+  </data>
+  <data name="InvalidOfferOpeningDate" xml:space="preserve">
+    <value>تاريخ فتح العروض يجب أن يكون أكبر من آخر تاريخ لتقديم العروض</value>
+  </data>
+  <data name="InvalidOfferPresentationDate" xml:space="preserve">
+    <value>تاريخ تقديم العروض يجب أن يكون أكبر من آخر تاريخ لتقديم الإستفسارات و ليس أكبر من تاريخ فتح العرض</value>
+  </data>
+  <data name="EnterValidQuantity" xml:space="preserve">
+    <value>الرجاء إدخال كمية صحيحة</value>
+  </data>
+  <data name="TenderActionFailed" xml:space="preserve">
+    <value>غير مسموح بالقيام بهذا الاجراء على تلك المنافسة</value>
+  </data>
+  <data name="EnterTenderCountries" xml:space="preserve">
+    <value>الرجاء اختيار الدول</value>
+  </data>
+  <data name="EnterListName" xml:space="preserve">
+    <value>ادخل اسم قائمة صحيح</value>
+  </data>
+  <data name="PleseSelectAList" xml:space="preserve">
+    <value>يرجى اختيار قائمة</value>
+  </data>
+  <data name="PleseSelectASupplier" xml:space="preserve">
+    <value>يرجى اختيار مورد</value>
+  </data>
+  <data name="FillTenderBasicInformation" xml:space="preserve">
+    <value>يرجي إدخال المعلومات الرئيسية أولا</value>
+  </data>
+  <data name="FillTenderClassificationInformation" xml:space="preserve">
+    <value>يرجي إدخال مجال التصنيف أولا</value>
+  </data>
+  <data name="FillTenderDetailsiInformation" xml:space="preserve">
+    <value>يرجي إدخال تفاصيل المنافسة أولا</value>
+  </data>
+  <data name="FillTenderQuantityTablesInformation" xml:space="preserve">
+    <value>يرجي إدخال جداول الكميات أولا</value>
+  </data>
+  <data name="EnquiryDateLargerThanPresentationDate" xml:space="preserve">
+    <value>أخر موعد لتقديم العروض  يجب أن يكون أكبر من  أخر موعد لتقديم الإستفسارات</value>
+  </data>
+  <data name="OpeningDateLessThanEnquiriesDate" xml:space="preserve">
+    <value>لا يجب أن يكون  آخر موعد لتقديم الإستفسارات بعد تاريخ فتح العروض</value>
+  </data>
+  <data name="OpeningDateLessThanPresentationDate" xml:space="preserve">
+    <value>لا يجب أن يكون  تاريخ تقديم العروض بعد تاريخ فتح العروض</value>
+  </data>
+  <data name="EnterQualificationCheckingDate" xml:space="preserve">
+    <value>الرجاء ادخال تاريخ تقييم وثائق التأهيل</value>
+  </data>
+  <data name="EnterQualificationCheckingTime" xml:space="preserve">
+    <value>الرجاء ادخال موعد تقييم وثائق التأهيل</value>
+  </data>
+  <data name="InvalidQualificationCheckingDate" xml:space="preserve">
+    <value>تاريخ تقديم الوثائق يجب أن يكون أكبر من آخر تاريخ لتقديم الإستفسارات و ليس أكبر من تاريخ تقييم الوثائق</value>
+  </data>
+  <data name="TenderLastPresentationDatePassed" xml:space="preserve">
+    <value>تم تجاوز اخر موعد لتقديم العروض </value>
+  </data>
+  <data name="EnterQualificationApplyingTime" xml:space="preserve">
+    <value>يرجي إدخال وقت تقديم وثائق التأهيل</value>
+  </data>
+  <data name="EnterAllQualificationDates" xml:space="preserve">
+    <value>يرجي إدخال جميع تواريخ التأهيل</value>
+  </data>
+  <data name="CheckingDateLessThanEnquiriesDate" xml:space="preserve">
+    <value>تاريخ فحص وثائق التأهيل يجب أن يكون بعد آخر تاريخ لتقديم وثائق التأهيل </value>
+  </data>
+  <data name="CheckingDateLessThanPresentationDate" xml:space="preserve">
+    <value>يجب أن يكون تاريخ تقييم الوثائق بعد تاريخ تقديم الوثائق </value>
+  </data>
+  <data name="CanNotProceedStatusIs" xml:space="preserve">
+    <value>لا يمكن اتمام العملية لان حالة المنافسة ليست </value>
+  </data>
+  <data name="OfferOpenningMoreThanToday" xml:space="preserve">
+    <value>تاريخ فتح العروض اكبر من تاريخ اليوم</value>
+  </data>
+  <data name="EnterQualificationName" xml:space="preserve">
+    <value>يرجي إدخال إسم دعوة التأهيل</value>
+  </data>
+  <data name="HTML5Error" xml:space="preserve">
+    <value>معذرة ! المتصفح الخاص لديكم لا يدعم هذا الاجراء.</value>
+  </data>
+  <data name="ValidExcell" xml:space="preserve">
+    <value>الرجاء رفع ملف مسموح به  و ادخال البيانات صحيحه </value>
+  </data>
+  <data name="LastEnqueriesDateLessThanToday" xml:space="preserve">
+    <value>أخر تاريخ لتقديم الاستفسارات يجب أن يكون أكبر من تاريخ اليوم</value>
+  </data>
+  <data name="EnterOffersCheckingData" xml:space="preserve">
+    <value>الرجاء ادخال تاريخ فحص العروض</value>
+  </data>
+  <data name="EnterOffersCheckingTime" xml:space="preserve">
+    <value>الرجاء ادخال وقت فحص العروض</value>
+  </data>
+  <data name="ErrorUploadToSadadMessage" xml:space="preserve">
+    <value>حدث خطأ، لم نتمكن من أرسال الفاتورة لسداد.</value>
+  </data>
+  <data name="FavouriteListHasSupplierExist" xml:space="preserve">
+    <value>المورد موجود من قبل في القائمة المحددة</value>
+  </data>
+  <data name="FavouriteListNotForAgency" xml:space="preserve">
+    <value>عملية غير شرعية: القائمة المحددة ليست من ضمن قوائم جهتك الحالية</value>
+  </data>
+  <data name="FavouriteListNotForBranch" xml:space="preserve">
+    <value>عملية غير شرعية: القائمة المحددة ليست من ضمن قوائم فرعك الحالي</value>
+  </data>
+  <data name="FavouriteListNameExist" xml:space="preserve">
+    <value>اسم القائمة المفضلة المدخل موجود مسبقا</value>
+  </data>
+  <data name="CanNotAccessTenderInAnotherBranch" xml:space="preserve">
+    <value>لا يمكنك المتابعه لان المنافسه ليست على نفس الفرع</value>
+  </data>
+  <data name="SendToApproveCantbeGreaterThanLastPresentation" xml:space="preserve">
+    <value>يجب تمديد تاريخ آخر يوم لتقديم العروض لنتمكن من ارسال التعديل للإعتماد</value>
+  </data>
+  <data name="PleaseSelectBranch" xml:space="preserve">
+    <value>من فضلك اختر فرع</value>
+  </data>
+  <data name="AlreadyPurchased" xml:space="preserve">
+    <value>تم طلب شراء هذه الكراسة مسبقا، الرجاء التواصل مع خدمة العملاء</value>
+  </data>
+  <data name="OfferPresentationDatePassed" xml:space="preserve">
+    <value>إنتهت فترة تقديم العروض</value>
+  </data>
+  <data name="YouMustChangeOneDateAtLeast" xml:space="preserve">
+    <value>يجب تغيير تارخ واحد على الأقل</value>
+  </data>
+  <data name="CannotApproveFinishedTender" xml:space="preserve">
+    <value>لايمكن اعتماد المنافسة حيث ان التاريخ الحالي أكبر من تاريخ أخر موعد لاستلام العروض</value>
+  </data>
+  <data name="YouHaveToMakeChangeAtAnyTable" xml:space="preserve">
+    <value>يجب القيام بتعديل احد الجداول</value>
+  </data>
+  <data name="DateMustMoreThanTenderDates" xml:space="preserve">
+    <value>التواريخ يجب أن تكون أكبر من تواريخ المنافسة</value>
+  </data>
+  <data name="CantFindRecord" xml:space="preserve">
+    <value>لم يتم العثور على السجل</value>
+  </data>
+  <data name="TenderIsNotApprovedOrOpeningDateNotPassed" xml:space="preserve">
+    <value>المنافسة غير معتمدة او تاريخ فتح العروض لم يحل بعد</value>
+  </data>
+  <data name="TenderMustBeOpeningOffersStage" xml:space="preserve">
+    <value>يجب ان تكون المنافسة فى مرحلة فتح العروض</value>
+  </data>
+  <data name="TenderStatusMustBeOpeningOffersPendingStage" xml:space="preserve">
+    <value>يجب ان تكون المنافسة فى مرحلة إنتظار إعتماد تقرير فتح العروض</value>
+  </data>
+  <data name="TenderStatusMustBeOpeningOffersRejectingStage" xml:space="preserve">
+    <value>يجب ان تكون حالة المنافسة تم رفض إعتماد تقرير فتح العروض</value>
+  </data>
+  <data name="SamplesDeliveryAddressRequired" xml:space="preserve">
+    <value>الرجاء إدخال عنوان تسليم عينات المورد</value>
+  </data>
+  <data name="TenderNumberAlreadyExist" xml:space="preserve">
+    <value>رقم المنافسة موجود مسبقا</value>
+  </data>
+  <data name="EnterAwardingData" xml:space="preserve">
+    <value>يجب إدخال بيانات الترسية أولا</value>
+  </data>
+  <data name="EstimatedValueCannotBeZero" xml:space="preserve">
+    <value>القيمة التقديرية يجب أن تكون أكبر صفر وأقل من 9999999999999999999 </value>
+  </data>
+  <data name="InvalidAnnouncementDate" xml:space="preserve">
+    <value>تاريخ إعلان المقبولين يجب أن يكون أكبر من تاريخ فحص العروض</value>
+  </data>
+  <data name="InvalidNumber" xml:space="preserve">
+    <value>الرجاء إدخال قيمة بين صفر و 9999999999999999999</value>
+  </data>
+  <data name="InvalidOffersCheckingDate" xml:space="preserve">
+    <value>تاريخ فحص العروض يجب أن يكون أكبر من أخر تاريخ لتقديم العروض </value>
+  </data>
+  <data name="MinumumValueMustBeEqualOrGreaterThanExpectedValue" xml:space="preserve">
+    <value>يجب أن تكون اقل قيمة عرض أكبر من القيمة التقديرية للمنافسة</value>
+  </data>
+  <data name="NoWhiteSpace" xml:space="preserve">
+    <value>غير مسموح بالمسافات</value>
+  </data>
+  <data name="ReverseTenderEstimateValueLess50Milion" xml:space="preserve">
+    <value>القيمة التقديرية للمزايدة العكسية الإلكترونية  يجب ألا تتجاوز خمسين مليون ريال سعودى</value>
+  </data>
+  <data name="SixtyDaysPresentationDatePeriod" xml:space="preserve">
+    <value>يجب ألا تقل المدة بين أخر موعد لتقديم العروض و تاريخ اليوم عن ستين يوما</value>
+  </data>
+  <data name="TenderShouldHavePrequalification" xml:space="preserve">
+    <value>المنافسة يجب أن تكون مربوطة بتأهيل مسبق لكى تكون القيمة التقديرية أكبر من عشرين مليون</value>
+  </data>
+  <data name="TenderValueMustBeEqualOrMore5M" xml:space="preserve">
+    <value>يجب أن تكون القيمة التقديرية للمنافسة أكبر او يساوي 5 ملايين ريال</value>
+  </data>
+  <data name="ThirtyDaysPresentationDatePeriod" xml:space="preserve">
+    <value>يجب ألا تقل المدة بين أخر موعد لتقديم العروض و تاريخ اليوم عن ثلاثين يوما</value>
+  </data>
+  <data name="ToEndThisBidOnlyOneMinumumValueAllowed" xml:space="preserve">
+    <value>لا يمكن انهاء الجوالة، أكثر من عرض قدموا أقل قيمة متساوية</value>
+  </data>
+  <data name="MustBeInUnitStage" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في مرحلة مركز تحقيق كفاءة الإنفاق</value>
+  </data>
+  <data name="MustIncludeAwardingReport" xml:space="preserve">
+    <value>يجب ارفاق محضر التوصية بالترسية</value>
+  </data>
+  <data name="RejectReasonMustHaveValue" xml:space="preserve">
+    <value>سبب الرفض يجب ان يحتوي على قيمة</value>
+  </data>
+  <data name="TenderUnitStatusMustBeRejectedByManager" xml:space="preserve">
+    <value>يجب أن تكون المنافسة مرفوضة من قبل مدير مركز تحقيق كفاءة الإنفاق</value>
+  </data>
+  <data name="TenderUnitStatusMustBeWaitingManagerApprove" xml:space="preserve">
+    <value>يجب أن تكون حالة المنافسة بإنتظار موافقة مدير مركز تحقيق كفاءة الإنفاق</value>
+  </data>
+  <data name="TenderUnitStatusMustBeRejectedByManagerOrInFirstStep" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في بداية مرحلة مركز تحقيق كفاءة الإنفاق او مرفوضة من قبل مدير مركز تحقيق كفاءة الإنفاق</value>
+  </data>
+  <data name="TheUnitSecretaryBustTakeAnACtionOnTheTender" xml:space="preserve">
+    <value>سكيرتير مركز تحقيق كفاءة الإنفاق يجب أن يأخذ اجراء على المنافسة قبل ارسالها اعتمادها</value>
+  </data>
+  <data name="TenderCanOnlyReOpenedByLatestAssignedSecretary" xml:space="preserve">
+    <value>يمكن إعادة فتح المنافسة عن طريق أخر مختص تم تعيينه عليها فقط</value>
+  </data>
+  <data name="WrongTenderStatus" xml:space="preserve">
+    <value>غير متاح فى هذه المرحلة للمنافسة</value>
+  </data>
+  <data name="FifteenDaysPresentationDatePeriod" xml:space="preserve">
+    <value>يجب ألا تقل المدة بين أخر موعد لتقديم العروض و تاريخ اليوم عن خمسة عشر يوما</value>
+  </data>
+  <data name="CheckingDateGreaterThanOpeining" xml:space="preserve">
+    <value>تاريخ فحص العروض يجب أن يكون أكبر من تاريخ فتح العروض</value>
+  </data>
+  <data name="BiddingEndTimeMustBeGreaterBiddingStartTime" xml:space="preserve">
+    <value>وقت نهاية المزايدة يجب أن يكون أكبر من وقت بداية المزايدة</value>
+  </data>
+  <data name="BiddingStartTimeMustBeGreaterNow" xml:space="preserve">
+    <value>وقت بداية المزايدة يجب أن يكون أكبر من الان</value>
+  </data>
+  <data name="BiddingInfomrationIsUnCorrect" xml:space="preserve">
+    <value>معلومات المزايدة غير صحيحة</value>
+  </data>
+  <data name="TenderBiddingNotExist" xml:space="preserve">
+    <value>المنافسة او المزايدة غير موجودات</value>
+  </data>
+  <data name="ThereAreAnActiveBidding" xml:space="preserve">
+    <value>يوجد مزايدة فعالة على هذه المنافسة</value>
+  </data>
+  <data name="BiddingDateTimesNotCorrect" xml:space="preserve">
+    <value>قيمة وقت نهاية المنافسة يجب أن تكون اكير من وقت بداية المنافسة</value>
+  </data>
+  <data name="BiddingValueMustBeGreaterThanZero" xml:space="preserve">
+    <value>قيمة المزايدة يجب أن تكون أكبر من صفر</value>
+  </data>
+  <data name="EnterBiddingDateTimeInfo" xml:space="preserve">
+    <value>يرجى ادخال تاريخ و اوقات بداية و نهاية المزايدة</value>
+  </data>
+  <data name="PleaseEnterValidDateTime" xml:space="preserve">
+    <value>يرجى ادخال تاريخ و وقت صحيحين</value>
+  </data>
+  <data name="AllOffersFinancialDataMustBeEntered" xml:space="preserve">
+    <value>يجب ادخال المعلومات المالية لجميع العروض</value>
+  </data>
+  <data name="AllTenderOffersMustBeTechnicallyChecked" xml:space="preserve">
+    <value>يجب أن يكون جميع عروض المسايقة تم تقييمها فنيا</value>
+  </data>
+  <data name="AllTendersMustBeFinanciallyChecked" xml:space="preserve">
+    <value>يجب أن تكون جميع العروض تم تقييمها ماليا</value>
+  </data>
+  <data name="TenderMustBeInTechnicalCheckingStageOrInFinancailCheckingStage" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في مرحلة فتح العروض الفني او مرحلة فحص العروض المالي</value>
+  </data>
+  <data name="TenderMustBeInOfferCheckingStageOrOpenOffersConfirmed" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في مرحلة فحص العروض او في مرحلة تم فتح العروض</value>
+  </data>
+  <data name="NoSpaceInitialGuranteePresentationAddress" xml:space="preserve">
+    <value>عنوان تقديم الضمان الإبتدائى لا يمكن أن يكون مسافات فارغه</value>
+  </data>
+  <data name="NoSpaceSamplesDeliveryAddress" xml:space="preserve">
+    <value>عنوان تسليم العينات لا يمكن أن يكون مسافات فارغه</value>
+  </data>
+  <data name="NoSpaceTenderName" xml:space="preserve">
+    <value>إسم المنافسة لا يمكن أن يكون مسافات فارغه </value>
+  </data>
+  <data name="NoSpaceTenderNumber" xml:space="preserve">
+    <value>رقم المنافسة لا يمكن أن يكون مسافات فارغه</value>
+  </data>
+  <data name="YouHaveAnotherPlaint" xml:space="preserve">
+    <value>لديك طلب تظلم علي هذه المنافسة </value>
+  </data>
+  <data name="CancelationReasonDescriptionRequired" xml:space="preserve">
+    <value>الرجاء إدخال وصف سبب الإلغاء</value>
+  </data>
+  <data name="PleaseSelectLevel2Spacialist" xml:space="preserve">
+    <value>يرجى اختيار مختص مركز تحقيق كفاءة الإنفاق مستوى ثاني</value>
+  </data>
+  <data name="PleaseEnterYourNotes" xml:space="preserve">
+    <value>يرجى ادخال ملاحظاتك</value>
+  </data>
+  <data name="PleaseSelectModificaitonType" xml:space="preserve">
+    <value>يرجى اختيار نوع التعديل</value>
+  </data>
+  <data name="PleaseEnterModicationDescription" xml:space="preserve">
+    <value>يرجى ادخال وصف التعديل</value>
+  </data>
+  <data name="TenderEstimationValueIsNotWithinTheManagerApprovalRange" xml:space="preserve">
+    <value>قيمة المنافسة ليست ضمن الصلاحية الممنوحة للمدير للموافقة عليها</value>
+  </data>
+  <data name="PleaseCheckTheValueOf" xml:space="preserve">
+    <value>يرجى التأكد من قيمة </value>
+  </data>
+  <data name="MustFillPreviousInformation" xml:space="preserve">
+    <value>يجب تمام معلومات الكراسة السابقة</value>
+  </data>
+  <data name="CurrentBudgetIsNotEnoughToAwardThisTender" xml:space="preserve">
+    <value>الميزانية الحالية غير كافية لترسية هذه المنافسة</value>
+  </data>
+  <data name="EnterEstimatedValue" xml:space="preserve">
+    <value>يرجي إدخال القيمة التقديرية</value>
+  </data>
+  <data name="MustSelectMoreThanOneOfferInPartialAwarding" xml:space="preserve">
+    <value>يجب أن تختار اكثر من عرض في حالة الترسية الجزئية أو اختار ترسية كاملة </value>
+  </data>
+  <data name="CheckingDateNotStartedYet" xml:space="preserve">
+    <value>تاريخ فحص العروض لم يأتي بعد</value>
+  </data>
+  <data name="ThereAreActiveNegotiationsOnThisTender" xml:space="preserve">
+    <value>لا يمكنك القيام بهذا الاجراء، هناك طلبات تفاوض فعالة على هذه المنافسة</value>
+  </data>
+  <data name="YouNeedToInsertAtLeastOneItem" xml:space="preserve">
+    <value>لابد من ادخال صنف واحد على الاقل فى اى جدول</value>
+  </data>
+  <data name="CheckingDateGreaterThanOpeiningPurchase" xml:space="preserve">
+    <value>تاريخ فحص العروض يجب أن يكون أكبر من أو يساوى تاريخ فتح العروض</value>
+  </data>
+  <data name="EnquiryDateLargerThanPresentationDateForPurchase" xml:space="preserve">
+    <value>أخر موعد لتقديم العروض  يجب أن يكون أكبر من  أو يساوى أخر موعد لتقديم الإستفسارات</value>
+  </data>
+  <data name="InvalidLastEnqueriesDateForPurchase" xml:space="preserve">
+    <value>اخر موعد لإستلام استفسارات الموردين يجب أن يكون أقل من أو يساوي تاريخ فتح العروض وتاريخ تقديم العروض</value>
+  </data>
+  <data name="InvalidOffersCheckingDatePurchase" xml:space="preserve">
+    <value>تاريخ فحص العروض يجب أن يكون أكبر من أو يساوي أخر تاريخ لتقديم العروض </value>
+  </data>
+  <data name="LastEnqueriesDateForPurchase" xml:space="preserve">
+    <value>أخر تاريخ لتقديم الاستفسارات يجب أن يكون أكبر من أو يساوي تاريخ اليوم</value>
+  </data>
+  <data name="TenderMustHaveActiveOrCommingBiddingRounds" xml:space="preserve">
+    <value>المنافسة يجب أن تحتوي على جولة مزايدة فعالة او قادمة</value>
+  </data>
+  <data name="EnterCompletionValidityPeriod" xml:space="preserve">
+    <value>يرجى إدخال مدة السماح لاستكمال الشهادات</value>
+  </data>
+  <data name="EnterOfferSighningDays" xml:space="preserve">
+    <value>يرجى إدخال المدة التي يجب أن يوقع فيه المورد العقد</value>
+  </data>
+  <data name="MaxAnswerPeriod" xml:space="preserve">
+    <value>يرجى إدخال أقصى مدة للإجابة على الإستفسارات </value>
+  </data>
+  <data name="ThereAreActiveActiveExtendDateOnThisTender" xml:space="preserve">
+    <value>لا يمكنك القيام بهذا الاجراء، هناك طلبات تمديد سريان العروض فعالة على هذه المنافسة</value>
+  </data>
+  <data name="CheckingDateTimeLessThanNow" xml:space="preserve">
+    <value>تاريخ ووقت فحص العروض لايمكن أن يكون أقل من الوقت الحالي. </value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ApprovedPriceMoreThanOffer" xml:space="preserve">
+    <value>قيمة الترسيه لا يمكن أن تكون أكبر من قيمة العرض </value>
+  </data>
+  <data name="AddBankGuarantee" xml:space="preserve">
+    <value>الرجاء إضافة الضمان البنكى</value>
+  </data>
+  <data name="CannotCancelTenderBill" xml:space="preserve">
+    <value>حدث خطأ أثناء الدفع</value>
+  </data>
+  <data name="BuyingCostCannotBeMinusForType" xml:space="preserve">
+    <value>قيمة المقابل المالي لشراء في نوع المنافسة ({0}) الكراسة لا يمكن أن تقوم أقل من صفر</value>
+  </data>
+  <data name="InvitationCostCannotBeMinusForType" xml:space="preserve">
+    <value>قيمة المقابل المالي للدعوات في نوع منافسة ({0}) لا يمكن أن يكون أقل من صفر</value>
+  </data>
+  <data name="AttachmentsValidation" xml:space="preserve">
+    <value>يجب ادخال البيانات الخاصة بالملحقات</value>
+  </data>
+  <data name="SpecialConditionsValidation" xml:space="preserve">
+    <value>الرجاء ادخال الشروط الخاصة</value>
+  </data>
+  <data name="TenderOfferCannotBeTodayOrLessThanOffer" xml:space="preserve">
+    <value>يجب أن يكون التاريخ المطلوب اكبر من تاريخ اليوم واكبر من تاريخ آخر موعد لتقديم العروض</value>
+  </data>
+  <data name="ThereIsNoAttachmentsToUpdate" xml:space="preserve">
+    <value>لم يتم إضافة أي ملحقات لتحديثها</value>
+  </data>
+  <data name="DetailsValiation" xml:space="preserve">
+    <value>عدد الحروف يجب أن يكون أقل من 1024 حرف</value>
+  </data>
+  <data name="ExcludedMessageNotInserted" xml:space="preserve">
+    <value>الرجاء إدخال سبب الإستبعاد لجميع الموردين الغير مرسى عليهم</value>
+  </data>
+  <data name="PlaintReasonValiation" xml:space="preserve">
+    <value>يجب أن لا يزيد طول الحقل عن 2000 حرف</value>
+  </data>
+  <data name="EnterBuildingName" xml:space="preserve">
+    <value>الرجاء ادخال اسم المبنى</value>
+  </data>
+  <data name="EnterDepartmentName" xml:space="preserve">
+    <value> الرجاء ادخال الغرفة / اسم الادارة</value>
+  </data>
+  <data name="EnterFloarNumber" xml:space="preserve">
+    <value>الرجاء ادخال اسم الطابق</value>
+  </data>
+  <data name="EnterOffersOpeningRangeTime" xml:space="preserve">
+    <value>الرجاء ادخال تاريخ فتح العروض ما بين الساعة السابعة صباحا والثامنة مساءً</value>
+  </data>
+  <data name="EnterOffersOpeningVacationRangeTime" xml:space="preserve">
+    <value>الرجاء ادخال تاريخ فتح العروض ما بين الساعة التاسعة صباحا الثانية مساءً</value>
+  </data>
+  <data name="CannotApproveInitial" xml:space="preserve">
+    <value>عفوا ، لا يمكن الاعتماد المبدئي لأن التأهيل المسبق غير ساري</value>
+  </data>
+  <data name="EstimationValueShouldNotBrGreaterThan100000" xml:space="preserve">
+    <value>يجب أن لا تتجاوز القيمة التقديرية عن 100 الف ريال سعودي</value>
+  </data>
+  <data name="AwardingExpectedDateRequired" xml:space="preserve">
+    <value>الرجاء ادخال التاريخ المتوقع للترسية</value>
+  </data>
+  <data name="StartingBusinessOrServicesDateRequired" xml:space="preserve">
+    <value>الرجاء ادخال تاريخ بدء الأعمال / الخدمات</value>
+  </data>
+  <data name="FinalGuaranteePercentageRequired" xml:space="preserve">
+    <value>الرجاء ادخال الضمان النهائي</value>
+  </data>
+  <data name="FinalGuaranteeNotValidValue" xml:space="preserve">
+    <value>يجب ألا تقل النسبة عن 5 % ولاتزيد عن 100%</value>
+  </data>
+  <data name="OfferDeliveryAddressRequired" xml:space="preserve">
+    <value>الرجاء ادخال عنوان تسليم العروض</value>
+  </data>
+  <data name="StoppingPeriodRequired" xml:space="preserve">
+    <value>الرجاء ادخال فترة التوقف</value>
+  </data>
+  <data name="LocalContentMechanismIMessage" xml:space="preserve">
+    <value>الرجاء تحديد آلية الأفضلية المستخدمة</value>
+  </data>
+</root>

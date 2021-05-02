@@ -1,0 +1,26 @@
+<div class="col-md-12 text-right">
+   @if (User.IsInRole(RoleNames.OffersPurchaseSecretary))
+   {
+   <a :href="awardTenderOffers(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedConfirmed) || tender.tenderStatusId == @((int)Enums.TenderStatus.DirectPurchaseOffersCheckingApproved) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingApproved)) && tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_SecretaryDirtectPurshasingCommittee))" class="btn btn-sm btn-primary">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.StartingAwarding
+   </a>
+   <a :href="tenderAwarding(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwarding)&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_SecretaryDirtectPurshasingCommittee))" class="btn btn-sm btn-primary">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EnterAwarding
+   </a>
+   <a :href="reOpenRejecterdTender(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.OffersInitialAwardedRejected)||tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedRejected))&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_SecretaryDirtectPurshasingCommittee))" class="btn btn-sm btn-primary">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenAwarding
+   </a>
+   }
+   @if (User.IsInRole(RoleNames.OffersPurchaseManager))
+   {
+   <a :href="confirmAwardOffersAward(tender.tenderIdString)" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.OffersInitialAwardedPending) && tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_ManagerDirtectPurshasingCommittee)" class="btn btn-sm btn-primary">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReviewData
+   </a>
+   }
+   @if (User.IsInRole(RoleNames.ApproveTenderAward))
+   {
+   <a :href="confirmAwardOffersAward(tender.tenderIdString)" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.OffersInitialAwardedConfirmed) ||tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedPending)" class="btn btn-sm btn-primary">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReviewData
+   </a>
+   }
+</div>

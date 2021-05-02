@@ -1,0 +1,162 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierBlockModel
+
+
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockDetails;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="/">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockDetails</li>
+      </ol>
+   </nav>
+}
+
+@Html.AntiForgeryToken()
+<form method="Post" action="" class="my-form">
+   <input type="hidden" id="ModuleType" value="4" />
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName
+                        </div>
+                        <div class="col-9 etd-item-info">
+                           <span>
+                              @(Model.AgencyName)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialRegistrationNo
+                        </div>
+                        <div class="col-9 etd-item-info">
+                           <span>
+                              @(Model.CommercialRegistrationNo)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName
+                        </div>
+                        <div class="col-9 etd-item-info">
+                           <span>
+                              @(Model.CommercialSupplierName)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockReason
+                        </div>
+                        <div class="col-9 etd-item-info">
+                           <span>
+                              @(Model.BlockDetails)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Status
+                        </div>
+                        <div class="col-9 etd-item-info">
+                           <span>
+                              @(Model.BlockStatusName)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.SupplierType
+                        </div>
+                        <div class="col-9 etd-item-info">
+                           <span>
+                              @(Model.OrganizationName)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  @if (Model.BlockStatusId == (int)Enums.BlockStatus.RejectedSecertary)
+                  {
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              سبب رفض المنع من السكرتير
+                             
+                           </div>
+                           <div class="col-9 etd-item-info">
+                              <span>
+                                 @(Model.SecretaryRejectionReason)
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  }
+                  @if (Model.BlockStatusId == (int)Enums.BlockStatus.RejectedManager)
+                  {
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              سبب رفض المنع من المدير
+                           </div>
+                           <div class="col-9 etd-item-info">
+                              <span>
+                                 @(Model.ManagerRejectionReason)
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  }
+                  @*v-if="sup.isOldBlock==true"*@
+                  @if (Model.BlockStatusId == (int)Enums.BlockStatus.ApprovedManager && !Model.IsOldSystem)
+                  {
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              سبب الموافقة على المنع
+                           </div>
+                           <div class="col-9 etd-item-info">
+                              <span>
+                                 @(Model.ManagerRejectionReason)
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  }
+               </ul>
+            </div>
+
+         </div>
+
+      </div>
+   </div>
+   <div class="col-12 ">
+      <button class="btn btn-outline-primary btn-link pull-right" type="button" onclick="window.location = '@Url.Action("Index", "Dashboard")'">
+         @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BackButton
+         <div class="ripple-container"></div>
+      </button>
+   </div>
+</form>

@@ -1,0 +1,963 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.SharedKernel@using Microsoft.Extensions.Options;
+@inject IOptionsSnapshot<RootConfiguration> rootConfiguration;
+@{ var _rootConfiguration = rootConfiguration.Value;
+   var isOneFile = Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile;
+   var isTechnical = Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles &&
+                       ((Model.TenderStatusId == (int)Enums.TenderStatus.DirectPurchaseOffersChecking ||
+                       Model.TenderStatusId == (int)Enums.TenderStatus.DirectPurchaseOffersCheckingApprovePending ||
+                       Model.TenderStatusId == (int)Enums.TenderStatus.DirectPurchaseOffersCheckingPending ||
+                       Model.TenderStatusId == (int)Enums.TenderStatus.DirectPurchaseOffersCheckingRejected) ||
+                       (Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking ||
+                       Model.TenderStatusId == (int)Enums.TenderStatus.OffersCheckedPending ||
+                       Model.TenderStatusId == (int)Enums.TenderStatus.OffersCheckedRejected ||
+                       Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingPending ||
+                       Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingRejected));
+   var isFinancial = Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles &&
+                       (Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialChecking ||
+                       Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed ||
+                       Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingApproved ||
+                       Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingPending ||
+                       Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected ||
+                       Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStage);
+   var isTechnicalEditEnabled = (Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking && (User.IsInRole(RoleNames.OffersPurchaseSecretary)
+  ||
+        (Model.isLowBudgetFlow == true &&
+   Model.isUserisDirectPurchaseAssignedMember == true)));
+
+
+   var isFinancialEditEnabled = (Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking && (Model.isLowBudgetFlow == true &&
+  Model.isUserisDirectPurchaseAssignedMember == true)) ||
+      (((Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile && Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking)
+      ||
+      (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles &&
+      (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialChecking))) &&
+      User.IsInRole(RoleNames.OffersPurchaseSecretary));
+   var hasCompinders = Model.CombinedSupplierModel.Count() > 1;
+   var localContentManualForCommittee = _rootConfiguration.LocalContentFilesConfiguration.LocalContentManualForCommittee;
+}
+@model MOF.Etimad.Monafasat.ViewModel.OfferModel
+@{
+   if (isOneFile)
+   {
+      ViewData["Title"] = MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferDataDetails;
+   }
+   else if (isTechnical)
+   {
+      ViewData["Title"] = "تفاصيل العرض الفني";
+   }
+   else if (isFinancial)
+   {
+      ViewData["Title"] = MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.FinancialOfferDetails;
+   }
+}
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item">
+            <a href="#">
+               @(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage)
+            </a>
+         </li>
+         @if (isOneFile)
+         {
+            <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferDataDetails</li>
+         }
+         else if (isTechnical)
+         {
+            <li class="breadcrumb-item active" aria-current="page">تفاصيل العرض الفني</li>
+         }
+         else if (isFinancial)
+         {
+            <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.FinancialOfferDetails</li>
+         }
+      </ol>
+   </nav>
+}
+<div id="myForm">
+   <input type="hidden" id="ModuleType" value="3" />
+   <input type="hidden" asp-for="OfferId" id="hdOfferId" />
+   @Html.AntiForgeryToken()
+   <div v-cloak>
+      <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+         <li class="nav-item">
+            <a class="nav-link active" href="#OfferDetails" role="tab" data-toggle="tab">
+               <i class="material-icons">table_chart</i>
+               @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferDataDetails
+            </a>
+         </li>
+         @if (!hasCompinders)
+         {
+            <li class="nav-item">
+               <a class="nav-link " href="#documentsAttachments" role="tab" data-toggle="tab">
+                  <i class="material-icons">assignment</i>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentsAttachments
+               </a>
+            </li>
+         }
+         else
+         {
+            IDictionary<string, string> combinedParameters = new Dictionary<string, string>();
+            combinedParameters.Add("tenderIdString", Model.TenderIdString);
+            combinedParameters.Add("offeridString", Model.OfferIdString);
+            combinedParameters.Add("CombinedOwner", "false");
+            combinedParameters.Add("CombinedIdString", "null");
+            combinedParameters.Add("tenderTypeId", Model.TenderTypeId.ToString());
+            combinedParameters.Add("tenderStatusId", Model.TenderStatusId.ToString());
+            combinedParameters.Add("offerPresentationWayId", Model.OfferPresentationWayId.ToString());
+            <li class="nav-item">
+               <a asp-action="CombinedSuppliersDetailsDirectPurchase" asp-controller="Offer" asp-all-route-data="@combinedParameters" class="nav-link ">
+                  <i class="material-icons">assignment</i>
+                  @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CombinedSuppliers
+               </a>
+            </li>
+         }
+         @if (Model.IsValidToApplyOfferLocalContentChanges.HasValue && Model.IsValidToApplyOfferLocalContentChanges.Value && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects)
+         {
+      <li class="nav-item">
+         <a class="nav-link" href="#localContentDetails" role="tab" data-toggle="tab">
+            <i class="material-icons">assignment</i>
+            تفاصيل المحتوي المحلي للمنشأه
+         </a>
+      </li>
+   }
+      </ul>
+      <div class="tab-content tab-space p-0">
+         <div class="tab-pane active " id="OfferDetails">
+            @if (isOneFile || isFinancial)
+            {<div class="tab-pane active" id="financialOfferDetails">
+                  <div class="col-12">
+                     <div class="card">
+                        <div class="card-body">
+                           <div class="col-12">
+                              @if (Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects)
+                              {
+                                 <ul class="list-group form-details-list">
+                                    <li class="list-group-item">
+                                       <div class="row">
+                                          <div class="col-4 etd-item-title">
+                                             @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MandatoryList
+                                          </div>
+                                          <div class="col-2 etd-item-info">
+                                             <span>
+                                                <a target="_blank" href="/Tender/GetAllMandatoryListProductsForExport" rel="lightbox" alt="عرض الملف" title="عرض الملف">
+                                                   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DownloadThisFile
+                                                </a><br />
+                                             </span>
+                                          </div>
+                                       </div>
+                                    </li>
+                                 </ul>
+                                 <ul class="list-group form-details-list">
+                                    <li class="list-group-item">
+                                       <div class="row">
+                                          <div class="col-4 etd-item-title">
+                                             @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FinancialMarketCompanies
+                                          </div>
+                                          <div class="col-2 etd-item-info">
+                                             <span>
+                                                <a target="_blank" href="~/StaticFiles/قائمة الشركات المدرجة في السوق المالي.xlsx" rel="lightbox" alt="عرض الملف" title="عرض الملف">
+                                                   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DownloadThisFile
+                                                </a><br />
+                                             </span>
+                                          </div>
+                                       </div>
+                                    </li>
+                                 </ul>
+                                 <ul class="list-group form-details-list">
+                                    <li class="list-group-item">
+                                       <div class="row">
+                                          <div class="col-4 etd-item-title">
+                                             الدليل الإرشادي لتطبيق المعادلات الحسابية الخاصة بأفضليات المحتوى المحلى
+                                          </div>
+                                          <div class="col-2 etd-item-info">
+                                             <span>
+                                                <a target="_blank" href="@localContentManualForCommittee" rel="lightbox" alt="عرض الملف" title="عرض الملف">
+                                                   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DownloadThisFile
+                                                </a><br />
+                                             </span>
+                                          </div>
+                                       </div>
+                                    </li>
+                                 </ul>
+                              }
+                           </div>
+                           <div class="col-12">
+                              <div class="card-collapse" style="border:1px solid #ccc;border-radius:6px;overflow:hidden;">
+                                 @await Html.PartialAsync("~/Views/Offer/DirectPurchase/_DirectPurchaseOfferCheckingFinancialDetails.cshtml", Model)
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            }
+         </div>
+         @if (!hasCompinders)
+         {
+            <div class="tab-pane " id="documentsAttachments">
+               @await Component.InvokeAsync("OfferAttachmentsDetailsForDirectPurchaseComponent", new { combinedId = Model.CombinedIdString, hasManyCombinders = false })
+            </div>
+         }
+         @if (Model.IsValidToApplyOfferLocalContentChanges.HasValue && Model.IsValidToApplyOfferLocalContentChanges.Value && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects)
+         {
+            <div class="tab-pane" id="localContentDetails">
+               @await Component.InvokeAsync("OfferLocalContentDetailsComponent", new { offerIdString = Model.OfferIdString })
+            </div>
+         }
+      </div>
+   </div>
+   <div class="row">
+      <div class="col">
+         @if (isOneFile || isTechnical || isFinancial)
+         {
+            @await Html.PartialAsync("~/Views/Offer/DirectPurchase/_OffersTechnicalCheckingResultAndActions.cshtml")
+         }
+         @if (isOneFile || isFinancial)
+         {
+            @Html.Partial("~/Views/Offer/DirectPurchase/_OffersFinantialCheckingResultAndActions.cshtml")
+         }
+         @if ((User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager)) && (isTechnicalEditEnabled || isFinancialEditEnabled))
+         {
+            <button type="button" onclick="SaveData()" class="btn btn-primary">
+               @res.SharedResources.DisplayInputs.Save
+            </button>
+         }
+         @{
+            IDictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("tenderIdString", Model.TenderIdString);
+            <a class="btn btn-outline-primary btn-link pull-right" asp-action="CheckDirectPurchaseOffers" asp-controller="Tender" asp-all-route-data="parameters">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+         }
+      </div>
+   </div>
+</div>
+@section scripts
+   {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   <script>
+      $(document).ready(function () {
+         if ('@Model.TechnicalOfferStatusId' == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer) || $('#technicalOfferStatusId option:selected').val() == "") {
+            $('#divRejectionReason').attr('hidden', true);
+         }
+         if ('@Model.FinantialOfferStatusId' == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferAcceptanceStatusId.AcceptedOffer) || $('#finantialOfferStatusId option:selected').val() == "") {
+            $('#divFinantialRejectionReason').attr('hidden', true);
+         }
+      });
+
+
+
+       @if (hasCompinders)
+    {
+       @:function RedirectURL(fileNetReferenceId, fileName)
+      @: {
+          @:window.open("/Upload/getfile/" + fileNetReferenceId + ":" + fileName, '_blank');
+       @:}
+    }
+
+      function checkSpcialChar(event) {
+         if (event.key == '.' && event.target.value.indexOf('.') > 0) {
+            return false
+         }
+         if (!($.isNumeric(event.target.value))) {
+            if (event.keyCode == 8 || (event.key == '.' && event.target.value.split('.').length <= 2)) {
+               event.returnValue = true;
+               return true;
+            }
+            event.returnValue = false;
+            return false;
+         }
+         event.returnValue = true;
+         return true;
+      }
+      var attachmentss = [];
+      @if (Model != null && Model.Attachment != null)
+      {
+         @:attachmentss = @Html.Raw(Json.Serialize(Model.Attachment));
+      }
+      var currentTabIndex = 0;
+      function nextTab() {
+         $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+         if (currentTabIndex != 2)
+            currentTabIndex++;
+         updateNavigationButtons();
+      }
+      function prevTab() {
+         $('.etd-wiz-tabs').children().find('a.active').parent().prev().children().click();
+         if (currentTabIndex != 0)
+            currentTabIndex--;
+         updateNavigationButtons();
+      }
+      updateNavigationButtons();
+      function updateNavigationButtons() {
+         $('#prevButton').show();
+         $('#nextButton').show();
+         if (currentTabIndex == 0)
+            $('#prevButton').hide();
+         if (currentTabIndex == 2)
+            $('#nextButton').hide();
+      }
+      var tables = [];
+      var finalPrice = 0;
+      @if (Model != null && Model.QuantityTable != null)
+      {
+         @:finalPrice = @Html.Raw(Json.Serialize(Model.FinalPrice));
+         @:tables = @Html.Raw(Json.Serialize(Model.QuantityTable));
+      }
+
+
+      function AjaxStartSpinner(event) {
+         event.target.innerHTML = '<i class="fa fa-refresh fa-spin" style="font-size:24px"></i> ';
+         event.target.classList.add('btn-warning');
+         event.target.disabled = true;
+      }
+      function AjaxStopSpinner(event) {
+
+         event.target.innerHTML = 'تحديث';
+         event.target.disabled = false;
+         event.target.classList.remove('btn-warning');
+
+      }
+
+      function UpdateIfCorporationSmallOrMedium(offerId, event) {
+         AjaxStartSpinner(event);
+         $.get('/Offer/UpdateIfCorporationSmallOrMedium/' + offerId).done(function (result) {
+            AjaxStopSpinner(event);
+            debugger;
+            $('#spanSmallAndMedium').html(result.result);
+            location.reload();
+         }).fail(function (error) {
+            AjaxStopSpinner(event)
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         });
+      }
+      function UpdateIsCorporatioIncludedInMoneyMarket(offerId, event) {
+         AjaxStartSpinner(event);
+         $.get('/Offer/UpdateIsCorporatioIncludedInMoneyMarket/' + offerId).done(function (result) {
+            AjaxStopSpinner(event);
+            debugger;
+            $('#spanIsIncludedInMoneyMarket').html(result.result);
+            location.reload();
+         }).fail(function (error) {
+            AjaxStopSpinner(event)
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         });
+      }
+      function UpdateLocalContentPercentage(offerId, event) {
+         AjaxStartSpinner(event);
+         $.get('/Offer/UpdateLocalContentPercentage/' + offerId).done(function (result) {
+            AjaxStopSpinner(event);
+            $('#spanLocalContentPerce').html(result.result);
+               location.reload();
+           
+         }).fail(function (error) {
+            AjaxStopSpinner(event)
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         });
+      }
+      function UpdateLocalContentDesiredPercentage(offerId, event) {
+         AjaxStartSpinner(event);
+         $.get('/Offer/UpdateLocalContentDesiredPercentage/' + offerId).done(function (result) {
+            AjaxStopSpinner(event);
+            $('#spamLocalContentDesiredPerce').html(result.result);
+               location.reload();
+         }).fail(function (error) {
+            AjaxStopSpinner(event)
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         });
+      }
+
+      function SaveData() {
+         debugger;
+         //without combinders
+         if ('@hasCompinders' == 'False') {
+            if ('@Model.OfferPresentationWayId' == '@((int)Enums.OfferPresentationWayId.OneFile)') {
+               app.saveOneFileCheckingDataAndAttachemntsDetial();
+            }
+            else if ('@(isTechnical)' == 'True') {
+               app.saveTwoFileTechnicalCheckingDataAndAttachemntsDetial();
+            }
+            else if ('@(isFinancial)' == 'True') {
+               app.saveTwoFileFinancialCheckingDataAndAttachemntsDetial();
+            }
+         }
+         //with combinders
+         else {
+            if ('@Model.OfferPresentationWayId' == '@((int)Enums.OfferPresentationWayId.OneFile)') {
+               app.saveOneFileCheckingData();
+            }
+            else if ('@(isTechnical)' == 'True') {
+               app.saveTwoFileTechnicalCheckingData();
+            }
+            else if ('@(isFinancial)' == 'True') {
+               app.saveTwoFileFinancialCheckingData();
+            }
+         }
+      }
+      var app = new Vue({
+         el: '#OfferDetails',
+         data: {
+            isEdit: false,
+            isEmpty: false,
+            isNumber: false,
+            QuantitiesTables: tables,
+            attachObj: {}
+         },
+         created: function () {
+            if ('@User.IsInRole(RoleNames.OffersPurchaseSecretary)' == "True" && @Model.TenderStatusId == @((int)Enums.TenderStatus.DirectPurchaseOffersChecking)) {
+               this.isEdit = true;
+            } else {
+               this.isEdit = false;
+            }
+         },
+         methods: {
+            nextTab: function () {
+               if (!this.isEdit) {
+                  $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+               } else {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseMakeSureOfSavingData', 'warning')
+               }
+            },
+            prevTab: function () {
+               if (!this.isEdit) {
+                  $('.etd-wiz-tabs').children().find('a.active').parent().prev().children().click();
+               } else {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseMakeSureOfSavingData', 'warning')
+               }
+            },
+            SumItem: function (price, quantity) {
+               return price * quantity;
+            },
+            AddQuantityTable: function () {
+               if ($('#txtNDName').val() == '' || $('#txtNDName').val() == undefined) {
+                  $('#txtTableNameValidation').show();
+                  return false;
+               }
+               else { $('#txtTableNameValidation').hide(); }
+               if ($('#OpenTxtPrice').val() == '' || $('#OpenTxtPrice').val() == undefined) {
+                  $('#OpenTxtPriceValidation').show();
+                  return false;
+               }
+               else {
+                  $('#OpenTxtPriceValidation').hide();
+               }
+               var tbl = {};
+               tbl.tableQuantityId == 0;
+               tbl.offerId =@Model.OfferId;
+               tbl.tableQuantityName = $('#txtNDName').val();
+               tbl.openingTotalPrice = parseFloat($('#OpenTxtPrice').val());
+               var disc = 0;
+               if ($('#OpenTxtDiscount').val() != "") {
+                  disc = parseFloat($('#OpenTxtDiscount').val());
+               }
+               var vat = 0;
+               if ($('#OpenTxtVat').val() != "") {
+                  vat = parseFloat($('#OpenTxtVat').val());
+               }
+               tbl.openingDiscount = disc;
+               tbl.openingVat = vat;
+               if (tbl.openingDiscount > tbl.openingTotalPrice) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.DiscountAmountLargerThanPrice)', alertMessageType.Danger);
+                  return false;
+               }
+               app.QuantitiesTables.push(tbl);
+               $("#txtNDName").val('');
+               $("#OpenTxtPrice").val('');
+               $("#OpenTxtDiscount").val('');
+               $("#OpenTxtVat").val('');
+               $("#txtBayanFinal").text('');
+               calcTotal("");
+               return false;
+            },
+            saveOneFileCheckingDataAndAttachemntsDetial: function () {
+               if ($("#technicalOfferStatusId").val() != '@((int)Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer)' && $("#technicalOfferStatusId").val() != '@((int)Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)') {
+                  AlertFun('لابد من اختيار التقييم الفنى', alertMessageType.Danger);
+                  return;
+               }
+               if ($("#technicalOfferStatusId").val() == '@((int)Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)' && $("#txtRejectionReason").val().length == 0) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.RejectReasonMustHaveValue)', alertMessageType.Danger);
+                  return;
+               }
+               if ($("#finantialOfferStatusId").val() != '@((int)Enums.OfferAcceptanceStatusId.RejectedOffer)' && $("#finantialOfferStatusId").val() != '@((int)Enums.OfferAcceptanceStatusId.AcceptedOffer)') {
+                  AlertFun('لابد من اختيار التقييم المالى', alertMessageType.Danger);
+                  return;
+               }
+               if ($("#finantialOfferStatusId").val() == '@((int)Enums.OfferAcceptanceStatusId.RejectedOffer)' && $("#txtFinantialRejectionReason").val().length == 0) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.RejectReasonMustHaveValue)', alertMessageType.Danger);
+                  return;
+               }
+               $('#LoadingSite').fadeIn();
+               //Attachmets Details
+               this.prepareObject();
+               //checking detail
+               var checkingModel = {};
+               checkingModel.TechnicalOfferStatusId = $("#technicalOfferStatusId").val();
+               checkingModel.RejectionReason = $("#txtRejectionReason").val();
+               checkingModel.Notes = $("#txtNotes").val();
+               checkingModel.TechniciansReportAttachmentsRef = $("#TechniciansReportAttachmentsRef").val();
+               checkingModel.FinantialOfferStatusId = $("#finantialOfferStatusId").val();
+               checkingModel.FinantialRejectionReason = $("#txtFinantialRejectionReason").val();
+               checkingModel.FinantialNotes = $("#txtFinantialNotes").val();
+               checkingModel.IsBindedToMandatoryList = $("input[name='IsBindedToMandatoryList']:checked").val();
+               //prepare the request
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Offer/SaveDirectPurchaseOneFileCheckingDataAndAttachemntsDetial', {
+                  model: this.attachObj, checkingResult: checkingModel, __RequestVerificationToken: token
+               }).done(function (e) {
+                  debugger;
+                  $('#LoadingSite').fadeOut();
+                  window.location = "/Tender/CheckDirectPurchaseOffers?tenderIdString=@Model.TenderIdString";
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               }).fail(function (error) {
+                  debugger;
+
+                  $('#LoadingSite').fadeOut();
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               });
+            },
+            saveOneFileCheckingData: function () {
+               if ($("#technicalOfferStatusId").val() != '@((int)Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer)' && $("#technicalOfferStatusId").val() != '@((int)Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)') {
+                  AlertFun('لابد من اختيار التقييم الفنى', alertMessageType.Danger);
+                  return;
+               }
+               if ($("#technicalOfferStatusId").val() == '@((int)Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)' && $("#txtRejectionReason").val().length == 0) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.RejectReasonMustHaveValue)', alertMessageType.Danger);
+                  return;
+               }
+               if ($("#finantialOfferStatusId").val() != '@((int)Enums.OfferAcceptanceStatusId.RejectedOffer)' && $("#finantialOfferStatusId").val() != '@((int)Enums.OfferAcceptanceStatusId.AcceptedOffer)') {
+                  AlertFun('لابد من اختيار التقييم المالى', alertMessageType.Danger);
+                  return;
+               }
+               if ($("#finantialOfferStatusId").val() == '@((int)Enums.OfferAcceptanceStatusId.RejectedOffer)' && $("#txtFinantialRejectionReason").val().length == 0) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.RejectReasonMustHaveValue)', alertMessageType.Danger);
+                  return;
+               }
+               $('#LoadingSite').fadeIn();
+               //checking detail
+               var checkingModel = {};
+               checkingModel.OfferIdString = "@Model.OfferIdString";
+               checkingModel.TechnicalOfferStatusId = $("#technicalOfferStatusId").val();
+               checkingModel.RejectionReason = $("#txtRejectionReason").val();
+               checkingModel.Notes = $("#txtNotes").val();
+               checkingModel.TechniciansReportAttachmentsRef = $("#TechniciansReportAttachmentsRef").val();
+               checkingModel.FinantialOfferStatusId = $("#finantialOfferStatusId").val();
+               checkingModel.FinantialRejectionReason = $("#txtFinantialRejectionReason").val();
+               checkingModel.FinantialNotes = $("#txtFinantialNotes").val();
+               checkingModel.IsBindedToMandatoryList = $("input[name='IsBindedToMandatoryList']:checked").val();
+               //prepare the request
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Offer/SaveOneFileDirectPurchaseChecking', {
+                  checkingResult: checkingModel, __RequestVerificationToken: token
+               }).done(function (e) {
+                  $('#LoadingSite').fadeOut();
+                  window.location = "/Tender/CheckDirectPurchaseOffers?tenderIdString=@Model.TenderIdString";
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               });
+            },
+            saveTwoFileTechnicalCheckingData: function () {
+               $('#LoadingSite').fadeIn();
+               if ($("#technicalOfferStatusId").val() != '@((int)Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer)' && $("#technicalOfferStatusId").val() != '@((int)Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)') {
+                  AlertFun('لابد من اختيار التقييم الفنى', alertMessageType.Danger);
+                  return;
+               }
+               if ($("#technicalOfferStatusId").val() == '@((int)Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)' && $("#txtRejectionReason").val().length == 0) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.RejectReasonMustHaveValue)', alertMessageType.Danger);
+                  return;
+               }
+               //checking detail
+               var checkingModel = {};
+               checkingModel.OfferIdString = "@Model.OfferIdString";
+               checkingModel.TechnicalOfferStatusId = $("#technicalOfferStatusId").val();
+               checkingModel.RejectionReason = $("#txtRejectionReason").val();
+               checkingModel.Notes = $("#txtNotes").val();
+               checkingModel.TechniciansReportAttachmentsRef = $("#TechniciansReportAttachmentsRef").val();
+               //prepare the request
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Offer/SaveTwoFilesTechnicalDirectPurchaseChecking', {
+                  checkingResult: checkingModel, __RequestVerificationToken: token
+               }).done(function (e) {
+                  $('#LoadingSite').fadeOut();
+                  window.location = "/Tender/CheckDirectPurchaseOffers?tenderIdString=@Model.TenderIdString";
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               });
+            },
+            saveTwoFileFinancialCheckingData: function () {
+               $('#LoadingSite').fadeIn();
+               if ($("#finantialOfferStatusId").val() != '@((int)Enums.OfferAcceptanceStatusId.RejectedOffer)' && $("#finantialOfferStatusId").val() != '@((int)Enums.OfferAcceptanceStatusId.AcceptedOffer)') {
+                  AlertFun('لابد من اختيار التقييم المالى', alertMessageType.Danger);
+                  return;
+               }
+               if ($("#finantialOfferStatusId").val() == '@((int)Enums.OfferAcceptanceStatusId.RejectedOffer)' && $("#txtFinantialRejectionReason").val().length == 0) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.RejectReasonMustHaveValue)', alertMessageType.Danger);
+                  return;
+               }
+               //checking detail
+               var checkingModel = {};
+               checkingModel.OfferIdString = "@Model.OfferIdString";
+               checkingModel.FinantialOfferStatusId = $("#finantialOfferStatusId").val();
+               checkingModel.FinantialRejectionReason = $("#txtFinantialRejectionReason").val();
+               checkingModel.FinantialNotes = $("#txtFinantialNotes").val();
+               checkingModel.IsBindedToMandatoryList = $("input[name='IsBindedToMandatoryList']:checked").val();
+               //prepare the request
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Offer/SaveTwoFilesFinancialDirectPurchaseChecking', {
+                  checkingResult: checkingModel, __RequestVerificationToken: token
+               }).done(function (e) {
+                  $('#LoadingSite').fadeOut();
+                  window.location = "/Tender/CheckDirectPurchaseOffers?tenderIdString=@Model.TenderIdString";
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               });
+            },
+            saveTwoFileTechnicalCheckingDataAndAttachemntsDetial: function () {
+               if ($("#technicalOfferStatusId").val() != '@((int)Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer)' && $("#technicalOfferStatusId").val() != '@((int)Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)') {
+                  AlertFun('لابد من اختيار التقييم الفنى', alertMessageType.Danger);
+                  return;
+               }
+               if ($("#technicalOfferStatusId").val() == '@((int)Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)' && $("#txtRejectionReason").val().length == 0) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.RejectReasonMustHaveValue)', alertMessageType.Danger);
+                  return;
+               }
+               $('#LoadingSite').fadeIn();
+               //Attachmets Details
+               this.prepareObject();
+               //checking detail
+               var checkingModel = {};
+               checkingModel.TechnicalOfferStatusId = $("#technicalOfferStatusId").val();
+               checkingModel.RejectionReason = $("#txtRejectionReason").val();
+               checkingModel.Notes = $("#txtNotes").val();
+               checkingModel.TechniciansReportAttachmentsRef = $("#TechniciansReportAttachmentsRef").val();
+               //prepare the request
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $('#LoadingSite').fadeIn();
+               $.post('/Offer/SaveTwoFileTechnicalCheckingDataAndAttachemntsDetial', {
+                  model: this.attachObj, checkingResult: checkingModel, __RequestVerificationToken: token
+               }).done(function (e) {
+                  $('#LoadingSite').fadeOut();
+                  window.location = "/Tender/CheckDirectPurchaseOffers?tenderIdString=@Model.TenderIdString";
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               });
+            },
+            saveTwoFileFinancialCheckingDataAndAttachemntsDetial: function () {
+               if ($("#finantialOfferStatusId").val() != '@((int)Enums.OfferAcceptanceStatusId.RejectedOffer)' && $("#finantialOfferStatusId").val() != '@((int)Enums.OfferAcceptanceStatusId.AcceptedOffer)') {
+                  AlertFun('لابد من اختيار التقييم المالى', alertMessageType.Danger);
+                  return;
+               }
+               if ($("#finantialOfferStatusId").val() == '@((int)Enums.OfferAcceptanceStatusId.RejectedOffer)' && $("#txtFinantialRejectionReason").val().length == 0) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.RejectReasonMustHaveValue)', alertMessageType.Danger);
+                  return;
+               }
+               $('#LoadingSite').fadeIn();
+               //Attachmets Details
+               this.prepareObject();
+               //checking detail
+               var checkingModel = {};
+               checkingModel.OfferIdString = "@Model.OfferIdString";
+               checkingModel.FinantialOfferStatusId = $("#finantialOfferStatusId").val();
+               checkingModel.FinantialRejectionReason = $("#txtFinantialRejectionReason").val();
+               checkingModel.FinantialNotes = $("#txtFinantialNotes").val();
+               checkingModel.IsBindedToMandatoryList = $("input[name='IsBindedToMandatoryList']:checked").val();
+               //prepare the request
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Offer/SaveTwoFileFinancialCheckingDataAndAttachemntsDetial', {
+                  model: this.attachObj, checkingResult: checkingModel, __RequestVerificationToken: token
+               }).done(function (e) {
+                  $('#LoadingSite').fadeOut();
+                  window.location = "/Tender/CheckDirectPurchaseOffers?tenderIdString=@Model.TenderIdString";
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               });
+            },
+            prepareObject: function () {
+               var obj = {};
+               obj.OfferIdString = "@Model.OfferIdString";
+               obj.CombinedOwner = "@Model.CombinedOwner";
+               obj.CombinedIdString = "@Model.CombinedIdString";
+               @if (isOneFile || isTechnical)
+               {
+                  <text>
+               obj.SpecificationsFiles = vueObj.Specifications;
+               obj.IsChamberJoiningAttached = $("input[name='IsChamberJoiningAttached']:checked").val();
+               obj.IsChamberJoiningValid = $("input[name='IsChamberJoiningValid']:checked").val();
+               obj.IsCommercialRegisterAttached = $("input[name='IsCommercialRegisterAttached']:checked").val();
+               obj.IsCommercialRegisterValid = $("input[name='IsCommercialRegisterValid']:checked").val();
+               obj.IsPurchaseBillAttached = $("input[name='IsPurchaseBillAttached']:checked").val();
+               obj.IsSaudizationAttached = $("input[name='IsSaudizationAttached']:checked").val();
+               obj.IsSaudizationValidDate = $("input[name='IsSaudizationValidDate']:checked").val();
+               obj.IsSocialInsuranceAttached = $("input[name='IsSocialInsuranceAttached']:checked").val();
+               obj.IsSocialInsuranceValidDate = $("input[name='IsSocialInsuranceValidDate']:checked").val();
+               obj.IsVisitationAttached = $("input[name='IsVisitationAttached']:checked").val();
+               obj.IsZakatAttached = $("input[name='IsZakatAttached']:checked").val();
+               obj.IsZakatValidDate = $("input[name='IsZakatValidDate']:checked").val();
+               obj.IsSpecificationAttached = $("input[name='IsSpecificationAttached']:checked").val();
+               obj.IsSpecificationValidDate = $("input[name='IsSpecificationValidDate']:checked").val();
+               obj.IsOfferCopyAttached = $("input[name='IsOfferCopyAttached']:checked").val();
+               obj.IsOfferLetterAttached = $("input[name='IsOfferLetterAttached']:checked").val();
+               obj.OfferLetterNumber = $("#OfferLetterNumber").val();
+               obj.offerLetterDate = $("#offerLetterDate").val();
+                  </text>
+               }
+               @if (isOneFile || isFinancial)
+               {
+                  <text>
+               obj.IsBankGuaranteeAttached = $("input[name='IsBankGuaranteeAttached']:checked").val();
+               obj.IsFinaintialOfferLetterAttached = $("input[name='IsFinaintialOfferLetterAttached']:checked").val();
+               obj.IsFinantialOfferLetterCopyAttached = $("input[name='IsFinantialOfferLetterCopyAttached']:checked").val();
+               obj.FinantialOfferLetterNumber = $("#FinantialOfferLetterNumber").val();
+               obj.FinantialOfferLetterDate = $("#FinantialOfferLetterDate").val();
+               obj.BankGuaranteeFiles = vueObj.BankGuarantees;
+                  </text>
+               }
+               this.attachObj = obj;
+            }
+         }
+      });
+      $("#technicalOfferStatusId").change(function () {
+         var selectedValue = $('#technicalOfferStatusId option:selected').val();
+         if (selectedValue == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)) {
+            $('#divRejectionReason').attr('hidden', false);
+            $("#spanTechnicalResult").hide()
+         }
+         if (selectedValue == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer) || selectedValue == "") {
+            $('#divRejectionReason').attr('hidden', true);
+            $('#txtRejectionReason').val(null);
+            $("#spanTechnicalResult").hide()
+         }
+      });
+      $("#finantialOfferStatusId").change(function () {
+         var selectedValue = $('#finantialOfferStatusId option:selected').val();
+         if (selectedValue == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferAcceptanceStatusId.RejectedOffer)) {
+            $('#divFinantialRejectionReason').attr('hidden', false);
+            $("#spanFinancialResult").hide()
+         }
+         if (selectedValue == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferAcceptanceStatusId.AcceptedOffer) || selectedValue == "") {
+            $('#divFinantialRejectionReason').attr('hidden', true);
+            $('#txtFinantialRejectionReason').val(null);
+            $("#spanFinancialResult").hide()
+         }
+      });
+
+      $('input[name="IsBindedToMandatoryList"]').change(function () {
+         var IsBindedToMandatoryList = $('input[name="IsBindedToMandatoryList"]:checked').val();
+         if (IsBindedToMandatoryList == "false") {
+            $('#finantialOfferStatusId').val(2).change()
+            $('#divFinantialRejectionReason').attr('hidden', false);
+            $("#spanFinancialResult").hide()
+            $('#txtFinantialRejectionReason').val($('#txtFinantialRejectionReason').val() + ' عدم التزام المورد بالقائمة الالزامية')
+         }
+      });
+
+      $("#btnSend").click(function () {
+         $('#vsNoDataFound').hide();
+         $('#vsNoAttachmentsDataFound').hide();
+      });
+      function discountChange(e) {
+         if ($(e).val() > 9999999999) {
+            $(e).val(0);
+         }
+         var tableid = $(e).closest('tr').attr('id');
+         var i = parseInt(tableid.split('_')[1]);
+         if ($(e).val() == "")
+            app.QuantitiesTables[i].openingDiscount = 0;
+         else
+            app.QuantitiesTables[i].openingDiscount = parseFloat($(e).val());
+         calcTotal(tableid);
+      }
+      function totalPriceChange(e) {
+         if ($(e).val() > 9999999999) {
+            $(e).val(0);
+         }
+         var tableid = $(e).closest('tr').attr('id');
+         var i = parseInt(tableid.split('_')[1]);
+         if ($(e).val() == "")
+            app.QuantitiesTables[i].openingTotalPrice = 0;
+         else
+            app.QuantitiesTables[i].openingTotalPrice = parseFloat($(e).val());
+         calcTotal(tableid);
+      }
+      function vatChange(e) {
+         if ($(e).val() > 9999999999) {
+            $(e).val(0);
+         }
+         var tableid = $(e).closest('tr').attr('id');
+         var i = parseInt(tableid.split('_')[1]);
+         if ($(e).val() == "")
+            app.QuantitiesTables[i].openingVat = 0;
+         else
+            app.QuantitiesTables[i].openingVat = parseFloat($(e).val());
+         calcTotal(tableid);
+      }
+      function calcTotal(tableId) {
+         if (tableId != "") {
+            var idIndex = parseInt(tableId.split('_')[1]);
+            var textTotalAfterDiscount = $("#tblTotalAfterDiscount" + idIndex);
+            var x = $("#textTotalAfterDiscount" + idIndex).val();
+            var v = (isNaN(parseInt($("#tblTotalPrice" + idIndex).val())) ? 0 : parseInt($("#tblTotalPrice" + idIndex).val()))
+               - (isNaN(parseInt($("#tblTotalDiscount" + idIndex).val())) ? 0 : parseInt($("#tblTotalDiscount" + idIndex).val()))
+               + (isNaN(parseInt($("#tblTotalVat" + idIndex).val())) ? 0 : parseInt($("#tblTotalVat" + idIndex).val()));
+            textTotalAfterDiscount.val(v);
+         }
+         var totalsPrice = 0;
+         var totalsAfterDiscount = 0;
+         var txtTotAfterVat = 0;
+         for (var i = 0; i < app.QuantitiesTables.length; i++) {
+            var txval = app.QuantitiesTables[i].openingTotalPrice;
+            totalsPrice += parseFloat(txval);
+            $("#txtTotPrice").text(totalsPrice);
+            txval = app.QuantitiesTables[i].openingDiscount;
+            totalsAfterDiscount += parseFloat(txval);
+            $("#txtTotAfterDiscount").text(totalsAfterDiscount);
+            txval = app.QuantitiesTables[i].openingVat;
+            txtTotAfterVat += parseFloat(txval);
+            $("#txtTotAfterVat").text(txtTotAfterVat);
+         }
+         $("#txtFinal").val(totalsPrice - totalsAfterDiscount + txtTotAfterVat);
+      }
+      var totalPricevalue = 0;
+      var totalDiscountvalue = 0;
+      var totalVatvalue = 0;
+      $("input[name=tblTotalPrice]").each(function () {
+         var txval = $(this).val();
+         totalPricevalue += parseFloat(txval);
+         $("#txtTotPrice").text(totalPricevalue);
+      });
+      $("input[name=tblTotalDiscount]").each(function () {
+         var txval = $(this).val();
+         totalDiscountvalue += parseFloat(txval);
+         $("#txtTotAfterDiscount").text(totalDiscountvalue);
+      });
+      $("input[name=tblTotalVat]").each(function () {
+         var txval = $(this).val();
+         totalVatvalue += parseFloat(txval);
+         $("#txtTotAfterVat").text(totalVatvalue);
+      });
+      $('a[data-toggle="collapse"]').click(function () {
+         $(this).toggleClass('btn-outline-primary');
+         $(this).toggleClass('btn-primary');
+      });
+      if (finalPrice == null) {
+         $("#txtFinal").val(totalPricevalue - totalDiscountvalue + totalVatvalue);
+      }
+      else
+         $("#txtFinal").val(finalPrice);
+      $("input[name=OpenTxtPrice]").on("input", function () {
+         if ($(this).val() > 9999999999) {
+            $(this).val(0);
+         }
+         var prc = 0;
+         var dscnt = 0;
+         var vat = 0;
+         if ($(this).val() != "")
+            prc = parseFloat($(this).val());
+         else
+            prc = 0;
+         if ($('#OpenTxtDiscount').val() != "")
+            dscnt = parseFloat($('#OpenTxtDiscount').val());
+         else
+            dscnt = 0;
+         if ($('#OpenTxtVat').val() != "")
+            vat = parseFloat($('#OpenTxtVat').val());
+         else
+            vat = 0;
+         var totl = prc - dscnt + vat;
+         $('#txtBayanFinal').text(totl);
+      });
+      $("input[name=OpenTxtDiscount]").on("input", function () {
+         if ($(this).val() > 9999999999) {
+            $(this).val(0);
+         }
+         var prc = 0;
+         var dscnt = 0;
+         var vat = 0;
+         if ($(this).val() != "")
+            dscnt = parseFloat($(this).val());
+         else
+            dscnt = 0;
+         if ($('#OpenTxtPrice').val() != "")
+            prc = parseFloat($('#OpenTxtPrice').val());
+         else
+            prc = 0;
+         if ($('#OpenTxtVat').val() != "")
+            vat = parseFloat($('#OpenTxtVat').val());
+         else
+            vat = 0;
+         var totl = 0;
+         if (prc == 0) {
+            totl = 0;
+         }
+         else {
+            totl = prc - dscnt + vat;
+         }
+         $('#txtBayanFinal').text(totl);
+      });
+      $("input[name=OpenTxtVat]").on("input", function () {
+         if ($(this).val() > 9999999999) {
+            $(this).val(0);
+         }
+         var prc = 0;
+         var dscnt = 0;
+         var vat = 0;
+         if ($(this).val() != "")
+            vat = parseFloat($(this).val());
+         else
+            vat = 0;
+         if ($('#OpenTxtPrice').val() != "")
+            prc = parseFloat($('#OpenTxtPrice').val());
+         else
+            prc = 0;
+         if ($('#OpenTxtDiscount').val() != "")
+            dscnt = parseFloat($('#OpenTxtDiscount').val());
+         else
+            dscnt = 0;
+         var totl = 0;
+         if (prc == 0) {
+            totl = 0;
+         }
+         else {
+            totl = prc - dscnt + vat;
+         }
+         $('#txtBayanFinal').text(totl);
+      });
+   </script>
+}

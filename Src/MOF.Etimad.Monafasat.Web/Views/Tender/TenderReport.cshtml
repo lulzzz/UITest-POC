@@ -1,0 +1,192 @@
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TendersReport;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reports</li>
+      </ol>
+   </nav>
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <span class="d-block pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search"><button id="searchBtnColaps" class="btn p-2 btn-outline-primary" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</button></span>
+   </div>
+}
+<form class="form" id="searchCriteriaForm">
+   <div id="SuppliersGrid" class="etd-cards" v-cloak>
+      <div class="clearfix"></div>
+      <div class="row tendar-navigation">
+      </div>
+      <div class="row" style="position:relative">
+         <div class="collapse col-lg-4 col-md-4 col-sm-12 col-xs-12 " id="Search">
+            <div class="card card-body">
+               <div class="row">                 
+                  <div class="col-lg-12 col-sm-12 col-xs-12" style="  ">
+                     <a class="search-expand d-block collapsed" data-toggle="collapse" href="#dates" role="button" aria-expanded="false" aria-controls="dates">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PurchaseDate <i class="material-icons pull-right">keyboard_arrow_up</i> </a>
+                     <div class="collapse multi-collapse" id="dates">
+                        <div class="row">
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group form-check etd-calendar-group">
+                                 <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.From</label>
+                                 <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" name="from" id="from" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date">
+                              </div>
+                           </div>
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group form-check etd-calendar-group">
+                                 <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.To</label>
+                                 <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" name="to" id="to" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date">
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-sm-12 col-xs-12">
+                     <div class="form-group has-success bmd-form-group">
+                        <select id="AgencyCode" name="AgencyCode" data-live-search="false" class="selectpicker" data-style="select-with-transition" data-size="7">
+                           <option value="">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseFromGovernmentAgencies
+                           </option>
+                           <option value="1">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency 1
+                           </option>
+                           <option value="2">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency 2
+                           </option>
+                           <option value="3">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency 3
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+                  <input type="hidden" id="hdnto" />
+                  <input type="hidden" id="hdnfrom" />
+               </div>
+               <div class="input-group-prepend pull-left etd-search-btn">
+                  <button type="button" class="btn btn-primary btn-block text-center" id="searchBtn" name="button" @@click="search">
+                     <i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+                  </button>
+                  <button type="reset" class="btn btn-block text-center" value="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear" id="btnClear" name="btnClear" @@click="clear">
+                     <i class="material-icons">close</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+                  </button>
+               </div>
+            </div>
+         </div>
+         <div class="table-responsive">
+            <table id="SuppliersTable" class="table  table-striped text-center" summary="desc">
+               <thead class="text-center">
+                  <tr>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PurchaseDate</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus</th>
+                  </tr>
+               </thead>
+               <tbody class="text-center" v-if="Tenders && Tenders.length > 0">
+                  <tr v-for="(Supplier, $index) in Tenders">
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName"> {{Supplier.tenderName}} </td>
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SubmtionDate"> {{Supplier.submitionDate}} </td>
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus"> {{Supplier.tenderStatusName}} </td>
+                  </tr>
+               </tbody>
+               <tbody v-else>
+                  <tr>
+                     <td colspan="9" class="text-center">
+                        <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                        <br />
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+            <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+         </div>
+      </div>
+      <div class="clearfix"></div>
+   </div>
+</form>
+<!--endtBody-->
+@section scripts{
+   
+   <script>
+
+      var Tender = new Vue({
+         el: '#SuppliersGrid',
+         data: {
+            Tenders: [],
+            tenderStatusList: [],
+            areasList: [],
+            selectedStatus: '',
+            selectedAreaList: [],
+            selectedTenderId: 0,
+            selectedRowStatus: '',
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            // Here you define the url of your paginated API
+            resource_url: '/Tender/TenderReportPagingAsync',
+            //resource_url: '/Tender/TenderReportPagingAsync',
+            queryString: ''
+         },
+         methods: {
+            updateResource: function (data) {
+               data.forEach(function (item) {
+                  if (item.submitionDate) {
+                     item.submitionDate = item.submitionDate.slice(0, 10); //.split('T')[0]
+                     item.submitionDate = item.submitionDate == "0001-01-01" ? false : (item.tenderStatusId == 1 ? " " : item.submitionDate);
+                  }
+               });
+               this.Tenders = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            search: function () {
+               this.queryString = $('#searchCriteriaForm').serialize();
+
+               var GregorianStart;
+               var GregorianEnd;
+               var startDate = "";
+               var endDate = "";
+               if ($("#from").val() != "") {
+                  var i = $("#from").val().split('/');
+                  if ($('input[name="cb_from"]:checked').length > 0 ) {
+                     $("#hdnfrom").val(i[0] + ',' + i[1] + ',' + i[2] + ',' + 'G');
+                     startDate = $("#from").val();
+                  }
+                  else {
+                     $("#hdnfrom").val(i[0] + ',' + i[1] + ',' + i[2] + ',' + 'H');
+                     startDate = convertUmmalquraToGregorian($("#from").val());
+                  }
+                  var GregorianStart = new Date(startDate);
+               }
+               if ($("#to").val() != "") {
+                  var x = $("#to").val().split('/');
+                  if ($('input[name="cb_to"]:checked').length>0) {
+                     $("#hdnto").val(x[0] + ',' + x[1] + ',' + x[2] + ',' + 'G');
+                     endDate = $("#to").val();
+                  }
+                  else {
+                     $("#hdnto").val(x[0] + ',' + x[1] + ',' + x[2] + ',' + 'H');
+                     endDate = convertUmmalquraToGregorian($("#to").val());
+                  }
+                  var GregorianEnd = new Date(endDate)
+               }
+               if (startDate != "" && endDate != "") {
+                  if (GregorianStart > GregorianEnd) {
+                      AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ToDateHaveToBeGreaterThanFromDate', 'danger');                 
+                     return false;
+                  }
+               }
+               this.resource_url = '/Tender/TenderReportPagingAsync' + '?' + this.queryString + '&FromLastOfferPresentationDateString=' + $("#hdnfrom").val() + '&ToLastOfferPresentationDateString=' + $("#hdnto").val();;
+            },
+            clear: function () {
+               $("#tenderName").val("");
+               $("#tenderNumber").val("");
+               $("#AgencyCode option:selected").remove();
+            }
+         }
+      });
+   </script>
+}

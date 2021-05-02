@@ -1,0 +1,359 @@
+
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.JoinTechnicalCommitteeModel
+@{
+   int enquiryId = Model.EnquiryId;
+   int tenderId = Model.TenderId;
+   string enquiryIdString = Model.EnquiryIdString;
+   ViewData["Title"] = @res.EnquiryResources.DisplayInputs.JoinCommittee;
+}
+@section breadcrumb
+   {
+
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("EnquiryDetails", "Enquiry", new { enquiryIdString = enquiryIdString})">@res.EnquiryResources.DisplayInputs.EnquiryReview</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@res.EnquiryResources.DisplayInputs.JoinCommittee  </li>
+      </ol>
+   </nav>
+}
+
+@Html.AntiForgeryToken()
+<div id="main">
+   <div class="modal fade" id="joinModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Confirm</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i> 
+               </button>
+            </div>
+            <template v-if="showJoin">
+               <div class="modal-body" id="sendToApprovalMsg">
+                  هل أنت متأكد من ضم هذة الجهة الفنية
+               </div>
+            </template>
+            <template v-if="showDelete">
+               <div class="modal-body" id="reopenDiv">
+                  هل أنت متأكد من حذف هذة الجهة الفنية
+               </div>
+            </template>
+             
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary btn-sm" name="button" v-if="showJoin" @@click="sendInvitationToJoin()">@res.EnquiryResources.DisplayInputs.SendInvitation</button>
+               @*<button type="button" class="btn btn-primary btn-sm" name="button" v-if="showDelete" @@click="removeCommittee()" id="btnReopenConfirmation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>*@
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="modal fade" id="commentModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="addCommentTitle"> @res.EnquiryResources.DisplayInputs.AddComment </h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i> 
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="col-lg-12 col-sm-12 col-xs-12" id="commentDiv">
+                  <div class="form-group">
+                     <label for="EnquiryReplyMessage" class="label bmd-label-static">@res.EnquiryResources.Messages.EnterComment</label>
+                     <textarea id="enquiryReplyMessage" name="EnquiryReplyMessage" rows="3" autocomplete="off" class="form-control" placeholder="@res.EnquiryResources.DisplayInputs.InternelCommentMessage" title="@res.EnquiryResources.Messages.EnterComment"></textarea>
+                     <div class="pull-left">
+                        <span class="bmd-help text-danger" id="txtCommentValidation" style="display:none;">@res.EnquiryResources.Messages.EnterComment</span>
+                        <br />
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="button" id="addComment" @@click="addComment()">@res.EnquiryResources.DisplayInputs.Add</button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.EnquiryResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="card" id="join">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <input type="hidden" id="hdnJoinId" value="@Model.JoinTechnicalCommitteeId" />
+               <h4 class="text-primary">@res.EnquiryResources.DisplayInputs.EnquiryInfo</h4>
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @res.EnquiryResources.DisplayInputs.SendingDate
+                        </div>
+                        <div class="col-9 etd-item-info">
+                           <span>
+                              @(Model.EnquirySendingDate.HasValue ? @Model.EnquirySendingDate.Value.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-US")) : "")
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @res.EnquiryResources.DisplayInputs.EnquiryText
+                        </div>
+                        <div class="col-9 etd-item-info">
+                           <span>@(Model.EnquiryName)</span>
+                        </div>
+                     </div>
+                  </li>
+
+               </ul>
+            </div>
+         </div>
+         <div class="row">
+            <div class="form-group bmd-form-group col-6">
+               <label label class="label bmd-label-static"> @res.EnquiryResources.DisplayInputs.SelectTechnicalCommittee</label><span class="text-danger">*</span>
+               <select asp-for="CommitteeName" id="committeeName" name="committeeName" required data-live-search="true" class="selectpicker"
+                       asp-items="@(new SelectList(Model.CommitteeList, "Id", "Name"))" data-style="select-with-transition" data-size="7"></select>
+               <span id="txtCommitteeValidation" style="display:none;" class="bmd-help text-danger">@res.EnquiryResources.DisplayInputs.SelectTechnicalCommittee </span>
+            </div>
+         </div>
+         <div class="row">
+
+            <div class="col-lg-6 col-sm-6 col-xs-6" id="commentDiv">
+               <div class="form-group">
+                  <label for="EnquiryComment" class="label bmd-label-static">@res.EnquiryResources.Messages.EnterComment</label>
+                  <textarea id="enquiryComment" name="EnquiryComment" rows="3" autocomplete="off" class="form-control" placeholder="@res.EnquiryResources.DisplayInputs.InternelCommentMessage"></textarea>
+               </div>
+            </div>
+
+         </div>
+         <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+
+
+               <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                  <div class="col-12 text-right">
+                     <button type="button" class="btn btn-primary etd-search-btn btn-sm" id="btnSend" @@click="showJoinModal">
+                        @res.EnquiryResources.DisplayInputs.SendInvitation
+                     </button>
+                  </div>
+               </div>
+               <h5> الجهات المنضمة  </h5>
+
+               <table id="CommitteeTable" class="table table-striped text-center" summary="desc">
+                  <thead class="text-center">
+                     <tr>
+                        <th scope="col" class="text-center">#</th>
+                        <th scope="col" class="text-center">@Html.Raw(res.CommitteeResources.DisplayInputs.CommitteeName) </th>
+                        <th scope="col" class="text-center">@Html.Raw(res.SharedResources.DisplayInputs.Operations) </th>
+                     </tr>
+                  </thead>
+                  <tbody class="text-center" v-if="invitedcommittees && invitedcommittees.length > 0">
+                     <tr v-for="(commettee, index) in invitedcommittees">
+                        <td class="text-center">
+                           {{index + 1}}
+                        </td>
+                        <td class="text-center">
+                           {{commettee.committeeName}}
+                        </td>
+                        <td class="text-center">
+                           <div style="text-align: center;">
+                              <button type="button" @@click="removeCommittee(commettee.joinTechnicalCommitteeId, commettee.replyId, index)" class="btn btn-danger btn-just-icon btn-round btn-link btn-sm" data-toggle="tooltip" data-placement="bottom" data-original-title="@res.EnquiryResources.DisplayInputs.CancelInvitation" title="@res.EnquiryResources.DisplayInputs.CancelInvitation">
+                                 <i class="material-icons">delete</i> <div class="ripple-container"></div>
+                              </button>
+                           </div>
+                        </td>
+                     </tr>
+                  </tbody>
+                  <tbody v-else>
+                     <tr>
+                        <td colspan="9" class="text-center">
+                           <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                           <br />
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+               <pagination :visible_pages="3" ref="vpaginator" :resource_url="committeeresource_url" @@update="updateCommitteeResource"></pagination>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                  <div class="col-12 text-right">
+                     <button type="button" class="btn btn-primary etd-search-btn btn-sm" v-if="invitedcommittees.length > 0" id="btnAddComment" @@click="showCommentModal">
+                        @res.EnquiryResources.DisplayInputs.AddComment
+                     </button>
+                  </div>
+               </div>
+               <h5> التعليقات الداخلية</h5>
+               <table id="CommentsTable" class="table table-striped text-center" summary="desc">
+                  <thead class="text-center">
+                     <tr>
+                        <th scope="col" class="text-center">#</th>
+                        <th scope="col" class="text-center">@Html.Raw(res.EnquiryResources.DisplayInputs.Comment) </th>
+                     </tr>
+                  </thead>
+                  <tbody class="text-center" v-if="comments && comments.length > 0">
+
+                     <tr v-for="(comment, index) in comments">
+                        <td class="text-center">
+                           {{index + 1}}
+                        </td>
+                        <td class="text-center">
+                           {{comment.internelComment}}
+                        </td>
+                     </tr>
+                  </tbody>
+                  <tbody v-else>
+                     <tr>
+                        <td colspan="9" class="text-center">
+                           <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                           <br />
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+               <pagination :visible_pages="3" ref="vpaginator" :resource_url="committeeresource_url" @@update="updateCommitteeResource"></pagination>
+            </div>
+
+         </div>
+      </div>
+
+      <div class="col-12 form-group" style="padding-bottom: 15px;">
+         <button class="btn btn-outline-primary pull-right" onclick="window.location = '@Url.Action("EnquiryDetails", "Enquiry", new { enquiryIdString = @enquiryIdString})'">
+            @res.EnquiryResources.DisplayInputs.Back
+         </button>
+      </div>
+   </div>
+</div>
+<!--endtBody-->
+@section scripts{
+   <script>
+
+      var Join = new Vue({
+         el: '#main',
+         data: {
+            invitedcommittees: [],
+            comments: [],
+            totalCount: 0,
+            replyCount: 0,
+            currentPage: 1,
+            enquiryIdString:'',
+            pageSize: 10,
+            committeeresource_url: "/Enquiry/GetInvitedCommitesByEnquiryId?EnquiryId=@enquiryId",
+            //resource_url: "",
+            showJoin: false,
+            showDelete: false 
+         },
+         methods: {
+            updateCommitteeResource: function (data) {
+               this.invitedcommittees = data;
+               if (data) {
+                  this.comments = data[0].internelComments;
+               }
+               debugger;
+               //data.forEach(function (item) {
+               //   Join.comments.push(item.internelComments);
+               //});
+               this.enquiryIdString = data.length > 0 ? data[0].enquiryIdString : '@enquiryIdString';
+               this.totalCount = this.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            removeCommittee: function (comitteeId, replyId, index) {
+               this.invitedcommittees.splice(index, 1);
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Enquiry/RemoveInvitedCommitteeAsync', { committeeId: comitteeId, replyId: replyId, enquiryId: @enquiryId, __RequestVerificationToken: token }).done(function (result) {
+                  Join.$forceUpdate();
+                  Join.$refs.vpaginator.fetchData(Join.committeeresource_url);
+
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.CancelTencnicalCommitteeInvitation)', alertMessageType.Success)
+                  }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     if (error.responseText != "Logout") {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                  });
+            },
+            showJoinModal: function () {
+               this.showJoin = true;
+               this.showDelete = false;
+               $('#joinModal').modal('show');
+            },
+            showCommentModal: function () {
+                $('#commentModal').modal('show');
+            },
+            addComment: function () {
+               var commentValidation = $("#enquiryReplyMessage").val();
+              if (commentValidation.trim() == '') {
+                $("#txtCommentValidation").show();
+                return false;
+              } 
+               var enquiryReplyObj = {
+                  EnquiryId: @enquiryId,
+                  TenderId: @tenderId,
+                  EnquiryReplyMessage: $("#enquiryReplyMessage").val()
+               }
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $('#LoadingSite').fadeIn();
+               $.post("/Enquiry/AddEnquiryComment",
+                  {
+                     enquiryReplyObj: enquiryReplyObj,
+                     __RequestVerificationToken: token
+                  }).done(function () {
+                     $("#enquiryReplyMessage").val('');
+                     $('#LoadingSite').fadeOut();
+                     $('#commentModal').modal('hide');
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                     Join.$refs.vpaginator.fetchData(Join.committeeresource_url);
+                  }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     $('#commentModal').modal('hide');
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  });
+            },
+            sendInvitationToJoin: function () {
+               if ($("#committeeName").val() != null) {
+                  var joinCommitteeObj = {
+                     EnquiryId: @enquiryId,
+                     TenderId: @tenderId,
+                     JoinedCommitteeId: $("#committeeName").val(),
+                     CommitteeName: $("#committeeName").text(),
+                     EnquiryComment: $("#enquiryComment").val()
+                  }
+                  var token = $('input[name=__RequestVerificationToken]').val();
+                  $('#LoadingSite').fadeIn();
+                  $.post('/Enquiry/SendInvitationsToJoinCommittee', { joinTechnicalCommitteeModel: joinCommitteeObj }).done(function (result) {
+                     $('#joinModal').modal("hide");
+                     document.getElementById("hdnJoinId").value = result.joinTechnicalCommitteeId;
+                     $('#LoadingSite').fadeOut();
+                     $("#enquiryComment").val("");
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.JoinTencnicalCommitteeInvitation)', alertMessageType.Success);
+                     Join.$refs.vpaginator.fetchData(Join.committeeresource_url);
+
+                  }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     $('#joinModal').modal("hide");
+                     if (error.responseText != "Logout") {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                  });
+               } else {
+                  $("#txtCommitteeValidation").show();
+               }
+            }
+         }
+      });
+
+
+   </script>
+}

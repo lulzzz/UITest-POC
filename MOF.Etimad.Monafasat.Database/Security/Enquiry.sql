@@ -1,0 +1,3 @@
+﻿CREATE SCHEMA [Enquiry]
+    AUTHORIZATION [dbo];
+

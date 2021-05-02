@@ -1,0 +1,468 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ApplyAutomatically" xml:space="preserve">
+    <value>التقديم الكترونى عبر بوابة المشتريات</value>
+  </data>
+  <data name="BackButton" xml:space="preserve">
+    <value>رجوع</value>
+  </data>
+  <data name="ExecutionPlace" xml:space="preserve">
+    <value>مكان التنفيذ</value>
+  </data>
+  <data name="BreadCrumb_Home" xml:space="preserve">
+    <value>الرئيسية</value>
+  </data>
+  <data name="LastEnqueriesDate" xml:space="preserve">
+    <value>آخر موعد لتقديم الإستفسارات</value>
+  </data>
+  <data name="LastOfferPresentationDate" xml:space="preserve">
+    <value>آخر موعد لتقديم العروض</value>
+  </data>
+  <data name="OffersOpeningDate" xml:space="preserve">
+    <value>تاريخ فتح العروض</value>
+  </data>
+  <data name="Invalid" xml:space="preserve">
+    <value>غير سارى المفعول</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>لا</value>
+  </data>
+  <data name="Valid" xml:space="preserve">
+    <value>سارى المفعول</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>نعم</value>
+  </data>
+  <data name="DiscountPercent" xml:space="preserve">
+    <value>نسبة الخصم</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>السعر</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>الوحدة</value>
+  </data>
+  <data name="CommercialName" xml:space="preserve">
+    <value>الإسم التجاري</value>
+  </data>
+  <data name="CommercialNumber" xml:space="preserve">
+    <value>الرقم التجاري</value>
+  </data>
+  <data name="Invitation" xml:space="preserve">
+    <value>دعوة</value>
+  </data>
+  <data name="Purshase" xml:space="preserve">
+    <value>شراء</value>
+  </data>
+  <data name="TablesName" xml:space="preserve">
+    <value>إسم الجدول</value>
+  </data>
+  <data name="AvailableTenderForOffers" xml:space="preserve">
+    <value>المنافسات المتاحة للعروض</value>
+  </data>
+  <data name="Tenders" xml:space="preserve">
+    <value>المنافسات</value>
+  </data>
+  <data name="AgencyName" xml:space="preserve">
+    <value>إسم الجهة</value>
+  </data>
+  <data name="Awarding" xml:space="preserve">
+    <value>Awarding</value>
+  </data>
+  <data name="DirectPurshase" xml:space="preserve">
+    <value>شراء مباشر</value>
+  </data>
+  <data name="GeneralTender" xml:space="preserve">
+    <value>منافسة عامة</value>
+  </data>
+  <data name="TenderName" xml:space="preserve">
+    <value>إسم المنافسة</value>
+  </data>
+  <data name="TenderType" xml:space="preserve">
+    <value>نوع المنافسة</value>
+  </data>
+  <data name="Attachment" xml:space="preserve">
+    <value>المرفق</value>
+  </data>
+  <data name="InvitationsNumber" xml:space="preserve">
+    <value>عدد الدعوات</value>
+  </data>
+  <data name="ItemName" xml:space="preserve">
+    <value>إسم الصنف</value>
+  </data>
+  <data name="TenderNumber" xml:space="preserve">
+    <value>رقم المنافسة</value>
+  </data>
+  <data name="TotalAmount" xml:space="preserve">
+    <value>المجموع</value>
+  </data>
+  <data name="TotalAmountWithDiscout" xml:space="preserve">
+    <value>المجموع بعد الخصم</value>
+  </data>
+  <data name="UnitDiscount" xml:space="preserve">
+    <value>الخصم للوحدة</value>
+  </data>
+  <data name="UnitPrice" xml:space="preserve">
+    <value>السعر للوحدة</value>
+  </data>
+  <data name="TenderStatus" xml:space="preserve">
+    <value>حالة المنافسة</value>
+  </data>
+  <data name="Withdraw" xml:space="preserve">
+    <value>إنسحاب</value>
+  </data>
+  <data name="AreYouSureYouWantRemoveTender" xml:space="preserve">
+    <value>هل أنت متأكد من ازالة المنافسة من قائمة المفضلة؟</value>
+  </data>
+  <data name="AreYouSureYouWantWithdraw" xml:space="preserve">
+    <value>هل أنت متأكد من الإنسحاب من الدعوة / منافسة ؟</value>
+  </data>
+  <data name="ChooseFromGovernmentAgencies" xml:space="preserve">
+    <value>اختار من الجهات الحكوميه</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>مسح</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>يوم</value>
+  </data>
+  <data name="DirectBuyInginvitation" xml:space="preserve">
+    <value>دعوة شراء مباشر</value>
+  </data>
+  <data name="PendingGovernmentAcceptanceOfTheRequest" xml:space="preserve">
+    <value>بإنتظار  قبول الطلب من الجهة الحكوميه</value>
+  </data>
+  <data name="RemoveTenderFromFavouriteList" xml:space="preserve">
+    <value>ازالة المنافسة من قائمة المفضلة</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>بحث</value>
+  </data>
+  <data name="TenderHasBeenBoughtBefore" xml:space="preserve">
+    <value>تم شراء المنافسه</value>
+  </data>
+  <data name="TherequestHasbeenAccepted" xml:space="preserve">
+    <value>تم قبول الطلب</value>
+  </data>
+  <data name="TherequestHasbeenRejected" xml:space="preserve">
+    <value>تم رفض الطلب</value>
+  </data>
+  <data name="WriteCmmercialName" xml:space="preserve">
+    <value>اكتب رقم السجل التجارى</value>
+  </data>
+  <data name="WriteCmmercialNumber" xml:space="preserve">
+    <value>اكتب رقم السجل التجارى</value>
+  </data>
+  <data name="AcceptOrRejectTheInvetation" xml:space="preserve">
+    <value>قبول أو رفض الدعوة</value>
+  </data>
+  <data name="AddToFavourite" xml:space="preserve">
+    <value>اضف الى المفضلة</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>إنتهى</value>
+  </data>
+  <data name="Free" xml:space="preserve">
+    <value>مجانا</value>
+  </data>
+  <data name="Hour" xml:space="preserve">
+    <value>ساعة</value>
+  </data>
+  <data name="NoData" xml:space="preserve">
+    <value>لا يوجد بيانات</value>
+  </data>
+  <data name="Pamphlet" xml:space="preserve">
+    <value>قيمة الكراسة</value>
+  </data>
+  <data name="Riyal" xml:space="preserve">
+    <value>ريال</value>
+  </data>
+  <data name="Share" xml:space="preserve">
+    <value>مشاركة</value>
+  </data>
+  <data name="FavouriteSuppliersList" xml:space="preserve">
+    <value>قائمة الموردين المفضلة</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>الخيارات</value>
+  </data>
+  <data name="SuppliersList" xml:space="preserve">
+    <value>قائمة الموردين</value>
+  </data>
+  <data name="NotPaid" xml:space="preserve">
+    <value>غير مدفوعة</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>مدفوعة</value>
+  </data>
+  <data name="Agency" xml:space="preserve">
+    <value>الجهة الحكوميه</value>
+  </data>
+  <data name="AgencyBranch" xml:space="preserve">
+    <value>فرع الجهة الحكوميه</value>
+  </data>
+  <data name="ConditionsBookletPrice" xml:space="preserve">
+    <value>قيمة كراسة الشروط</value>
+  </data>
+  <data name="DirectPurchaseTendersCount" xml:space="preserve">
+    <value>عدد المنافسات الشراء المباشر</value>
+  </data>
+  <data name="DirectPurchaseTendersValue" xml:space="preserve">
+    <value>قيمة المنافسات الشراء المباشر</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>من</value>
+  </data>
+  <data name="LessThanMilion" xml:space="preserve">
+    <value>اقل من مليون</value>
+  </data>
+  <data name="MoreThanFiftyMilion" xml:space="preserve">
+    <value>اكثر من خمسين مليون</value>
+  </data>
+  <data name="MoreThanFiveMilion" xml:space="preserve">
+    <value>اكثر من خمسة ملايين</value>
+  </data>
+  <data name="MoreThanMilion" xml:space="preserve">
+    <value>اكثر من مليون</value>
+  </data>
+  <data name="MoreThanTenMilion" xml:space="preserve">
+    <value>اكثر من عشرة ملايين</value>
+  </data>
+  <data name="PublicTendersCount" xml:space="preserve">
+    <value>عدد المنافسات الشراء المباشر</value>
+  </data>
+  <data name="PublicTendersValue" xml:space="preserve">
+    <value>قيمة المنافسات الشراء المباشر</value>
+  </data>
+  <data name="reports" xml:space="preserve">
+    <value>التقارير</value>
+  </data>
+  <data name="SelectAgency" xml:space="preserve">
+    <value>أختر الجهة</value>
+  </data>
+  <data name="SelectAgencyBranch" xml:space="preserve">
+    <value>إختر فرع الجهة</value>
+  </data>
+  <data name="SelectCondtionsBookletPrice" xml:space="preserve">
+    <value>إختر سعر كراسة الشروط</value>
+  </data>
+  <data name="SubmtionDate" xml:space="preserve">
+    <value>تاريخ نشر المنافسة</value>
+  </data>
+  <data name="TenderCountToTypesReport" xml:space="preserve">
+    <value>تقرير عدد المنافسات بالنسبة لنوعها</value>
+  </data>
+  <data name="TenderValueToTypesReport" xml:space="preserve">
+    <value>تقرير قيمة المنافسه بالنسبة لنوعها</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>الى</value>
+  </data>
+  <data name="ToDateHaveToBeGreaterThanFromDate" xml:space="preserve">
+    <value>تاريخ النهايه يحب ان يكون اكبر من تاريخ البداية</value>
+  </data>
+  <data name="TendersToAwardedSuppliersReport" xml:space="preserve">
+    <value>تقرير المنافسات بالنسبه للموردين المرسى عليهم</value>
+  </data>
+  <data name="AgencySummaryReport" xml:space="preserve">
+    <value>تقرير ملخص الجهة الحكومية</value>
+  </data>
+  <data name="NotificationStatusReport" xml:space="preserve">
+    <value>تقرير حالة الإرساليات</value>
+  </data>
+  <data name="MostSuppliersAwardedReport" xml:space="preserve">
+    <value>تقرير أكثر الموردين المرسى عليهم</value>
+  </data>
+  <data name="SupplierName" xml:space="preserve">
+    <value>إسم المورد</value>
+  </data>
+  <data name="TenderReport" xml:space="preserve">
+    <value>تقرير المنافسات</value>
+  </data>
+  <data name="TendersCount" xml:space="preserve">
+    <value>عدد المنافسات</value>
+  </data>
+  <data name="TendersCountReport" xml:space="preserve">
+    <value>تقرير عدد المنافسات</value>
+  </data>
+  <data name="TenderPurshasingDate" xml:space="preserve">
+    <value>تاريخ شراء المنافسة</value>
+  </data>
+  <data name="TenderPurshaseDate" xml:space="preserve">
+    <value>تاريخ شراء المنافسة</value>
+  </data>
+  <data name="RequestDateFrom" xml:space="preserve">
+    <value>تاريخ الطلب من</value>
+  </data>
+  <data name="RequestDateTo" xml:space="preserve">
+    <value>تاريخ الطلب إلى</value>
+  </data>
+  <data name="ResponseDateFrom" xml:space="preserve">
+    <value>تاريخ الرد من</value>
+  </data>
+  <data name="ResponseDateTo" xml:space="preserve">
+    <value>تاريخ الرد إلى</value>
+  </data>
+  <data name="RevisionDate" xml:space="preserve">
+    <value>طلبات التمديدات</value>
+  </data>
+  <data name="RevisionDateList" xml:space="preserve">
+    <value>قائمة طلبات التمديد</value>
+  </data>
+  <data name="ConditionsBooklet" xml:space="preserve">
+    <value>كراسة الشروط والمواصفات وملاحق المنافسة</value>
+  </data>
+  <data name="Countries" xml:space="preserve">
+    <value>الدول</value>
+  </data>
+  <data name="NoSamplesRequired" xml:space="preserve">
+    <value>لا توجد عينات مطلوبة </value>
+  </data>
+  <data name="CreationDate" xml:space="preserve">
+    <value>تاريخ الإنشاء</value>
+  </data>
+  <data name="PendingQuantityTableUpdate" xml:space="preserve">
+    <value>بإنتظار إعتماد تحديث الملحقات(جدول الكميات)</value>
+  </data>
+  <data name="QualificationDocuments" xml:space="preserve">
+    <value>وثائق التأهيل</value>
+  </data>
+  <data name="QualificationEvaluationDate" xml:space="preserve">
+    <value>تاريخ تقييم وثائق التأهيل</value>
+  </data>
+  <data name="QualificationEvaluationTime" xml:space="preserve">
+    <value>موعد تقييم وثائق التأهيل</value>
+  </data>
+  <data name="QualificationName" xml:space="preserve">
+    <value>إسم دعوة التأهيل</value>
+  </data>
+  <data name="QualificationPrice" xml:space="preserve">
+    <value>قيمة وثائق التأهيل</value>
+  </data>
+  <data name="AddEditPreQualification" xml:space="preserve">
+    <value>إضافة / تعديل تأهيل مسبق</value>
+  </data>
+  <data name="QualificationEvaluationTime1" xml:space="preserve">
+    <value>وقت تقييم الوثائق</value>
+  </data>
+</root>

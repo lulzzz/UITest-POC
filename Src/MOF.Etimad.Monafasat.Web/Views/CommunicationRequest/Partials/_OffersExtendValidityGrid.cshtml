@@ -1,0 +1,55 @@
+<div class="table-responsive">
+   <table id="OffersExtendValidityTable" class="table table-striped text-center" summary="desc">
+      <thead class="text-center">
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferNumber</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseStatus</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RequestStatus</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.InitialGuarantee</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+         </tr>
+      </thead>
+      <tbody class="text-center" v-if="Offers && Offers.length > 0">
+         <tr v-for="(offer, $index) in Offers">
+            <td class="text-center" data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName"> {{offer.commericalRegisterName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{offer.commericalRegisterNo}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferNumber"> {{$index+ 1}} / {{Offers.length}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue"> {{offer.offerPrice}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseStatus">{{offer.invitationTypeName}}</td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue"> {{offer.offerAcceptanceStatus}} </td>
+            @*<td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseStatus">{{offer.offerTechnicalEvaluationStatus}}</td>*@
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BankGuarantee">
+               <span>
+                  <a href="#" v-if='offer.guaranteeAttachment' @@click="RedirectURL(offer.guaranteeAttachment.fileNetReferenceId,offer.guaranteeAttachment.name);return false;"> {{offer.guaranteeAttachment.name}} </a>
+               </span>
+            </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               <div class="dropdown">
+                  <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i> <div class="ripple-container"></div></button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                     <a :href="viewOfferFiles(offer.offerIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferFiles</a>
+                     <a :href="viewOfferDetails(offer.offerIdString,offer.combinedIdString,offer.combinedCount,offer.offerPresentationWay)" v-if="offer.tenderTypeId!='@((int) Enums.TenderType.Competition)'" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails</a>
+                  </div>
+               </div>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td class="text-center" colspan="9">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+               <br />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>
+
+

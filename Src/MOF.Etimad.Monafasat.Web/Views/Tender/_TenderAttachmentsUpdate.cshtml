@@ -1,0 +1,107 @@
+@using System
+@model MOF.Etimad.Monafasat.ViewModel.AttachmentsModel
+<div class="col col-11 pull-right">
+   <input asp-for="TenderName" type="hidden" />
+   <input asp-for="TenderNumber" type="hidden" />
+   <input asp-for="ReferenceNumber" type="hidden" />
+
+   <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:10px;">
+         <ul class="list-group form-details-list">
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>@(Model.TenderName)</span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>@(Model.TenderNumber)</span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>@(Model.ReferenceNumber)</span>
+                  </div>
+               </div>
+            </li>
+         </ul>
+
+      </div>
+      @if (Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects)
+      {
+         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group bmd-form-group p-0">
+               <label asp-for="BookletReference" class="label bmd-label-static"></label>
+               <span class="text-danger">*</span>   @Html.FileUploaderFor(m => m.BookletReference, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+               <span asp-validation-for="BookletReference" class="text-danger"></span>
+            </div>
+         </div>
+      }
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+         <div class="form-group bmd-form-group p-0">
+            <label asp-for="AttachmentReference" class="label bmd-label-static"></label>
+            @Html.FileUploaderFor(m => m.AttachmentReference, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+            <input type="hidden" id="ModuleType" value="@((int)Enums.DeleteModule.TenderAttachementChanges)" />
+
+         </div>
+      </div>
+   </div>
+   @if (Model.AttachmentsChanges.Count() > 0)
+   {
+
+      <div id="changeDiv" class="col-md-6 col-sm-12 col-xs-12" style="padding-left:10px;">
+         <ul class="list-group form-details-list">
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     تعديل المرفقات
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <div class="form-group">
+                        @foreach (var item in Model.AttachmentsChanges.ToList())
+                        {
+
+                           <div class="input-group-append" style="margin-bottom: 5px;">
+                              <a href="#" onclick="RedirectURL('@item.FileNetReferenceId','@item.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col" style="white-space: normal;">
+                                 @item.Name
+                                 @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.EtimadOfficer))
+                                 {
+                                    @if (item.DeletedAttachmentId == null)
+                                    {
+                                       <span class="badge badge-primary pull-right m-1"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddAction</span>
+                                    }
+                                    else
+                                    {
+                                       <span class="badge badge-warning pull-right m-1"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DelteAction</span>
+                                    }
+                                 }
+                              </a>
+                              <button type="button" id="btnDeleteChange" @@click="removeItem(@item.AttachmentId)" class="btn btn-danger btn-sm m-0">حذف</button>
+                           </div>
+
+
+                        }
+                     </div>
+                  </div>
+
+               </div>
+            </li>
+         </ul>
+      </div>
+   }
+
+</div>

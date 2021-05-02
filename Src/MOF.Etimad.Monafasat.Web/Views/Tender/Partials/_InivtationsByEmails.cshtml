@@ -1,0 +1,65 @@
+<div class="tab-pane" id="sendWithEmails">
+   <template v-if="isValidToUpdate">
+      <div class="row">
+         <div class=" col-md-6 col-sm-12 col-xs-12">
+            <div class="row">
+               <div class="col-lg-10 col-sm-6 col-xs-12 form form-newsletter p-0">
+                  <div class="form-group bmd-form-group pull-left p-0" style="width:100%">
+                     <input type="email" class="form-control" id="tb_Email" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Email)">
+                     <span id="spanEmail" style="color:#ff0000"></span>
+                  </div>
+               </div>
+               <div class="input-group-prepend pull-right">
+                  <button type="button" @@click="addEmail()" class=" btn btn-primary btn-just-icon"><i class="material-icons">add</i> <div class="ripple-container"></div></button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </template>
+   <div class="row">
+      <div class=" col-md-6 col-sm-12 col-xs-12">
+         <div class="col-12">
+            <h4 class="text-primary">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.EmailsList)</h4>
+         </div>
+         <div class="table-responsive">
+            <table id="SuppliersTable" class="table  table-striped table-bordered  text-center"    summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow">
+               <thead class="text-center">
+                  <tr>
+                     <th scope="col" class="text-center">#</th>
+                     <th scope="col" class="text-center"> </th>
+                     <template v-if="isValidToUpdate">
+                        <th scope="col" class="text-center"> @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Operations)</th>
+                     </template>
+                     <template v-else> 
+                     </template>
+                  </tr>
+               </thead>
+               <tbody class="text-center" v-if="emails && emails.length > 0">
+                  <tr v-for="(email, index) in emails">
+                     <td class="text-center">
+                        {{index + 1}}
+                     </td>
+                     <td class="text-center" data-label=" @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Email) ">
+                        {{email}}
+                     </td>
+                     <td v-if="isValidToUpdate" class="text-center" data-label="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Operations) ">
+                        <div style="text-align: center;">
+                           <button type="button"  @@click="removeEmail(index)" class=" btn btn-danger btn-round btn-just-icon btn-sm"><i class="material-icons">remove</i> <div class="ripple-container"></div></button>
+                        </div>
+                     </td>
+                  </tr>
+               </tbody>
+               <tbody v-else>
+                  <tr>
+                     <td colspan="9">
+                        @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData)
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+            <pagination :visible_pages="3" ref="vpaginator" :resource_url="resourceEmail_url" @@update="updateEmailResource"></pagination>
+         </div>
+      </div>
+
+   </div>
+</div>

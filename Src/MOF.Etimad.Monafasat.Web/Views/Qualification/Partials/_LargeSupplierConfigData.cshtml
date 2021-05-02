@@ -1,0 +1,1119 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationApplyDocumentsModel
+@using res = MOF.Etimad.Monafasat.Resources
+
+@{
+
+   bool ExistingContractualObligationsFlag = true;
+   bool HRFlag = true;
+   bool PreviousExperienceYearFlag = true;
+   bool EnviromentAndHealthyFlag = true;
+   bool QualityFlag = true;
+   bool InsuranceFlag = true;
+   bool editMode = true;
+}
+
+
+<div id="dvLargeSupplierConfigData">
+
+   <div class="card">
+      <div class="card-body">
+         <div class="">
+
+
+            <div class="">
+               <ul class="nav nav-pills">
+                  <li class="nav-item "><a class="nav-link text-center active show" href="#section1" data-toggle="tab"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.lbltechnicalCapablities    </a></li>
+                  <li class="nav-item"><a class="nav-link text-center " href="#section2" data-toggle="tab"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.lblFinancialcapabilities  </a></li>
+
+               </ul>
+            </div>
+            <div class="tab-content tab-space p-0">
+               <div class="tab-pane active show" id="section1">
+                  <div class="row">
+
+
+                     @for (int i = 0; i < Model.lstQualificationSupplierTechDataModel.Count; i++)
+                     {
+                        <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].IsConfigure" />
+                        <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId" />
+                        <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationConfigurationId" />
+                        <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationItemId" />
+                        <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationCategoryId" />
+                        <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationItemTypeId" />
+                        <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].Min" />
+                        <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].Max" />
+                        <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationTypeId" />
+                        <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].Value" />
+                        <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].Weight" />
+
+                        @if (Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId == (Int32)Enums.QualificationSubCategory.PreviousExperienceYear)
+                        {
+                           if (PreviousExperienceYearFlag)
+                           {
+                              <div class="col-12">
+                                 <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreviousExperience  </h5>
+                              </div>
+                           }
+
+                           if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.NumberOfProjectsImplementedLastThreeYears)
+                           {
+
+                              <div class="col-md-4 col-sm-12 col-xs-12">
+                                 <div class="form-group bmd-form-group p-0">
+                                    <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label>
+                                    <input onkeypress="return allowNumeric(event)" readonly class="form-control" type="text" maxlength="3" id="txtNumberOfProjectLastThreeYear" value="@(editMode?Convert.ToInt32(@Model.lstQualificationSupplierTechDataModel[i].SupplierValue) : 0 )">
+                                 </div>
+                              </div>
+                           }
+
+                           else if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.TotalValueProjectsLastThreeYears)
+                           {
+                              <div class="col-md-4 col-sm-12 col-xs-12">
+                                 <div class="form-group bmd-form-group p-0">
+                                    <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label>
+                                    <input onkeypress="return allowDecimalWithCustomLength(event,15)" readonly class="form-control" type="text" id="txtCostOfProjectLastThreeYear" value="@(editMode? @Model.lstQualificationSupplierTechDataModel[i].SupplierValue : 0 )">
+                                 </div>
+                              </div>
+                           }
+                           else
+                           {
+
+                              <div class="col-md-4 col-sm-6 col-xs-12">
+                                 <div class="form-group bmd-form-group p-0">
+                                    <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                                    <input required class="form-control" onkeypress="return allowNumeric(event);" maxlength="3" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" value="@(editMode?Convert.ToInt32(@Model.lstQualificationSupplierTechDataModel[i].SupplierValue) : 0 )">
+                                    <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" class="text-danger"></span>
+                                 </div>
+                              </div>
+                           }
+                           PreviousExperienceYearFlag = false;
+                        }
+
+                        else if (Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId == (Int32)Enums.QualificationSubCategory.HumanResource)
+                        {
+                           if (HRFlag)
+                           {
+                              <div class="col-12">
+                                 <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.HR  </h5>
+                              </div>
+                           }
+
+                           if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.PercentageOfSaudiEmployees)
+                           {
+                              <div class="col-md-4 col-sm-6 col-xs-12">
+                                 <div class="form-group bmd-form-group p-0">
+                                    <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label>
+                                    <input class="form-control" readonly type="text" id="txtSaudiaEmployeePercentage" asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue">
+                                    <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" class="text-danger"></span>
+                                 </div>
+                              </div>
+                           }
+                           else if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.NumberOfEmployees)
+                           {
+                              <div class="col-md-4 col-sm-6 col-xs-12">
+                                 <div class="form-group bmd-form-group p-0">
+                                    <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label>
+                                    <input class="form-control" onkeypress="return allowNumeric(event)" maxlength="7" onkeyup="calculateSaudiEmployeePercentage()" type="text" id="txtNumberOfTotalEmployee" asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" value="@(editMode?Convert.ToInt32(@Model.lstQualificationSupplierTechDataModel[i].SupplierValue) : 0 )">
+                                    <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" class="text-danger"></span>
+
+                                 </div>
+                              </div>
+                           }
+                           else if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.NumberOfSaudiEmployees)
+                           {
+                              <div class="col-md-4 col-sm-6 col-xs-12">
+                                 <div class="form-group bmd-form-group p-0">
+                                    <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label>
+                                    <input class="form-control" onkeypress="return allowNumeric(event)" maxlength="7" onkeyup="calculateSaudiEmployeePercentage()" type="text" id="txtSaudiaEmployeeNumber" asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" value="@(editMode?Convert.ToInt32(@Model.lstQualificationSupplierTechDataModel[i].SupplierValue) : 0 )">
+                                    <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" class="text-danger"></span>
+                                    <span class="text-danger" id="spEmployeeValidation">  </span>
+                                 </div>
+                              </div>
+                           }
+
+
+                           HRFlag = false;
+                        }
+                        else if (Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId == (Int32)Enums.QualificationSubCategory.ExistingContractualObligations)
+                        {
+                           if (ExistingContractualObligationsFlag)
+                           {
+                              <div class="col-12">
+                                 <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ExistingContractualObligations  </h5>
+                              </div>
+                           }
+
+
+
+                           if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.NumberOfExistingProjects)
+                           {
+                              <div class="col-md-4 col-sm-12 col-xs-12">
+                                 <div class="form-group bmd-form-group p-0">
+                                    <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label>
+                                    <input onkeypress="return allowNumeric(event)" maxlength="3" class="form-control" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" value="@(editMode?Convert.ToInt32(@Model.lstQualificationSupplierTechDataModel[i].SupplierValue) : 0 )">
+                                 </div>
+                              </div>
+                           }
+                           else if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.ValueOfExistingProjects)
+                           {
+                              <div class="col-md-4 col-sm-12 col-xs-12">
+                                 <div class="form-group bmd-form-group p-0">
+                                    <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                                    <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" value="@(editMode? @Model.lstQualificationSupplierTechDataModel[i].SupplierValue : 0 )">
+                                    <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" class="text-danger"></span>
+                                 </div>
+                              </div>
+
+                           }
+
+
+                           ExistingContractualObligationsFlag = false;
+                        }
+
+
+                        else if (Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId == (Int32)Enums.QualificationSubCategory.Quality)
+                        {
+
+                           if (QualityFlag)
+                           {
+
+                              <div class="col-12">
+                                 <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Quality  </h5>
+                              </div>
+
+                           }
+
+                           if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.QualityAssuranceStandards)
+                           {
+                              <div class="col-md-6 col-sm-6 col-xs-12">
+                                 <div class="form-group bmd-form-group p-0">
+                                    <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                                    <select asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" id="dllQualityAssurance" asp-items="Html.GetEnumSelectList<Enums.QualificationQualityGuaranteeLookup>()" data-live-search="false" class="selectpicker" data-style="select-with-transition" onchange="ValidQualityAssuranceFiles(this)" title="Select with Search" data-size="3">
+                                       <option selected="selected" value="-99">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose</option>
+                                    </select>
+                                    <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" class="text-danger"></span>
+
+                                 </div>
+                              </div>
+                              <div class="col-md-6 col-sm-6 col-xs-12">
+                                 <div class="form-group bmd-form-group p-0">
+                                    <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" class="text-danger"></span>
+                                    <label class="label bmd-label-static">مرفق معاير ضمان الجوده</label><span class="text-danger">*</span>
+                                    @Html.FileUploaderFor(m => m.FileReferenceForQualityAssuranceStandards, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                                    <span asp-validation-for="@Model.FileReferenceForQualityAssuranceStandards" class="text-danger"></span>
+                                 </div>
+                              </div>
+
+
+                           }
+                           QualityFlag = false;
+                        }
+
+                        else if (Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId == (Int32)Enums.QualificationSubCategory.EnviromentAndHealthy)
+                        {
+                           if (EnviromentAndHealthyFlag)
+                           {
+                              <div class="col-12">
+                                 <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.EnvironmentGuide  </h5>
+                              </div>
+                           }
+
+
+                           if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.EnvironmentalHealthSafetyStandards)
+                           {
+                              <div class="col-md-6 col-sm-6 col-xs-12">
+                                 <div class="form-group bmd-form-group p-0">
+                                    <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                                    <select asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" id="dllEnvironmentalHealth" asp-items="Html.GetEnumSelectList<Enums.QualificationEnvironmentStandardsLookup>()" data-live-search="false" class="selectpicker" onchange="ValidEnvironmentalHealthSafetyFiles(this)" data-style="select-with-transition" title="Select with Search" data-size="3">
+                                       <option selected="selected" value="-99">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose</option>
+                                    </select>
+                                    <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" class="text-danger"></span>
+                                 </div>
+                              </div>
+                              <div class="col-md-6 col-sm-6 col-xs-12">
+                                 <div class="form-group bmd-form-group p-0">
+
+                                    <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" class="text-danger"></span>
+                                    <label class="label bmd-label-static"> مرفق  معايير ضمان البيئة والصحة والسلامة</label><span class="text-danger">*</span>
+                                    @Html.FileUploaderFor(m => m.FileReferenceForEnvironmentalHealthSafetyStandards, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                                    <span asp-validation-for="@Model.FileReferenceForEnvironmentalHealthSafetyStandards" class="text-danger"></span>
+                                 </div>
+                              </div>
+                           }
+
+                           EnviromentAndHealthyFlag = false;
+                        }
+
+
+                        else if (Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId == (Int32)Enums.QualificationSubCategory.Insurance)
+                        {
+
+                              <div class="col-12">
+                                 <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Insurance</h5>
+                              </div>
+                           <div class="col-md-12 col-sm-12 col-xs-12">
+                              <div class="row">
+                                 <div class="col-lg-3 col-sm-3 col-xs-12">
+                                    <div class="form-group bmd-form-group p-0">
+
+                                       <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                                       <select asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" asp-items="Html.GetEnumSelectList<Enums.QualificationYesOrNoLookup>()" data-live-search="false" class="selectpicker" data-style="select-with-transition" title="Select with Search" data-size="3">
+                                          <option selected="selected" value="-99">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose</option>
+                                       </select>
+                                       <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" class="text-danger"></span>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+
+                           @*if (InsuranceFlag)
+            {
+               <div class="col-12">
+                  <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Insurance  </h5>
+               </div>
+            }
+
+
+            if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.InsuranceOfProfessionalCompensation)
+            {
+               <div class="col-12">
+
+                  <label class="label bmd-label-static">  مرفق وثائق التأمين</label><span class="text-danger">*</span>
+                  @Html.FileUploaderFor(m => m.FileReferenceForInsurance, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                  <span asp-validation-for="@Model.FileReferenceForInsurance" class="text-danger"></span>
+               </div>
+               <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="row">
+                     <div class="col-lg-3 col-sm-3 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                           <select asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" id="dllInsuranceOfProfessional" onchange="enableInsuranceOfProfessionalCompensation()" asp-items="Html.GetEnumSelectList<Enums.QualificationAvailibleNotAvailibleLookup>()" data-live-search="false" class="selectpicker" data-style="select-with-transition" title="Select with Search" data-size="3">
+                              <option selected="selected" value="-99">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose</option>
+                           </select>
+                           <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" class="text-danger"></span>
+                        </div>
+                     </div>
+                     <div class="col-lg-9 col-sm-9 col-xs-12 d-none" id="dvInsuranceOfProfessionalCompensation">
+                        <div class="row">
+                           <div class="col-lg-4 col-sm-4 col-xs-12">
+                              <div class="form-group bmd-form-group p-0">
+                                 <label class="label bmd-label-static">@res.QualificationResources.DisplayInputs.InsuranceProvider</label><span class="text-danger">*</span>
+                                 <input id="txtInsuranceOfProfessionalCompensationProvider" class="form-control" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceProvider">
+                                 <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceProvider" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-sm-4 col-xs-12">
+                              <div class="form-group bmd-form-group p-0">
+                                 <label class="label bmd-label-static"> @res.QualificationResources.DisplayInputs.InsuranceCoverage  </label><span class="text-danger">*</span>
+                                 <input class="form-control"  onkeypress="return allowDecimalWithCustomLength(event,15)" type="text" id="txtInsuranceOfProfessionalInsuranceCoverage" asp-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverage">
+                                 <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverage" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-sm-46 col-xs-12">
+                              <div class="form-group bmd-form-group form-check etd-calendar-group p-0">
+                                 <label class="label bmd-label-static">@res.QualificationResources.DisplayInputs.InsuranceCoverageEndDate</label><span class="text-danger">*</span>
+                                 <input class="form-control datepicker-mix datepicker-gregorian inputMask" id="txtInsuranceOfProfessionalInsuranceCoverageEndDate" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverageEndDate">
+                                 <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverageEndDate" class="text-danger"></span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            }
+
+            else if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.LiabilityInsurance)
+            {
+               <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="row">
+                     <div class="col-lg-3 col-sm-3 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                           <select asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" id="dllLiabilityInsurance" onchange="enableLiabilityInsurance()" asp-items="Html.GetEnumSelectList<Enums.QualificationAvailibleNotAvailibleLookup>()" data-live-search="false" class="selectpicker" data-style="select-with-transition" title="Select with Search" data-size="3">
+                              <option selected="selected" value="-99">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose</option>
+                           </select>
+                           <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" class="text-danger"></span>
+                        </div>
+                     </div>
+                     <div class="col-lg-9 col-sm-9 col-xs-12 d-none" id="dvLiabilityInsurance">
+                        <div class="row">
+                           <div class="col-lg-4 col-sm-4 col-xs-12">
+                              <div class="form-group bmd-form-group p-0">
+                                 <label class="label bmd-label-static"> @res.QualificationResources.DisplayInputs.InsuranceProvider  </label><span class="text-danger">*</span>
+                                 <input class="form-control" id="txtLiabilityInsuranceProvider" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceProvider">
+                                 <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceProvider" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-sm-4 col-xs-12">
+                              <div class="form-group bmd-form-group p-0">
+                                 <label class="label bmd-label-static"> @res.QualificationResources.DisplayInputs.InsuranceCoverage  </label><span class="text-danger">*</span>
+                                 <input  onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" id="txtLiabilityInsuranceCoverage" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverage">
+                                 <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverage" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-sm-4 col-xs-12">
+                              <div class="form-group form-check etd-calendar-group bmd-form-group p-0">
+                                 <label class="label bmd-label-static">@res.QualificationResources.DisplayInputs.InsuranceCoverageEndDate</label><span class="text-danger">*</span>
+                                 <input class="form-control datepicker-mix datepicker-gregorian inputMask" id="txtLiabilityInsuranceCoverageEndDate" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverageEndDate">
+                                 <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverageEndDate" class="text-danger"></span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            }
+
+
+            else if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.InsuranceOfGeneralCommercialResponsibility)
+            {
+               <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="row">
+                     <div class="col-lg-3 col-sm-3 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+
+                           <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                           <select asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" onchange="enableCommercialResponsibility()" id="dllCommercialResponsibility" asp-items="Html.GetEnumSelectList<Enums.QualificationAvailibleNotAvailibleLookup>()" data-live-search="false" class="selectpicker" data-style="select-with-transition" title="Select with Search" data-size="3">
+                              <option selected="selected" value="-99">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose</option>
+                           </select>
+                           <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" class="text-danger"></span>
+                        </div>
+                     </div>
+                     <div class="col-lg-9 col-sm-9 col-xs-12 d-none" id="dvInsuranceOfGeneralCommercialResponsibility">
+                        <div class="row">
+                           <div class="col-lg-4 col-sm-4 col-xs-12">
+                              <div class="form-group bmd-form-group p-0">
+
+                                 <label class="label bmd-label-static">@res.QualificationResources.DisplayInputs.InsuranceProvider  </label><span class="text-danger">*</span>
+                                 <input class="form-control" id="txtCommercialResponsibilityProvider" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceProvider">
+                                 <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceProvider" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-sm-4 col-xs-12">
+                              <div class="form-group bmd-form-group p-0">
+                                 <label class="label bmd-label-static"> @res.QualificationResources.DisplayInputs.InsuranceCoverage  </label><span class="text-danger">*</span>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" id="txtCommercialResponsibilityInsuranceCoverage" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverage">
+                                 <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverage" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-sm-4 col-xs-12">
+                              <div class="form-group bmd-form-group p-0 form-check etd-calendar-group">
+                                 <label class="label bmd-label-static">@res.QualificationResources.DisplayInputs.InsuranceCoverageEndDate </label><span class="text-danger">*</span>
+                                 <input class="form-control datepicker-mix datepicker-gregorian inputMask" id="txtCommercialResponsibilityInsuranceCoverageEndDate" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverageEndDate">
+                                 <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverageEndDate" class="text-danger"></span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            }
+
+
+            InsuranceFlag = false;*@
+                        }
+
+                     }
+
+                  </div>
+                  <br />
+                  <div class="col-12 table-responsive" id="dvtable">
+                     <h5 class="text-primary">
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AllProject
+                        <button class="btn btn-primary m-0 pull-right" onclick="return showPoupProject()" style="padding: 8px 20px;">
+                           <i class="material-icons">add</i> 
+                           @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.btnAddProject
+                        </button>
+                     </h5>
+                     <hr />
+
+                     <table class="table  table-bordered table-striped" id="tblSupplierProject">
+                        <caption>مشاريع المورد</caption>
+                     </table>
+
+                  </div>
+               </div>
+               <div class="tab-pane col-md-12" id="section2">
+                  <h5 class="text-primary">  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.FinanacialDetails  </h5>
+                  <div class="table-responsive">
+                     <table class="table  table-bordered table-striped">
+                        <caption>البيانات المالية</caption>
+                        <thead style="background: #29ad6f38;">
+                           <tr>
+                               <th scope="col">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.LastFinancialDetailsForThreeYear
+                              </th>
+                               <th scope="col">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CurrentYear
+                              </th>
+
+                               <th scope="col">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.previousYear
+                              </th>
+                               <th scope="col">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.BeforePreviousYear
+                              </th>
+                           </tr>
+                           <tr>
+                              <th colspan="4" scope="col">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.BalanceSheet
+                              </th>
+                           </tr>
+                        </thead>
+                        <tbody id="bdySupplierConfigData">
+                           <tr>
+                              <td>
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Assetslbl
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.CurrentAssets">
+                                 <span asp-validation-for="@Model.CurrentAssets" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.CurrentAssets1">
+                                 <span asp-validation-for="@Model.CurrentAssets" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.CurrentAssets2">
+                                 <span asp-validation-for="@Model.CurrentAssets2" class="text-danger"></span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CashEquivalents
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.CashEquivalents">
+                                 <span asp-validation-for="@Model.CashEquivalents" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.CashEquivalents1">
+                                 <span asp-validation-for="@Model.CashEquivalents1" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.CashEquivalents2">
+                                 <span asp-validation-for="@Model.CashEquivalents2" class="text-danger"></span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AccountsReceivable
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.AccountsReceivable">
+                                 <span asp-validation-for="@Model.AccountsReceivable" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.AccountsReceivable1">
+                                 <span asp-validation-for="@Model.AccountsReceivable1" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.AccountsReceivable2">
+                                 <span asp-validation-for="@Model.AccountsReceivable2" class="text-danger"></span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.lblTotalassets
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.TotalAssets">
+                                 <span asp-validation-for="@Model.TotalAssets" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.TotalAssets1">
+                                 <span asp-validation-for="@Model.TotalAssets1" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.TotalAssets2">
+                                 <span asp-validation-for="@Model.TotalAssets2" class="text-danger"></span>
+                              </td>
+                           </tr>
+
+
+                           <tr>
+                              <td>
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CurrentLiabilities
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.CurrentLiabilities">
+                                 <span asp-validation-for="@Model.CurrentLiabilities" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input class="form-control" onkeypress="return allowDecimalWithCustomLength(event,15)" type="text" asp-for="@Model.CurrentLiabilities1">
+                                 <span asp-validation-for="@Model.CurrentLiabilities1" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.CurrentLiabilities2">
+                                 <span asp-validation-for="@Model.CurrentLiabilities2" class="text-danger"></span>
+                              </td>
+                           </tr>
+
+
+                           <tr>
+                              <td>
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.lblTotalLiabilities
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.TotalLiabilities">
+                                 <span asp-validation-for="@Model.TotalLiabilities" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.TotalLiabilities1">
+                                 <span asp-validation-for="@Model.TotalLiabilities1" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.TotalLiabilities2">
+                                 <span asp-validation-for="@Model.TotalLiabilities2" class="text-danger"></span>
+                              </td>
+                           </tr>
+
+                           <tr>
+                              <td>
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.lblTotalRevenue
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.TotalRevenue">
+                                 <span asp-validation-for="@Model.TotalRevenue" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.TotalRevenue1">
+                                 <span asp-validation-for="@Model.TotalRevenue1" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.TotalRevenue2">
+                                 <span asp-validation-for="@Model.TotalRevenue2" class="text-danger"></span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.lblNetProfit
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.NetProfit">
+                                 <span asp-validation-for="@Model.NetProfit" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.NetProfit1">
+                                 <span asp-validation-for="@Model.NetProfit1" class="text-danger"></span>
+                              </td>
+                              <td>
+                                 <input onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.NetProfit2">
+                                 <span asp-validation-for="@Model.NetProfit2" class="text-danger"></span>
+                              </td>
+                           </tr>
+
+                        </tbody>
+
+                        <tbody hidden>
+                           @for (int i = 0; i < Model.lstQualificationSupplierFinancialDataModel.Count; i++)
+                           {
+                              <tr>
+                                 <td>
+                                    <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].IsConfigure" />
+                                    <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].QualificationSubCategoryId" />
+                                    <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].QualificationConfigurationId" />
+                                    <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].QualificationItemId" />
+                                    <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].QualificationCategoryId" />
+                                    <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].QualificationItemTypeId" />
+                                    <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].Min" />
+                                    <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].Max" />
+                                    <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].QualificationTypeId" />
+                                    <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].Value" />
+                                    <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].Weight" />
+                                 </td>
+                              </tr>
+                           }
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+
+   <div class="modal fade " id="SupplierProjectModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">  المشاريع السابقة المشابهة في نطاق الأعمال </h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               <input type="hidden" id="hdProjectIdDeleted" />
+               <div class="row">
+                  <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group p-0 form-check etd-calendar-group">
+                        <label class="label bmd-label-static noSpecial">تاريخ بداية المشروع</label><span class="text-danger">*</span>
+                        <input class="form-control datepicker-mix inputMask" id="txtProjectStartDate" />
+                     </div>
+                  </div>
+
+                  <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group p-0 form-check etd-calendar-group">
+                        <label class="label bmd-label-static noSpecial">تاريخ نهاية المشروع</label><span class="text-danger">*</span>
+                        <input class="form-control datepicker-mix inputMask" id="txtProjectEndDate" />
+                     </div>
+                  </div>
+
+                  <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group p-0">
+                        <label class="label bmd-label-static noSpecial">اسم المشروع</label><span class="text-danger">*</span>
+                        <input class="form-control" id="txtContractName" />
+                     </div>
+                  </div>
+
+                  <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group p-0">
+                        <label class="label bmd-label-static noSpecial">وصف المشروع</label><span class="text-danger">*</span>
+                        <input class="form-control" id="txtDescription" />
+                     </div>
+                  </div>
+
+                  <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group p-0">
+                        <label class="label bmd-label-static noSpecial">قيمة المشروع</label><span class="text-danger">*</span>
+                        <input class="form-control" id="txtProjectValue" onkeypress="return allowDecimalWithCustomLength(event,15)" />
+                     </div>
+                  </div>
+
+                  <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group p-0">
+                        <label class="label bmd-label-static noSpecial">اسم صاحب العمل</label><span class="text-danger">*</span>
+                        <input class="form-control" id="txtProjectOwnerName" />
+                     </div>
+                  </div>
+
+                  <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group p-0">
+                        <label class="label bmd-label-static noSpecial">    الهاتف   </label><span class="text-danger">*</span>
+                        <input class="form-control" id="txtProjectPhoneNo" maxlength="10" onkeypress="return allowNumeric(event)" />
+                        <span id="spvalidatePhone" style="display:none;" class="text-danger">يجب أن يبدأ رقم الهاتف ب  01 أو 05 ومكون من 10 أرقام</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group p-0">
+                        <label class="label bmd-label-static noSpecial">     البريد الالكتروني  </label><span class="text-danger">*</span>
+                        <input type="text" class="form-control" id="txtProjectMailAddress" />
+                        <span id="spvalidateMail" style="display:none;" class="text-danger">ادخل ايميل صحيح</span>
+                     </div>
+                  </div>
+
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="button" onclick="AddSuuplierProject()">اضافة</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="modal fade" id="deleteProjectModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">تأكيد </h5>
+
+            </div>
+            <div class="modal-body">
+               هل انت متاكد من الحذف ؟
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary btn-sm m-1" onclick="DeleteProjectRow()" name="button">نـعم</button>
+               <button type="button" class="btn btn-danger  btn-link btn-sm m-1" data-dismiss="modal"> لا</button>
+
+
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<script>
+   var ArrIndex = 0;
+   var Flag = 0;
+   var array = new Array();
+
+
+   $(document).ready(function () {
+
+      if ('@editMode' == 'True') {
+
+         checkSupplierProject();
+         checkInsuranceUpdate();
+
+      }
+
+      });
+
+
+   function checkSupplierProject() {
+      
+      var _array = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.lstQualificationSupplierProjectModel))');
+      if (_array != 'null' &&   _array != null) {
+         for (var i = 0; i < _array.length; i++) {
+            var Obj = {
+               Flag: "rwProject" + Flag,
+               StartDate: _array[i].StartDateHijri,
+               EndDate: _array[i].EndDateHijri,
+               ContractName: _array[i].ContractName,
+               Description: _array[i].Description,
+               ContractValue: _array[i].ContractValue,
+               OwnerName: _array[i].OwnerName,
+               PhoneNumber: _array[i].PhoneNumber,
+               EmailAddress: _array[i].EmailAddress
+            };
+            Flag++;
+            array.push(Obj);
+         }
+         DrawProjectTable();
+      }
+   }
+
+   function preventPasteEvent(e) {
+      e.preventDefault();
+   }
+
+   function checkInsuranceUpdate() {
+
+
+          var InsuranceProfessional = $("#dllInsuranceOfProfessional").val();
+      if (InsuranceProfessional == '@((Int16)Enums.QualificationAvailibleNotAvailibleLookup.Availible )') {
+         $("#dvInsuranceOfProfessionalCompensation").removeClass('d-none')
+
+      } else {
+         //$("#dvInsuranceOfProfessionalCompensation").addClass('d-none')
+         // $('#txtInsuranceOfProfessionalCompensationProvider').rules("remove", "required");
+         //$('#txtInsuranceOfProfessionalCompensationProvider').rules("remove", "required");
+         //$('#txtInsuranceOfProfessionalInsuranceCoverage').rules("remove", "required");
+         //$('#txtInsuranceOfProfessionalInsuranceCoverageEndDate').rules("remove", "required");
+         //$('#FileReferenceForInsurance').rules("remove", "required");
+
+         $("#txtInsuranceOfProfessionalCompensationProvider").val('0')
+         $("#txtInsuranceOfProfessionalInsuranceCoverage").val('0')
+          $('#txtInsuranceOfProfessionalInsuranceCoverageEndDate').val('');
+      }
+
+
+          var Value = $("#dllCommercialResponsibility").val();
+      if (Value == '@((Int16)Enums.QualificationAvailibleNotAvailibleLookup.Availible )') {
+         $("#dvInsuranceOfGeneralCommercialResponsibility").removeClass('d-none')
+      } else {
+         $("#dvInsuranceOfGeneralCommercialResponsibility").addClass('d-none')
+         // $("#dvInsuranceOfGeneralCommercialResponsibility").addClass('d-none')
+         //$('#txtCommercialResponsibilityProvider').rules("remove", "required");
+         //$('#txtCommercialResponsibilityInsuranceCoverage').rules("remove", "required");
+         //$('#txtCommercialResponsibilityInsuranceCoverageEndDate').rules("remove", "required");
+         //$('#FileReferenceForInsurance').rules("remove", "required");
+
+           $("#txtCommercialResponsibilityProvider").val('0')
+         $("#txtCommercialResponsibilityInsuranceCoverage").val('0')
+         $('#txtCommercialResponsibilityInsuranceCoverageEndDate').val('');
+      }
+
+        var Value = $("#dllLiabilityInsurance").val();
+      if (Value == '@((Int16)Enums.QualificationAvailibleNotAvailibleLookup.Availible )') {
+            $("#dvLiabilityInsurance").removeClass('d-none')
+      } else {
+         //$("#dvLiabilityInsurance").addClass('d-none')
+         //   $("#dvLiabilityInsurance").addClass('d-none')
+         //$('#txtLiabilityInsuranceProvider').rules("remove", "required");
+         //$('#txtLiabilityInsuranceCoverage').rules("remove", "required");
+         //$('#txtLiabilityInsuranceCoverageEndDate').rules("remove", "required");
+         //$('#FileReferenceForInsurance').rules("remove", "required");
+
+           $("#txtLiabilityInsuranceCoverage").val('0')
+         $("#txtLiabilityInsuranceProvider").val('0')
+          $('#txtLiabilityInsuranceCoverageEndDate').val('');
+      }
+
+   }
+
+   function enableInsuranceOfProfessionalCompensation() {
+
+      var InsuranceProfessional = $("#dllInsuranceOfProfessional").val();
+
+      if (InsuranceProfessional == '@((Int16)Enums.QualificationAvailibleNotAvailibleLookup.Availible )')
+      {
+         $("#dvInsuranceOfProfessionalCompensation").removeClass('d-none')
+         requireInput('txtInsuranceOfProfessionalCompensationProvider',    '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+         requireInput('txtInsuranceOfProfessionalInsuranceCoverage', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+         requireInput('txtInsuranceOfProfessionalInsuranceCoverageEndDate', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+         requireInput('FileReferenceForInsurance', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+
+      } else {
+         $('#txtInsuranceOfProfessionalCompensationProvider').rules("remove", "required");
+         $("#dvInsuranceOfProfessionalCompensation").addClass('d-none')
+         $('#txtInsuranceOfProfessionalCompensationProvider').rules("remove", "required");
+         $('#txtInsuranceOfProfessionalInsuranceCoverage').rules("remove", "required");
+         $('#txtInsuranceOfProfessionalInsuranceCoverageEndDate').rules("remove", "required");
+         $('#FileReferenceForInsurance').rules("remove", "required");
+
+
+      }
+   }
+
+   function enableCommercialResponsibility() {
+
+       var Value = $("#dllCommercialResponsibility").val();
+      if (Value == '@((Int16)Enums.QualificationAvailibleNotAvailibleLookup.Availible )') {
+         $("#dvInsuranceOfGeneralCommercialResponsibility").removeClass('d-none')
+         requireInput('txtCommercialResponsibilityProvider',    '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+         requireInput('txtCommercialResponsibilityInsuranceCoverage', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+         requireInput('txtCommercialResponsibilityInsuranceCoverageEndDate', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+         requireInput('FileReferenceForInsurance', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+      } else {
+
+         $("#dvInsuranceOfGeneralCommercialResponsibility").addClass('d-none')
+         $('#txtCommercialResponsibilityProvider').rules("remove", "required");
+         $('#txtCommercialResponsibilityInsuranceCoverage').rules("remove", "required");
+         $('#txtCommercialResponsibilityInsuranceCoverageEndDate').rules("remove", "required");
+         $('#FileReferenceForInsurance').rules("remove", "required");
+
+      }
+   }
+
+   function enableLiabilityInsurance() {
+
+      var Value = $("#dllLiabilityInsurance").val();
+      if (Value == '@((Int16)Enums.QualificationAvailibleNotAvailibleLookup.Availible )') {
+
+         $("#dvLiabilityInsurance").removeClass('d-none')
+         requireInput('txtLiabilityInsuranceProvider',    '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+         requireInput('txtLiabilityInsuranceCoverage', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+         requireInput('txtLiabilityInsuranceCoverageEndDate', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+         requireInput('FileReferenceForInsurance', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+      }
+      else
+      {
+         $("#dvLiabilityInsurance").addClass('d-none')
+         $('#txtLiabilityInsuranceProvider').rules("remove", "required");
+         $('#txtLiabilityInsuranceCoverage').rules("remove", "required");
+         $('#txtLiabilityInsuranceCoverageEndDate').rules("remove", "required");
+         $('#FileReferenceForInsurance').rules("remove", "required");
+
+      }
+   }
+
+
+
+   function showPoupProject() {
+
+      clearPopup();
+      $("#SupplierProjectModal").modal('show');
+      return false;
+   }
+
+
+   function mailValidation(email)
+   {
+
+       var expr = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+       if (expr.test(email)) {
+         return true;
+      }
+      else {
+         return false;
+      }
+    }
+
+   function validPhoneNo(phone) {
+
+      if (phone != "") {
+         if (phone.length != 10 || phone[0] != 0 || (phone[1] != 5 && phone[1] != 1)) {
+            return false;
+         }
+         else {
+            return true;
+         }
+      }
+   }
+
+   function AddSuuplierProject( ) {
+
+      $("#spvalidatePhone").css('display', 'none')
+      $("#spvalidateMail").css('display', 'none')
+      var ContractName = $("#txtContractName").val();
+      var OwnerName = $("#txtProjectOwnerName").val();
+      var endDate = $("#txtProjectEndDate").val();
+      var startDate = $("#txtProjectStartDate").val();
+      var Description = $("#txtDescription").val();
+      var ContractValue = $("#txtProjectValue").val();
+      var PhoneNo = $("#txtProjectPhoneNo").val();
+      var MailAddress = $("#txtProjectMailAddress").val();
+
+      if (ContractName == '' || OwnerName == '' || endDate == '' || startDate == '' || Description == '' || ContractValue == '' || PhoneNo == '' || MailAddress == '' ) {
+         AlertFun(  'من فضلك ادخل جميع الحقول' , alertMessageType.Danger);
+         return false;
+      }
+
+      //Valid Project Dates
+
+
+      var startDateGregorian
+      if ($('#cb_txtProjectStartDate').is(':checked')) {
+         var i = startDate.split('/');
+         startDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         startDateGregorian = convertUmmalquraToGregorian(startDate);
+      }
+
+      startDateGregorian = new Date(startDateGregorian);
+
+      var endDateGregorian
+      if ($('#cb_txtProjectEndDate').is(':checked')) {
+         var i = endDate.split('/');
+         endDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         endDateGregorian = convertUmmalquraToGregorian(endDate);
+      }
+
+      endDateGregorian = new Date(endDateGregorian);
+
+      if (startDateGregorian >= endDateGregorian) {
+         AlertFun('من فضلك تأكد من تاريخ بداية ونهاية المشروع', alertMessageType.Danger);
+         return false;
+      }
+
+
+      var mailValid = mailValidation(MailAddress);
+      if (!mailValid) {
+         $("#spvalidateMail").css('display', 'block')
+         return false
+      }
+
+      var phoneValid = validPhoneNo(PhoneNo);
+      if (!phoneValid) {
+         $("#spvalidatePhone").css('display', 'block')
+         return false
+      }
+
+
+      var Obj = {
+         Flag: "rwProject" + Flag,
+         StartDate: startDate,
+         EndDate: endDate,
+         ContractName: ContractName,
+         Description: Description,
+         ContractValue: ContractValue,
+         OwnerName: OwnerName,
+         PhoneNumber: PhoneNo,
+         EmailAddress: MailAddress
+      };
+      Flag++;
+      array.push(Obj);
+      $("#SupplierProjectModal").modal('hide');
+      DrawProjectTable();
+
+   }
+
+
+
+   function clearPopup() {
+       $("#txtContractName").val('');
+       $("#txtProjectOwnerName").val('');
+       $("#txtProjectEndDate").val('');
+       $("#txtProjectStartDate").val('');
+       $("#txtDescription").val('');
+       $("#txtProjectValue").val('');
+       $("#txtProjectPhoneNo").val('');
+       $("#txtProjectMailAddress").val('');
+   }
+
+   function DrawProjectTable() {
+
+
+      var Str; var projectVal = 0;
+      $("#txtNumberOfProjectLastThreeYear").val('');
+      $('#tblSupplierProject').empty();
+      Str = '<thead ><tr><th>#</th><th>تاريخ بداية المشروع</th><th>تاريخ نهاية المشروع</th><th>اسم العقد</th><th>وصف نطاق الأعمال</th><th>قيمة العقد</th><th>اسم صاحب العمل</th><th>وسيلة الاتصال (هاتف)</th><th>وسيلة الاتصال (بريد الكتروني)</th><th>خيارات</th></tr></thead ><tbody id="ProjectsTable">';
+
+      if (array.length > 0) {
+         for (var i = 0; i < array.length; i++) {
+
+            Str += '<tr id="' + array[i].Flag + '">' +
+               '<td>' + Number(i + 1) + '</td>' +
+               '<td><input  type="hidden" value="' + array[i].StartDate + '"  name="lstQualificationSupplierProjectModel[' + i + '].StartDate" /><span>' + array[i].StartDate + '</span></td>' +
+               '<td><input  type="hidden" value="' + array[i].EndDate + '"  name="lstQualificationSupplierProjectModel[' + i + '].EndDate" /><span>' + array[i].EndDate + '</span></td>' +
+               '<td><input  type="hidden" value="' + array[i].ContractName + '"  name="lstQualificationSupplierProjectModel[' + i + '].ContractName" /><span>' + array[i].ContractName + '</span></td>' +
+               '<td><input  type="hidden" value="' + array[i].Description + '"  name="lstQualificationSupplierProjectModel[' + i + '].Description" /><span>' + array[i].Description + '</span></td>' +
+               '<td><input  type="hidden" value="' + array[i].ContractValue + '"  name="lstQualificationSupplierProjectModel[' + i + '].ContractValue" /><span>' + array[i].ContractValue + '</span></td>' +
+               '<td><input  type="hidden" value="' + array[i].OwnerName + '"  name="lstQualificationSupplierProjectModel[' + i + '].OwnerName" /><span>' + array[i].OwnerName + '</span></td>' +
+               '<td><input  type="hidden" value="' + array[i].PhoneNumber + '"  name="lstQualificationSupplierProjectModel[' + i + '].PhoneNumber" /><span>' + array[i].PhoneNumber + '</span></td>' +
+               '<td><input  type="hidden" value="' + array[i].EmailAddress + '"  name="lstQualificationSupplierProjectModel[' + i + '].EmailAddress" /><span>' + array[i].EmailAddress + '</span></td>' +
+               '<td style="width:160px"><button  data-toggle="modal" onclick="showDeletePopup(' + array[i].Flag + ')" type="button"  data-target="#deleteProjectModal" class="btn-danger btn btn-sm" > حذف</button ></td>' +
+               '</tr>';
+
+            projectVal = parseFloat(projectVal) +  parseFloat(array[i].ContractValue);
+         }
+         $("#txtNumberOfProjectLastThreeYear").val(array.length);
+         $("#txtCostOfProjectLastThreeYear").val(projectVal.toFixed(2));
+         $('#tblSupplierProject').append('</tbody>' + Str);
+         pagingProjectTable();
+      } else {
+         $("#txtNumberOfProjectLastThreeYear").val('0');
+         $("#txtCostOfProjectLastThreeYear").val('0');
+      }
+
+   }
+
+   function pagingProjectTable() {
+
+
+      $("#dvtable").find('nav').remove();
+      $('#ProjectsTable').paginathing({
+         // Limites your pagination number
+         // false or number
+         limitPagination: false,
+         perPage: 10,
+         // Pagination controls
+         prevNext: true,
+         firstLast: true,
+         prevText: '&laquo;',
+         nextText: '&raquo;',
+         firstText: '&laquo;&laquo;',
+         lastText: '&raquo;&raquo;',
+         containerClass: 'PageNav col-12 m-5 m-auto text-center',
+         ulClass: 'pagination pagination-primary',
+         liClass: 'page-item',
+         activeClass: 'active',
+         insertAfter: '#tblSupplierProject',
+         disabledClass: 'disabled',
+      })
+   }
+
+
+   function showDeletePopup(rowId) {
+
+      $("#hdProjectIdDeleted").val(rowId.id);
+   }
+
+   function DeleteProjectRow() {
+
+      var rowId = $("#hdProjectIdDeleted").val();
+       $("#" + rowId).remove();
+
+      $.each(array, function (i) {
+
+         if (array[i].Flag === rowId) {
+            array.splice(i, 1);
+            return false;
+         }
+      });
+      $("#deleteProjectModal").modal('hide')
+      DrawProjectTable();
+   }
+
+
+
+
+
+
+</script>

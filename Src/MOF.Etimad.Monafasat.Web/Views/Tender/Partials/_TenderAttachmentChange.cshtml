@@ -1,0 +1,40 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderAttachmentModel
+
+<div class="col-12">
+   <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ChangeRequest</h4>
+</div>
+
+@if (Model.TenderTypeId != (int)Enums.TenderType.PreQualification && Model.TenderTypeId != (int)Enums.TenderType.PostQualification)
+{
+<div class="col-md-6 col-sm-12 col-xs-12">
+   <ul class="list-group form-details-list">
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletAndAttachments
+            </div>
+            <div class="col-8 etd-item-info">
+               @foreach (var item in Model.AttachmentsChanges.Where(a => a.AttachmentTypeId == (int)Enums.AttachmentType.TenderBookletAttachment).ToList())
+               {
+                  <a href="#" onclick="RedirectURL('@item.FileNetReferenceId','@item.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                     @item.Name
+                     @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.EtimadOfficer))
+                     {
+                        @if (item.DeletedAttachmentId == null)
+                        {
+                           <span class="badge badge-primary pull-right m-1">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddAction</span>
+                        }
+                        else
+                        {
+                           <span class="badge badge-danger pull-right m-1"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DelteAction</span>
+                        }
+                     }
+                  </a>
+               }
+            </div>
+         </div>
+      </li>
+   </ul>
+</div>
+
+}

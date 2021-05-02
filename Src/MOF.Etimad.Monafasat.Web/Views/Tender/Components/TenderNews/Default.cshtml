@@ -1,0 +1,73 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderNewsModel
+@using  MOF.Etimad.Monafasat.Resources.TenderResources
+
+
+
+<div class="col-md-6 col-sm-12 col-xs-12">
+
+   <ul class="list-group form-details-list">
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreationDate
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>@(Model.TenderCreationDate)</span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @(Model.OfferOpeningDate)
+               </span>
+            </div>
+         </div>
+      </li>
+
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtendDates
+            </div>
+            @if (Model.TenderRevisionDate != null)
+            {
+               <div class="col-8 etd-item-info">
+                  <span id="subPurposSapn" style="display:block">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate<br/>
+                     @(Model.TenderRevisionDate.OffersOpeningDate)
+                  </span><br />
+                  <span id="subPurposSapn" style="display:block">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate<br />
+                     @(Model.TenderRevisionDate.LastOfferPresentationDate)
+                  </span><br />
+                  <span id="subPurposSapn" style="display:block">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate<br />
+                     @(Model.TenderRevisionDate.LastEnqueriesDate)
+                  </span>
+               </div>
+            }
+         </div>
+      </li>
+
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingDate
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @(Model.OfferAwardingDate)
+               </span>
+            </div>
+         </div>
+      </li>
+   </ul>
+</div>

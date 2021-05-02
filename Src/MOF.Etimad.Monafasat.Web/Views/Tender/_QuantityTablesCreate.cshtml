@@ -1,0 +1,149 @@
+@model MOF.Etimad.Monafasat.ViewModel.QuantityTableStepDTO
+@{
+   var count = 0;
+}
+@foreach (var template in Model.TemplateFormDTOs)
+{
+   @foreach (var form in template.FormDTOs)
+   {
+      count++;
+      <div class="card-header" role="tab" id='headingOne@(count)'>
+         @if (!Model.IsReadOnly)
+         {
+            <div>
+               <button type="button" data-toggle="tooltip" title="@(form.FormName + " - " + template.TemplateName)" class="btn btn-primary btn-sm pull-right m-2" id="@form.FormId" data-nextTableId="collapsEnd@(count)" onclick="addTable(@form.FormId, @Model.TenderID, '@template.TemplateName')">إضافة جدول <span class="material-icons">add</span></button>
+               <button type="button" class="btn btn-primary btn-sm pull-right m-2" onclick="GenerateExcelTemplateNew(0,0,@Model.TemplateYears,'@form.FormId',true)"> تحميل قالب فارغ <span class="material-icons">cloud_download</span></button>
+            </div>}
+         <h4 class="m-0 p-2">
+            <a data-toggle="collapse" name="collapseHeader" href="#collapse@(count)" aria-expanded="false" aria-controls="collapse@(count)" data-tableId="@(form.Tables.Count > 0 ? form.Tables[0].TableId : 0)" id="collapse_@form.FormId" onclick="loadTables(this, @Model.TenderID, @form.FormId)">
+               @(form.FormName + (string.IsNullOrEmpty(template.TemplateName) ? " " : (" - " + template.TemplateName)))
+               <i class="material-icons pull-left">keyboard_arrow_down</i>
+            </a>
+         </h4>
+      </div>
+      <div id="collapse@(count)" class="collapse" role="tabpanel" aria-labelledby='collapse@(count)' data-parent="#accordion">
+         <div class="row">
+            <div class="col-2">
+               <button type="button" class="btn btn-sm btn-default d-print-none pull-left m-3 p-2 prevQuantityTable">السابق</button>
+            </div>
+            <div class="col-8">
+               <ul id="tableHeaderContainer_@form.FormId" class="nav nav-pills pull-left p-0 m-3" style="min-height: 48px; white-space:normal">
+
+                  @foreach (var table in form.Tables)
+                  {
+                     @:<li class="nav-item mb-2" data-toggle="tooltip" title="@table.TableName">
+                        @: <a class="nav-link text-center" id="tableIndex_@table.TableId" href="#tableIndex_@table.TableId" data-tableId="@table.TableId" onclick="changeTable(@Model.TenderID, @table.TableId, @form.FormId)" data-toggle="tab" style="padding: 4px 4px;box-shadow: none;">@table.TableName</a>
+                     @:</li>
+                  }
+               </ul>
+            </div>
+            <div class="col-2">
+               <button type="button" class="btn btn-sm btn-primary d-print-none pull-right m-3 p-2 nextQuantityTable">التالي</button>
+            </div>
+         </div>
+         <div id="tableContainDiv_@(form.FormId)"></div>
+      </div>
+   }
+}
+<script>
+
+ 
+   $('.nextQuantityTable').click(function () {
+      $(this).parent().parent().find('ul.nav-pills').find('li a.active').parent().next().find('a').click();
+   });
+   $('.prevQuantityTable').click(function () {
+      $(this).parent().parent().find('ul.nav-pills').find('li a.active').parent().prev().find('a').click();
+   });
+   function changeTable(tenderId, tableId, formId) {
+      $('#collapse_' + formId).attr('data-tableId', tableId);
+      Tender.resource_url = '/Tender/GetTenderTableQuantityItemsAsync?tenderId=' + tenderId + '&quantityTableId=' + tableId + '&formId=' + formId + '&isReadOnly=@Model.IsReadOnly';
+   }
+
+   function loadTables(e, tenderId, formId) {
+      debugger;
+      var tableId = $(e).attr('data-tableId');
+      if ($(e).attr('aria-expanded') == 'true') {
+         $("#tableContainDiv_" + formId).html('');
+         return;
+      }
+      else
+         $('a[name=collapseHeader][aria-expanded=true]').click();
+      $('#loader').show();
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $.post('/Tender/GetTenderQuantityTableViewComponent?tenderId=' + tenderId + '&tableId=' + tableId + '&formId=' + formId + '&isReadOnly=@Model.IsReadOnly', {
+         __RequestVerificationToken: token,
+      }).done(function (data) {
+        // debugger;
+         //setTimeout(function () {
+         //   $('#tableHeaderContainer_' + formId + ' li').addClass('mb-2');
+         //   $('#tableHeaderContainer_' + formId + ' li a').css('box-shadow', 'none');
+
+         //})
+
+         $("#tableContainDiv_" + formId).html(data);
+         $('#tableHeaderContainer_' + formId + ' li a').removeClass('active');
+         $('#tableHeaderContainer_' + formId + ' li a').removeClass('show');
+         $('#tableHeaderContainer_' + formId + ' li a[data-tableId=' + tableId + ']').addClass('active');
+         $('#tableHeaderContainer_' + formId + ' li a[data-tableId=' + tableId + ']').addClass('show');
+         $('#loader').hide();
+
+      }).fail(function (ex) {
+         $('#LoadingSite').fadeOut();
+         console.log(ex);
+         AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+      });
+   }
+   function DeleteExistinghtmlRow(e) {
+      //debugger
+      DeletehtmlRow(e);
+      Tender.$refs.vpaginator.fetchData(Tender.resource_url.replace('&quantityTableId=0&', '&quantityTableId=' + e.formTableId + '&'));
+   }
+   function GenerateExcelTemplate(url) {
+      window.location = url
+   }
+   var GenerateExcelTemplateNew = function (tableId, tenderid, yearscount, formid) {
+      try {
+         window.location = '/Tender/ExportTenderTableQuantityItemsAsync_New?tableId=' + tableId + '&isNewChange=false&tenderId=' + tenderid + '&yearsCount= ' + yearscount + '&formId= ' + formid + '&isEmpty=true';
+      } catch (e) {
+         location.reload();
+      }
+   }
+   function GenerateMandatoryListExcel() {
+      window.location = "/Tender/GetAllMandatoryListProductsForExport";
+   }
+   //Append New Row to Table Or replace Existing One
+   function AddEditRow(Data) {
+      if (typeof Data.formHtml == "undefined" || Data.formHtml == "undefined") {
+         location.reload();
+         }
+      if (Data.indexOf && Data.indexOf('<a class="loginBtn" href="/Account/Login">تسجيل الدخول</a>') > -1)
+         window.location = '/account/logout';
+      var tableselector = "table[name = " + Data.tableId + "] tbody";
+      var EffectedRow = $(tableselector + " .EffectedRow_" + Data.tableId);
+      var MEffectedRow = $(tableselector + " .MEffectedRow_" + Data.tableId);
+      //replace Existing One  (Edit Row Or Altenaitv item)
+      if (EffectedRow.length > 0) {
+         $(EffectedRow).replaceWith(Data.formHtml);
+         $(MEffectedRow).find('#btnAlternative').hide();
+         $(MEffectedRow).removeClass(MEffectedRow);
+         $("table[name = " + Data.tableId + "]  .offerType_td").show();
+         $('.modal').modal('hide');
+      }
+      //Append New Row (new Item)
+      else {
+         var tableselector = "table[name = " + Data.tableId + "] tbody";
+         Data.formHtml = Data.formHtml.replace("tr_0", "tr_" + Data.itemNumber)
+         var cellsCount = $(Data.formHtml).find('td').length - 1;
+         Tender.totalCount += cellsCount;
+         if (Tender.totalCount > Tender.pageSize) {
+            if (Tender.resource_url.indexOf('&quantityTableId=0&') > -1)
+               Tender.resource_url = Tender.resource_url.replace('&quantityTableId=0&', '&quantityTableId=' + Data.formTableId + '&');
+            else
+               Tender.$refs.vpaginator.fetchData(Tender.resource_url.replace('&quantityTableId=0&', '&quantityTableId=' + Data.formTableId + '&'));
+         }
+         else
+            $(tableselector).append(Data.formHtml);
+         $('.modal').modal('hide');
+      }
+   }
+</script>

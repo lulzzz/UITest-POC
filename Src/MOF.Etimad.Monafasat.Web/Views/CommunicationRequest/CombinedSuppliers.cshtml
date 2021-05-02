@@ -1,0 +1,259 @@
+@using res = MOF.Etimad.Monafasat.Resources
+
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailModel
+
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.FinancialOfferDetailsForCombined;
+}
+
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.FinancialOfferDetails</li>
+      </ol>
+   </nav>
+}
+   <div v-cloak id="CombinedSuppliersGrid">
+      <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+         @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+         {
+            <li class="nav-item">
+               <a class="nav-link active" href="#financialOfferDetails" role="tab" data-toggle="tab">
+                  <i class="material-icons">table_chart</i> 
+                  @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.FinancialOfferDetails
+               </a>
+            </li>
+         }
+
+         @if (Model.CombinedSupplierModel.Count == 1)
+         {
+            <li class="nav-item">
+               <a class="nav-link " href="#documentsAttachments" role="tab" data-toggle="tab">
+                  <i class="material-icons">assignment</i> 
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentsAttachments
+               </a>
+            </li>
+         }
+         else
+         {
+            <li class="nav-item">
+               <a asp-action="CombinedSuppliersDetails" asp-controller="Offer" asp-route-tenderIdString="@Model.TenderIDString" asp-route-offeridString="@Model.OfferIdString" asp-route-CombinedIdString="" class="nav-link ">
+                  <i class="material-icons">assignment</i> 
+                  @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CombinedSuppliers
+               </a>
+            </li>
+
+         }
+
+      </ul>
+      <div class="tab-content tab-space p-0">
+         @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+         {
+            <div class="tab-pane active" id="financialOfferDetails">
+               <div class="">
+                  @if (Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.CurrentTender)
+                  {
+                     <div class="">
+                        <div class="card">
+                           <div class="card-body">
+                              <h5 class="title text-primary">@res.OfferResources.DisplayInputs.DiscountAndNotes</h5>
+                              <div id="attachmentDelete">
+                                    <div class="row">
+                                       <div class="col-md-4  col-sm-6 col-xs-12">
+                                          <div class="form-group bmd-form-group">
+                                             <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.Discount</label>
+                                             <label class="form-control">@Model.Discount</label>
+                                          </div>
+                                       </div>
+                                       <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <div class="form-group bmd-form-group">
+                                             <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.Notes</label>
+                                             <label class="form-control">@Model.DiscountNotes</label>
+                                          </div>
+                                       </div>
+                                    </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  }
+               </div>
+            </div>
+
+         }
+
+         @if (Model.CombinedSupplierModel.Count == 1)
+         {
+            <div class="tab-pane " id="documentsAttachments">
+               @*@if (User.IsInRole(RoleNames.OffersOppeningSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppening)
+               {
+                  @await Component.InvokeAsync("OfferAttachmentsUpdate", new { combinedId = Model.CombinedIdString })
+               }
+               else
+               {
+                  @await Component.InvokeAsync("OfferAttachmentsDetails", new { combinedId = Model.CombinedIdString })
+               }*@
+            </div>
+         }
+      </div>
+
+   </div>
+
+
+
+
+
+
+@if (!string.IsNullOrEmpty(Model.CombinedIdString))
+{
+   @*@await Component.InvokeAsync("OfferAttachmentsDetails", new { combinedId = Model.CombinedIdString })*@
+
+   <div class="row">
+      <div class="col">
+         <a class="btn btn-outline-primary btn-link pull-right" asp-action="CombinedSuppliersDetails" asp-controller="Offer" asp-route-tenderIdString="@Model.TenderIDString" asp-route-offeridString="@Model.OfferIdString" asp-route-CombinedIdString="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+      </div>
+      <div class="clearfix"></div>
+   </div>
+}
+else
+{
+   @Html.Partial("~/Views/CommunicationRequest/Partials/_CombinedSuppliersActions.cshtml")
+   <div class="row">
+      <div class="col">
+         <a class="btn btn-outline-primary btn-link pull-right" asp-action="OpenTenderOffers" asp-controller="Tender" asp-route-tenderIdString="@Model.TenderIDString">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+      </div>
+      <div class="clearfix"></div>
+   </div>
+}
+
+
+
+@section scripts{
+   <script>
+
+   var appss = new Vue({
+   el: '#CombinedSuppliersGrid',
+   data: {
+   CombinedSuppliersDetails: [],
+   totalCount: 0,
+   currentPage: 1,
+   pageSize: 10,
+   resource_url: '/CommunicationRequest/GetCombinedSuppliersGridAsync?offerid=' + '@Model.OfferIdString',
+   queryString: ''
+   },
+   methods: {
+   updateResource: function (data) {
+   this.CombinedSuppliersDetails = data;
+   this.totalCount = this.$refs.vpaginator.totalCount;
+   this.currentPage = this.$refs.vpaginator.currentPage;
+   this.pageSize = this.$refs.vpaginator.pageSize;
+      },
+            SelectSupplier: function (CombinedIdString) {
+               return '/CommunicationRequest/CombinedSuppliers/' + '@Model.OfferIdString' + '/' + '@Model.TenderIDString' + '/' + CombinedIdString;
+   }
+
+   }
+   });
+
+
+     var app = new Vue({
+      el: '#financialOfferDetails',
+      data: {
+         isEdit: false,
+         isEmpty: false,
+         isNumber: false
+         //,
+        // QuantitiesTables: tables,
+      },
+      created: function () {
+         this.isEdit = false;
+       },
+       computed: {
+          Adjustedtotal() {
+             
+             for (var i = 0; i < this.QuantitiesTables.length; i++) {
+                return this.QuantitiesTables[i].quantityTableItemForOpeningModel.reduce((Adjustedtotal, item) => {
+                      return Adjustedtotal + item.quantity * item.adjustedPrice;
+                   }, 0);
+             }
+          },
+          AdjustedFinalPrice() {
+             for (var i = 0; i < this.QuantitiesTables.length; i++) {
+                return this.QuantitiesTables[i].quantityTableItemForOpeningModel.reduce((AdjustedFinalPrice, item) => {
+                      return AdjustedFinalPrice + ((item.adjustedVat / 100) * (item.adjustedPrice * item.quantity - (item.quantity * item.adjustedPrice) * (item.adjustedDiscount / 100))) + (item.adjustedPrice * item.quantity - (item.quantity * item.adjustedPrice) * (item.adjustedDiscount / 100));
+                   }, 0);
+             }
+          },
+          FinalTotalPrice() {
+             var ItemTotalPrice = 0;
+             var TablesFinalPrice = 0;
+             for (var j = 0; j < this.QuantitiesTables.length; j++) {
+                if (this.QuantitiesTables[j].quantityTableItemForOpeningModel.length > 0) {
+                   for (var i = 0; i < this.QuantitiesTables[j].quantityTableItemForOpeningModel.length; i++) {
+                      ItemTotalPrice += Number(this.QuantitiesTables[j].quantityTableItemForOpeningModel[i].adjustedPrice) * this.QuantitiesTables[j].quantityTableItemForOpeningModel[i].quantity;
+                   }
+                }
+                else {
+                   TablesFinalPrice += Number(this.QuantitiesTables[j].adjustedTotalPrice);
+                }
+             }
+             return ItemTotalPrice + TablesFinalPrice ;
+          },
+          FinalTotalDiscount() {
+             var ItemTotalDiscount = 0;
+             var TablesFinalDiscount = 0;
+             for (var j = 0; j < this.QuantitiesTables.length; j++) {
+                if (this.QuantitiesTables[j].quantityTableItemForOpeningModel.length > 0) {
+                   for (var i = 0; i < this.QuantitiesTables[j].quantityTableItemForOpeningModel.length; i++) {
+                      ItemTotalDiscount += Number(this.QuantitiesTables[j].quantityTableItemForOpeningModel[i].adjustedDiscount);
+                   }
+                }
+                else {
+                   TablesFinalDiscount += Number(this.QuantitiesTables[j].adjustedTotalDiscount);
+                }
+             }
+             return ItemTotalDiscount + TablesFinalDiscount;
+          },
+          FinalTotalVat() {
+             var ItemTotalVat = 0;
+             var TablesFinalVat = 0;
+             for (var j = 0; j < this.QuantitiesTables.length; j++) {
+                if (this.QuantitiesTables[j].quantityTableItemForOpeningModel.length > 0) {
+                   for (var i = 0; i < this.QuantitiesTables[j].quantityTableItemForOpeningModel.length; i++) {
+                      ItemTotalVat += Number(this.QuantitiesTables[j].quantityTableItemForOpeningModel[i].adjustedVat);
+                   }
+                }
+                else {
+                   TablesFinalVat += Number(this.QuantitiesTables[j].adjustedTotalVat);
+                }
+             }
+             return ItemTotalVat + TablesFinalVat;
+          },
+          FinalTotalPriceAfterVatAndDisconut() {
+             var ItemFinalPrice = 0;
+             var TablesFinalPrice = 0;
+             for (var j = 0; j < this.QuantitiesTables.length; j++) {
+                if (this.QuantitiesTables[j].quantityTableItemForOpeningModel.length > 0) {
+                   for (var i = 0; i < this.QuantitiesTables[j].quantityTableItemForOpeningModel.length; i++) {
+                      var item = this.QuantitiesTables[j].quantityTableItemForOpeningModel;
+                      ItemFinalPrice += ((item[i].adjustedVat / 100) * (item[i].adjustedPrice * item[i].quantity - (item[i].quantity * item[i].adjustedPrice) * (item[i].adjustedDiscount / 100))) + (item[i].adjustedPrice * item[i].quantity - (item[i].quantity * item[i].adjustedPrice) * (item[i].adjustedDiscount / 100));
+                   }
+                }
+                else {
+                   TablesFinalPrice += Number(this.QuantitiesTables[j].adjustedTotalPrice) - Number(this.QuantitiesTables[j].adjustedTotalPrice) * Number(this.QuantitiesTables[j].adjustedTotalDiscount / 100) + (Number(this.QuantitiesTables[j].adjustedTotalPrice) - Number(this.QuantitiesTables[j].adjustedTotalPrice) * Number(this.QuantitiesTables[j].adjustedTotalDiscount / 100)) * Number(this.QuantitiesTables[j].adjustedTotalVat / 100);
+                }
+             }
+             return ItemFinalPrice + TablesFinalPrice;
+          },
+       },
+
+   });
+   </script>
+}

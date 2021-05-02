@@ -1,0 +1,26 @@
+@model MOF.Etimad.Monafasat.ViewModel.AwardingDetailsModel
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails;
+}
+<br />
+<div class="row">
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <h4>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QualifiedSupplier</h4>
+      <table class="table  table-striped text-center table-bordered"  summary="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierName">
+         <caption></caption>
+         <thead>
+            <tr>
+               <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierName</th>
+            </tr>
+         </thead>
+         <tbody class="text-center">
+            @foreach (var item in Model.SupplierNames)
+            {
+               <tr>
+                  <td>@item</td>
+               </tr>
+            }
+         </tbody>
+      </table>
+   </div>
+</div>

@@ -1,0 +1,57 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierExtendOfferDatesAgencyRequestModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.SupplierExtendOfferDatesRequest;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.SupplierExtendOfferDatesRequest</li>
+      </ol>
+   </nav>
+}
+<form method="POST" id="ExtendOfferDatesRequestForm" asp-controller="CommunicationRequest" asp-antiforgery="true" asp-action="CreateSupplierExtendOfferDatesRequestAsync" autocomplete="off">
+   @Html.AntiForgeryToken()
+   <input asp-for="TenderIdString" type="hidden" />
+   <div id="app" v-cloak>
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="ExtendOfferDatesRequestReason" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                     <input asp-for="ExtendOfferDatesRequestReason" class="form-control" onchange="return blockSpecialChar(event)" name="ExtendOfferDatesRequestReason" id="ExtendOfferDatesRequestReason" maxlength="4000" />
+                     <span asp-validation-for="ExtendOfferDatesRequestReason" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-12">
+                  <button type="submit" class="btn btn-primary etd-search-btn" id="btnSave">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+                  </button>
+                  <button class="btn btn-danger etd-search-btn" id="btnCancel" onclick="window.location=@Url.Action("Index","Tender")">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+      </div>
+</form>
+
+<script type="text/javascript">
+   function blockSpecialChar(e) {
+      var newString = "";
+      var stringValue = $(e.currentTarget).val();
+      for (var i = 0; i < stringValue.length; i++) {
+         var k = stringValue[i];
+         var iChars = "!@@#$%^&*()+=-[]\\\';,./{}|\":<>?_×÷،ٍِِِِِ’َ؟?‘ًَُ~ٍِـ`";
+         if (iChars.indexOf(k) == -1)
+            newString = newString + k;
+      }
+      $(e.currentTarget).val(newString);
+   }
+</script>

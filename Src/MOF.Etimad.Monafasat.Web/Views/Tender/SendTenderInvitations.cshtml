@@ -1,0 +1,875 @@
+@using MOF.Etimad.Monafasat.ViewModel
+@model InvitationStepModel
+
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendingInvitations;
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage)</a></li>
+         <li class="breadcrumb-item"><a href="">@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders)</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.TenderDetails)</li>
+      </ol>
+   </nav>
+}
+<link href="~/Etimad-UI/assets/vendor/countryPhoneCodes/style.css" rel="stylesheet" />
+<div class="" id="TenderDetials" v-cloak>
+   @Html.AntiForgeryToken()
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.TenderReferenceNumber)
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @Model.ReferenceNumber
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.TenderName)
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @Model.TenderName
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ExecutionPlace)
+                        </div>
+                        <div class="col-8 etd-item-info">
+
+                           <template v-if="insideKSA">
+                              <span>
+                                 @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.InsideKsa)
+                              </span>
+                           </template>
+
+                           <template v-else>
+                              <span>
+                                 @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.OutsideKsa)
+                              </span>
+                           </template>
+                        </div>
+                     </div>
+                  </li>
+                  @*<li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.OfferPresentationPlace)
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <i class="material-icons pull-left">layers</i>
+                              <span>
+                                 @Model.OfferPresentationPlace
+                              </span>
+                           </div>
+                        </div>
+                     </li>*@
+               </ul>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<form class="form" id="searchCriteriaForm">
+   @Html.AntiForgeryToken()
+   @section pagecontrols{
+   }
+   <div class="" id="SuppliersGrid" v-cloak>
+      <div class="row">
+         <ul class="nav nav-pills nav-pills-icons col-12" role="tablist">
+            <li class="nav-item">
+               <a class="nav-link active show" href="#regSupplier" role="tab" data-toggle="tab" aria-selected="true">
+                  <i class="material-icons">group</i>
+                  @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.RegisteredSuppliers)
+               </a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="#UnregesteredNotification" role="tab" data-toggle="tab" aria-selected="false">
+                  <i class="material-icons">group_add</i>
+                  @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.UnRegisteredSuppliersIn)
+               </a>
+            </li>
+         </ul>
+         <div class="tab-content tab-space col-12">
+            <div class="tab-pane active show" id="regSupplier">
+               <div class="card card-body">
+                  <div class="row">
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <input type="text" class="form-control" name="CommericalRegisterNo" id="commericalRegisterNo" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)">
+                           <input type="hidden" name="InvitationTenderId" value="@(Model.TenderId)" />
+                           <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)</span>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <input type="text" class="form-control" name="CommericalRegisterName" id="commericalRegisterName" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)">
+                           <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)</span>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <select data-live-search="false" id="mainActivityList" name="MainActivitiesId" class="selectpicker" @@change="GetSecondryActitvitiesByParentId()" title="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.MainActivity" v-model="selectedMainActivity" data-style="select-with-transition">
+                              <option value="-1">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                              <option :value="ac.id" v-for="ac in MainActitvities">{{ac.name}}</option>
+                           </select> <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.MainActivity</span>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <select data-live-search="false" id="secondryActivityList" name="SubActivitesId" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.SecondaryActivity" v-model="selectedSecondryActivity" data-style="select-with-transition">
+                              <option value="-1">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                              <option :value="ac.id" v-for="ac in SecondaryActivities">{{ac.name}}</option>
+                           </select> <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.SecondaryActivity</span>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <input type="text" class="form-control" name="ActivityDescription" id="activityDescription" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ActivityDescription) ">
+                           <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ActivityDescription)</span>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group has-success bmd-form-group">
+                           <select id="cityNameList" data-live-search="true" class="selectpicker" name="CityName" data-style="select-with-transition" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.City)" data-size="7">
+                              <option value="" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.City)">
+                                 @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose)
+                              </option>
+                              <option v-for="city in cities" v-bind:value="city.name">
+                                 {{city.name}}
+                              </option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <input type="text" class="form-control" name="EMail" id="eMail" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Email) ">
+                           <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Email)</span>
+                        </div>
+                     </div>
+                     <div hidden="hidden" class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <input type="text" class="form-control" name="CivilRegisterNo" id="civilRegisterNo" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.CivilRegisterNo) ">
+                           <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.CivilRegisterNo)</span>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div hidden="hidden" class="row">
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group has-success bmd-form-group">
+                           <select v-model="selected" v-on:change="getSuppliersById(selected)" id="SuppliersList" name="MainActivitiesId" data-live-search="false" class="selectpicker" data-style="select-with-transition" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SelectMainActivity)" data-size="7">
+                              <option v-for="sup in SuppliersDD" v-bind:value="sup.SubjectId">
+                                 {{sup.username}}
+                              </option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group has-success bmd-form-group">
+                           <select id="subSuppliersList" data-live-search="false" class="selectpicker" name="SubActivitesId" data-style="select-with-transition" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SelectSubActivity) " data-size="7">
+                              <option v-for="sup in subSuppliers" v-bind:value="sup.supplierId">
+                                 {{sup.supplierName}}
+                              </option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <input type="text" class="form-control" name="ActivityDescription" id="publisher" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ActivityDescription)">
+                           <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ActivityDescription)</span>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <span class="bmd-help text-danger" style="position:relative" id="vdSearch">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.EnterSearchFields)</span>
+                  </div>
+                  <div class="row">
+                     <div class="col-12 form-group etd-search-btn">
+                        <button type="button" class="btn btn-primary" name="button" @@click="search">
+                           <i class="material-icons">search</i> @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search)
+
+                        </button>
+                        <button type="reset" class="btn text-center" name="button" @@click="clear($event)">
+                           <i class="material-icons">close</i> @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear)
+
+                        </button>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-primary">
+                        <div v-if="showTable" class="pull-right">
+                           <div class="dropdown position-absolute etd-sorting-btn">
+                              <span data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SortResult" class="d-block">
+                                 <button href="#sort" data-toggle="dropdown" aria-expanded="false" class="btn btn-primary btn-round btn-sm "><i class="material-icons">sort</i><div class="ripple-container"></div></button>
+                                 <div x-placement="bottom-start" class="dropdown-menu dropdown-menu-left" style="position: absolute; top: 34px; left: 1px; will-change: top, left;">
+                                    <h4 class="dropdown-header">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SortResult</h4> <div class="dropdown-divider"></div>
+                                    <a href="javascript:void()" class="dropdown-item" @@click="SortBySubmissionDate()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DateOfRegisteration</a>
+                                    <a href="javascript:void()" class="dropdown-item" @@click="RandomSort()">@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RandomSort)</a>
+                                 </div>
+                              </span>
+                           </div>
+                        </div>
+                        <h5 v-if="showTable">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.SuppliersList)</h5>
+                        <div v-if="showTable"> @Html.Partial("_SuppliersGrid")</div>
+                     </div>
+
+
+                     <div class="col-lg-12  col-md-12 col-sm-12 col-xs-12 pull-right text-primary">
+                        <h5>@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.InvitedSupplierList)</h5>
+                        @Html.Partial("_InvitedSuppliersGrid")
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-12 form-group">
+                        <button type="button" id="btnSendInvitations" class="btn btn-primary" name="button" @@click="sendInvitation">
+                           @Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveSend)
+                           <div class="ripple-container"></div>
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            @Html.Partial("Partials/_UnRegisteredSuppliersInvitation.cshtml")
+
+            <div>
+               <a class="btn btn-outline-primary btn-link pull-right" href="/Tender/Index">رجوع<div class="ripple-container"></div></a>
+               <div class="clearfix"></div>
+            </div>
+         </div>
+      </div>
+
+
+   </div>
+
+</form>
+
+
+
+
+@section scripts{
+   <script src="~/Etimad-UI/assets/vendor/countryPhoneCodes/intlTelInput.min.js"></script>
+   <script src="~/Etimad-UI/assets/vendor/countryPhoneCodes/utils.js"></script>
+   <script>
+      var NebObj = new Vue({
+         el: '#regSupplier',
+         data: {
+            rows: [
+               //initial data
+               { email: "Email", mobileNo: "Phone" },
+            ],
+            Suppliers: [],
+            InvitedSuppliers:[],
+            removedSuppliers:[],
+            SuppliersDD: [],
+            subSuppliers: [],
+            cities: [],
+            inputs: [],
+            //addedsuppliers=[],
+            selected: 0,
+            totalCount: 0,
+            currentPage: 2,
+            pageSize: 10,
+            tb_Email: '',
+            emails: [],
+            mobilNoList: [],
+            resource_url:'', //'/Tender/GetAllSuppliersBySearchCretriaForInvitationAsync?invitationTenderId=@Model.TenderId',
+            invitedResource_url: '/Tender/GetInvitedSuppliers',
+            queryString: '',
+            showTable: false,
+            selectedMainActivity: 0,
+            selectedSecondryActivity: 0,
+            isAjaxMethodsCalled: false,
+            MainActitvities: [],
+            SecondaryActivities: [],
+            ac: {},
+            MainActivitiesId: 0,
+            IsChange: false,
+            crNumber:'',
+            crName:'',
+            email:'',
+            crNumberForeign:'',
+            descriptionOther:'',
+            showRegistred : false,
+            showForiegn : false,
+            showOther: false,
+            showComunication: false,
+            mobile: null,
+            checkName: false,
+            invitationType: 0,
+            vailMobile: false,
+            sort: "",
+            sortDirection: "",
+            isRandomSort: false
+         },
+         methods: {
+
+            updateResource: function (data) {
+               this.Suppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            updateInvitedResource: function (data) {
+               this.InvitedSuppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            detailsUrl: function (params) {
+            },
+            getSupplierInfo: function (CR) {
+               getSupplierInfo(CR);
+            },
+            updateData: function (data) {
+               this.MainActitvities = data;
+               setTimeout(function () {
+                  $('#mainActivityList').selectpicker('refresh');
+               }, 1000);
+            },
+            GetSecondryActitvitiesByParentId: function () {
+               NebObj.selectedSecondryActivity = -1;
+               NebObj.SecondaryActivities = [];
+               NebObj.UpdatebyActivitiesId();
+               $.get("/ManageVendors/GetMainActivitiesByParentId?ParentId=" + NebObj.selectedMainActivity).done(function (res) {
+                  NebObj.SecondaryActivities = res;
+                  setTimeout(function () {
+                     $('#secondryActivityList').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (err) {
+                  console.log("Error" + err);
+               });
+            },
+            UpdatebyActivitiesId: function () {
+               if (NebObj.selectedSecondryActivity == -1) {
+                  NebObj.MainActivitiesId = (NebObj.selectedMainActivity == -1 ? 0 : NebObj.selectedMainActivity);
+                  } else {
+                  NebObj.MainActivitiesId = NebObj.selectedSecondryActivity;
+                  }
+            },
+            SortBySubmissionDate: function () {
+
+               if (this.sort = "CreatedAt") {
+                  if (this.sortDirection == "DESC")
+                     this.sortDirection = "ASC";
+                  else
+                     this.sortDirection = "DESC"
+               }
+               else {
+                  this.sort = "CreatedAt";
+                  this.sortDirection = "ASC";
+               }
+               this.search();
+            },
+            RandomSort: function () {
+               this.isRandomSort = true;
+               this.search();
+            },
+            search: function () {
+               var selectedCity = $("#cityNameList option:selected").val();
+               var MainActivity = $("#mainActivityList option:selected").val();
+               var SeondryActivity = $("#secondryActivityList option:selected").val();
+               if ($("#commericalRegisterNo").val() == "" && MainActivity == "" && SeondryActivity == "-1" && selectedCity == "-1" && $("#commericalRegisterName").val() == "" && $("#activityDescription").val() == "" && $("#eMail").val() == "")
+               {
+                  $("#vdSearch").show();
+                  return false;
+               }
+               else
+               {
+                  $("#vdSearch").hide();
+               }
+               this.queryString = $('#searchCriteriaForm').serialize();
+               this.queryString = this.queryString + '&Sort=' + this.sort + '&SortDirection=' + this.sortDirection + '&IsRandomSort=' + this.isRandomSort;
+
+               this.resource_url = '/Invitation/GetAllSuppliersBySearchCretriaForInvitationAsync' + '?' + this.queryString + '&d=' + Date();
+               this.showTable = true;
+               Vue.templateCache = false
+            },
+            clear: function () {
+
+               $("#cityNameList, #mainActivityList,#secondryActivityList").val('');
+               $("#cityNameList,#mainActivityList,#secondryActivityList").selectpicker("refresh");
+               //this.showTable = false;
+            },
+
+            AddToInvitationGrid: function (Supplier) {
+               this.IsChange = true;
+               var existeSupplier = false;
+               $(this.InvitedSuppliers).each(function (i, e) {
+                  if (e.crNumber == Supplier.crNumber) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.SupplierAlreadyExsit)', alertMessageType.Danger)
+                     existeSupplier = true;
+                  }
+               })
+               if (existeSupplier == false) {
+                  Supplier.isChecked = true;
+                  this.InvitedSuppliers.push(Supplier);
+                  $("#btnSendInvitations").prop("disabled", false)
+               }
+            },
+            RemoveInvitationGrid: function (Supplier) {
+               this.IsChange = true;
+               Supplier.isChecked = false;
+               this.removedSuppliers.push(Supplier);
+               var i = this.InvitedSuppliers.indexOf(Supplier);
+               this.InvitedSuppliers.splice(i, 1);
+            },
+            sendInvitation: function () {
+               if (this.IsChange == true) {
+                  $('#LoadingSite').fadeIn();
+                  var suppliersLst = [];
+                  $(this.removedSuppliers).each(function (i, e) {
+                     suppliersLst.push(e);
+                  })
+                  $(this.InvitedSuppliers).each(function (i, e) {
+                     e.isChecked = true;
+                     suppliersLst.push(e);
+                  })
+                  var token = $('input[name=__RequestVerificationToken]').val();
+                     $.post('/Tender/SendInvitationsAsync', { suppliers: suppliersLst, __RequestVerificationToken: token }).done(function (e) {
+
+                        $('#LoadingSite').fadeOut();
+                        AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SendInvitations)', 'success')
+                        NebObj.IsChange = false;
+                        NebObj.$refs.vpaginator.$parent.search()
+                        //NebObj.queryString = $('#searchCriteriaForm').serialize();
+                        NebObj.invitedResource_url = '/Tender/GetInvitedSuppliers' + '?' + NebObj.queryString + '&d=' + Date();
+                        setTimeout(function () {
+                           window.location = "/Tender/index";
+                        }, 1000);
+                     }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     if (error.responseText != "Logout") {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                  });
+
+                    }
+               else {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseAddSupplier', 'danger')
+               }
+            },
+            getCities: function () {
+               $.get("/Tender/GetAllCities").done(function (response) {
+                  NebObj.cities = response;
+                  setTimeout(function () {
+                     $('#cityNameList').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+            },
+            getDropDownData: function () {
+               var self = this;
+               this.isAjaxMethodsCalled = true;
+            },
+         },
+         mounted: function () {
+            this.getDropDownData();
+         },
+
+         created: function () {
+            this.queryString = $('#searchCriteriaForm').serialize();
+            this.invitedResource_url = '/Tender/GetInvitedSuppliers' + '?' + this.queryString + '&d=' + Date();
+            this.getCities();
+            $.get("/ManageVendors/GetMainActivitiesByParentId").done(function (res) {
+               NebObj.updateData(res);
+            }).fail(function (err) {
+               console.log("Error" + err);
+            });
+         },
+      })
+      var DetialsObj = new Vue({
+         el: '#TenderDetials',
+         data: {
+            Suppliers: [],
+            inKSA: '@Model.InsideKSA'
+         },
+         // Check If InsidKsa Is True Return داخل السعوديه Else return خارج السعوديه
+         computed: {
+            insideKSA: function () {
+               return (this.inKSA == 'False') ? false : true;
+            }
+         },
+      })
+   </script>
+
+   <script>
+      var UnregesteredNotification = new Vue({
+         el: '#UnregesteredNotification',
+         data: {
+            Suppliers: [],
+            InvitedUnRegisterSuppliers:[],
+            removedSuppliers:[],
+            selected: 0,
+            totalCount: 0,
+            currentPage: 2,
+            pageSize: 10,
+            tb_Email: '',
+            resource_url: '',
+            //invitedResource_url:'', //'/Tender/GetAllSuppliersBySearchCretriaForInvitationAsync?invitationTenderId=@Model.TenderId',
+            invitedResource_url: '/Tender/GetInvitedUnRegisterSuppliers?invitationTenderId=@Model.TenderId',
+            queryString: '',
+            ac: {},
+            IsChange: false,
+            crNumber:'',
+            crName:'',
+            email:'',
+            crNumberForeign:'',
+            descriptionOther:'',
+            showRegistred : false,
+            showForiegn : false,
+            showOther: false,
+            showComunication: false,
+            mobile: null,
+            checkName: false,
+            invitationType: 0,
+            vailMobile: false,
+            isEmailContact:'true',
+         },
+         methods: {
+            updateResource: function (data) {
+               this.Suppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            updateInvitedResource: function (data) {
+               this.InvitedUnRegisterSuppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+
+            onInvitationTypeChange: function (event) {
+               resetLabels();
+               this.showComunication = true;
+               type = event.target.value
+               if (type == 1) {
+                  this.showRegistred = true;
+                  this.showForiegn = false;
+                  this.showOther = false;
+                  this.invitationType = 1;
+                  this.clearUnRegisteredData();
+               }
+               if (type == 2) {
+                  $("#hForienTitle").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.ForeignCustomer)');
+                  $("#labForienTitle").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CRNOrigin)');
+                  this.showForiegn = true;
+                  this.showRegistred = false;
+                  this.showOther = false;
+                  this.invitationType = 2;
+                  this.clearUnRegisteredData();
+               }
+               if (type == 3) {
+                   $("#hForienTitle").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.lblHaveProfessionLicense)');
+                  $("#labForienTitle").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.LicenseNumber)');
+                  this.showForiegn = true;
+                  this.showRegistred = false;
+                  this.showOther = false;
+                  this.invitationType = 3;
+                  this.clearUnRegisteredData();
+               }
+               if (type == 4) {
+                  this.showOther = true;
+                  this.showForiegn = false;
+                  this.showRegistred = false;
+                  this.invitationType = 4;
+                  this.clearUnRegisteredData();
+               }
+            },
+            clearUnRegisteredData: function () {
+               $($(".iti-arrow")[0]).prop("hidden", "hidden")
+               //this.email = null;
+               //this.mobile = null;
+               //this.crNumber = null;
+               //this.crName = null;
+               //this.descriptionOther = null;
+               //this.crNumberForeign = null;
+                              this.email = null;
+                               this.mobile = '';
+                               this.crNumber = '';
+                               this.crName = '';
+                               this.descriptionOther = '';
+                               this.crNumberForeign = '';
+
+
+
+            },
+            RemoveInvitationGrid: function (crNumber) {
+                  var token = $('input[name=__RequestVerificationToken]').val();
+                  $.post('/Tender/RemoveUnRegisterSupplier',
+                  {
+                     tenderId: '@Model.TenderId',
+                     crNumber: crNumber,
+                     __RequestVerificationToken: token
+                  }).done(function (e) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', 'success');
+
+                     UnregesteredNotification.invitedResource_url = UnregesteredNotification.invitedResource_url + "&d=" + new Date();
+
+                  }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     if (error.responseText != "Logout") {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                  });
+            },
+            CheckForCrNumber: function (cr) {
+
+               $("#spanvalidCr").hide();
+               $("#spanvalidSend").hide();
+               $("#valid-msg").hide();
+               var crnumber = $("#txtCrNumber").val().trim();
+               var invitationType = $("#ddlInvitationType").val();
+               if (invitationType == 1 && crnumber == "") {
+                  $("#spanvalidCr").show();
+                  return false;
+               }
+               else {
+                  $("#spanvalidCr").hide();
+               }
+
+               $('#LoadingSite').fadeIn();
+               $.get('/Tender/CheckForCrNumberExistAsync', { crNumber: crnumber }).done(function (e) {
+
+                  if (e != null) {
+                     UnregesteredNotification.crName = e;
+                     UnregesteredNotification.checkName = true;
+                     $('#LoadingSite').fadeOut();
+                  } else {
+                       AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.BlockResources.ErrorMessages.InvalidCommercialRegistrationNo)', alertMessageType.Danger);
+                     $('#LoadingSite').fadeOut();
+                  }
+
+               }).fail(function (error) {
+                  UnregesteredNotification.checkName = false;
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            },
+            SendInvitationsForUnRegisteredSupplierAsync: function (cr, name, email, mobile, invitationType) {
+
+               var crMail = $("#txtCrEmail").val();
+               var crMobile = $("#txtCrMobile").val();
+               var validSend = true;
+               if (this.invitationType == 1 && !this.crName) {
+                  $("#spanvalidCr").show();
+                  validSend = false;
+               } else {
+                  $("#spanvalidCr").hide();
+               }
+               if (this.invitationType == 2 && !this.crNumberForeign) {
+                  $("#spanvalidForiegn").show();
+                  $("#spanvalidForiegn").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.BlockResources.ErrorMessages.EnterCommercialRegistrationNo)');
+                  validSend = false;
+               } else {
+                  $("#spanvalidForiegn").hide();
+               }
+               if (this.invitationType == 3 && !this.crNumberForeign) {
+                  $("#spanvalidForiegn").show();
+                  $("#spanvalidForiegn").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.BlockResources.Messages.EnterLicenseNumber)');
+                  validSend = false;
+               }
+               if (this.invitationType == 4 && !this.descriptionOther) {
+                  $("#spanvalidDesc").show();
+                  validSend = false;
+               } else {
+                  $("#spanvalidDesc").hide();
+               }
+               if (!crMail && !crMobile) {
+                  $("#spanvalidSend").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.BlockResources.ErrorMessages.EnterPhoneNumberOrEmail)');
+                  validSend = false;
+               }
+               if (crMail) {
+                  if (!this.validEmail(crMail)) {
+                     $("#spanvalidSend").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.WrongEmail)');
+                     validSend = false;
+                  }
+               }
+               else {
+                  if (!this.vailMobile) {
+                     $("#error-msg").show();
+                     validSend = false;
+                  } else {
+                     $("#error-msg").hide();
+                  }
+               }
+               if (this.isEmailContact == 'true') {
+               $("#txtCrMobile").val('');
+                    //mobileNo = '';
+            if (!this.validEmail(crMail)) {
+               $("#spanvalidSend").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.WrongEmail)');
+               validSend = false;
+            }
+         }
+               else {
+                   $("#txtCrEmail").val('');
+            if (!this.vailMobile) {
+               $("#error-msg").removeClass("hide");
+               validSend = false;
+            }
+         }
+
+
+               if (this.crNumberForeign) {
+                  this.crNumber = this.crNumberForeign;
+               }
+
+               if (!validSend) {
+                  return false;
+               }
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $('#LoadingSite').fadeIn();
+
+
+
+               $.post('/Tender/SendInvitationsForUnRegisteredSupplierAsync',
+                  {
+                     tenderIdString: '@Model.TenderIdString',
+                     crNumber: this.crNumber,
+                     crName: this.crName,
+                     email: $("#txtCrEmail").val(),
+                     mobile: $("#txtCrMobile").val() != "" ? $(".selected-dial-code")[0].innerHTML + $("#txtCrMobile").val() : "",
+                     invitationTypeId: this.invitationType,
+                     description: this.descriptionOther,
+                     __RequestVerificationToken: token
+                  }).done(function (e) {
+
+                     $('#LoadingSite').fadeOut();
+                     $("#txtCrEmail").val('');
+                     $("#txtCrMobile").val('');
+                     $("#valid-msg").hide();
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', 'success');
+                     UnregesteredNotification.invitedResource_url = UnregesteredNotification.invitedResource_url + "&d=" + new Date();
+                  }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     if (error.responseText != "Logout") {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                  });
+            },
+            validEmail: function (email) {
+               var re = /^(([^<>()\[\]\\.,;:\s"]+(\.[^<>()\[\]\\.,;:\s"]+)*)|(".+"))((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+               return re.test(email);
+            }
+         }
+      });
+
+      var telInput = $("#txtCrMobile"),
+         errorMsg = $("#error-msg"),
+         validMsg = $("#valid-msg");
+
+      telInput.intlTelInput({
+         formatOnDisplay: true,
+         autoFormat: true,
+         autoHideDialCode: true,
+         autoPlaceholder: true,
+         nationalMode: true,
+         initialCountry: 'SA',
+         numberType: "MOBILE",
+         preferredCountries: ['sa', 'ae', 'qa', 'om', 'bh', 'kw', 'ma'],
+         preventInvalidNumbers: true,
+         separateDialCode: true,
+         geoIpLookup: function (callback) {
+            //$.get("http://ipinfo.io", function () { }, "jsonp").always(function (resp) {
+            //                var countryCode = (resp && resp.country) ? resp.country : "";
+            //                callback(countryCode);
+            //             });
+                      },
+         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.9/js/utils.js"
+      });
+
+      var reset = function () {
+         telInput.removeClass("error");
+         errorMsg.addClass("hide");
+         validMsg.addClass("hide");
+      };
+
+      // on blur: validate
+      telInput.blur(function () {
+         if ($.trim(telInput.val())) {
+            if (telInput.intlTelInput("isValidNumber") && telInput.val() != undefined && !telInput.val().startsWith('0')) {
+               UnregesteredNotification.vailMobile = true;
+            } else {
+               telInput.addClass("error");
+               errorMsg.removeClass("hide");
+               UnregesteredNotification.vailMobile = false;
+            }
+         }
+      });
+
+      // on keyup / change flag: reset
+      telInput.on("keyup change", reset);
+
+      function mailValidation(email) {
+         var re = /^(([^<>()\[\]\\.,;:\s"]+(\.[^<>()\[\]\\.,;:\s"]+)*)|(".+"))((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+         return re.test(email);
+      }
+      function resetLabels() {
+         $("#spanvalidCr").hide();
+         $("#spanvalidForiegn").hide();
+         $("#spanvalidForiegn").hide();
+         $("#spanvalidDesc").hide();
+         $("#error-msg").hide();
+         $("#spanvalidSend").text('');
+         $("#lblCrname").hide();
+      }
+
+      $('#txtCrEmail').on('blur change', function (e) {
+         var mail = $('#txtCrEmail').val().trim();
+         if (mail != "") {
+
+            var re = /^(([^<>()\[\]\\.,;:\s"]+(\.[^<>()\[\]\\.,;:\s"]+)*)|(".+"))((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            var validateMail = re.test(mail);
+            if (validateMail) {
+               $("#spanvalidSend").text('');
+            } else {
+               $("#spanvalidSend").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.WrongEmail)');
+            }
+         } else {
+            $("#spanvalidSend").text('');
+         }
+      });
+   </script>
+}
+

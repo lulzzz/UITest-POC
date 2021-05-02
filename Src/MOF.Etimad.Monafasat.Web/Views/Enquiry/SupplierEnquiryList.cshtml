@@ -1,0 +1,486 @@
+@using resource = MOF.Etimad.Monafasat.Resources;
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   ViewData["Title"] = @resource.EnquiryResources.DisplayInputs.Enquiries;
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb"> 
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li> 
+         <li class="breadcrumb-item active" aria-current="page">@resource.EnquiryResources.DisplayInputs.Enquiries</li>
+      </ol>
+   </nav>
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <span class="d-block pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@resource.SharedResources.DisplayInputs.Search"><button id="searchBtnColaps" class="btn p-2 btn-outline-primary" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</button></span>
+   </div>
+}
+
+   <form class="form" id="searchCriteriaForm">
+    
+      <div id="SuppliersEnquiryGrid" class="etd-cards" v-cloak>
+         <div class="clearfix"></div>
+         <div class="row tendar-navigation position-relative" style="min-height:0px;">
+            <div class="etd-sorting-cont">
+               @Html.Partial("~/Views/Tender/Partials/_TendersGridSorts.cshtml")
+            </div>
+            @*<div class="dropdown position-absolute etd-sorting-btn">
+         <button href="#sort" class="btn btn-primary btn-round btn-sm " data-toggle="dropdown" aria-expanded="false">
+            <span class="d-block" data-toggle="tooltip" data-placement="top" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SortResult" data-container="body" data-original-title=" @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SortResult"><i class="material-icons">sort</i></span>
+         </button>
+         <div class="dropdown-menu dropdown-menu-left" x-placement="top-end">
+            <h4 class="dropdown-header"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SortResult</h4>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item" @@click="SortBySubmissionDate()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreationDate</a>
+            <a href="#" class="dropdown-item" @@click="SortByOfferOpeningDate()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate</a>
+         </div>
+      </div>*@
+         </div>
+
+         <div class="row" style="position:relative">
+            <div class="collapse col-lg-4 col-md-4 col-sm-12 col-xs-12 " id="Search">
+               <div class="card card-body">
+                  <div class="row">
+                     <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="name" class="label bmd-label-static"> @resource.TenderResources.DisplayInputs.TenderType </label> <div class="form-check">
+                              <select data-live-search="false" id="tenderType" class="selectpicker" data-search="tenderType" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType" data-style="select-with-transition" v-model="selectedTenderTypeId">
+                                 @*  <option :value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType</option>*@
+                                 <option :value="item.tenderTypeId" v-for="item in typeList">{{item.tenderTypeName}}</option>
+                              </select>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <input type="text" class="form-control" name="TenderName" id="tenderName" value="" placeholder="@resource.TenderResources.DisplayInputs.TenderName">
+                           <span class="bmd-help">@resource.TenderResources.DisplayInputs.EnterTenderName</span>
+                        </div>
+                     </div>
+                     <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <input type="text" class="form-control" name="ReferenceNumber" id="referenceNumber" value="" placeholder="@resource.TenderResources.DisplayInputs.TenderRefrenceNumber">
+                           <span class="bmd-help">@resource.TenderResources.DisplayInputs.TenderRefrenceNumber</span>
+                        </div>
+                     </div>
+                     <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <input type="text" class="form-control" name="TenderNumber" id="tenderNumber" value="" placeholder="@resource.TenderResources.DisplayInputs.TenderNumberForAgency">
+                           <span class="bmd-help">@resource.TenderResources.DisplayInputs.EnterTenderNumber</span>
+                        </div>
+                     </div>
+                     <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="EnquiryReplyStatus" class="label bmd-label-static">@resource.EnquiryResources.DisplayInputs.EnquiryShowOptions </label>
+                           <select id="EnquiryReplyStatus" name="EnquiryReplyStatus" data-live-search="false" class="selectpicker" title="@resource.EnquiryResources.DisplayInputs.All" data-style="select-with-transition" data-size="7">
+                              <option value="">
+                                 @resource.EnquiryResources.DisplayInputs.All
+                              </option>
+                              <option value="1">
+                                 @resource.EnquiryResources.DisplayInputs.PendingReply
+                              </option>
+                           </select>
+                        </div>
+                     </div>
+
+                  </div>
+                  <div class="input-group-prepend pull-left etd-search-btn">
+                     <button type="button" class="btn btn-primary btn-block text-center" id="searchBtn" name="button" @@click="search">
+                        <i class="material-icons">search</i> @resource.SharedResources.DisplayInputs.Search
+                     </button>
+                     <button type="reset" class="btn btn-block text-center" value="@resource.SharedResources.DisplayInputs.Clear" id="btnClear" name="btnClear" @@click="clear">
+                        <i class="material-icons">close</i> @resource.SharedResources.DisplayInputs.Clear
+                     </button>
+                  </div>
+               </div>
+            </div>
+            <div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="cardsresult">
+               <div class="row" v-if="Tenders && Tenders.length > 0">
+                  <div class="monafasa-item col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12" v-for="(tender, $index) in Tenders">
+                     <div class="card">
+                        <div class="card-body">
+                           <div class="row">
+                              <div class="agncy_logo col-12">
+                                 <div class="dropdown pull-right">
+                                    <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i><div class="ripple-container"></div></button>
+                                    <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                                       @if (User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.EtimadOfficer))
+                                       {
+                                          <a :href="tenderDetailsUrl(tender.tenderIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i> @resource.EnquiryResources.DisplayInputs.EnquiryReview</a>
+                                       }
+                                       @if (User.IsInRole(RoleNames.TechnicalCommitteeUser))
+                                       {
+                                          <a :href="reviewEnquiries(tender.tenderIdString)" class="dropdown-item">
+                                             <i class="material-icons">undo</i> @MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.EnquiryReview
+                                          </a>
+                                       }
+                                    </div>
+                                 </div>
+                                 <h5 class="text-dark-green m-0"><span>@Html.Partial("_AgencyLogo")</span></h5>
+
+                              </div>
+                              <div class="clearfix"></div>
+                              <div class="monafasa-content col-12">
+                                 <h5 class="text-primary" v-if="tender.tenderName.length > 100"><a :href="tenderDetailsUrl(tender.tenderIdString)">{{tender.tenderName.substring(0, 100) + ' ...'}}</a></h5>
+                                 <h5 class="text-primary" v-else><a :href="tenderDetailsUrl(tender.tenderIdString)">{{tender.tenderName}}</a></h5>
+                                 <div class="row">
+                                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                                       <ul class="list-group form-details-list">
+                                          <li class="list-group-item">
+                                             <div class="row">
+                                                <div class="col-6 etd-item-title">
+                                                   @resource.TenderResources.DisplayInputs.ReferenceTenderNumber
+                                                </div>
+                                                <div class="col-6 etd-item-info">
+                                                   <span>{{tender.tenderReferenceNumber}}</span>
+                                                </div>
+                                             </div>
+                                          </li>
+
+                                          <li class="list-group-item" v-if="tender.tenderTypeId !=@((int)Enums.TenderType.PreQualification)">
+                                             <div class="row">
+                                                <div class="col-6 etd-item-title">
+
+                                                   @resource.TenderResources.DisplayInputs.TenderNumber
+
+
+                                                </div>
+                                                <div class="col-6 etd-item-info">
+                                                   <span v-if="tender.tenderNumber != null">{{tender.tenderNumber}}</span>
+                                                   <span v-else>@resource.SharedResources.DisplayInputs.NotExist</span>
+                                                </div>
+                                             </div>
+                                          </li>
+
+                                          <li class="list-group-item">
+                                             <div class="row">
+                                                <div class="col-6 etd-item-title">
+                                                   <span v-if="tender.tenderTypeId==@((int)Enums.TenderType.PreQualification)">
+                                                      @resource.QualificationResources.DisplayInputs.QualificationType
+                                                   </span>
+                                                   <span v-else>
+                                                      @resource.TenderResources.DisplayInputs.TenderType
+                                                   </span>
+                                                </div>
+                                                <div class="col-6 etd-item-info">
+                                                   <span>{{tender.tenderTypeName}}</span>
+                                                </div>
+                                             </div>
+                                          </li>
+                                          <template v-if="tender.lastEnqueriesDate">
+                                             <li class="list-group-item">
+                                                <div class="row">
+                                                   <div class="col-6 etd-item-title">
+                                                      @resource.TenderResources.DisplayInputs.LastEnqueriesDate
+                                                   </div>
+                                                   <div class="col-6 etd-item-info">
+
+                                                      {{tender.lastEnqueriesDate.split('T')[0]}}<br />
+                                                      {{tender.lastEnqueriesDateHijri}}
+
+
+                                                   </div>
+                                                </div>
+                                             </li>
+                                          </template>
+                                          <template v-else>
+                                          </template>
+                                          <template v-if="tender.lastOfferPresentationDate">
+                                             <li class="list-group-item">
+                                                <div class="row">
+                                                   <div class="col-6 etd-item-title">
+                                                      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate
+                                                   </div>
+                                                   <div class="col-6 etd-item-info">
+
+                                                      {{tender.lastOfferPresentationDate.split('T')[0]}}
+
+                                                      <br />
+
+                                                      {{tender.lastOfferPresentationDateHijri}}  <br /> {{tender.lastOfferPresentationDate.split('T')[1].substring(0,5)}}
+
+                                                   </div>
+                                                </div>
+                                             </li>
+                                          </template>
+                                          <template v-else>
+                                          </template>
+                                          <li class="list-group-item">
+                                             <div class="row">
+                                                <div class="col-6 etd-item-title">
+                                                   @resource.TenderResources.DisplayInputs.OfferOpenDateTime
+                                                </div>
+                                                <div class="col-6 etd-item-info">
+                                                   <template v-if="tender.offersOpeningDate">
+                                                      {{tender.offersOpeningDate.split('T')[0]}}
+                                                      <br />
+                                                      {{tender.offersOpeningDateHijri}}
+                                                      <br /> {{tender.offersOpeningDate.split('T')[1].substring(0,5)}}
+
+                                                   </template>
+                                                   <template v-else>
+                                                      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist
+                                                   </template>
+                                                </div>
+                                             </div>
+                                          </li>
+                                       </ul>
+                                    </div>
+                                    <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                                       <template v-if="tender.lastOfferPresentationDate">
+                                          <div class="progress" :data-percentage="percentageLeft(tender.submitionDate,tender.lastOfferPresentationDate,tender.remainingDays,tender.remainingHours)">
+                                             <span class="progress-left">
+                                                <span class="progress-bar"></span>
+                                             </span>
+                                             <span class="progress-right">
+                                                <span class="progress-bar"></span>
+                                             </span>
+                                             <div class="progress-value">
+                                                <div>
+                                                   <a href="" data-toggle="tooltip" data-placement="top" :title="'@resource.TenderResources.DisplayInputs.LastOfferPresentationDate' + tender.lastOfferPresentationDate.split('T')[0]" data-container="body" :data-original-title="'@resource.TenderResources.DisplayInputs.LastOfferPresentationDate' + tender.lastOfferPresentationDate.split('T')[0]">
+                                                      <template v-if="tender.remainingDays > 0 || tender.remainingHours>0 || tender.remainingMins>0">
+                                                         <template v-if="tender.remainingDays >= 1">
+                                                            {{ tender.remainingDays }} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Day
+                                                         </template>
+                                                         <template V-else>
+
+                                                            {{ tender.remainingHours}} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Hour
+                                                            <br />
+                                                            {{ tender.remainingMins}} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Minutes
+                                                         </template>
+                                                      </template>
+                                                      <template v-else>
+                                                         @resource.TenderResources.DisplayInputs.Ended
+                                                      </template>
+                                                   </a>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </template>
+                                       <template v-else>
+                                       </template>
+                                       @if (User.IsInRole(RoleNames.TechnicalCommitteeUser))
+                                       {
+                                          <a :href="reviewEnquiries(tender.tenderIdString)">
+                                             <div>
+                                                <p class="text-center ">@resource.EnquiryResources.DisplayInputs.EnquiryCount</p>
+                                                <p class="text-center text-primary h5">{{tender.enquiriesCountForTechnical}} </p>
+                                             </div>
+                                          </a>
+                                       }
+                                       else
+                                       {
+                                          <a :href="tenderDetailsUrl(tender.tenderIdString)">
+                                             <p class="text-center">@resource.EnquiryResources.DisplayInputs.EnquiryCount</p>
+                                             <p class="text-center text-primary h5">{{tender.enquiriesCountForAuditor}} </p>
+                                          </a>
+                                       }
+
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="card-footer row">
+                           <div class="col-md-12 text-right">
+                              @if (User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.EtimadOfficer))
+                              {
+                                 <a :href="tenderDetailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary">
+                                    @MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.EnquiryReview
+                                 </a>
+                              }
+                              @if (User.IsInRole(RoleNames.TechnicalCommitteeUser))
+                              {
+                                 <a :href="reviewEnquiries(tender.tenderIdString)" class="btn btn-sm btn-primary">
+                                    @MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.EnquiryReview
+                                 </a>
+                              }
+
+                           </div>
+                        </div>
+
+                     </div>
+                  </div>
+               </div>
+               <div class="col-12" v-else>
+                  <div class="row text-center">
+                     <div class="card">
+                        <div class="card-body text-center">
+                           <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                           <br />
+                           @resource.SharedResources.DisplayInputs.NoData
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-12 m-5 m-auto">
+                  <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+               </div>
+            </div>
+         </div>
+         <div class="clearfix"></div>
+      </div>
+   </form>
+
+<!--endtBody-->
+@section scripts{
+   <script>
+      $(document).ready(function () {
+         $('li#menuSupplierEnquiryList a').addClass('active');
+      });
+      var cardsCont = document.getElementById('cardsresult');
+      $('button[type="reset"]').click(function () {
+         $(".selectpicker").val('default');
+         $(".selectpicker").selectpicker("refresh");
+      });
+      $(function () {
+         $("input").keypress(function (event) {
+            if (event.which === 13) {
+               event.preventDefault();
+               $("#searchBtn").click();
+            }
+         });
+         $('#searchBtnColaps').click(function () {
+            var _cards = $('#cardsresult');
+            var _grid = $('#gridresult');
+            if (_cards.hasClass('col-md-12')) {
+               _cards.removeClass('col-md-12');
+               _cards.addClass('col-md-8');
+               _cards.find('.monafasa-item').removeClass('col-md-6');
+               _cards.find('.monafasa-item').addClass('col-md-12');
+               _cards.find('.monafasa-item').removeClass('col-lg-6');
+               _cards.find('.monafasa-item').addClass('col-lg-12');
+               _cards.find('.monafasa-item').removeClass('col-xl-4');
+               _cards.find('.monafasa-item').addClass('col-xl-6');
+            } else if (_cards.hasClass('col-md-8')) {
+               _cards.addClass('col-md-12');
+               _cards.removeClass('col-md-8 ');
+               _cards.find('.monafasa-item').addClass('col-md-6');
+               _cards.find('.monafasa-item').removeClass('col-md-12');
+               _cards.find('.monafasa-item').addClass('col-lg-6');
+               _cards.find('.monafasa-item').removeClass('col-lg-12');
+               _cards.find('.monafasa-item').addClass('col-xl-4');
+               _cards.find('.monafasa-item').removeClass('col-xl-6');
+            }
+              $('#closeSearch').on("click",function () {
+              
+              $('#searchBtnColaps').click()
+            });
+         });
+      });
+      var Tender = new Vue({
+         el: '#SuppliersEnquiryGrid',
+         data: {
+            Tenders: [], typeList: [],
+            selectedTenderTypeId: '',
+            currentDate: new Date(),
+            selectedTenderId: 0,
+            selectedRowStatus: '',
+            totalCount: 0,
+            currentPage: 1, 
+            pageSize: @((int)Enums.PageSize.Six), 
+            // Here you define the url of your paginated API
+            resource_url: '/Enquiry/EnquirySupplierListPagingAsync?pageSize='+@((int)Enums.PageSize.Six),
+            queryString: '',
+            sort: "SubmitionDate",
+            sortDirection: "DESC"
+         },
+
+         methods: {
+            percentageLeft: function (pubDate, lastDate, remainingDays, remainingHours) {
+               return calculateCardPercentage(pubDate, lastDate, remainingDays, remainingHours);
+            },
+            updateResource: function (data) { 
+               this.Tenders = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+               var _cards = $('#cardsresult');
+               if (_cards.hasClass('col-md-12')) {
+                  _cards.find('.monafasa-item').addClass('col-md-6');
+                  _cards.find('.monafasa-item').removeClass('col-md-12');
+                  _cards.find('.monafasa-item').addClass('col-lg-6');
+                  _cards.find('.monafasa-item').removeClass('col-lg-12');
+                  _cards.find('.monafasa-item').addClass('col-xl-4');
+                  _cards.find('.monafasa-item').removeClass('col-xl-6');
+               } else if (_cards.hasClass('col-md-8')) {
+                  _cards.find('.monafasa-item').removeClass('col-md-6');
+                  _cards.find('.monafasa-item').addClass('col-md-12');
+                  _cards.find('.monafasa-item').removeClass('col-lg-6');
+                  _cards.find('.monafasa-item').addClass('col-lg-12');
+                  _cards.find('.monafasa-item').removeClass('col-xl-4');
+                  _cards.find('.monafasa-item').addClass('col-xl-6');
+               }
+               $('[data-toggle="tooltip"]').tooltip(); 
+            },
+            tenderDetailsUrl: function (id) {
+               return '/Tender/Details?STenderId=' + id + '#d-6';
+            },
+            reviewEnquiries: function (id) {
+               return '/Enquiry/SupplierEnquiriesOnTender/' + id;
+            },
+            SortBySubmissionDate: function () {
+               this.sort = "SubmitionDate";
+               this.search();
+            },
+            SortByOfferOpeningDate: function () {
+               this.sort = "OffersOpeningDate";
+               this.search();
+            },
+            getTendersBySelectedPageSize: function () {
+               this.pageSize = $('#itemsPerPage').val();
+               this.search();
+            },
+            search: function () {
+               this.queryString = $('#searchCriteriaForm').serialize() + '&TenderTypeId=' + this.selectedTenderTypeId + '&SortDirection=' + this.sortDirection + '&Sort=' + this.sort + '&PageSize=' + this.pageSize;
+               this.resource_url = '/Enquiry/EnquirySupplierListPagingAsync' + '?' + this.queryString;
+            },
+            clear: function () {
+               $("#tenderName").val("");
+               $("#tenderNumber").val(""); 
+               $("#referenceNumber").val(""); 
+               $("#tenderType").val('default'); 
+               $("#tenderType").selectpicker("refresh");
+               $("#EnquiryReplyStatus").val('default');
+               $("#EnquiryReplyStatus").selectpicker("refresh");
+               this.queryString = $('#searchCriteriaForm').serialize();
+               this.resource_url = '/Enquiry/EnquirySupplierListPagingAsync' + '?' + this.queryString;
+            }
+         },
+         updated: function () {
+            $("#tenderType, #EnquiryReplyStatus").val(null);
+            var _cards = $('#cardsresult');
+            if (_cards.hasClass('col-md-12')) {
+               _cards.find('.monafasa-item').addClass('col-md-6');
+               _cards.find('.monafasa-item').removeClass('col-md-12');
+               _cards.find('.monafasa-item').addClass('col-lg-6');
+               _cards.find('.monafasa-item').removeClass('col-lg-12');
+               _cards.find('.monafasa-item').addClass('col-xl-4');
+               _cards.find('.monafasa-item').removeClass('col-xl-6');
+            } else if (_cards.hasClass('col-md-8')) {
+               _cards.find('.monafasa-item').removeClass('col-md-6');
+               _cards.find('.monafasa-item').addClass('col-md-12');
+               _cards.find('.monafasa-item').removeClass('col-lg-6');
+               _cards.find('.monafasa-item').addClass('col-lg-12');
+               _cards.find('.monafasa-item').removeClass('col-xl-4');
+               _cards.find('.monafasa-item').addClass('col-xl-6');
+            }
+            $('[data-toggle="tooltip"]').tooltip();
+         }
+      });
+      var url_string = decodeURI(window.location.href)
+      var url = new URL(url_string);
+      $.get('/Qualification/GetTenderTypes').done(function (result) {
+         Tender.typeList = result;
+         setTimeout(function () {
+            if (url.searchParams.get('TenderTypeId')) {
+               $('#tenderType').selectpicker('val', url.searchParams.get('TenderTypeName'));
+            }
+            $('#tenderType').selectpicker('refresh');
+         }, 1000);
+      });
+   </script>
+}

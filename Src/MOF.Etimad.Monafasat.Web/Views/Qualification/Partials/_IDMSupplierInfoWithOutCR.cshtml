@@ -1,0 +1,419 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierFullDataViewModel
+
+
+<div id="accordion" role="tablist">
+   <div class=" card-collapse">
+      <div class="card-header" role="tab" id="headingOne">
+         <h5 class="mb-0">
+            <a data-toggle="collapse" href="#SupplierInfo" aria-expanded="true" aria-controls="collapseOne">
+               <i class="material-icons">keyboard_arrow_down</i> 
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierInfo
+               
+            </a>
+         </h5>
+      </div>
+      <div id="SupplierInfo" class="collapse  show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+         <div class="card-body">
+            @{
+
+               foreach (var info in Model.contactOfficers)
+               {
+
+
+                  <ul class="list-group form-details-list h6">
+
+
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Email
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>@info.Email</span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UserName
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @info.Name
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Nationality
+
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @info.Nationality
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CiviRegistery
+                           </div>
+                           <div class="col-8 etd-item-info">
+
+                              <span>
+                                 @info.NationalID
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Title
+                           </div>
+                           <div class="col-8 etd-item-info">
+
+                              <span>
+                                 @info.JobTitle
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Mobile
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @info.Mobile
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PhoneNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @info.PhoneNumber
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+
+               }
+
+            }
+         </div>
+      </div>
+   </div>
+
+
+   <div class=" card-collapse">
+      <div class="card-header" role="tab" id="headingTwo">
+         <h5 class="mb-0">
+            <a class="collapsed" data-toggle="collapse" href="#CompanyInfo" aria-expanded="false" aria-controls="collapseTwo">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CompanyInfo
+               <i class="material-icons">keyboard_arrow_down</i> 
+            </a>
+         </h5>
+      </div>
+      <div id="CompanyInfo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+         <div class="card-body">
+            <ul class="list-group form-details-list h6">
+
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        تاريخ إصدار السجل التجارى
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @Model.crIssueDate
+                        </span>
+                     </div>
+                  </div>
+               </li>
+
+               @*<li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        جنسية مالك السجل
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.ownerNationality</span>
+                     </div>
+                  </div>
+               </li>
+
+
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        تاريخ انتهاء السجل التجارى
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.ownerNationality</span>
+                     </div>
+                  </div>
+               </li>*@
+
+
+
+               @if (Model.SupplierHasNoCRType == (int)Enums.IDMInstitutionTypeEnum.Orgnization)
+               {
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+
+                           اسم المالك
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>@Model.ownerName</span>
+                        </div>
+                     </div>
+                  </li>
+               }
+
+               @*<li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        راس مال السجل
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.capital</span>
+                     </div>
+                  </div>
+               </li>*@
+
+
+               @*<li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        جنسية مالك السجل
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.ownerNationality</span>
+                     </div>
+                  </div>
+               </li>*@
+
+
+
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        نوع المنشأه
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>  @(Model.SupplierHasNoCRType == (int)Enums.IDMInstitutionTypeEnum.Company ? "شركة" : Model.SupplierHasNoCRType == (int)Enums.IDMInstitutionTypeEnum.Orgnization ? "مؤسسة" : Model.OtherSupplierHasNoCRType) </span>
+                     </div>
+                  </div>
+               </li>
+
+
+               @if (Model.SupplierHasNoCRType == (int)Enums.IDMInstitutionTypeEnum.Company)
+               {
+
+
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AdministrationStaff
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>@Model.BoardOfDirectories</span>
+                        </div>
+                     </div>
+                  </li>
+
+
+               }
+
+
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.supplierNumber</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.supplierName</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainActivityBasedonCommercialNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.MainActivity</span>
+                     </div>
+                  </div>
+               </li>
+               @*<li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MembershipCity
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.YasserInfo.MembershipCityName</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UniqueNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.YasserInfo.OfficeFacilityNumberInMinistryOfLabor</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RegistrationInSocialInsurance
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.YasserInfo.SocialSecuritySubscriptionNumber</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvestmentLicense
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.YasserInfo.InvestmentLicenseNumber</span>
+                     </div>
+                  </div>
+               </li>*@
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Activities
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <ul>
+                           @{
+                              foreach (var activity in Model.Activities)
+                              {
+                                 <li>@activity</li>
+                              }
+
+
+                           }
+                        </ul>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ActivityDescription
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span> @Model.MainActivityDescription</span>
+                     </div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+      </div>
+   </div>
+
+   <div class=" card-collapse">
+      <div class="card-header" role="tab" id="headingTwo">
+         <h5 class="mb-0">
+            <a class="collapsed" data-toggle="collapse" href="#SupplierCertificates" aria-expanded="false" aria-controls="collapseTwo">
+               الشهادات
+               <i class="material-icons">keyboard_arrow_down</i> 
+            </a>
+         </h5>
+      </div>
+      <div id="SupplierCertificates" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+         <div class="card-body">
+            <ul class="list-group form-details-list h6">
+
+
+               @{
+                  if (Model.attachments != null && Model.attachments.Count > 0)
+                  {
+                     foreach (var item in Model.attachments)
+                     {
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @item.attachmentTypeName
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 @if (item.attachmentId == 0)
+                                 {
+                                    <span>
+                                       يرجى إكمال بيانات إلتزام المنشأة، وإرفاق الشهادات الثبوتية في ملف المورد
+                                    </span>
+                                 }
+                                 else
+                                 {
+                                    <a href="@item.url" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">@item.name</a>
+                                 }
+                              </div>
+                           </div>
+                        </li>
+                     }
+                  }
+
+               }
+
+
+
+
+            </ul>
+         </div>
+      </div>
+   </div>
+
+
+
+</div>

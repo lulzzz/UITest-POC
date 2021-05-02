@@ -1,0 +1,23 @@
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailsModel
+@{
+   int offerId = ViewBag.OfferId;
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ShowOffer;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ShowOffer</li>
+      </ol>
+   </nav>
+
+}
+@Html.AntiForgeryToken()
+@await Component.InvokeAsync("OfferDetails", new { OfferId = offerId })
+@section scripts{
+   <script>
+
+   </script>
+}
+

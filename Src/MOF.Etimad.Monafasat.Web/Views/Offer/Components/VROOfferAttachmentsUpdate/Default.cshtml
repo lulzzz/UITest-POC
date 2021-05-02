@@ -1,0 +1,1056 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailModel
+<style>
+   .form-check-input {
+      position: relative;
+      margin-top: .3rem;
+      margin-left: 0.5rem;
+   }
+</style>
+<div id="app">
+   <input type="hidden" id="hdnisNewBank" value="1" />
+   <input type="hidden" id="hdnisNewClassification" value="1" />
+   <input type="hidden" name="OfferIdString" asp-for="OfferIdString" id="hdOfferId" />
+   @Html.AntiForgeryToken()
+   <div class="modal fade" id="myModal3" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">  @res.OfferResources.DisplayInputs.BankGuaranteeLetter</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i> 
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="" id="divBankGuarantee">
+                  <div class="row">
+                     <div class="col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label class="label bmd-label-static"> @res.OfferResources.DisplayInputs.BankGuaranteeStatus</label>
+                           <div class="form-check">
+                              <label class="form-check-label">
+                                 <input name="guaranteeStatus" class="form-check-input isFinancialChecking" checked type="radio" id="guaranteeStatus1" value="true">
+                                 @res.OfferResources.DisplayInputs.Valid
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                              <label class="form-check-label">
+                                 <input name="guaranteeStatus" class="form-check-input isFinancialChecking" type="radio" id="guaranteeStatus2" value="false">
+                                 @res.OfferResources.DisplayInputs.Invalid
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.BankGuaranteeNumber</label><span class="text-danger">*</span>
+                           <input class="form-control isFinancialChecking" name="guaranteeNumber" required id="tb_GuaranteeNUmber" />
+                           <span id="vdGuaranteeNUmber" class="bmd-help text-danger">@res.OfferResources.ErrorMessages.EnterGuaranteeNumber </span>
+                        </div>
+                     </div>
+                     <div class="col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label label class="label bmd-label-static"> @res.OfferResources.DisplayInputs.GuaranteeBankName</label><span class="text-danger">*</span>
+                           <select asp-for="Bank" id="bankName" name="bankName" required data-live-search="true" title="@res.SharedResources.DisplayInputs.Select" class="selectpicker"
+                                   asp-items="@(new SelectList(Model.Banks, "BankId", "Name"))" data-style="select-with-transition" data-size="7">
+                              <option value="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Select</option>
+                           </select>
+                           <span id="vdbankName" class="bmd-help text-danger">@res.OfferResources.ErrorMessages.SelectBank</span>
+                        </div>
+                     </div>
+                     <div class="  col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label class="label bmd-label-static"> @res.OfferResources.DisplayInputs.GuaranteeValue </label><span class="text-danger">*</span>
+                           <input type="number" min="0" class="form-control isFinancialChecking" required id="tb_GuaranteeValue" value="">
+                           <span id="vdGuaranteeValue" class="bmd-help text-danger">@res.OfferResources.ErrorMessages.EnterBankGuaranteeValue</span>
+                        </div>
+                     </div>
+                     <div class="  col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.BankGuaranteeDays</label>
+                           <input type="number" min="0" class="form-control isFinancialChecking" id="tb_GuaranteeDays" value="">
+                        </div>
+                     </div>
+                     <div class="  col-sm-6 col-xs-12">
+                        <div class="form-group form-check etd-calendar-group">
+                           <label for="datepick" class="label bmd-label-static"> @res.OfferResources.DisplayInputs.GuaranteeStartDate</label>
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask isFinancialChecking" id="tb_GuaranteeStartDate" name="guaranteeStartDate" placeholder="" value="">
+                           <span id="vdDates" class="bmd-help text-danger">@res.OfferResources.ErrorMessages.StartDateGreaterThanEndDate</span>
+                        </div>
+                     </div>
+                     <div class="  col-sm-6 col-xs-12">
+                        <div class="form-group form-check etd-calendar-group">
+                           <label for="datepick" class="label bmd-label-static">@res.OfferResources.DisplayInputs.GuaranteeEndDate</label>
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask isFinancialChecking" id="tb_GuaranteeEndDate" name="guaranteeEndDate" placeholder="" value="">
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="button"
+                       id="uploadGuaranteexxx" onclick="AddBankGuarantee()">
+                  @res.SharedResources.DisplayInputs.Save
+               </button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="modal fade" id="myModal2" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@res.OfferResources.DisplayInputs.ClassificationCertificate</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i> 
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="row" id="divSpecification">
+                  <div class="  col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.ClassificationCertificateFor</label>
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input name="isForApplier" class="form-check-input" checked type="radio" id="isForApplier1" value="true">
+                              @res.OfferResources.DisplayInputs.OfferApplier
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <label class="form-check-label">
+                              <input name="isForApplier" class="form-check-input" type="radio" id="isForApplier2" value="false">
+                              @res.OfferResources.DisplayInputs.Guarantor
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-12 "><hr /><h4 class="h5">@res.OfferResources.DisplayInputs.ClassificationField</h4></div>
+                  <div class="col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label label class="label bmd-label-static">@res.OfferResources.DisplayInputs.ConstuctionWork</label>
+                        <select asp-for="ConstructionWork" data-live-search="true" class="selectpicker" id="ConstructionWorklst"
+                                asp-items="@(new SelectList(Model.ConstructionWorks, "ConstructionWorkId", "Name"))" data-style="select-with-transition" data-size="7">
+                           <option value="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Select</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label label class="label bmd-label-static">@res.OfferResources.DisplayInputs.RunningMentainaceWork</label>
+                        <select asp-for="MaintenanceRunningWork" class="selectpicker" id="MaintenanceWorklst"
+                                asp-items="@(new SelectList(Model.MaintenanceRunningWorks, "MaintenanceRunningWorkId", "Name"))" data-style="select-with-transition" data-size="7">
+                           <option value="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Select</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label label class="label bmd-label-static">@res.OfferResources.DisplayInputs.ClassificationDegree </label>
+                        <select id="specificationDegree" data-live-search="true" class="selectpicker"
+                                data-style="select-with-transition" title="@res.SharedResources.DisplayInputs.Select" data-size="7">
+                           <option value="">@res.SharedResources.DisplayInputs.Select</option>
+                           <option value="1">1</option>
+                           <option value="2">2</option>
+                           <option value="3">3</option>
+                           <option value="4">4</option>
+                           <option value="5">5</option>
+                           <option value="6">6</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="clearfix"></div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="button"
+                       id="uploadClassificationxxx" onclick="AddSpecification()"
+                       value="">
+                  @res.SharedResources.DisplayInputs.Save
+               </button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="clearfix"></div>
+   <div class="row">
+      <div class="col-12">
+         <div class="row tendar-navigation position-relative m-3" style="min-height: 0px;">
+            <ul class="nav nav-pills nav-pills-teal col-12">
+               <li class="nav-item active leader">
+                  <a href="#pill1" data-toggle="tab" class="nav-link active">
+                     <i class="material-icons pull-left" style="padding: 0px 3px;font-size: 24px;">contacts</i> 
+                     <i class="material-icons pull-left text-warning" style="padding: 0px 3px;font-size: 24px;">star</i> @Model.SupplierName
+                  </a>
+               </li>
+            </ul>
+         </div>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.BankGuarantee</h5>
+         <div class="card">
+            <div class="col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached </label><span class="text-danger">*</span>
+                  <div class="form-check">
+                     <label class="form-check-label">
+                        <input name="IsBankGuaranteeAttached" class="form-check-input isFinancialChecking" checked type="radio" id="IsBankGuaranteeAttached1" value="true">
+                        @res.SharedResources.DisplayInputs.Yes
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                     <label class="form-check-label">
+                        <input asp-for="IsBankGuaranteeAttached" name="IsBankGuaranteeAttached" class="form-check-input isFinancialChecking" type="radio" id="IsBankGuaranteeAttached2" value="false">
+                        @res.SharedResources.DisplayInputs.No
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                  </div>
+               </div>
+            </div>
+            <table class="table">
+               <caption></caption>
+               <thead style="background-color: #e0efe8;">
+                  <tr>
+                     <th scope="col">@res.OfferResources.DisplayInputs.BankGuaranteeStatus</th>
+                     <th scope="col">@res.OfferResources.DisplayInputs.BankGuaranteeNumber</th>
+                     <th scope="col">@res.OfferResources.DisplayInputs.GuaranteeValue</th>
+                     <th scope="col">@res.OfferResources.DisplayInputs.BankGuaranteeDays</th>
+                     <th scope="col">@res.OfferResources.DisplayInputs.GuaranteeBankName</th>
+                     <th scope="col">@res.OfferResources.DisplayInputs.GuaranteeStartDate</th>
+                     <th scope="col">@res.OfferResources.DisplayInputs.GuaranteeEndDate</th>
+                     @{
+                        if (!User.IsInRole(RoleNames.OffersOpeningAndCheckManager) && !(User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersFinancialCheckingPending))
+                        {
+                           <th scope="col"></th>
+                        }
+                     }
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr class="GuaranteesGrid" v-for="(tbl,indexD) in BankGuarantees">
+                     <td data-label=" Milestone">
+                        <span> {{tbl.isBankGuaranteeValidString}}</span>
+                        <span style="display:none"> {{tbl.isBankGuaranteeValid}}</span>
+                     </td>
+                     <td data-label=" Quantity">
+                        <span> {{tbl.guaranteeNumber}}</span>
+                     </td>
+                     <td data-label="Unit">
+                        <span> {{tbl.amount}}</span>
+                     </td>
+                     <td data-label="Details">
+                        <span> {{tbl.guaranteeDays}}</span>
+                     </td>
+                     <td data-label="Details">
+                        <span> {{tbl.bankName}}</span>
+                        <span style="display:none"> {{tbl.BankId}}</span>
+                     </td>
+                     <td data-label="Details">
+                        <span format="MM-dd-yyyy"> {{tbl.guaranteeStartDateDisplay}}</span>
+                     </td>
+                     <td data-label="Details">
+                        <span format="MM-dd-yyyy"> {{tbl.guaranteeEndDateDisplay}}</span>
+                     </td>
+                     @{ if (!User.IsInRole(RoleNames.OffersOpeningAndCheckManager) && !(User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersFinancialCheckingPending))
+                         {
+                        <td>
+                           <div class="btn-group" role="group">
+                              <button type="button" class="btn btn-just-icon btn-danger btn-link btn-sm" data-toggle="tooltip" data-placement="top" @@click="deleteGuarantee(indexD)">
+                                 <i class="material-icons">delete</i>
+                              </button>
+                              <button type="button" class="btn btn-just-icon btn-warning btn-link btn-sm" data-toggle="modal" data-placement="top" data-target="#myModal3" @@click="editGuarantee(indexD)">
+                                 <i class="material-icons">edit</i> 
+                              </button>
+                           </div>
+                        </td>
+                        } }
+                  </tr>
+               </tbody>
+               <tfoot>
+                  @{
+                     if (!User.IsInRole(RoleNames.OffersOpeningAndCheckManager) && !(User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersFinancialCheckingPending))
+                     {
+                        <tr>
+                           <td colspan="9">
+                              <button type="button" class="btn btn-primary btn-sm pull-right" name="button" @@click="AddNewGuarantee" data-toggle="modal" data-target="#myModal3">@res.OfferResources.DisplayInputs.AddBankGuarantee</button>
+                           </td>
+                        </tr>
+                     }
+                  }
+               </tfoot>
+            </table>
+         </div>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.ClassificationCertificate</h5>
+         <div class="card">
+            <div class="col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached </label><span class="text-danger">*</span>
+                  <div class="form-check">
+                     <label class="form-check-label">
+                        <input asp-for="IsSpecificationAttached" name="IsSpecificationAttached" class="form-check-input" checked type="radio" id="IsSpecificationAttached1" value="true">
+                        @res.SharedResources.DisplayInputs.Yes
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                     <label class="form-check-label">
+                        <input asp-for="IsSpecificationAttached" name="IsSpecificationAttached" class="form-check-input" type="radio" id="IsSpecificationAttached2" value="false">
+                        @res.SharedResources.DisplayInputs.No
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                  </div>
+               </div>
+            </div>
+            <div class="  col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.ClassificationCertificateStatus  </label>
+                  <div class="form-check">
+                     <label class="form-check-label">
+                        <input asp-for="IsSpecificationValidDate" name="IsSpecificationValidDate" class="form-check-input" checked type="radio" id="IsSpecificationValidDate1" value="true">
+                        @res.SharedResources.DisplayInputs.Valid
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                     <label class="form-check-label">
+                        <input asp-for="IsSpecificationValidDate" name="IsSpecificationValidDate" class="form-check-input" type="radio" id="IsSpecificationValidDate2" value="false">
+                        @res.SharedResources.DisplayInputs.Invalid
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                  </div>
+               </div>
+            </div>
+            <table class="table">
+               <caption></caption>
+               <thead style="background-color: #e0efe8;">
+                  <tr>
+                     <th scope="col">@res.OfferResources.DisplayInputs.ClassificationCertificateFor</th>
+                     <th scope="col">@res.OfferResources.DisplayInputs.ClassificationDegree </th>
+                     <th scope="col">@res.OfferResources.DisplayInputs.ConstuctionWork</th>
+                     <th scope="col">@res.OfferResources.DisplayInputs.RunningMentainaceWork</th>
+                     @{if (!User.IsInRole(RoleNames.OffersOpeningAndCheckManager) && !(User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersFinancialCheckingPending))
+                         {
+                           <th scope="col"></th>
+                         }}
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr class="SpecificationsGrid" v-for="(tbl,indexD) in Specifications">
+                     <td data-label=" Quantity">
+                        <span> {{tbl.isForApplierString}}</span>
+                        <span style="display:none"> {{tbl.iIsForApplier}}</span>
+                     </td>
+                     <td data-label="Unit">
+                        <span> {{tbl.degree}}</span>
+                     </td>
+                     <td data-label="Details">
+                        <span> {{tbl.constructionWorkString}}</span>
+                        <span style="display:none"> {{tbl.constructionWorkId}}</span>
+                     </td>
+                     <td data-label="Details">
+                        <span> {{tbl.maintenanceRunningWorkString}}</span>
+                        <span style="display:none"> {{tbl.maintenanceRunningWorkId}}</span>
+                     </td>
+                     @{if (!User.IsInRole(RoleNames.OffersOpeningAndCheckManager) && !(User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersFinancialCheckingPending))
+                        {
+                           <td>
+                              <div class="btn-group" role="group">
+                                 <button type="button" class="btn btn-just-icon btn-danger btn-link btn-sm" data-toggle="tooltip" data-placement="top" @@click="deleteSpecification(indexD)">
+                                    <i class="material-icons">delete</i> 
+                                 </button>
+                                 <button type="button" class="btn btn-just-icon btn-warning btn-link btn-sm" data-placement="top" @@click="editSpecification(indexD)" id="btnEditSpecification" data-toggle="modal" data-target="#myModal2">
+                                    <i class="material-icons">edit</i> 
+                                 </button>
+                              </div>
+                           </td>
+                        }}
+                  </tr>
+               </tbody>
+               <tfoot>
+                  @{
+                     if (!User.IsInRole(RoleNames.OffersOpeningAndCheckManager) && !(User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersFinancialCheckingPending))
+                     {
+                        <tr>
+                           <td colspan="7">
+                              <button type="button" class="btn btn-primary btn-sm pull-right" name="button" id="btnClassModal" data-toggle="modal" @@click="AddNewSpecification" data-target="#myModal2">@res.OfferResources.DisplayInputs.AddClassification</button>
+                           </td>
+                        </tr>
+                     }
+                  }
+               </tfoot>
+            </table>
+         </div>
+      </div>
+      @if (Model.CombinedOwner == true)
+      {
+         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <h5 class="text-dark-green"> @res.OfferResources.DisplayInputs.PurchaseReceipt</h5>
+            <div class="card">
+               <div class="card-body">
+                  <div class=" ">
+                     <div class="form-group bmd-form-group">
+                        <span id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached</span><span class="text-danger">*</span>
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input name="IsPurchaseBillAttached" class="form-check-input" checked type="radio" id="isBillAttached1" value="true" @(User.IsInRole(RoleNames.OffersOpeningAndCheckManager) ? "disabled='disabled'" : "" )>
+                              @res.SharedResources.DisplayInputs.Yes
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <label class="form-check-label">
+                              <input asp-for="IsPurchaseBillAttached" name="IsPurchaseBillAttached" class="form-check-input" type="radio" id="isBillAttached2" value="false">
+                              @res.SharedResources.DisplayInputs.No
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.SiteVisitation</h5>
+            <div class="card">
+               <div class="card-body">
+                  <div class=" ">
+                     <div class="form-group bmd-form-group">
+                        <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached</label><span class="text-danger">*</span>
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input asp-for="IsVisitationAttached" name="IsVisitationAttached" class="form-check-input" checked type="radio" id="isVisitationFileAttached1" value="true">
+                              @res.SharedResources.DisplayInputs.Yes
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <label class="form-check-label">
+                              <input asp-for="IsVisitationAttached" name="IsVisitationAttached" class="form-check-input" type="radio" id="isVisitationFileAttached2" value="false">
+                              @res.SharedResources.DisplayInputs.No
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      }
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+         <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.ZakatCerificate</h5>
+         <div class="card">
+            <div class="card-body">
+               <div class=" ">
+                  <div class="form-group bmd-form-group">
+                     <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached </label><span class="text-danger">*</span>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="IsZakatAttached" name="IsZakatAttached" class="form-check-input" checked type="radio" id="IsZakatAttached1" value="true">
+                           @res.SharedResources.DisplayInputs.Yes
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input asp-for="IsZakatAttached" name="IsZakatAttached" class="form-check-input" type="radio" id="IsZakatAttached2" value="false">
+                           @res.SharedResources.DisplayInputs.No
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+               <div>
+                  <div class="form-group bmd-form-group">
+                     <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.ZakatCerificateStatus</label>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="IsZakatValidDate" name="IsZakatValidDate" class="form-check-input" checked type="radio" id="IsZakatValidDate1" value="true">
+                           @res.SharedResources.DisplayInputs.Valid
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input asp-for="IsZakatValidDate" name="IsZakatValidDate" class="form-check-input" type="radio" id="IsZakatValidDate2" value="false">
+                           @res.SharedResources.DisplayInputs.Invalid
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+         <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.SocialInsuranceCerificate</h5>
+         <div class="card">
+            <div>
+               <div>
+                  <div class="form-group bmd-form-group">
+                     <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached </label><span class="text-danger">*</span>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="IsSocialInsuranceAttached" name="IsSocialInsuranceAttached" class="form-check-input" checked type="radio" id="isSocialInsuranceAttached1" value="true">
+                           @res.SharedResources.DisplayInputs.Yes
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input asp-for="IsSocialInsuranceAttached" name="IsSocialInsuranceAttached" class="form-check-input" type="radio" id="isSocialInsuranceAttached2" value="false">
+                           @res.SharedResources.DisplayInputs.No
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+               <div>
+                  <div class="form-group bmd-form-group">
+                     <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.SocialInsuranceCerificateStatus</label><span class="text-danger">*</span>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="IsSocialInsuranceValidDate" name="IsSocialInsuranceValidDate" class="form-check-input" checked type="radio" id="IsSocialInsuranceValidDate1" value="true">
+                           @res.SharedResources.DisplayInputs.Valid
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input asp-for="IsSocialInsuranceValidDate" name="IsSocialInsuranceValidDate" class="form-check-input" type="radio" id="IsSocialInsuranceValidDate2" value="false">
+                           @res.SharedResources.DisplayInputs.Invalid
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+         <h5 class="text-dark-green">
+            @res.OfferResources.DisplayInputs.SuadizationCerificate
+         </h5>
+         <div class="card">
+            <div class="card-body">
+               <div class=" ">
+                  <div class="form-group bmd-form-group">
+
+                     <label id="" class="label bmd-label-static"> @res.OfferResources.DisplayInputs.Attached</label><span class="text-danger">*</span>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="IsSaudizationAttached" name="IsSaudizationAttached" class="form-check-input" checked type="radio" id="isSaudizationFilesAttached1" value="true">
+                           @res.SharedResources.DisplayInputs.Yes
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input asp-for="IsSaudizationAttached" name="IsSaudizationAttached" class="form-check-input" type="radio" id="isSaudizationFilesAttached2" value="false">
+                           @res.SharedResources.DisplayInputs.No
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+               <div>
+                  <div class="form-group bmd-form-group">
+                     <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.SaudizationStatus </label>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="IsSaudizationValidDate" name="IsSaudizationValidDate" class="form-check-input" checked type="radio" id="SaudizationStatus1" value="true">
+                           @res.SharedResources.DisplayInputs.Valid
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input asp-for="IsSaudizationValidDate" name="IsSaudizationValidDate" class="form-check-input" type="radio" id="SaudizationStatus2" value="false">
+                           @res.SharedResources.DisplayInputs.Invalid
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+         <h5 class="text-dark-green"> @res.OfferResources.DisplayInputs.CommercialRegisterCopy </h5>
+         <div class="card">
+            <div class="card-body">
+               <div>
+                  <div class="form-group bmd-form-group">
+                     <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached </label><span class="text-danger">*</span>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="IsCommercialRegisterAttached" name="IsCommercialRegisterAttached" class="form-check-input" checked type="radio" id="isCommercialRegisterAttached1" value="true">
+                           @res.SharedResources.DisplayInputs.Yes
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input asp-for="IsCommercialRegisterAttached" name="IsCommercialRegisterAttached" class="form-check-input" type="radio" id="isCommercialRegisterAttached2" value="false">
+                           @res.SharedResources.DisplayInputs.No
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+               <div>
+                  <div class="form-group bmd-form-group">
+                     <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.CommercialRegisterStatus  </label>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="IsCommercialRegisterValid" name="IsCommercialRegisterValid" class="form-check-input" checked type="radio" id="CommercialRegisterStatus1" value="true">
+                           @res.SharedResources.DisplayInputs.Valid
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input asp-for="IsCommercialRegisterValid" name="IsCommercialRegisterValid" class="form-check-input" type="radio" id="CommercialRegisterStatus2" value="false">
+                           @res.SharedResources.DisplayInputs.Invalid
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+         <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.ChamberJoining  </h5>
+         <div class="card">
+            <div class="card-body">
+               <div class=" ">
+                  <div class="form-group bmd-form-group">
+                     <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached</label><span class="text-danger">*</span>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="IsChamberJoiningAttached" name="IsChamberJoiningAttached" class="form-check-input" checked type="radio" id="isChamberJoiningAttached1" value="true">
+                           @res.SharedResources.DisplayInputs.Yes
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input asp-for="IsChamberJoiningAttached" name="IsChamberJoiningAttached" class="form-check-input" type="radio" id="isChamberJoiningAttached2" value="false">
+                           @res.SharedResources.DisplayInputs.No
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+               <div>
+                  <div class="form-group bmd-form-group">
+                     <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.ChamberJoiningStatus </label>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="IsChamberJoiningValid" name="IsChamberJoiningValid" class="form-check-input" checked type="radio" id="ChamberJoiningStatus1" value="true">
+                           @res.SharedResources.DisplayInputs.Valid
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input asp-for="IsChamberJoiningValid" name="IsChamberJoiningValid" class="form-check-input" type="radio" id="ChamberJoiningStatus2" value="false">
+                           @res.SharedResources.DisplayInputs.Invalid
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      @if (@Model.CombinedOwner == true)
+      {
+         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12" title="خطاب العرض">
+            @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+            {
+               <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.OfferLetter </h5>
+            }
+            else
+            {
+               <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.TechnicalOfferLetter </h5>
+            }
+            <div class="card">
+               <div class="card-body">
+                  <div class="row">
+                     <div>
+                        <div class="form-group bmd-form-group">
+                           <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached</label><span class="text-danger">*</span>
+                           <div class="form-check">
+                              <label class="form-check-label">
+                                 <input asp-for="IsOfferLetterAttached" name="IsOfferLetterAttached" class="form-check-input isFinancialChecking" checked type="radio" id="isOfferLetterAttached1" value="true">
+                                 @res.SharedResources.DisplayInputs.Yes
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                              <label class="form-check-label">
+                                 <input asp-for="IsOfferLetterAttached" name="IsOfferLetterAttached" class="form-check-input isFinancialChecking" type="radio" id="isOfferLetterAttached2" value="false">
+                                 @res.SharedResources.DisplayInputs.No
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class=" col-md-6 col-sm-12">
+                        <div class="form-group bmd-form-group">
+                           <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.OfferLetterNumber </label>
+                           <input class="form-control isFinancialChecking" asp-for="OfferLetterNumber" name="OfferLetterNumber" id="OfferLetterNumber" />
+                        </div>
+                     </div>
+                     <div class=" col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <input asp-for="CombinedIdString" id="CombinedIdString" name="CombinedIdString" type="hidden" />
+                           <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.OfferLetterDate</label>
+                           <input type="text" asp-for="OfferLetterDate" id="offerLetterDate" name="OfferLetterDate" class="form-control datepicker-mix datepicker-hijri datepicker-gregorian inputMask isFinancialChecking" />
+                           @Html.ValidationMessageFor(model => model.OfferLetterDate, "", new { @class = "text-danger" })
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      }
+   </div>
+   @if (@Model.CombinedOwner == true)
+   {
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+         @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+         {
+            <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.OfferCopy</h5>
+         }
+         else
+         {
+            <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.TechnicalOfferCopy</h5>
+         }
+         <div class="card">
+            <div class="card-body">
+               <div class="row">
+                  <div class=" ">
+                     <div class="form-group bmd-form-group">
+                        <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached</label><span class="text-danger">*</span>
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input asp-for="IsOfferCopyAttached" name="IsOfferCopyAttached" class="form-check-input isFinancialChecking" checked type="radio" id="isOfferCopyAttached1" value="true">
+                              @res.SharedResources.DisplayInputs.Yes
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <label class="form-check-label">
+                              <input asp-for="IsOfferCopyAttached" name="IsOfferCopyAttached" class="form-check-input isFinancialChecking" type="radio" id="isOfferCopyAttached2" value="false">
+                              @res.SharedResources.DisplayInputs.No
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   }
+</div>
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script src="~/Etimad-UI/assets/js/vue-app/vue2-filters.min.js"></script>
+<script src="~/Etimad-UI/assets/js/vue-app/pagination.js"></script>
+<script>
+   var isClassEdit = 0;
+   var classEditIndex;
+   var isGuaranteeEdit = 0;
+   var GuaranteeEditIndex;
+   var guaranteesList = [];
+   var classificationsList = [];
+   @if (Model != null && Model.BankGuaranteeFiles != null)
+   {
+      @:guaranteesList = @Html.Raw(Json.Serialize(Model.BankGuaranteeFiles));
+      @:classificationsList = @Html.Raw(Json.Serialize(Model.SpecificationsFiles));
+   }
+   var vueObj = new Vue({
+      el: "#app",
+      data: {
+         BankGuarantees: guaranteesList,
+         Specifications: classificationsList
+      },
+      methods: {
+         deleteGuarantee: function (im) {
+            this.BankGuarantees.splice(im, 1);
+         },
+         deleteSpecification: function (im) {
+
+            this.Specifications.splice(im, 1);
+         },
+         AddNewSpecification: function () {
+            isClassEdit = 0;
+            cleanSpecificationModal();
+         },
+         AddNewGuarantee: function () {
+            isGuaranteeEdit = 0;
+            cleanBankModal();
+         },
+         editSpecification: function (im) {
+            var ClassObj = this.Specifications[im];
+            isClassEdit = 1;
+            classEditIndex = im;
+            if (ClassObj.isForApplier == 'true')
+               $("#isForApplier1").prop("checked", true);
+            else
+               $("#isForApplier2").prop("checked", true);
+            $('#specificationDegree').val(ClassObj.degree);
+            $('#ConstructionWorklst').val(ClassObj.constructionWorkId);
+            $('#MaintenanceWorklst').val(ClassObj.maintenanceRunningWorkId);
+            $("#specificationDegree, #MaintenanceWorklst, #ConstructionWorklst").selectpicker("refresh");
+         },
+         editGuarantee: function (im) {
+            var bankObj = this.BankGuarantees[im];
+            isGuaranteeEdit = 1;
+            GuaranteeEditIndex = im;
+            if (bankObj.isBankGuaranteeValid == 'true')
+               $("#guaranteeStatus1").prop("checked", true);
+            else
+               $("#guaranteeStatus2").prop("checked", true);
+            $('#tb_GuaranteeNUmber').val(bankObj.guaranteeNumber);
+            $('#tb_GuaranteeValue').val(bankObj.amount);
+            $('#tb_GuaranteeDays').val(bankObj.guaranteeDays);
+            $('#bankName').val(bankObj.bankId);
+            $('#tb_GuaranteeStartDate').val(bankObj.guaranteeStartDateDisplay);
+            $('#tb_GuaranteeEndDate').val(bankObj.guaranteeEndDateDisplay);
+            $("#bankName").selectpicker("refresh");
+         }
+      }
+   });
+   $(document).ready(function () {
+      if (@User.IsInRole(RoleNames.OffersOpeningAndCheckManager).ToString().ToLower() == 'true' || @((User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && Model.TenderStatusId != (int)Enums.TenderStatus.VROOffersFinancialChecking).ToString().ToLower()) == 'false') {
+         $("input").attr('disabled', true);
+         $('.check').attr("disabled", true);
+      }
+   });
+   function SaveAttachmentDetails() {
+      var obj = {};
+      obj.OfferLetterNumber = $("#OfferLetterNumber").val();
+      obj.offerLetterDate = $("#offerLetterDate").val();
+      obj.CombinedIdString = $("#CombinedIdString").val();
+      obj.SpecificationsFiles = vueObj.Specifications;
+      obj.BankGuaranteeFiles = vueObj.BankGuarantees;
+      obj.OfferLetterNumber = $("#OfferLetterNumber").val();
+      obj.IsOfferLetterAttached = $("input[name='IsOfferLetterAttached']:checked").val();
+      obj.IsChamberJoiningAttached = $("input[name='IsChamberJoiningAttached']:checked").val();
+      obj.IsChamberJoiningValid = $("input[name='IsChamberJoiningValid']:checked").val();
+      obj.IsCommercialRegisterAttached = $("input[name='IsCommercialRegisterAttached']:checked").val();
+      obj.IsCommercialRegisterValid = $("input[name='IsCommercialRegisterValid']:checked").val();
+      obj.IsOfferCopyAttached = $("input[name='IsOfferCopyAttached']:checked").val();
+      obj.IsPurchaseBillAttached = $("input[name='IsPurchaseBillAttached']:checked").val();
+      obj.IsSaudizationAttached = $("input[name='IsSaudizationAttached']:checked").val();
+      obj.IsSaudizationValidDate = $("input[name='IsSaudizationValidDate']:checked").val();
+      obj.IsSocialInsuranceAttached = $("input[name='IsSocialInsuranceAttached']:checked").val();
+      obj.IsSocialInsuranceValidDate = $("input[name='IsSocialInsuranceValidDate']:checked").val();
+      obj.IsVisitationAttached = $("input[name='IsVisitationAttached']:checked").val();
+      obj.IsZakatAttached = $("input[name='IsZakatAttached']:checked").val();
+      obj.IsZakatValidDate = $("input[name='IsZakatValidDate']:checked").val();
+      obj.IsBankGuaranteeAttached = $("input[name='IsBankGuaranteeAttached']:checked").val();
+      obj.IsSpecificationAttached = $("input[name='IsSpecificationAttached']:checked").val();
+      obj.IsSpecificationValidDate = $("input[name='IsSpecificationValidDate']:checked").val();
+      obj.OfferIdString = "@Model.OfferIdString";
+      obj.CombinedOwner = "@Model.CombinedOwner";
+      obj.CombinedIdString = "@Model.CombinedIdString";
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $('#LoadingSite').fadeIn();
+      $.post("/Offer/OfferDetail", {
+         model: obj, __RequestVerificationToken: token
+      }).done(function () {
+         $('#LoadingSite').fadeOut();
+         AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+         window.location = "/Offer/ApplyOfferOpening/@Model.TenderIDString/@Model.OfferIdString";
+      }).fail(function (error) {
+         $('#LoadingSite').fadeOut();
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });
+   }
+   function AddBankGuarantee() {
+      if ($('#tb_GuaranteeNUmber').val().trim() == "") {
+         $('#vdGuaranteeNUmber').show();
+         return false;
+      }
+      if ($('#bankName').val() == "") {
+         $('#vdbankName').show();
+         return false;
+      }
+      if ($('#tb_GuaranteeValue').val().trim() == "") {
+         $('#vdGuaranteeValue').show();
+         return false;
+      }
+      var bankObj = {};
+      bankObj.isBankGuaranteeValid = $("input[name='guaranteeStatus']:checked").val();
+      bankObj.isBankGuaranteeValidString = $("input[name='guaranteeStatus']:checked").parent('label').text();
+      bankObj.guaranteeNumber = $('#tb_GuaranteeNUmber').val();
+      bankObj.amount = $('#tb_GuaranteeValue').val();
+      bankObj.guaranteeDays = $('#tb_GuaranteeDays').val();
+      bankObj.bankId = $('#bankName option:selected').val();
+      bankObj.bankName = $('#bankName option:selected').text();
+      bankObj.guaranteeEndDate = $('#tb_GuaranteeEndDate').val();
+      var startDate = "";
+      var endDate = "";
+      bankObj.guaranteeStartDate = $('#tb_GuaranteeStartDate').val();
+      bankObj.guaranteeStartDateDisplay = $('#tb_GuaranteeStartDate').val();
+      if ($("#tb_GuaranteeEndDate").val() != "") {
+         if ($('#cb_tb_GuaranteeEndDate').is(':checked')) {
+            var x = $("#tb_GuaranteeEndDate").val().split('/');
+            endDate = x[1] + '/' + x[0] + '/' + x[2];
+         }
+         else {
+            endDate = convertUmmalquraToGregorian($("#tb_GuaranteeEndDate").val());
+         }
+      }
+      if ($("#tb_GuaranteeStartDate").val() != "") {
+         if ($('#cb_tb_GuaranteeStartDate').is(':checked')) {
+            var x = $("#tb_GuaranteeStartDate").val().split('/');
+            startDate = x[1] + '/' + x[0] + '/' + x[2];
+         }
+         else {
+            startDate = convertUmmalquraToGregorian($("#tb_GuaranteeStartDate").val());
+         }
+      }
+      if (new Date(startDate) > new Date(endDate)) {
+         $('#vdDates').show();
+         return false;
+      }
+      bankObj.guaranteeEndDate = $('#tb_GuaranteeEndDate').val();
+      bankObj.guaranteeEndDateDisplay = $('#tb_GuaranteeEndDate').val();
+      vueObj.BankGuarantees.push(bankObj);
+      if (isGuaranteeEdit == 1) {
+         vueObj.BankGuarantees.splice(GuaranteeEditIndex, 1);
+      }
+      $('#vdDates').hide();
+      $('#myModal3').modal('hide');
+      cleanBankModal();
+   }
+   function cleanBankModal() {
+      $('.datepicker-gregorian').val('')
+      $('#vdGuaranteeNUmber').hide();
+      $('#vdbankName').hide();
+      $('#vdGuaranteeValue').hide();
+      $("input[name='guaranteeStatus'][value=" + true + "]").prop('checked', true);
+      $('#tb_GuaranteeNUmber').val("");
+      $('#tb_GuaranteeValue').val("");
+      $('#tb_GuaranteeDays').val("");
+      $("#tb_GuaranteeStartDate").val('');
+      $("#hdntb_GuaranteeStartDate").val('')
+      $('#tb_GuaranteeEndDate').val('');
+      $("#bankName").val("");
+      $("#bankName").selectpicker("refresh");
+      $('#txtGuaranteesValidation').hide();
+   }
+   function cleanSpecificationModal() {
+      $('#vdGuaranteeNUmber').hide();
+      $('#vdbankName').hide();
+      $('#vdGuaranteeValue').hide();
+      $("input[name='isForApplier'][value=" + true + "]").prop('checked', true);
+      $('#specificationDegree').val("");
+      $('#ConstructionWorklst').val("");
+      $('#MaintenanceWorklst').val("");
+      $('#txtSpecificationsValidation').hide();
+      $("#specificationDegree, #MaintenanceWorklst, #ConstructionWorklst").selectpicker("refresh");
+   }
+   function AddSpecification() {
+      var ClassObj = {};
+      ClassObj.isSpecificationValidDate = $("input[name='specificationStatus']:checked").val();
+      ClassObj.isSpecificationValidDateString = $("input[name='specificationStatus']:checked").parent('label').text();
+      ClassObj.isForApplier = $("input[name='isForApplier']:checked").val();
+      ClassObj.isForApplierString = $("input[name='isForApplier']:checked").parent('label').text();
+      ClassObj.degree = $('#specificationDegree  option:selected').val();
+      ClassObj.attachmentId = 0;
+      ClassObj.constructionWorkId = $('#ConstructionWorklst  option:selected').val();
+      if ($('#ConstructionWorklst  option:selected').val() == "")
+         ClassObj.constructionWorkString = "";
+      else
+         ClassObj.constructionWorkString = $('#ConstructionWorklst  option:selected').text();
+      ClassObj.maintenanceRunningWorkId = $('#MaintenanceWorklst  option:selected').val();
+      if ($('#MaintenanceWorklst  option:selected').val() == "")
+         ClassObj.maintenanceRunningWorkString = "";
+      else
+         ClassObj.maintenanceRunningWorkString = $('#MaintenanceWorklst  option:selected').text();
+      vueObj.Specifications.push(ClassObj);
+      if (isClassEdit == 1) {
+         vueObj.Specifications.splice(classEditIndex, 1);
+      }
+      $('#myModal2').modal('hide');
+      cleanSpecificationModal();
+   }
+   $('.modal > div').addClass('modal-lg');
+   function RedirectURL(fileNetReferenceId, fileName) {
+      window.open("/Upload/getfile/" + fileNetReferenceId + ":" + fileName, '_blank');
+   }
+   function isValidForm() {
+      var flag = 1;
+      if (vueObj.BankGuarantees.length == 0) {
+         $('#txtGuaranteesValidation').show();
+         flag = flag * 0;
+      }
+      if (vueObj.Specifications.length == 0) {
+         $('#txtSpecificationsValidation').show();
+         flag = flag * 0;
+      }
+      if (flag == 0)
+         return false;
+      return true;
+   }
+</script>

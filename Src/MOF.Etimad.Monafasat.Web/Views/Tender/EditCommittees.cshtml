@@ -1,0 +1,234 @@
+@model MOF.Etimad.Monafasat.ViewModel.EditeCommitteesModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditCommittee;
+
+   bool canEditCheckingCommittee = (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppening || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedPending
+      || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedRejected || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedConfirmed) ? true : false;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditCommittee</li>
+      </ol>
+   </nav>
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+</style>
+
+@section modalTitle{
+   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+}
+@section modalContent{
+   <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmUpdateCommittee
+   </div>
+}
+@section modalButtons{
+   <button type="submit" class="btn btn-link btn-success" name="submit" id="btnApproveConfirmation">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</button>
+   <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+}
+<form id="editCommitteeForm" method="POST" asp-controller="Tender" asp-action="EditCommittees" autocomplete="off">
+   @Html.AntiForgeryToken()
+
+   <div id="app">
+      <input asp-for="IsAgancyHasTechnicalCommittee" type="hidden" />
+      <input asp-for="TenderIdString" type="hidden" />
+      <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+      <div class="card">
+         <div class="col-md-6 col-sm-12 col-xs-12" style="padding-left:10px;">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.TenderName)</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.TenderTypeName)</span>
+                     </div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+         <div class="col-md-6 col-sm-12 col-xs-12" style="padding-left:10px;">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.TenderStatusName)</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.ReferenceNumber)</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.TenderNumber)</span>
+                     </div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+         <div class="card-body">
+            <div class="row">
+               @if (((Model.TenderStatusId == 0 || Model.TenderStatusId == (int)Enums.TenderStatus.UnderEstablishing || Model.TenderStatusId == (int)Enums.TenderStatus.Established || Model.TenderStatusId == (int)Enums.TenderStatus.Approved) && Model.LastEnqueriesDate.HasValue && Model.LastEnqueriesDate.Value >= DateTime.Now.Date))
+               {
+                  <div class="col-lg-4 col-sm-6 col-xs-12" id="divTechnicalCommittee">
+                     <div class="form-group bmd-form-group">
+                        <label asp-for="TechnicalOrganizationId" class="label bmd-label-static"></label><span id="techCommitteeIdVAlidation" class="text-danger">*</span>
+                        <select data-live-search="true" asp-for="TechnicalOrganizationId" name="TechnicalOrganizationId"
+                                asp-items="@(new SelectList(Model.TechnicalCommittees, "CommitteeId", "CommitteeName"))" id="dD_TechnicalOrganizationId" class="selectpicker" data-style="select-with-transition" data-size="7">
+                           <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseTechnicalCommittee </option>
+                        </select>
+                        <span asp-validation-for="TechnicalOrganizationId" class="text-danger"></span>
+                     </div>
+                  </div>
+               }
+               @if (Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects && Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase && (Model.TenderStatusId == 0 || Model.TenderStatusId == (int)Enums.TenderStatus.UnderEstablishing || Model.TenderStatusId == (int)Enums.TenderStatus.Established || Model.TenderStatusId == (int)Enums.TenderStatus.Approved))
+               {
+                  <div class="col-lg-4 col-sm-6 col-xs-12" id="divOfferOpeningCommittee">
+                     <div class="form-group bmd-form-group">
+                        <label asp-for="OffersOpeningCommitteeId" class="label bmd-label-static"></label>
+                        <select data-live-search="true" class="selectpicker" asp-for="OffersOpeningCommitteeId" id="dD_OffersOpeningCommitteeId" data-style="select-with-transition"
+                                asp-items="@(new SelectList(Model.OfferOpenningCommittees, "CommitteeId", "CommitteeName"))" data-size="7">
+                           <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseOfferOpenCommitte</option>
+                        </select>
+                     </div>
+                  </div>
+               }
+               @if (Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects && Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase && (Model.TenderStatusId == 0 || Model.TenderStatusId == (int)Enums.TenderStatus.UnderEstablishing || Model.TenderStatusId == (int)Enums.TenderStatus.Established || Model.TenderStatusId == (int)Enums.TenderStatus.Approved || canEditCheckingCommittee))
+               {
+                  <div class="col-lg-4 col-sm-6 col-xs-12" id="divOfferCheckingCommittee">
+                     <div class="form-group bmd-form-group">
+                        <label asp-for="OffersCheckingCommitteeId" class="label bmd-label-static"></label>
+                        <select data-live-search="true" asp-for="OffersCheckingCommitteeId" class="selectpicker" id="dD_OffersCheckingCommitteeId" data-style="select-with-transition"
+                                asp-items="@(new SelectList(Model.OfferCheckingCommittees, "CommitteeId", "CommitteeName"))" data-size="7">
+                           <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseOfferCheckCommittee</option>
+                        </select>
+                     </div>
+                  </div>}
+               @if ((Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects) && (Model.TenderStatusId == 0 || Model.TenderStatusId == (int)Enums.TenderStatus.UnderEstablishing || Model.TenderStatusId == (int)Enums.TenderStatus.Established || Model.TenderStatusId == (int)Enums.TenderStatus.Approved))
+               {
+                  <div class="col-lg-4 col-sm-6 col-xs-12" id="divVROCommittee">
+                     <div class="form-group bmd-form-group">
+                        <label asp-for="VROCommitteeId" class="label bmd-label-static"></label>
+                        <select data-live-search="true" asp-for="VROCommitteeId" class="selectpicker" id="dD_VROCommitteeId" data-style="select-with-transition"
+                                asp-items="@(new SelectList(Model.VROCommittees, "CommitteeId", "CommitteeName"))" data-size="7">
+                           <option value="">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.VROCommitteeSelect</option>
+                        </select>
+                     </div>
+                  </div>
+               }
+               @if (Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase && (Model.TenderStatusId == 0 || Model.TenderStatusId == (int)Enums.TenderStatus.UnderEstablishing || Model.TenderStatusId == (int)Enums.TenderStatus.Established || Model.TenderStatusId == (int)Enums.TenderStatus.Approved))
+               {
+
+                  @if (Model.EstimatedValue > (int)Enums.TenderBudget.LowBudget || !Model.IsLowBudgetDirectPurchase.HasValue || !Model.IsLowBudgetDirectPurchase.Value)
+                  {
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divDirectPurchase">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="DirectPurchaseCommitteeId" class="label bmd-label-static"></label>
+                           <select data-live-search="true" asp-for="DirectPurchaseCommitteeId" class="selectpicker" id="dD_DirectPurchaseCommitteeId" data-style="select-with-transition"
+                                   asp-items="@(new SelectList(Model.DirectPurchaseCommittees, "CommitteeId", "CommitteeName"))" data-size="7">
+                              <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectDirectPurchaseCommittee</option>
+                           </select>
+                        </div>
+                     </div>
+                  }
+                  else
+                  {
+                     <div class="form-group bmd-form-group">
+                        <label asp-for="DirectPurchaseCommitteeMemberId" class="label bmd-label-static"></label>
+                        <select data-live-search="true" id="directPurchaseCommitteeMemberId" name="DirectPurchaseCommitteeMemberId" class="selectpicker"
+                                asp-for="DirectPurchaseCommitteeMemberId"
+                                title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DirectPurchaseCommitteeMemberId" data-style="select-with-transition"
+                                asp-items="@(new SelectList(Model.DirectPurchaseCommitteeMember, "UserId", "UserName"))" data-size="7">
+                           <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DirectPurchaseCommitteeMemberId</option>
+                        </select>
+
+                     </div>
+                  }
+               }
+            </div>
+            <div class="clearfix"></div>
+         </div>
+      </div>
+      <div class="">
+         <button type="submit" class="btn btn-primary etd-search-btn" id="btnSave">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+         </button>
+         <a asp-action="Index" asp-controller="Tender" class="btn btn-outline-primary btn-link pull-right">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+         </a>
+      </div>
+   </div>
+</form>
+
+@section scripts{
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script type="text/javascript">
+      $(document).ready(function () {
+
+         if ('@Model.IsAgancyHasTechnicalCommittee' == 'True') {
+
+            $("#techCommitteeIdVAlidation").attr('hidden', false);
+         } else {
+            $("#techCommitteeIdVAlidation").attr('hidden', true);
+         }
+
+         if ('@Model.IsAgancyHasTechnicalCommittee' == 'True') {
+            $('#editCommitteeForm').validate({
+               rules: {
+                  TechnicalOrganizationId: {
+                     required: true
+                  },
+               },
+               messages: {
+                  TechnicalOrganizationId: {
+                     required: '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.TechnicalOrganizationRequired)'
+                  },
+               },
+               errorPlacement: function (error, element) {
+                  error.css({ 'color': 'red' });
+                  error.insertAfter(element);
+               }
+            });
+         }
+
+      });
+
+
+</script>
+

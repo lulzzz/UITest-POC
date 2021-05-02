@@ -1,0 +1,118 @@
+@model MOF.Etimad.Monafasat.ViewModel.ManageUsersAssignationModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using MOF.Etimad.Monafasat.ViewModel;
+@{
+
+}
+
+   <div class="card card-body">
+      <div class="text-right">
+         <button id="closeSearch" type="button" class="btn btn-sm btn-link btn-default pull-right p-1">
+            <i class="material-icons">close</i>
+
+         </button>
+      </div>
+      <div class="row">
+         <div class="col-12">
+            <a class="search-expand d-block collapsed" data-toggle="collapse" href="#basicInfo" role="button" aria-expanded="false" aria-controls="basicInfo">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation <i class="material-icons pull-right">keyboard_arrow_up</i></a>
+            <div class="collapse multi-collapse" id="basicInfo">
+               <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <input type="text" class="form-control" id="txtCommericalRegisterNo" name="CommericalRegisterNo" maxlength="50" placeholder="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.CommericalRegisterNo">
+                        <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.CommericalRegisterNo</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <input type="text" class="form-control" id="txtCommericalRegisterName" name="CommericalRegisterName" maxlength="50" placeholder="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.CommericalRegisterName">
+                        <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.CommericalRegisterName</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <input type="text" class="form-control" id="txtNationalId" name="NationalId" maxlength="50" placeholder="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.NationalId">
+                        <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.EnterNationalId</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <input type="text" class="form-control" id="txtEMail" name="EMail" maxlength="50" placeholder="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.Email">
+                        <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.EnterEmail</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <input type="text" class="form-control" id="txtActivityDescription" name="ActivityDescription" maxlength="50" placeholder="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.ActivityDescription">
+                        <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.ActivityDescription</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <select data-live-search="false" id="MainActitvitiesList" class="selectpicker" @@change="GetSecondryActitvitiesByParentId()" title="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.MainActivity" v-model="selectedMainActivity" data-style="select-with-transition">
+                           <option value="
+                                ">
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All
+                           </option>
+                           <option :value="ac.id" v-for="ac in MainActitvities">{{ac.name}}</option>
+                        </select> <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.MainActivity</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <select data-live-search="false" id="SecondaryActivitiesList" class="selectpicker" @@change="GetSubSecondryActitvitiesByParentId()" title="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.SecondaryActivity" v-model="selectedSecondryActivity" data-style="select-with-transition">
+                           <option value="-1">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                           <option :value="ac.id" v-for="ac in SecondaryActivities">{{ac.name}}</option>
+                        </select> <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.SecondaryActivity</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <select id="SubSecondaryActivitiesList" @@change="UpdatebyActivitiesId()" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.SecondaryActivity" data-style="select-with-transition" v-model="selectedSubSecondryActivity">
+                           <option value="-1">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                           <option :value="ac.id" v-for="ac in SubSecondaryActivities">{{ac.name}}</option>
+                        </select> <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.SubLevel</span>
+                     </div>
+                  </div>
+                  @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer))
+                  {
+                     <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <select id="FavouriteSuppliersList" name="FavouriteSupplierListId" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.IsFavourite" data-style="select-with-transition">
+                              <option value="-1">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                              <option :value="ac.favouriteSupplierListId" v-for="ac in FavouriteSuppliersList">{{ac.name}}</option>
+                           </select> <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.IsFavourite</span>
+                        </div>
+                     </div>
+                  }
+                  @*<div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <div class="form-check">
+                           <label class="form-check-label text-dark-green" style="margin-bottom:10px">
+                              @MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.IsFavourite
+                              <input class="form-check-input" name="IsFavourite" type="checkbox" id="chkFavourite">
+
+                              <span class="form-check-sign">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>*@
+                  <input type="hidden" v-model="MainActivitiesId" name="MainActivitiesId" />
+                  <input type="hidden" v-model="ActivitesLevelId" name="ActivitesLevelId" />
+
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="input-group-prepend pull-left etd-search-btn">
+         <button type="button" class="btn btn-primary btn-block text-center btn-sm" id="searchBtn" name="button" @@click="search">
+            <i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+         </button>
+         <button type="reset" class="btn btn-block text-center btn-sm" name="reset" @@click="reset">
+            <i class="material-icons">close</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+         </button>
+      </div>
+   </div>
+

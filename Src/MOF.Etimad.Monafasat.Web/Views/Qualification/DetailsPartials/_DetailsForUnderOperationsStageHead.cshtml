@@ -1,0 +1,97 @@
+@using res = MOF.Etimad.Monafasat.Resources
+<meta charset="utf-8" />
+<style>
+   .blockquote .blockquote {
+      background-color: #fff;
+      border-color: #999999
+   }
+
+      .blockquote .blockquote span {
+         font-size: 0.9rem;
+      }
+
+   @@media print {
+      li.list-group-item * {
+         font-size: 20px !important;
+      }
+
+      #printDiv > div {
+         width: 100% !important;
+      }
+   }
+</style>
+
+@section pagecontrols{
+   <div class="dropdown">
+      <a target="_blank" class=" btn btn-outline-primary btn-link btn-just-icon"
+         href="OpenTenderDetailsReport?tenderIdString=@Model.TenderIdString"
+         title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails"
+         data-original-title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails">
+         <i class="material-icons">assignment</i> <div class="ripple-container"></div>
+      </a>
+      <a target="_blank" class=" btn btn-outline-primary btn-link btn-just-icon"
+         href="OpenTenderAdvDetailsReport?tenderIdString=@Model.TenderIdString"
+         title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderAdvReport"
+         data-original-title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderAdvReport">
+         <i class="material-icons">insert_drive_file</i> <div class="ripple-container"></div>
+      </a>
+   </div>
+}
+<div class="modal fade" id="enquiryModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@res.EnquiryResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="row" id="divApprove">
+               <div class="col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label id="" class="label bmd-label-static"> @res.EnquiryResources.Messages.EnquiryReplyMsg</label>
+                  </div>
+               </div>
+               <div class="clearfix"></div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button" id="btnSendEnquiryConfirmation">@res.EnquiryResources.DisplayInputs.Send</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="changeRequestModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@res.EnquiryResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="col-12" id="divChangeRequestRejectReason">
+               <div class="form-group bmd-form-group" style="padding-top:0">
+                  <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+                  <input type="text" class="form-control" id="txtRejectionReasonChangeRequest" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason" />
+                  <div class="pull-left">
+                     <span class="bmd-help text-danger" id="txtChangeRequestRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary" name="button" id="btnExtendDateApprovalConfirm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmApprovingChange</button>
+            <button type="button" class="btn  btn-primary" name="button" id="btnExtendDateRejectConfirm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmRejectingChange</button>
+            <button type="button" class="btn  btn-primary" name="button" id="btnAttachmentsApprovalConfirm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmApprovingChange</button>
+            <button type="button" class="btn  btn-primary" name="button" id="btnAttachmentsRejectConfirm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmRejectingChange</button>
+            <button type="button" class="btn btn-primary" name="button" id="btnQuantityTableApprovalConfirm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmApprovingChange</button>
+            <button type="button" class="btn  btn-primary" name="button" id="btnQuantityTableRejectConfirm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmRejectingChange</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.ejada.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns="http://www.ejada.com" targetNamespace="http://www.ejada.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation>
+    <wsdl:appinfo source="WMQI_APPINFO">
+      <MRWSDLAppInfo imported="true">
+        <generatedXSD location="FileNetCheckIn_InlineSchema1.xsd" />
+        <binding hasEncoding="false" imported="true" name="FileNetCheckInSOAP11" originalBindingStyle="document" />
+        <binding hasEncoding="false" imported="true" name="FileNetCheckInSOAP12" originalBindingStyle="document" />
+      </MRWSDLAppInfo>
+    </wsdl:appinfo>
+  </wsdl:documentation>
+  <wsdl:types>
+    <xsd:schema xmlns="http://www.ejada.com" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.ejada.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:include schemaLocation="https://ry1drvesbiib01.mof.gov.sa:7931/FileNetCheckIn?xsd=xsd0" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="FileNetCheckInRequest">
+    <wsdl:part name="FileNetCheckInRq" element="ns:FileNetCheckInRq" />
+  </wsdl:message>
+  <wsdl:message name="FileNetCheckInResponse">
+    <wsdl:part name="FileNetCheckInRs" element="ns:FileNetCheckInRs" />
+  </wsdl:message>
+  <wsdl:portType name="FileNetCheckIn">
+    <wsdl:operation name="FileNetCheckIn">
+      <wsdl:input message="ns:FileNetCheckInRequest" />
+      <wsdl:output message="ns:FileNetCheckInResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FileNetCheckInSOAP12" type="ns:FileNetCheckIn">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="FileNetCheckIn">
+      <soap12:operation soapAction="FileNetCheckIn" style="document" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="FileNetCheckInSOAP11" type="ns:FileNetCheckIn">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="FileNetCheckIn">
+      <soap:operation soapAction="FileNetCheckIn" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FileNetCheckIn">
+    <wsdl:port name="FileNetCheckInSOAP12" binding="ns:FileNetCheckInSOAP12">
+      <soap12:address location="https://ry1drvesbiib01.mof.gov.sa:7931/FileNetCheckIn" />
+    </wsdl:port>
+    <wsdl:port name="FileNetCheckInSOAP11" binding="ns:FileNetCheckInSOAP11">
+      <soap:address location="http://localhost:7800/FileNetCheckIn11" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

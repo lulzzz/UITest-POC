@@ -1,0 +1,1308 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.OfferModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ApplyOffer;
+   var validToUpdate = (User.IsInRole(RoleNames.supplier) && (Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)) ? 1 : 0;
+}
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.TenderDetails</li>
+      </ol>
+   </nav>
+}
+
+<form id="myForm" method="post" action="#">
+   <input type="hidden" id="ModuleType" value="3" />
+   @Html.AntiForgeryToken()
+   @if (Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established || Model.OfferStatusId == (int)Enums.OfferStatus.Canceled)
+   {
+      <div class="modal fade" id="checkmodal" tabindex="-1" role="dialog">
+         <div class="modal-dialog modal-lg" style="width:800px" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body">
+
+                  <div id="DIVSummary">
+                  </div>
+
+                  <div class="form-check">
+                     <label class="form-check-label text-dark-green" style="margin-bottom:10px">
+                        <input class="form-check-input" type="checkbox" id="chVATValue">
+                        @MOF.Etimad.Monafasat.Resources.OfferResources.Messages.OfferVATApproval
+                        <span class="form-check-sign">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                  </div>
+                  <span class="h6 text-danger d-block" id="txtApproveVAT" style="display:none">@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseAgree</span>
+                  <div id="divSammary">
+                  </div><br>
+                  @MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.SendOfferFilesConfirm
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-sm m-1 btn-primary" onclick="sendOffer('@Model.OfferId')">@MOF.Etimad.Monafasat.Resources.OfferResources.Messages.ApproveAndSendOffer</button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+                  <span id="vsNoDataFound" class="text-danger" style="display:none">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.ApplyOfferDataIssue</span>
+
+                  <span id="vsNoAttachmentsDataFound" class="text-danger" style="display:none">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.ApplyOfferAttachmentsDataIssue</span>
+                  <span id="vsCombinedLetterAttachments" class="text-danger" style="display:none">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CombinationLetter</span>
+               </div>
+            </div>
+         </div>
+      </div>
+
+   }
+   @Html.Partial("~/Views/Offer/Partial/ApplyOffer/_ApplyOfferModals.cshtml")
+
+   <div class="col-12" id="applyOffer" v-cloak>
+
+
+
+      <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+         <li class="nav-item">
+            <a class="nav-link active" href="#monafasa-info" role="tab" :data-toggle="isEdit? '' : 'tab'" :disabled="isEdit">
+               <i class="material-icons">assignment</i>
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails
+            </a>
+         </li>
+         @if (Model.QuantityTable.Count > 0)
+         {
+            <li class="nav-item">
+               <a class="nav-link " href="#quantity-tables" role="tab" :data-toggle="isEdit?  '': 'tab'">
+                  <i class="material-icons">table_chart</i>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantityTables
+               </a>
+            </li>
+         }
+         <li class="nav-item">
+            <a class="nav-link" href="#attachments" role="tab" :data-toggle="isEdit? '' : 'tab'" :disabled="isEdit">
+               <i class="material-icons">attach_file</i>
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Atachementes
+            </a>
+         </li>
+
+         <li class="nav-item">
+            <a class="nav-link" href="#combined" role="tab" :data-toggle="isEdit? '' : 'tab'" :disabled="isEdit">
+               <i class="material-icons">group</i>
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Combined
+            </a>
+         </li>
+
+      </ul>
+      <div class="tab-content tab-space">
+         <div class="tab-pane active" id="monafasa-info">
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        @await Component.InvokeAsync("BasicOfferTenderInfo", new { TenderId = ViewBag.tenderId })
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+         </div>
+         @if (Model.QuantityTable.Count > 0)
+         {
+            <div class="tab-pane" id="quantity-tables">
+               @Html.Partial("~/Views/Offer/Partial/ApplyOffer/_ApplyOfferQuantityTables.cshtml")
+
+            </div>
+         }
+         <div class="tab-pane" id="attachments">
+            @Html.Partial("~/Views/Offer/Partial/ApplyOffer/_ApplyOfferAttachments.cshtml")
+
+         </div>  <div class="tab-pane" id="combined">
+            @Html.Partial("_ApplyOfferCombinedInvitation.cshtml")
+            @Html.Partial("~/Views/Offer/Partial/ApplyOffer/_ApplyOfferActions.cshtml")
+         </div>
+      </div>
+
+   </div>
+   <a class="btn btn-outline-primary btn-link pull-right" href="/Tender/SupplierTenders">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+      <div class="ripple-container"></div>
+   </a>
+</form>
+@section scripts
+   {
+
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script type="text/javascript">
+      $(document).ready(function () {
+         $("#btnSend").click(function () {
+            //alert("ll");
+            var qsammary = $('#quantity-tables').clone().removeAttr('id');
+            $(qsammary).find('form').removeAttr('id');
+            $(qsammary).find('tr').removeAttr('id');
+            var filessammary = $('#attachmentDelete').html();
+            $('#vsNoAttachmentsDataFound').hide();
+            $('#divSammary').html();
+            $('#divSammary').html(qsammary);
+            $('#divSammary').append(filessammary);
+            $('#divSammary button').remove();
+            $('#divSammary #btnback').remove();
+            $('#btnSendConfirm').show();
+            $('#divSammary span[data-index]').on('click', function (index) {
+               app2.RedirectURL($(this).attr('data-index'));
+            })
+         });
+         });
+
+      function resetFileUpload() {
+         
+         // this sould be implmentd on file uploader
+         $('.file_uploader_message').html('');
+         $('.qq-upload-list').html('');
+         $('.file_uploader').css('display', 'block');
+         //$('#attach').fineUploader().val('');
+      }
+      function RedirectURLEditMode() {
+         
+         var item = vueObj.QuantitiesTables[vueObj.UploaderIndex].quantitiesTableItems[vueObj.editedItemIndex];
+         window.open("/Upload/getfile/" + item.itemAttachmentId + ":" + item.itemAttachmentName, '_blank');
+      }
+      function saveFiles() {
+         
+         var modelValue = $('#model').val();
+         if (modelValue == "") {
+            return false;
+         }
+         else {
+            $('#uploadLable' + UploaderIndex).html(modelValue.split(":")[1]);
+            $('#hdnUploadLable' + UploaderIndex).val(modelValue.split(":")[0]);
+            $('#model').val('');
+            $('.file_uploader_message').remove();
+            $('#myModal2').hide();
+
+         }
+      }
+      function addCommas(nStr) {
+         nStr += '';
+         x = nStr.split('.');
+         x1 = x[0];
+         x2 = x.length > 1 ? '.' + x[1] : '';
+         var rgx = /(\d+)(\d{3})/;
+         while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+         }
+         return x1 + x2;
+      }
+      function checkSpcialChar(event) {
+
+         console.log(event);
+         if (event.key == '.' && event.target.value.indexOf('.')>0) {
+            return false;
+         }
+         if (!($.isNumeric(event.target.value))) {
+            if (event.keyCode == 8 || (event.key == '.' && event.target.value.split('.').length <= 2)) {
+               event.returnValue = true;
+               return true;
+            }
+            event.returnValue = false;
+            return false;
+         }
+         event.returnValue = true;
+         return true;
+      }
+
+      var attachmentss = [];
+      var combinedAttachments = [];
+      var pWay=0;
+      @if (Model != null && Model.Attachment != null)
+      {
+         @:attachmentss = @Html.Raw(Json.Serialize(Model.Attachment.Where(x=>x.type!= Enums.AttachmentType.SupplierCombinedAttachment)));
+ @:       combinedAttachments = @Html.Raw(Json.Serialize(Model.Attachment.Where(x => (int)x.type == 17).ToList()));
+     @*@:pWay = @Html.Raw(Json.Serialize(Model.OfferPresentationWayId??2));*@
+
+      }
+
+      function EditQuantityTableItem(event) {
+
+         event.target = event;
+
+         app2.EditQuantityTableItem(event)
+            ;
+      }
+      function DeleteQuantityTableItem(event) {
+
+         event.target = event;
+
+         app2.DeleteQuantityTableItem(event)
+            ;
+      }
+      function DeleteFile() {
+         app2.DeleteFile();
+
+      }
+
+
+      $('#divSendTables').hide();
+      var app2 = new Vue({
+         el: '#applyOffer',
+         data: {
+            isEdit: false,
+            isEmpty: false,
+            alternativeItem: {  },
+            alternativeItemDataModel: { },
+            isNumber: false,
+            AlternativeItemParentRowIndex: -1,
+            AlternativeTableId:'',
+            QuantitiesTables: [],
+            attachments: attachmentss,
+            combinedAttachment: combinedAttachments,
+            Suppliers: [],
+               @*//presentationWay=@Model.OfferPresentationWayId??2,*@
+            InvitedSuppliers: [],
+            QualifiedSuppliers: [],
+            SuppliersDD: [],
+            subSuppliers: [],
+            inputs: [],
+            isValidate: false,
+            //addedsuppliers=[],
+            selected: 0,
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 6,
+            tb_Email: '',
+            emails: [],
+            isValidToUpdate: true,
+            mobilNoList: [],
+            //  hasCombination: true,
+            OfferIdString:'@Model.OfferIdString',
+
+            // Here you define the url of your paginated API
+            resource_url: '/Offer/GetSuppliersForCombinedAsync',
+            invitedResource_url: '/Offer/GetCombinedSuppliersByOfferId?OfferId=@Model.OfferId',
+            resourceEmail_url: '',
+            resourceMobil_url: '',
+            queryString: '',
+            showTable: false,
+            showInvitedTable: false
+
+         },
+         created: function () {
+            //this.hasCombination = this.InvitedSuppliers.length > 0 || this.mobilNoList.length > 0 || this.emails.length > 0 ? true : false;
+            this.isValidToUpdate = @validToUpdate == 1 ? true : false;
+            this.queryString = $('#formSearchSuppliers').serialize();
+            this.invitedResource_url = '/Offer/GetCombinedSuppliersByOfferId?OfferId=@Model.OfferId';
+         },
+         methods: {
+            nextTab: function () {
+               if (!this.isEdit) {
+                  $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+               } else {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseMakeSureOfSavingData', 'warning')
+
+               }
+            },
+            prevTab: function () {
+               if (!this.isEdit) {
+                  $('.etd-wiz-tabs').children().find('a.active').parent().prev().children().click();
+               } else {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseMakeSureOfSavingData', 'warning')
+
+               }
+            },
+            SumItem: function (price, quantity) {
+               return price * quantity;
+            },
+            RedirectURL: function (index) {
+
+               window.open("/Upload/getfile/" + this.attachments[index].fileNetReferenceId + ":" + this.attachments[index].fileName, '_blank');
+            },
+            AddQuantityTable: function () {
+               if ($('#txtNDName').val() == '' || $('#txtNDName').val() == undefined) {
+                  $('#txtTableNameValidation').show();
+                  return false;
+               }
+               else { $('#txtTableNameValidation').hide(); }
+               if ($('#OpenTxtDiscount').val() == '' || $('#OpenTxtDiscount').val() == undefined) {
+                  return false;
+               }
+               if ($('#OpenTxtPrice').val() == '' || $('#OpenTxtPrice').val() == undefined) {
+                  return false;
+               }
+
+               var tbl = {};
+               tbl.tableQuantityId == 0;
+               tbl.offerId =@Model.OfferId;
+               tbl.name = $('#txtNDName').val();
+               tbl.totalPrice = $('#OpenTxtPrice').val();
+               tbl.discount = $('#OpenTxtDiscount').val();
+               app2.QuantitiesTables.push(tbl);
+               $("#txtNDName").val('');
+               $("#OpenTxtPrice").val('');
+               $("#OpenTxtDiscount").val('');
+               $('#divSendTables').show();
+               return false;
+            }
+            , sendTables: function () {
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $('#LoadingSite').fadeIn();
+               $.post('/Offer/SaveOpeningStageTables', {
+                  tables: app2.QuantitiesTables, __RequestVerificationToken: token
+               }).done(function (e) {
+
+                  $('#LoadingSite').fadeOut();
+                  $('#btnBackToOffers').click();
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               });
+            },
+            deleteQuantityTable: function (index) {
+               this.QuantitiesTables.splice(index, 1);
+               if (this.QuantitiesTables.length > 0) {
+                  $('#divSendTables').show();
+               }
+               else
+                  $('#divSendTables').hide();
+            },
+            SumItemAfterDiscount: function (price, quantity, discount) {
+               var totalPrice = ((price * quantity) - (price * quantity) * (discount / 100));
+               return totalPrice;
+            },
+            SumAll: function (items) {
+
+               items
+            },
+
+            SaveAlternativeItem: function () {
+
+
+
+            },
+
+            editmode: function (event) {
+               
+               this.isEdit = !this.isEdit
+               $($(event.target)[0]).parent().prev('table').find('tr').not('.alternative').find('input').not("#txtTotPriceItem").not("#txtTotalAfter").not("#txtTotPrice").not("#txtTotAfterDiscount").not("#tblTotalAfterDiscount").not("#tblTotalPrice").attr('disabled', false);
+               $(event.target).toggleClass('d-none');
+               $(event.target).next('.etd-save-btn').toggleClass('d-none');
+            },
+            updatealternativeRowIndex: function (tableid, _index, event) {
+               this.AlternativeTableId = $(event.target).closest('tr');
+
+
+            }, AddQuantityTableItem: function (event) {
+               resetFileUpload();
+               $('#divFileUpload').show();
+               $('#divFileUploadlist').hide();
+               this.alternativeItemDataModel= { Name: '', VAT: '', Discount: '', ItemAttachmentName: '', ItemAttachmentId: '', Unit: '', Price: '', Quantity: '' }
+               this.AlternativeTableId = $(event.target).closest('tr');
+               this.alternativeItemDataModel.OriginalItemId = $($(event.target).closest('tr').find("input[type=hidden][name=Id]")[0]).val();
+               this.alternativeItemDataModel.TenderQuantityTableItemId = $($(event.target).closest('tr').find("input[type=hidden][name=TenderQuantityTableItemId]")[0]).val();
+               this.alternativeItemDataModel.SupplierTableQuantityId = $($(event.target).closest('tr').find("input[type=hidden][name=SupplierTableQuantityId]")[0]).val();
+               this.alternativeItemDataModel.Id = 0;
+            },
+            DeleteQuantityTableItem: function (event) {
+               this.AlternativeTableId = $(event.target).closest('tr');
+                   $('#LoadingSite').fadeIn();
+               var token = $('input[name=__RequestVerificationToken]').val();
+             var id=  $($(event.target).closest('tr').find("input[type=hidden][name=Id]")[0]).val();
+               $.post("/Offer/DeleteAlternativeItem", {
+                  AlternativeItemId: id, __RequestVerificationToken: token
+               }).done(function (itemResponseModel) {
+                  //
+                  this.isValidate = false;
+                  $('#myModalAddItem').modal('hide')
+                  $('#LoadingSite').fadeOut();
+                  if (!itemResponseModel.isSuccess) {
+                     AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.ModelDataError', alertMessageType.Danger);
+                     return false;
+                  }
+                  else {
+                     AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.RemovedSuccefuly', alertMessageType.Success);
+                     $(app2.AlternativeTableId).remove();
+
+                  }
+               }).fail(function (error) {
+                        $('#LoadingSite').fadeOut();
+
+                        if (error.responseText != "Logout") {
+                           AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                        }
+                        else if (error.responseText == "Logout") {
+                           window.location = '/account/logout'; return;
+                        }
+                     })
+            },
+            EditQuantityTableItem: function (event) {
+               
+               resetFileUpload();
+               $('#divFileUpload').hide();
+               $('#divFileUploadlist').show();
+               //$($(event.target).closest('tr').find("input[type=hidden][name=AttachmentId]")[0]).val('')
+               this.AlternativeTableId = $(event.target).closest('tr');
+               this.alternativeItemDataModel = {};
+               this.alternativeItemDataModel.Name = $($(event.target).closest('tr').find("#spnName")[0]).text();
+               this.alternativeItemDataModel.TenderQuantityTableItemId = $($(event.target).closest('tr').find("input[type=hidden][name=TenderQuantityTableItemId]")[0]).val();
+               this.alternativeItemDataModel.SupplierTableQuantityId = $($(event.target).closest('tr').find("input[type=hidden][name=SupplierTableQuantityId]")[0]).val();
+               this.alternativeItemDataModel.Id = $($(event.target).closest('tr').find("input[type=hidden][name=Id]")[0]).val();
+               this.alternativeItemDataModel.Quantity = jQuery.trim($($(event.target).closest('tr').find("#spanQuantity")[0]).text());
+               this.alternativeItemDataModel.Unit = $($($(event.target).closest('tr').find("#spnUnit"))[0]).text();
+               this.alternativeItemDataModel.Price = $($(event.target).closest('tr').find("#txtPrice")[0]).val();
+               this.alternativeItemDataModel.Discount = $($(event.target).closest('tr').find("#txtDiscount")[0]).val();
+               this.alternativeItemDataModel.VAT = $($(event.target).closest('tr').find("#txtVAT")[0]).val();
+               this.alternativeItemDataModel.OriginalItemId = $($(event.target).closest('tr').find("input[type=hidden][name=OriginalItemId]")[0]).val();
+               this.alternativeItemDataModel.ItemAttachmentId = ($($(event.target).closest('tr').find("input[type=hidden][name=AttachmentId]")[0]).val()).split(':')[0];
+               this.alternativeItemDataModel.ItemAttachmentName = ($($(event.target).closest('tr').find("input[type=hidden][name=AttachmentId]")[0]).val()).split(':')[1];
+               $('#attachAlternative').val(($($(event.target).closest('tr').find("input[type=hidden][name=AttachmentId]")[0]).val()))
+            }
+            ,
+            validateObject: function () {
+               
+               if (this.alternativeItemDataModel.ItemAttachmentId == ''||  this.alternativeItem.Name == ''
+                  || this.alternativeItem.Quantity == 0 || this.alternativeItem.Quantity == '' || this.alternativeItem.Price == ''
+                  || this.alternativeItem.Unit == '' || this.alternativeItem.Discount  > 100|| this.alternativeItem.Discount == '' || (this.alternativeItem.VAT == '' || this.alternativeItem.VAT > 100) ) {
+                  return false;
+               }
+               return true;
+
+            },
+            SaveQuantityTableItem: function () {
+               this.isValidate = true;
+
+               
+               var modelValue = $('#attachAlternative').val();
+               this.alternativeItemDataModel.ItemAttachmentId = modelValue.split(":")[0];
+               this.alternativeItemDataModel.ItemAttachmentName = modelValue.split(":")[1];
+               this.alternativeItem.Name = this.alternativeItemDataModel.Name;
+               this.alternativeItem.TenderQuantityTableItemId = this.alternativeItemDataModel.TenderQuantityTableItemId;
+               this.alternativeItem.SupplierTableQuantityId = this.alternativeItemDataModel.SupplierTableQuantityId;
+               this.alternativeItem.Id = this.alternativeItemDataModel.Id;
+               this.alternativeItem.Quantity = this.alternativeItemDataModel.Quantity;
+               this.alternativeItem.Price = this.alternativeItemDataModel.Price;
+               this.alternativeItem.Unit = this.alternativeItemDataModel.Unit;
+               this.alternativeItem.ItemAttachmentId = this.alternativeItemDataModel.ItemAttachmentId;
+               this.alternativeItem.ItemAttachmentName = this.alternativeItemDataModel.ItemAttachmentName;
+               this.alternativeItem.Discount = this.alternativeItemDataModel.Discount;
+               this.alternativeItem.VAT = this.alternativeItemDataModel.VAT;
+               this.alternativeItem.OriginalItemId = this.alternativeItemDataModel.OriginalItemId;
+               if (!this.validateObject()) {
+                  return false;
+               }
+               $('#LoadingSite').fadeIn();
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post("/Offer/SaveAlternativeItem", {
+                  AlternativeItem: this.alternativeItem, __RequestVerificationToken: token
+               }).done(function (itemResponseModel) {
+                  //
+                  this.isValidate = false;
+                  $('#myModalAddItem').modal('toggle')
+                  $('#LoadingSite').fadeOut();
+                   if (!itemResponseModel.isSuccess) {
+                     AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.ModelDataError', alertMessageType.Danger);
+                     return false;
+                  }
+                  else {
+                      AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved', alertMessageType.Success);
+
+                  }
+                 // app2.alternativeItem.Id = itemResponseModel.id;
+                  var newrow = $('#divTemplate').clone();
+                  $($(newrow).find("input[type=hidden][name=AttachmentId]")[0]).val(app2.alternativeItem.AttachmentId + ':' + app2.alternativeItem.ItemAttachmentName);
+                  $($(newrow).find("input[type=hidden][name=TenderQuantityTableItemId]")[0]).val(app2.alternativeItem.TenderQuantityTableItemId);
+                  $($(newrow).find("input[type=hidden][name=OriginalItemId]")[0]).val(app2.alternativeItem.OriginalItemId);
+                  $($(newrow).find("input[type=hidden][name=SupplierTableQuantityId]")[0]).val(app2.alternativeItem.SupplierTableQuantityId);
+                  $($(newrow).find("input[type=hidden][name=Id]")[0]).val(itemResponseModel.id);
+                  $($(newrow).find('#spnName')[0]).text(app2.alternativeItem.Name);
+                  $($(newrow).find('#spnAttachment')[0]).text(app2.alternativeItem.ItemAttachmentName);
+                  $($(newrow).find('#spanQuantity')[0]).text(app2.alternativeItem.Quantity);
+                  $($(newrow).find('#spnUnit')[0]).text(app2.alternativeItem.Unit);
+                  $($(newrow).find('#txtPrice')[0]).val(app2.alternativeItem.Price);
+                  $($(newrow).find('#txtDiscount')[0]).val(app2.alternativeItem.Discount);
+                  $($(newrow).find('#txtVAT')[0]).val(app2.alternativeItem.VAT);
+                  $($(newrow).find('#txtTotal')[0]).val(itemResponseModel.total);
+                  $($(newrow).find('#txtTotalAfterDiscount')[0]).val(itemResponseModel.totalAfterDiscount);
+                  
+                  $($(app2.AlternativeTableId).closest('table').find('tfoot tr')[1]).find('#tblTotalAfterDiscount').val(addCommas(itemResponseModel.totalAlternativeAfterDiscount))
+                  $($(app2.AlternativeTableId).closest('table').find('tfoot tr')[1]).find('#tblTotalPrice').val(addCommas(itemResponseModel.totalAlternative))
+                  if (app2.alternativeItem.Id == 0) {
+                     $(app2.AlternativeTableId.find('#btnSave')[0]).remove();
+                     $(app2.AlternativeTableId).after(newrow);
+                  }
+                  else {
+                     $(app2.AlternativeTableId).after(newrow); $(app2.AlternativeTableId).remove();
+                  }
+
+                  // location.reload();
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+
+            },
+
+            saveTable: function (formName, tableId, offerId, tenderId, event) {
+               $('#LoadingSite').fadeIn();
+               var form = $('#' + formName).serializeArray();
+               for (var x = 0; form.length > x; x++) {
+                  var row = form[x];
+                  if (row.name == 'Price' && !$.isNumeric(row.value)) {
+                     AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.PleaseEnterNumbers', 'danger');
+                     return;
+                  }
+               }
+
+               var items = this.serializeTableToJson(form);
+               var tableObj = { OfferId: offerId, TableQuantityId: tableId, QuantityTableItem: items, TenderId: tenderId };
+               var token = $('input[name=__RequestVerificationToken]').val();
+              // console.log('token', token);
+               $.post("/Offer/savetable", {
+                  table: tableObj, __RequestVerificationToken: token
+               }).done(function () {
+                  
+                  $('#LoadingSite').fadeOut();
+                  $($(event.target)[0]).parent().prev('table').find('input').attr('disabled', true);
+                  $(event.target).toggleClass('d-none');
+                  $(event.target).prev('.etd-edit-btn').toggleClass('d-none');
+                  app2.isEdit = !app2.isEdit;
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            },
+            serializeTableToJson: function (serializer) {
+               
+               var tableColumnsCount = 9;
+               var _string = '[';
+               for (var x = 0; serializer.length - 2 > x; x += tableColumnsCount) {
+                  _string += '{';
+                  for (var y = 0; tableColumnsCount > y; y++) {
+                   //  console.log("ROW "+row)
+                     if (row == null || row == undefined) {
+                      //  console.log("x= " + x)
+                      //  console.log("y= " + y)
+                     }
+                     var row = serializer[x + y];
+                     if (row.name.trim().toUpperCase()== 'PRICE' && row.value.trim() == '') {
+                        _string += '"' + row.name + '":"0.0",';
+                     }
+                     else if (row.name.trim().toUpperCase() == 'VAT' && row.value.trim() == '') {
+                        _string += '"' + row.name + '":"0.0",';
+                     }
+                     else if (row.name.trim().toUpperCase() == 'DISCOUNT' && row.value.trim() == '') {
+                        _string += '"' + row.name + '":"0.0",';
+                     }
+                     else {
+                     _string += '"' + row.name + '":"' + row.value + '",';
+                     } }
+                  var end = _string.length - 1;
+                  _string = _string.substr(0, end);
+                  _string += '},';
+               }
+               var end = _string.length - 1;
+               _string = _string.substr(0, end);
+               _string += ']';
+
+               console.log(_string);
+
+               return JSON.parse(_string);
+            },
+            DeleteAttach: function (index, actionType) {
+               var attach;
+               if (actionType != 'combined') {
+                  attach = this.attachments[index];
+                  this.attachments.splice(index, 1);
+               } else {
+
+                  attach = this.combinedAttachment[index];
+                  this.combinedAttachment.splice(index, 1);
+
+               }
+               var obj = { AttachmentId: attach.attachmentId, OfferId: attach.offerId }
+               $('#LoadingSite').fadeIn();
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post("/Offer/DeleteSupplierAttachments", {
+                  model: obj, __RequestVerificationToken: token
+               }).done(function () {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DeletedSuccessfully)', alertMessageType.Success);
+
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            },
+            updateResource: function (data) {
+               this.Suppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            updateInvitedResource: function (data) {
+               //this.InvitedSuppliers = data;
+               $.each(data, function (key, value) {
+                  if (value.email != null)
+                     app2.emails.push(value.email);
+                  console.log(value);
+
+               });
+               $.each(data, function (key, value) {
+                  if (value.commericalRegisterNo != null)
+                     app2.InvitedSuppliers.push(value);
+
+                  console.log(value);
+
+               });
+               $.each(data, function (key, value) {
+                  if (value.mobileNumber != null)
+                     app2.mobilNoList.push(value.mobileNumber);
+                  console.log(value);
+
+               });
+
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            DeleteFile: function () {
+               this.alternativeItemDataModel.ItemAttachmentId = '';
+               this.alternativeItemDataModel.ItemAttachmentName = '';
+               $('#divFileUpload').show();
+               $('#divFileUploadlist').hide();
+
+            }
+
+            ,
+            updateQualifiedSupplierResource: function (data) {
+               this.QualifiedSuppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            updateAcceptedFirstStageSuppliersResource: function (data) {
+               this.QualifiedSuppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            updateEmailResource: function (data) {
+               this.emails = data;
+
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.pageSize;
+            },
+            updateMobileResource: function (data) {
+               this.mobilNoList = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.pageSize;
+            },
+            detailsUrl: function (params) {
+            },
+            // Search Method To get Suppliers with Search Cretria
+            search: function () {
+
+               
+
+               if ($("#commericalRegisterNo").val().trim().length == 0) {
+                  $("#vdSearch").show();
+                  return false;
+               }
+               else {
+                  $("#vdSearch").hide();
+               }
+
+               this.queryString = $('#formSearchSuppliers').serialize();
+               this.resource_url = '/Offer/GetSuppliersForCombinedAsync' + '?' + this.queryString + '&d=' + Date();
+               //this.invitedResource_url = '/Tender/GetInvitedSuppliers' + '?' + this.queryString + '&d=' + Date();
+               this.showTable = true;
+               Vue.templateCache = false
+            },
+            ResetFields: function () {
+               $("#commericalRegisterNo").val('');
+            },
+            AddToInvitationGrid: function (Supplier) {
+
+               var existeSupplier = false;
+               $(this.InvitedSuppliers).each(function (i, e) {
+                  if (e.commericalRegisterNo == Supplier.commericalRegisterNo) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.SupplierAlreadyExsit)', alertMessageType.Danger)
+                     existeSupplier = true;
+                  }
+               });
+
+               ////////////////////
+               
+
+               if (existeSupplier == false) {
+                  var registeredModel = { Email: "", Mobile: "", CR: Supplier.commericalRegisterNo, enCombinedSupplierinviteWay: '@((int)Enums.enCombinedSupplierinviteWay.CR)', OfferIdString: '@(MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(Model.OfferId))' };
+                  this.AddSuppliertoCombinedList(registeredModel, function (data) {
+                     
+                     if (data) {
+                        AlertFun(data.message, data.enMessageTypeString);
+                        if (data.enMessageType == @((int)Enums.enAjaxResponseMessageType.success)) {
+
+                           app2.InvitedSuppliers.push(Supplier);
+                        }
+                     }
+                  })
+               }
+            },
+            UpdateSupplierList: function () {
+            },
+            AddSuppliertoCombinedList: function (registeredModel, _callback) {
+               $('#LoadingSite').fadeIn();
+
+               $.post('/Offer/AddSuppliertoCombinedList',
+                  { model: registeredModel, __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val() }, function (data) {
+                     $('#LoadingSite').fadeOut();
+
+                     if (data) {
+                        _callback(data);
+                     }
+                  })
+                  .done(function (e) {
+                     $('#LoadingSite').fadeOut();
+                   //  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', 'success')
+                  })
+                  .fail(function () {
+                     $('#LoadingSite').fadeOut();
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     setTimeout(function () {
+                        window.location = "@Url.Action("TenderIndexUnderOperationsStage", "Tender")";
+                     }, 2000);
+                  });
+
+            }
+
+            ,
+
+            RemoveSupplierFromCombinedList: function (model, _callback) {
+               
+               $('#LoadingSite').fadeIn();
+               $.post('/Offer/RemoveSupplierFromCombinedList',
+                  { model: model, __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val() },
+
+                   function (data) {
+                     _callback(data);
+                  })
+                  .done(function (e) {
+                     //  this.InvitedSuppliers.push(Supplier);
+                     //   var i = this.Suppliers.indexOf(Supplier);
+                     //   this.Suppliers.splice(i, 1);
+                     $('#LoadingSite').fadeOut();
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DeletedSuccessfully)', 'success')
+                  })
+                  .fail(function () {
+                     $('#LoadingSite').fadeOut();
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     setTimeout(function () {
+                        window.location = "@Url.Action("TenderIndexUnderOperationsStage", "Tender")";
+                     }, 2000);
+                  });
+            },
+
+            RemoveInvitationGrid: function (Supplier) {
+
+
+
+               var i = this.InvitedSuppliers.indexOf(Supplier);
+
+               var _model = this.emails[i];
+               var registeredModel = { Email: "", Mobile: "", CR: Supplier.commericalRegisterNo, enCombinedSupplierinviteWay: '@((int)Enums.enCombinedSupplierinviteWay.CR)', OfferIdString: '@(MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(Model.OfferId))' };
+
+               this.RemoveSupplierFromCombinedList(registeredModel, function (data) {
+                  if (data) {
+
+                     app2.InvitedSuppliers.splice(i, 1);
+                  }
+               });
+
+            },
+            // Send invitations For Selected Registered Suppliers
+            sendInvitation: function () {
+               var offerId =  @(Model?.OfferId??0);
+               $('#LoadingSite').fadeIn();
+               var combinedSupplierList = {};
+               combinedSupplierList.InvitedSuppliers = [];
+               $(this.InvitedSuppliers).each(function (i, e) {
+                  combinedSupplierList.InvitedSuppliers.push(e.commericalRegisterNo);
+               })
+               combinedSupplierList.MobileNumbers = this.mobilNoList;
+               combinedSupplierList.Emails = this.emails;
+               combinedSupplierList.offerId = offerId;
+               var token = $('input[name=__RequestVerificationToken]').val();
+
+            },
+            // Add Email To Emails Table
+            addEmail: function (index) {
+
+               var tb_Email = $("#tb_Email").val()
+               if (tb_Email == "") {
+                  $("#spanEmail").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.EnterEmail)');
+               }
+               else if (!this.validEmail(tb_Email)) {
+                  $("#spanEmail").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.WrongEmail)');
+               }
+               else if (this.emails.indexOf(tb_Email) > -1) {
+                  $("#spanEmail").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.EmailExist)');
+               }
+               else {
+                  $("#spanEmail").text("");
+                  var registeredModel = { Email: tb_Email, Mobile: "", CR: "", enCombinedSupplierinviteWay: '@((int)Enums.enCombinedSupplierinviteWay.Email)', OfferIdString: '@(MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(Model.OfferId))' };
+                  this.AddSuppliertoCombinedList(registeredModel, function (data) {
+                     
+                     if (data) {
+                        AlertFun(data.message, data.enMessageTypeString)
+                        if (data.enMessageType == @((int)Enums.enAjaxResponseMessageType.success)) {
+
+                           app2.emails.push(tb_Email);
+                        }
+                     }
+                  })
+
+               }
+            },
+            // Remove Email From  Table
+            removeEmail: function (index) {
+               
+               var _model = this.emails[index];
+               var registeredModel = { Email: _model, Mobile: "", CR: "", enCombinedSupplierinviteWay: '@((int)Enums.enCombinedSupplierinviteWay.Email)', OfferIdString: '@(MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(Model.OfferId))' };
+
+               this.RemoveSupplierFromCombinedList(registeredModel, function (data) {
+                  if (data) {
+
+                     app2.emails.splice(index, 1);
+                  }
+               });
+
+
+            },
+            // Add MobileNo To MobileNo Table
+            addMobilNo: function (index) {
+               var mobileNo = $("#tb_MobilNo").val()
+               if (mobileNo == "") {
+                  $("#spanMobilNo").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.EnterPhone)');
+               }
+               else if (this.mobilNoList.indexOf(mobileNo) > -1) {
+                  $("#spanMobilNo").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.PhoneExist)');
+               }
+               else {
+                  $("#spanMobilNo").text("");
+                  var registeredModel = { Email: "", Mobile: mobileNo, CR: "", enCombinedSupplierinviteWay: '@((int)Enums.enCombinedSupplierinviteWay.Mobile)', OfferIdString: '@(MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(Model.OfferId))' };
+                  this.AddSuppliertoCombinedList(registeredModel,
+                     function (data) {
+                         console.log(data);
+                        AlertFun(data.message, data.enMessageTypeString)
+                        if (data.enMessageType == @((int)Enums.enAjaxResponseMessageType.success)) {
+
+                           app2.mobilNoList.push(mobileNo);
+                        }
+
+                     });
+            }
+               },
+            // Remove Mobile No From  Table
+               removeMobilNo: function (index) {
+                  var _model = this.mobilNoList[index];
+                  var registeredModel = { Email: "", Mobile: _model, CR: "", enCombinedSupplierinviteWay: '@((int)Enums.enCombinedSupplierinviteWay.Mobile)', OfferIdString: '@(MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(Model.OfferId))' };
+                  this.RemoveSupplierFromCombinedList(registeredModel, function (data) {
+                     if (data) {
+
+                        app2.mobilNoList.splice(index, 1);
+                     }
+                  });
+
+
+
+            },
+            // Send Invitations For Unregistered Suppliers With Email
+            sendEmails: function () {
+
+               var tendarId =  @(Model?.TenderId??0);
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Tender/SendInvitationsByEmailAsync', { tenderId: tendarId, emails: this.emails, __RequestVerificationToken: token }).done(function (e) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SendInvitations)', 'success')
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            },
+            // Send Invitations For Unregiestered Suppliers With SMS
+            sendSms: function () {
+               var tendarId =  @(Model?.TenderId??0);
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Tender/SendInvitationsBySmsAsync', { tenderId: tendarId, mobileNoList: this.mobilNoList, __RequestVerificationToken: token }).done(function (e) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SendInvitations)', 'success')
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            },
+            // Check If Email Is Valid
+            validEmail: function (email) {
+               var re = /^(([^<>()\[\]\\.,;:\s"]+(\.[^<>()\[\]\\.,;:\s"]+)*)|(".+"))((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+               return re.test(email);
+            }
+            }
+         });
+
+      $("input[name=price]").on("input", function () {
+         var trIndex = $(this).parent().parent().parent().index() + 1;
+         var tableid = $(this).closest('table').attr('id');
+         calcTotal(trIndex, tableid);
+      });
+
+
+      $("#btnSend").click(function () {
+         //var QT = $("#DivQuantityTable").clone();
+         //var Files = $("#DIVfiles").clone();
+         //$('#DIVSummary').append(QT);
+         //$('#DIVSummary').append(Files);
+         $('#vsNoDataFound').hide();
+         $('#vsNoAttachmentsDataFound').hide();
+      });
+
+
+      $("input[name=discount]").on("input", function () {
+         var trIndex = $(this).parent().parent().parent().parent().index() + 1;
+         var tableid = $(this).closest('table').attr('id');
+         calcTotal(trIndex, tableid);
+      });
+      $("input[name=VAT]").on("input", function () {
+         var trIndex = $(this).parent().parent().parent().parent().index() + 1;
+         var tableid = $(this).closest('table').attr('id');
+         calcTotal(trIndex, tableid);
+      });
+
+
+      function calcTotal(trIndex, tableid) {
+         var totalsPrice = 0;
+         var totalsAfterDiscount = 0;
+         var tabletotals = 0;
+         var tabletotalsAfterDiscount = 0;
+         $("#" + tableid).not('thead tr').each(function (i) {
+            var price = parseFloat($($(this).children().children()[trIndex]).find("#txtPrice").val())
+            var discount = $($(this).children().children()[trIndex]).find("#txtDiscount").val()
+            var quantity = parseInt($($(this).children().children()[trIndex]).find("#spanQuantity")[0].innerHTML);
+            var vat = $($(this).children().children()[trIndex]).find("#txtVAT").val();
+
+            $($(this).children().children()[trIndex]).find("#txtTotPriceItem").val(price * quantity);
+            $($(this).children().children()[trIndex]).find("#txtTotalAfter").val((((price * quantity) - ((price * quantity) * (discount / 100))) * (vat / 100)) + ((price * quantity) - ((price * quantity) * (discount / 100))));
+
+            $($(this).children().children()[trIndex]).find("#txtTotalAfterAddVAT").val(555555);
+
+            $(this).find("#tblTotalPrice").val(tabletotals);
+            $(this).find("input[name=itemtotalprice]").each(function () {
+               var txval = $(this).val();
+               tabletotals += parseFloat(txval);
+               $(this).closest('table').find("#tblTotalPrice").val(tabletotals);
+            })
+            $(this).find("input[name=itemTotaldiscount]").each(function () {
+               var txval = $(this).val();
+               tabletotalsAfterDiscount += parseFloat(txval);
+               $(this).closest('table').find("#tblTotalAfterDiscount").val(tabletotalsAfterDiscount);
+            })
+            $("input[name=tblTotalPricename]").each(function () {
+               var txval = $(this).val();
+               totalsPrice += parseFloat(txval);
+               $("#txtTotPrice").text(totalsPrice);
+            })
+            $("input[name=tbltotafterdiscountname]").each(function () {
+               var txval = $(this).val();
+               totalsAfterDiscount += parseFloat(txval);
+               $("#txtTotAfterDiscount").text(totalsAfterDiscount);
+            })
+         })
+      }
+      var totalPricevalue = 0;
+      var totalDiscountvalue = 0;
+      $("input[name=tblTotalPricename]").each(function () {
+
+         var txval = $(this).val();
+         totalPricevalue += parseFloat(txval);
+         $("#txtTotPrice").text(totalPricevalue);
+      })
+      $("input[name=tbltotafterdiscountname]").each(function () {
+         var txval = $(this).val();
+         totalDiscountvalue += parseFloat(txval);
+         $("#txtTotAfterDiscount").text(totalDiscountvalue);
+      })
+
+      function resetFileUpload(type) {
+         //alert('resetFileUpload');
+         $('.file_uploader_message').html('');
+         $('.qq-upload-list').html('');
+         $('.file_uploader').css('display', 'block');
+
+
+         $('#model').val('');
+         $('#financialFile').val('');
+         $('#technicalFile').val('');
+         $('#combinedFile').val('');
+
+         if (type == 'combined') {
+            // alert('ddddd');
+            $('#attachementUploader').hide();
+            $('#combinedUploader').show();
+
+            $('#myModal2').modal('show');
+
+         } else {
+
+            $('#attachementUploader').show();
+            $('#combinedUploader').hide();
+
+         }
+
+      }
+      function saveFiles(tenderId) {
+         var modelValue = $('#model').val();
+         var financialFileValue = $('#financialFile').val();
+         var technicalFileValue = $('#technicalFile').val();
+         var combinedFileValue = $('#combinedFile').val();
+         var obj=[];
+         if ((modelValue) != undefined && modelValue != '') {
+            obj.push( { tenderId: tenderId, files: modelValue, type: 15 });
+
+         } if ( (financialFileValue) != undefined && financialFileValue!='') {
+            obj.push( { tenderId: tenderId, files: financialFileValue, type: 18 });
+
+         } if ((technicalFileValue) != undefined && technicalFileValue!='') {
+            obj.push({ tenderId: tenderId, files: technicalFileValue, type: 19 });
+
+         } if ((combinedFileValue) != undefined && combinedFileValue != '') {
+            obj.push( { tenderId: tenderId, files: combinedFileValue, type: 17 });
+         }
+
+         if (typeof (obj) == 'undefined' || obj.length <1)
+            return;
+         uploadOfferFile(obj);
+
+         $('#model').val('');
+         $('#financialFile').val('');
+         $('#technicalFile').val('');
+         $('#combinedFile').val('');
+         $('#LoadingSite').fadeIn();
+      }
+      function uploadOfferFile(obj)
+      {
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $.post("/Offer/SaveSupplierAttachments", {
+            model: obj, __RequestVerificationToken: token
+         }).done(function (data) {
+            
+            var newAttachements = [];
+            var newCombinedAttachements = [];
+             $.each(data, function (index, value) {
+               console.log(value);
+               if (value.type != '17') {
+                  newAttachements.push(value);
+               } else {
+                  newCombinedAttachements.push(value)
+               }
+
+
+             });
+
+            app2.attachments = newAttachements;
+            app2.combinedAttachment = newCombinedAttachements;
+
+            $('#myModal2').modal('hide');
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success);
+
+            }).fail(function (error) {
+               $('#model').val('');
+               $('#financialFile').val('');
+               $('#technicalFile').val('');
+
+               $('#myModal2').modal('hide');
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+
+
+          }
+      $(function () {
+       //  
+         //$('a[data-toggle="collapse"]')[0].click();
+
+            $('tr.ItemsGrid').find('input').attr('disabled', true);
+
+         $('.txtDiscount').on('change', function (event) {
+            if (event.keyCode == 8) {
+               event.returnValue = true;
+               return true;
+            }
+            if ($(this).val() > 100) {
+               $(this).val(100);
+               return false;
+
+            }
+         });
+
+
+
+
+      });
+
+
+      function sendOffer(id) {
+
+         
+         if (!isFormsValid()) {
+            //$('#vsNoDataFound').show();
+            return false;
+         }
+
+         var _checkVAT = $('#chVATValue').is(':checked');
+         if (!_checkVAT) {
+            $("#txtApproveVAT").show();
+            return false;
+         }
+
+         $('#LoadingSite').fadeIn();
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $.post("/Offer/SendOffer", {
+            offerId: id, __RequestVerificationToken: token
+         }).done(function (data) {
+            $('#LoadingSite').fadeOut();
+            setTimeout(function () {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.OfferResources.Messages.DataSaved)', alertMessageType.Success);
+            }, 3000);
+            window.location = "/Tender/SupplierTenders";
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      }
+
+      function isFormsValid() {
+         
+         var forms = $('.tableForm');
+         for (var ii = 0; ii < forms.length; ii++) {
+
+            for (var xx = 0; xx < forms[ii].length; xx++) {
+               if (forms[ii][xx].type == 'number' && forms[ii][xx].name == 'price' ) {
+                  //if ((isNaN(parseFloat($('#' + forms[ii][xx].id).val())))) {
+                  if (isNaN(parseFloat(forms[ii][xx].value))) {
+            $('#vsNoDataFound').show();
+                     return false;
+
+                  }
+                  if (parseFloat(forms[ii][xx].value) == 0) {
+                     $('#vsNoDataFound').show();
+                     return false;
+                  }
+               }
+            }
+         }
+
+         //if ($('.file_uploader_message').find('div').length == 0) {
+         if ($('#attachmentDelete tbody tr').length == 0) {
+            $('#vsNoAttachmentsDataFound').show();
+            return false;
+         }
+
+
+
+
+
+
+
+         var pWay =@Model.OfferPresentationWayId;
+
+         var ticFile = false;
+         var fiFile = false;
+         var comFile = false;
+         var orgFile = false;
+
+         $.each(app2.attachments, function (index, value) {
+            if (value.type == '15')
+               orgFile = true;
+            if (value.type == '19')
+               ticFile = true;
+            if (value.type == '17')
+               comFile = true;
+            if (value.type == '18')
+               fiFile = true;
+
+          });
+
+
+         if (pWay == @((int)Enums.OfferPresentationWayId.TwoSepratedFiles)) {
+            if (app2.attachments.length < 2 || !(ticFile && fiFile)) {
+               $('#vsNoAttachmentsDataFound').show();
+               return false;
+            }
+         } else {
+            if (app2.attachments.length == 0 && !orgFile) {
+               $('#vsNoAttachmentsDataFound').show();
+               return false;
+            }
+
+         }
+         if (app2.InvitedSuppliers.length > 0 || app2.mobilNoList.length > 0 || app2.emails.length > 0) {
+
+            if (app2.combinedAttachment.length == 0) {
+              // $('#vsCombinedLetterAttachments').show();
+               AlertFun('@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.CombinationLetter', alertMessageType.Danger)
+               return false;
+            }
+
+         }
+         return true;
+      }
+
+
+   </script>
+}
+
+<script src="~/Etimad-UI/assets/js/xlsx.full.min.js"></script>
+

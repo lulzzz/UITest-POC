@@ -1,0 +1,122 @@
+@model MOF.Etimad.Monafasat.ViewModel.Offer.OfferMainVModel
+@using res = MOF.Etimad.Monafasat.Resources
+@{
+   ViewData["Title"] = "البيانات الاساسية";
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">البيانات الاساسية</li>
+      </ol>
+   </nav>
+}
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+<form method="post" asp-action="OfferMainAsync" asp-controller="Offer">
+   <div class="card">
+      <div class="card-body">
+         <div id="basictenderinfo"> </div>
+         <div id="suppliercertifcates"> </div>
+      @await Component.InvokeAsync("QualificationSupplierIDMInfo", new { SupplierId = Model.CR }) 
+         @{
+            <input type="hidden" asp-for="offerIdString" />
+            <input type="hidden" asp-for="tenderIdString" />
+            if (!(Model.tenderTypeId == (int)Enums.TenderType.NationalTransformationProjects || Model.tenderTypeId == (int)Enums.TenderType.CurrentTender || Model.tenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase))
+            {
+               <div class="row">
+                  <div class="col-12">
+                     <h4 class="text-primary">التضامن</h4>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group p-0">
+                        @{
+                           if (string.IsNullOrEmpty(Model.offerIdString) || (Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established || Model.OfferStatusId == (int)Enums.OfferStatus.Canceled))
+                           {
+                              <div class="form-check">
+                                 <label class="form-check-label text-dark-green">
+                                    <input class="form-check-input" asp-for="isSolidarity" type="checkbox" onchange="ChangeSolidarity(this)">
+                                    عرض بالتضامن
+                                    <span class="form-check-sign">
+                                       <span class="check"></span>
+                                    </span>
+                                 </label>
+                              </div>
+                           }
+                           else if (Model.isSolidarity)
+                           {
+                              <span>عرض بالتضامن</span>
+
+                           }
+                           else
+                           {
+                              <span> عرض منفرد </span>
+                           }
+                        }
+                     </div>
+                  </div>
+                  <div class="col-12" id="divQtableFiles">
+                  </div>
+               </div>
+            }
+         }
+      </div>
+   </div>
+   <div class="row">
+      @{ if (string.IsNullOrEmpty(Model.offerIdString) || Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established || Model.OfferStatusId == (int)Enums.OfferStatus.Canceled)
+         {
+            <div class="col-12">
+               <button type="submit" class="btn btn-primary pull-left" name="submitButton" value="Save">حفظ</button>
+               <button type="submit" class="btn btn-primary pull-left" name="submitButton" value="Next">التالي</button>
+               <a asp-action="SupplierTenders" asp-controller="Tender" class="btn btn-outline-primary pull-right">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToMyTenders</a>
+            </div>
+         }
+         else
+         {
+            <div class="col-12">
+               <a asp-action="OfferFilesAsync" asp-controller="Offer" asp-route-OfferIdString="@Model.offerIdString" class="btn btn-primary pull-left">التالي</a>
+               <a asp-action="SupplierTenders" asp-controller="Tender" class="btn btn-outline-primary pull-right">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToMyTenders</a>
+            </div>} }
+   </div>
+</form>
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script>
+      $(document).ready(function () {
+         var tenderid = @(MOF.Etimad.Monafasat.SharedKernal.Util.Decrypt(Model.tenderIdString))
+         $.ajax({
+            url: "/Offer/GetOfferMainComponent?TenderId="+tenderid+"",
+            success: function (html) {
+
+               $('#basictenderinfo').html(html);
+            }
+            , complete: function () {
+
+               $('#LoadingSite').fadeOut();
+
+            }
+         });
+
+        // GetOfferFiles();
+
+      });
+      $('#divSolidarityFile').hide();
+      function RefreshList(hiddenFiled) {
+
+      }
+      function ChangeSolidarity(_sender) {
+         if ($(_sender).is(':checked')) {
+            $('#divSolidarityFile').show()
+         }
+         else {
+            $('#divSolidarityFile').hide()
+         }
+      }
+   </script>
+}

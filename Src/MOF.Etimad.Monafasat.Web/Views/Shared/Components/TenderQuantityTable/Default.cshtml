@@ -1,0 +1,155 @@
+<div id="tableContainer" class="card-body p-2">
+   <div v-if="QuantityTableItems && QuantityTableItems.length > 0" v-for="(table, $index) in QuantityTableItems">
+      <div class="TableNameSection" v-show="table.isReadOnly == false">
+         <div class="d-flex flex-column flex-md-row">
+            <h5 class="title text-primary p-1 m-0">
+               <span class="tableName col">{{table.tableName}}</span>
+            </h5>
+         <button class="btn btn-sm btn-warning d-print-none" @@click="editTableName($event, table.tableName)">تعديل الإسم</button>
+         <button class="btn btn-sm btn-primary d-print-none" @@click="exportToExcelNew(table.tableId, @Model.TenderId, table.templateYears,table.formId)">تصدير</button>
+         <input type="file" style="display:none;" :id="'importFile_' + table.tableId" @@change="performImport(table.tableId, table.formId, table.tableName, @Model.TenderId, table.templateYears)" />
+         <button class="btn btn-sm btn-primary d-print-none" @@click="importFromExcel(table.tableId)">استيراد</button>
+         <button class="btn btn-sm btn-danger d-print-none" @@click="deleteTable($event, table.tableId)">حذف الجدول</button>
+   
+
+         </div>
+         <div id="TableNameEdit" class="d-none">
+            <div class="row">
+               <div class="col-6 form-group" style="padding-top:0">
+                  <div class="input-group-append">
+                     <input id="tableName" class="form-control" value="" maxlength="200"/>
+                     <button class="btn btn-sm btn-primary" :data-table-id="table.tableId" :data-form-id="table.formId" @@click="saveTableName($event, table)">حفظ</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="row" v-html="QuantityTableItems[0].tableHtml">
+      </div>
+   </div>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>
+<form asp-controller="Tender" asp-action="SaveTenderQuantityItem"
+      data-ajax-failure="OnQtableFailureCSiCode" data-ajax-success="AddEditRow" data-ajax-loading="#LoadingSite" data-ajax-begin=""
+      data-ajax="true" data-ajax-method="POST">
+   <div id="addModel" tabindex="-1"></div>
+</form>
+<form asp-controller="Tender" asp-action="DeleteTenderQuantityItem"
+      data-ajax-failure="OnQtableFailure" data-ajax-success="DeleteExistinghtmlRow" data-ajax-loading="#LoadingSite"
+      data-ajax="true" data-ajax-method="POST">
+   <div id="deleteModel"></div>
+</form>
+<div id="javaScript"></div>
+<script>
+   function OnQtableFailureCSiCode(e) {
+    //  debugger
+      if (e.responseJSON === undefined) {
+         location.reload();
+      }
+      else {
+         AlertFun(e.responseJSON.message, alertMessageType.Danger);
+      }
+   }
+   $(document).ready(function () {     
+      Tender = new Vue({
+         el: '#tableContainer',
+         data: {
+            totalCount: 0,
+            currentPage: 1,
+            QuantityTableItems: [],
+            pageSize: @((int)Enums.PageSize.Six),
+            resource_url: '/Tender/GetTenderTableQuantityItemsAsync?tenderId=@Model.TenderId&quantityTableId=@Model.TableId&formId=@Model.FormId&isReadOnly=@Model.IsReadOnly'
+         },
+         created: function () {
+            this.resource_url = '/Tender/GetTenderTableQuantityItemsAsync?tenderId=@Model.TenderId&quantityTableId=@Model.TableId&formId=@Model.FormId&isReadOnly=@Model.IsReadOnly';
+         },
+         methods: {
+            updateResource: function (data) {
+               //debugger
+               this.QuantityTableItems = data;
+               if ($('#tableHeaderContainer_' + @Model.FormId + ' li').length <= 1) {
+                  $('#tableHeaderContainer_' + @Model.FormId).html('<li class="nav-item"><a class="nav-link text-center" href="#tableIndex_' + data[0].tableId + '" data-tableId="' + data[0].tableId + '" onclick="changeTable(' + data[0].tenderId + ', ' + data[0].tableId + ', ' + data[0].formId + ')" data-toggle="tab">' + data[0].tableName + '</a></li>');
+                  $('#collapse_' + @Model.FormId).attr('data-tableId', data[0].tableId);
+                  $('#tableHeaderContainer_' + @Model.FormId + ' li a').removeClass('active');
+                  $('#tableHeaderContainer_' + @Model.FormId + ' li a').removeClass('show');
+                  $('#tableHeaderContainer_' + @Model.FormId + ' li a[data-tableId=' + data[0].tableId + ']').addClass('active');
+                  $('#tableHeaderContainer_' + @Model.FormId + ' li a[data-tableId=' + data[0].tableId + ']').addClass('show');
+               }
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+               $('#addModel').html(data[0].editFormHtml);
+               $('#deleteModel').html(data[0].deleteFormHtml);
+               if (data[0].javascript != null)
+                  $('#javaScript').html(data[0].javascript);
+            },
+            exportToExcel: function (tableId ) {
+               window.location = '/Tender/ExportTenderTableQuantityItemsAsync?tableId=' + tableId + '&isNewChange=false';
+            },
+            exportToExcelNew: function (tableId, tenderid, yearscount, formid) {
+               window.location = '/Tender/ExportTenderTableQuantityItemsAsync_New?tableId=' + tableId + '&isNewChange=false&tenderId='+tenderid+'&yearsCount= '+yearscount+'&formId= '+formid+'';
+            },
+            editTableName: function (e, tableName) {
+               editTableName(e.srcElement, tableName);
+            },
+            saveTableName: function (e, table) {
+               saveTableName(e.srcElement, table, function (tableName, table) {
+                  table.tableName = tableName;
+               });
+            },
+            deleteTable: function (e, tableId) {
+               deleteTable(e.srcElement, tableId);
+            },
+            importFromExcel: function (tableId) {
+               $('#importFile_' + tableId).trigger('click');
+            },
+            performImport: function (tableId, formId, tableName, tenderId, years) {
+               var fileExtension = ['xls', 'xlsx'];
+               var filename = $('#importFile_' + tableId).val();
+               if (filename.length == 0) {
+                  alert("Please select a file.");
+                  return false;
+               }
+               else {
+                  var extension = filename.replace(/^.*\./, '');
+                  if ($.inArray(extension, fileExtension) == -1) {
+                     alert("Please select only excel files.");
+                     return false;
+                  }
+               }
+               $('#LoadingSite').fadeIn();
+               var fdata = new FormData();
+               var fileUpload = $('#importFile_' + tableId).get(0);
+               var files = fileUpload.files;
+               fdata.append(files[0].name, files[0]);
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.ajax({
+                  type: "POST",
+                  url: "/Tender/ImportTenderTableQuantityItemsAsync?tableId=" + tableId + '&formId=' + formId + '&tableName=' + tableName + '&tenderId=' + tenderId + '&years=' + years,
+                  beforeSend: function (xhr) {
+                     xhr.setRequestHeader("__RequestVerificationToken", token);
+                  },
+                  data: fdata,
+                  contentType: false,
+                  processData: false,
+                  success: function () {
+                     if (Tender.resource_url.indexOf('&quantityTableId=0&') > -1)
+                        Tender.resource_url = Tender.resource_url.replace('&quantityTableId=0&', '&quantityTableId=' + tableId + '&');
+                     else
+                        Tender.$refs.vpaginator.fetchData(Tender.resource_url.replace('&quantityTableId=0&', '&quantityTableId=' + tableId + '&'));
+                     $('#importFile_' + tableId).val('');
+                     $('#LoadingSite').fadeOut();
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success);
+                  },
+                  error: function (e) {
+                   //  debugger
+                     $('#importFile_' + tableId).val('');
+                     $('#LoadingSite').fadeOut();
+                     AlertFun(e.responseJSON, 'danger');
+                  }
+               });
+            }
+         }
+      });
+   });
+</script>

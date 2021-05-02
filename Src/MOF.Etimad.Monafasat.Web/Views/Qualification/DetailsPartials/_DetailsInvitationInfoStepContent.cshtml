@@ -1,0 +1,59 @@
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationDetailsModel
+@{
+ var tenderExecutionPlace = (Model != null && Model.InsideKSA != null) ? (Model.InsideKSA == true ? MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InsideKSA : @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OutsideKSA) : "";
+}
+   <div class="tab-pane animated bounceInLeft  delay-1s" id="d-5">
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="">
+                     <ul class="list-group form-details-list">
+
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PublishDate
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 @if (Model.SubmitionDate.HasValue)
+                                 {
+                                    <span>
+                                       @(Model.SubmitionDateString)
+                                    </span>
+                                    <span>
+                                       @(Model.SubmitionDateHijri)
+                                    </span>
+                                 }
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ModifyRequests
+                              </div>
+                              <div class="col-8 etd-item-info">
+
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CancelRequests
+                              </div>
+                              <div class="col-8 etd-item-info">
+
+
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                     <input type="hidden" id="lastOfferPresentationDate" value="@(Model.LastOfferPresentationDate.HasValue ? @Model.LastOfferPresentationDate.Value.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-US")) : "")" />
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>

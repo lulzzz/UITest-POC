@@ -1,0 +1,115 @@
+@using System
+@model MOF.Etimad.Monafasat.ViewModel.AttachmentsModel
+@{
+    ViewBag.Title = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles;
+    var showInvitationTab = (((Model.PreQualificationId != null || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender || Model.TenderTypeId == (int)Enums.TenderType.SecondStageTender || Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding ||
+              Model.TenderTypeId == (int)Enums.TenderType.LimitedTender || Model.TenderTypeId == (int)Enums.TenderType.FrameworkAgreement || Model.TenderTypeId == (int)Enums.TenderType.Competition ||
+              Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects) && Model.InvitationTypeId == (int)Enums.InvitationType.Specific) || (Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles) );
+    var showDatesTab = Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects && Model.TenderCreatedByTypeId != (int)Enums.TenderCreatedByType.AgenciesRelatedByVRO;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+      </ol>
+   </nav>
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+</style> 
+@using (Html.BeginForm())
+{
+   <input type="hidden" id="ModuleType" value="1" />
+   @Html.AntiForgeryToken()
+   <ul class="wizSteps">
+      <li>
+         @if (Model.TenderTypeId == (int)Enums.TenderType.SecondStageTender)
+         {
+            <h4><a id="hBasicStep" href="@Url.Action("BasicSecondStageData", "Tender", new { id = Model.TenderIDString })"><span class="step-num">1</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</a></h4>
+         }
+         else
+         {
+            <h4><a id="hBasicStep" href="@Url.Action("BasicTenderData", "Tender", new { id = Model.TenderIDString })"><span class="step-num">1</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</a></h4>
+         }
+         <div class="clearfix"></div>
+      </li>
+      @if (showDatesTab == true || User.UserIsVRO())
+      {
+         <li class="">
+            <div>
+               <h4><a id="hDetailsStep" href="@Url.Action("TenderDates", "Tender", new { tenderId = Model.TenderIDString })"><span class="step-num">2</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DetailsStep</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+      }
+      <li class="">
+         <div>
+            <h4><a id="hRealtionStep" href="@Url.Action("RelationsStep", "Tender",new {tenderId = Model.TenderIDString})"><span class="step-num">3</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep</a></h4>
+         </div>
+         <div class="clearfix"></div>
+      </li>
+      @if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding)
+      {
+         <li class="">
+            <div>
+               <h4 id="hQuantatysStep"><a href="@Url.Action("QuantitiesTableStep", "Tender",new {id = Model.TenderIDString})"><span class="step-num">4</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+      }
+      <li class="active">
+         <div>
+            <h4 id="hAttachmentStep"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles <strong class="step-count">(5 - 5)</strong></h4>
+         </div>
+         <input asp-for="TenderIDString" type="hidden" />
+         <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+         @Html.Partial("_TenderAttachments")
+         <div class="clearfix"></div>
+      </li>
+      @if (Model.TenderStatusId == (int)Enums.TenderStatus.Established && showInvitationTab == true)
+      {
+         <li class="">
+            <div>
+               <h4><a id="hInvitationsStep" href="@Url.Action("SendInvitationsStep", "Tender", new { tenderIdString = Model.TenderIDString })"><span class="step-num">6</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Invitations</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+      }
+      else if (Model.TenderStatusId != (int)Enums.TenderStatus.Established && showInvitationTab == true)
+      {
+         <li class="">
+            <div>
+               <h4><a id="hInvitationsStep" href="#"><span class="step-num">6</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Invitations</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+      }
+   </ul>
+}
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+      $('#btnPrivious').click(function () {
+         $('#LoadingSite').fadeIn();
+         if (@Model.TenderTypeId != @((int)Enums.TenderType.FirstStageTender) && @Model.TenderTypeId != @((int)Enums.TenderType.ReverseBidding) && @Model.TenderTypeId != @((int)Enums.TenderType.Competition)) {
+            window.location = "@Url.Action("QuantitiesTableStep", "Tender", new { id = Model.TenderIDString })";
+            return false;
+         }
+         else {
+            window.location = "@Url.Action("RelationsStep", "Tender", new { tenderId = Model.TenderIDString })";
+            return false;
+
+         }
+      });
+      $("#btnSave").click(function () {
+         //$('#LoadingSite').fadeIn();
+      });
+   </script>
+}

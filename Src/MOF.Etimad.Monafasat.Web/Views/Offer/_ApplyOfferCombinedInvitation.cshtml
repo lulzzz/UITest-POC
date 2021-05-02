@@ -1,0 +1,185 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+@using res = MOF.Etimad.Monafasat.Resources
+
+<div class="card">
+   <div class="form" id="searchCriteriaForm">
+      <div class="alert alert-warning" style="z-index:0">
+         <div class="">
+            <div class="alert-icon">
+               <i class="material-icons">warning</i> 
+            </div>
+            @res.OfferResources.Messages.OfferCombinationMSG
+         </div>
+         <span class="badge badge-pill badge-warning"> </span>
+      </div>
+      <div class="card-body">
+         <div class="form-group">
+
+           
+         </div>
+      </div>
+            <div class="" id="SuppliersGrid" v-cloak>
+               <div class="card-body">
+                  <ul class="nav nav-pills nav-pills-teal p-0" role="tablist">
+                     <li class="nav-item">
+                        <a class="nav-link active show" href="#regSupplier" role="tab" data-toggle="tab" aria-selected="true">
+
+                           @Html.Raw(res.InvitationResources.DisplayInputs.RegisteredSuppliers)
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#sendWithEmails" role="tab" data-toggle="tab" aria-selected="false">
+
+                           @Html.Raw(res.InvitationResources.DisplayInputs.SendByEmailAddress)
+                        </a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#sendWithSms" role="tab" data-toggle="tab" aria-selected="false">
+
+                           @Html.Raw(res.InvitationResources.DisplayInputs.SendBySms)
+                        </a>
+                     </li>
+                  </ul>
+                  <div class="tab-content tab-space p-0">
+                     <div class="tab-pane active show" id="regSupplier">
+                        <div class="">
+                           <form id="formSearchSuppliers">
+                              @*<input type="hidden" value="OfferIdString" name="OfferIdString" />*@
+                              <div class="row">
+                                 @if (User.IsInRole(RoleNames.supplier) && Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)
+                           {
+                              <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                                 <div class="form-group bmd-form-group">
+                                    <input type="text" class="form-control" name="CommericalRegisterNo" id="commericalRegisterNo" value="" placeholder="@Html.Raw(res.SharedResources.DisplayInputs.ComericalRegisterNo)">
+                                    <input type="hidden" name="InvitationTenderId" value="@(Model.TenderId)" />
+                                    <span class="bmd-help">@Html.Raw(res.SharedResources.DisplayInputs.ComericalRegisterNo)</span>
+                                 </div>
+                              </div>
+                              <div hidden="hidden" class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                                 <div class="form-group bmd-form-group">
+                                    <input type="text" class="form-control" name="CommericalRegisterName" id="publisher" value="" placeholder="@Html.Raw(res.InvitationResources.DisplayInputs.ComericalRegisterName)">
+                                    <span class="bmd-help">@Html.Raw(res.InvitationResources.DisplayInputs.ComericalRegisterName)</span>
+                                 </div>
+                              </div>
+
+                              <div hidden="hidden" class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                                 <div class="form-group bmd-form-group">
+                                    <input type="text" class="form-control" name="CivilRegisterNo" id="publisher" value="" placeholder="@Html.Raw(res.InvitationResources.DisplayInputs.CivilRegisterNo) ">
+                                    <span class="bmd-help">@Html.Raw(res.InvitationResources.DisplayInputs.CivilRegisterNo)</span>
+                                 </div>
+                              </div>
+                     }
+                              </div>
+                              <div hidden="hidden" class="row">
+                                 <div class="col-lg-4 col-sm-6 col-xs-12">
+                                    <div class="form-group bmd-form-group">
+                                       <input type="text" class="form-control" name="EMail" id="tb_EMail" value="" placeholder="@Html.Raw(res.SharedResources.DisplayInputs.Email)">
+                                       <span class="bmd-help">@Html.Raw(res.SharedResources.DisplayInputs.Email)</span>
+                                    </div>
+                                 </div>
+
+                              </div>
+                           </form>
+                           <div class="row">
+                              <span class="bmd-help text-danger" style="position:relative" id="vdSearch">@Html.Raw(res.SharedResources.ErrorMessages.EnterSearchFields)</span>
+                           </div>
+                           @if (User.IsInRole(RoleNames.supplier) && Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)
+                     {
+                        <div class="row">
+                           <div class="col-12 form-group etd-search-btn">
+                              <button type="button" class="btn btn-primary btn-sm" name="button" @@click="search">
+                                 <i class="material-icons">search</i>  @Html.Raw(res.SharedResources.DisplayInputs.Search)
+                              </button>
+                              <button type="reset" class="btn text-center btn-sm" name="button">
+                                 <i class="material-icons">close</i>  @Html.Raw(res.SharedResources.DisplayInputs.Clear)
+                              </button>
+                           </div>
+                        </div>
+               }
+                           <div class="row">
+                              <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 text-primary">
+                                 <h5>@Html.Raw(res.InvitationResources.DisplayInputs.SuppliersList)</h5>
+                                 <div v-if="showTable"> @Html.Partial("~/Views/Tender/_SuppliersGridForCombined.cshtml")</div>
+                                 <div v-else>
+                                    <table class="table  table-striped text-center">
+                                       <caption>قائمة الموردين</caption>
+                                       <thead class="text-center">
+                                          <tr>
+                                             <th scope="col" class="text-center">#</th> <th scope="col" class="text-center">@res.TenderResources.DisplayInputs.CommercialName</th>
+                                             <th scope="col" class="text-center">@res.TenderResources.DisplayInputs.CommercialNumber</th> <th scope="col" class="text-center"></th>
+                                           </tr>
+                                       </thead>
+                                       <tbody>
+                                          <tr>
+                                             <td colspan="9" class="text-center">
+                                                @res.OfferResources.DisplayInputs.SearchVendorsByCR
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </div>
+                              <div class="col-lg-6  col-md-12 col-sm-12 col-xs-12 pull-right text-primary">
+                                 <h5>@Html.Raw(res.InvitationResources.DisplayInputs.InvitedSuppliersList)</h5>
+                                 @Html.Partial("~/Views/Tender/_InvitedSuppliersGridInCombined.cshtml")
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     @Html.Partial("~/Views/Tender/Partials/_InivtationsByEmails.cshtml")
+                     @Html.Partial("~/Views/Tender/Partials/_InivtationsByMobileNumbers.cshtml")
+                  </div>
+                  <div class="row">
+                     <div class="col-12" id="attachmentTable">
+                        <div id="attachmentDelete" v-if="(combinedAttachment.length > 0)">
+                           <table class="table table-striped">
+                              <caption>المرفقات</caption>
+                              <thead style="background-color: #e0efe8;">
+                                 <tr>
+                                    <th scope="col">@res.SharedResources.DisplayInputs.FileName </th>
+
+                                    <th scope="col">@res.SharedResources.DisplayInputs.Options</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr v-for="(tbl,index) in combinedAttachment">
+                                    <td data-label=" Milestone">
+                                       <a href="#" @@click="RedirectURL(index);return false;" target="_blank"> {{tbl.fileName}} </a>
+                                    </td>
+                                    <td data-label="Details">
+                                       @if (User.IsInRole(RoleNames.supplier) && Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)
+                                 {
+                                    <div class="dropdown pull-right">
+                                       <button @@click="DeleteAttach(index,'combined')" class="btn btn-round btn-sm btn-danger"><i class="material-icons">clear</i>  @res.SharedResources.DisplayInputs.Delete</button>
+                                    </div>
+                           }
+                                    </td>
+                                 </tr>
+                              </tbody>
+                              <tfoot>
+                              </tfoot>
+                           </table>
+                        </div>
+                        @if (User.IsInRole(RoleNames.supplier) && Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)
+                  {
+
+                     <button v-if="(combinedAttachment.length<1)&& (InvitedSuppliers.length>0 || mobilNoList.length>0 || emails.length>0)" type="button" onclick="resetFileUpload('combined')" class="btn btn-sm btn-primary" data-toggle="modal">@res.OfferResources.DisplayInputs.UploadCombinedLetter</button>
+
+
+            }
+                     </div>
+                     @if (User.IsInRole(RoleNames.supplier) && Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)
+               {
+                  @*<div class="col-12 form-group">
+                     <button type="button" id="btnSendInvitations" class="btn btn-primary btn-sm" name="button" @@click="sendInvitation">
+                        @Html.Raw(res.OfferResources.DisplayInputs.SaveCombination)
+                        <div class="ripple-container"></div>
+                     </button>
+
+                  </div>*@
+         }
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>

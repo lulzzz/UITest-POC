@@ -1,0 +1,125 @@
+@model MOF.Etimad.Monafasat.ViewModel.CountAndCloseAppliedOffersModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+<link rel="icon" href="~/Etimad-UI/assets/imgs/favicon.ico">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script>
+   document.title = "Report";
+   (function () {
+      var link = document.createElement('link');
+      oldLink = document.getElementById('dynamic-favicon');
+      link.id = 'dynamic-favicon';
+      link.rel = 'shortcut icon';
+      link.href = '~/Etimad-UI/assets/imgs/favicon.ico';
+      document.getElementsByTagName('head')[0].appendChild(link);
+   })();
+   function printData() {
+      window.print();
+      window.close();
+   }
+   function saveData() {
+      var sourceHTML = document.getElementById("printDiv").innerHTML;
+      var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      var fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = 'document.doc';
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+   }
+</script>
+<button id="printButton" onclick="printData();" class="btn btn-success d-print-none" style="margin:20px;">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Print / @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+<div id="printDiv" class="row" dir="rtl" style="margin:20px;">
+   <div class="col-sm-4 text-right">
+      <h5>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.KingdomOfSaudiArabia</h5>
+      <h5> @Model?.AgencyName</h5>
+      <h5>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Tender @Model?.TenderName @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Number (@Model?.TenderNumber)</h5>
+      <h5>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderReferenceNumber @Model.TenderReferenceNumber</h5>
+   </div>
+   <div class="col-sm-4">
+      <h3 class="text-center">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CountCloseReportName</h3>
+      <h4 class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FinancialYear  @Model?.SubmitionDate هـ</h4>
+   </div>
+   <div class="col-sm-4"></div>
+   <div class="col-sm-12"><br /><br /></div>
+   <h5 class="col-sm-12 text-right">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CountCloseReportBody1</h5>
+   <h5 class="col-sm-12 text-right">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OffersNumber @Model.OffersNumbers</h5>
+   @if ((int)Model.TenderTypeId == (int)(Enums.TenderType.CurrentDirectPurchase) || (int)Model.TenderTypeId == (int)(Enums.TenderType.NewDirectPurchase))
+   {
+      <h5 class="col-sm-12 text-right">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.InvitationsNumber: @Model.InvetationsNumbers</h5>
+   }
+   else
+   {
+      <h5 class="col-sm-12 text-right">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BuyersNumber: @Model.PurshaseNumbers</h5>
+   }
+   <h5 class="col-sm-12 text-right">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CountCloseReportBody2</h5>
+   <table class="col-sm-12 table text-center table-bordered">
+      <caption></caption>
+      <tr>
+         <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SequenceNumber</th>
+         <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferSupplierName</th>
+         <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CommercialNumber</th>
+         @if ((int)Model.TenderTypeId == (int)(Enums.TenderType.CurrentDirectPurchase) || (int)Model.TenderTypeId == (int)(Enums.TenderType.NewDirectPurchase))
+         {
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.InvitationPurchaseSendingDate</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.InvitationPurchaseStatus</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.InvitationAcceptanceDate</th>
+         }
+         else
+         {
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.PurshaseStatus </th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.PurshaseDate</th>
+         }
+      </tr>
+      @if ((int)Model.TenderTypeId == (int)(Enums.TenderType.CurrentDirectPurchase) || (int)Model.TenderTypeId == (int)(Enums.TenderType.NewDirectPurchase))
+      {
+         for (int i = 0; i < Model.InvitationedSuppliers.Count; i++)
+         {
+            <tr>
+               <td>@(i + 1)</td>
+               <td>@Model.InvitationedSuppliers[i].SupplierName</td>
+               <td>@Model.InvitationedSuppliers[i].CommercialNumber</td>
+               <td>@Model.InvitationedSuppliers[i].InvitationSendingDate</td>
+               <td>@Model.InvitationedSuppliers[i].InvitaionStatus</td>
+               <td>@Model.InvitationedSuppliers[i].InvitationAcceptanceDate</td>
+            </tr>
+         }
+      }
+      else
+      {
+         for (int i = 0; i < Model.PurshesSuppliers.Count; i++)
+         {
+            <tr>
+               <td>@(i + 1)</td>
+               <td>@Model.PurshesSuppliers[i].SupplierName</td>
+               <td>@Model.PurshesSuppliers[i].CommercialNumber</td>
+               <td>@Model.PurshesSuppliers[i].PurshaseStatus</td>
+               <td>@Model.PurshesSuppliers[i].PurshaseDate</td>
+            </tr>
+         }
+      }
+   </table>
+   <div class="col-sm-12"><br /></div>
+   <div id="report" class="col-sm-12 d-none d-print-block">
+      <table class="col-s-m-12 text-center table table-borderless">
+         <tr>
+            <td>سكرتير المناقصات</td>
+            <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Memeber</td>
+            <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Memeber</td>
+            <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Memeber</td>
+            <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Memeber</td>
+            <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Memeber</td>
+            <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ChairmanOfTheOpenEnvelopesCommittee</td>
+         </tr>
+         <tr>
+            <td>..................................</td>
+            <td>..................................</td>
+            <td>..................................</td>
+            <td>..................................</td>
+            <td>..................................</td>
+            <td>..................................</td>
+            <td>..................................</td>
+         </tr>
+      </table>
+   </div>
+</div>

@@ -1,0 +1,10 @@
+<div class="card-footer row">
+   <div class="col-md-12 text-left">
+      <button type="button" v-if="br.announcementStatusId == @((int)Enums.AnnouncementStatus.Approved) && !br.hasApprovedRequest  && br.announcementStatusId == @((int)Enums.AnnouncementStatus.Approved)" @@click="join(br.announcementIdString)" class="btn btn-info pull-right btn-sm">
+         @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.JoinAnnouncement
+      </button>
+      <a href="#" v-if="br.announcementStatusId == @((int)Enums.AnnouncementStatus.Approved) && br.hasApprovedRequest && br.announcementStatusId == @((int)Enums.AnnouncementStatus.Approved)"  @@click="join(br.announcementIdString)" class="btn btn-danger pull-right btn-sm">
+         @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.WithdrawAnnouncementRequest
+      </a>
+   </div>
+</div>

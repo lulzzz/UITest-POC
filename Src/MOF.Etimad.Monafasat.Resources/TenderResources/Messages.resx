@@ -1,0 +1,661 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdvancedSearchMessage" xml:space="preserve">
+    <value>عزيزنا مستخدم منصة إعتماد, كي تستطيع إستخدام مزايا البحث المتقدم التالية :</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>معتمده</value>
+  </data>
+  <data name="Canceled" xml:space="preserve">
+    <value>تم الإلغاء</value>
+  </data>
+  <data name="CancelSentToApproval" xml:space="preserve">
+    <value>تم ارسال طلب إلغاء المنافسة</value>
+  </data>
+  <data name="CancelTenderApproved" xml:space="preserve">
+    <value>تم قبول طلب الالغاء</value>
+  </data>
+  <data name="CancelTenderRejected" xml:space="preserve">
+    <value>تم رفض طلب الالغاء</value>
+  </data>
+  <data name="ChangeRequestApproved" xml:space="preserve">
+    <value>تم إعتماد طلب التعديل بنجاح  </value>
+  </data>
+  <data name="ChangeRequestCanceled" xml:space="preserve">
+    <value>تم إلغاء طلب التعديل بنجاح </value>
+  </data>
+  <data name="ChangeRequestRejected" xml:space="preserve">
+    <value>تم رفض طلب التعديل بنجاح  </value>
+  </data>
+  <data name="ChangeRequestSentToApproval" xml:space="preserve">
+    <value>تم إرسال طلب التعديل للاعتماد بنجاح</value>
+  </data>
+  <data name="CheckingSentToApproval" xml:space="preserve">
+    <value>تم ارسال نتيجة الفحص للاعتماد</value>
+  </data>
+  <data name="DataSaved" xml:space="preserve">
+    <value>تم الحفظ بنجاح</value>
+  </data>
+  <data name="DeletedSuccessfully" xml:space="preserve">
+    <value>تمت عملية الحذف بنجاح</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>خطا فى الإرسال</value>
+  </data>
+  <data name="ErrorInImportedData" xml:space="preserve">
+    <value>خطا فى بيانات الملف المرفق</value>
+  </data>
+  <data name="Established" xml:space="preserve">
+    <value>تم الإنشاء</value>
+  </data>
+  <data name="FullSubscribtion" xml:space="preserve">
+    <value>يجب الإشتراك بفئة 2000 ريال أو أكثر</value>
+  </data>
+  <data name="NoSupplierSelected" xml:space="preserve">
+    <value>لم يتم اختيار موردين</value>
+  </data>
+  <data name="OffersAwardedConfirmed" xml:space="preserve">
+    <value>تم قبول الترسية</value>
+  </data>
+  <data name="OffersAwardedPending" xml:space="preserve">
+    <value>بإنتظار إعتماد الترسية</value>
+  </data>
+  <data name="OffersAwardedRejected" xml:space="preserve">
+    <value>تم رفض الترسية</value>
+  </data>
+  <data name="OffersAwarding" xml:space="preserve">
+    <value>مرحلة الترسية</value>
+  </data>
+  <data name="OffersCheckedConfirmed" xml:space="preserve">
+    <value>تم إعتماد التقييم الفنى</value>
+  </data>
+  <data name="OffersCheckedPending" xml:space="preserve">
+    <value>بانتظار اعتماد تقييم العروض</value>
+  </data>
+  <data name="OffersCheckedRejected" xml:space="preserve">
+    <value>تم رفض التقييم الفنى</value>
+  </data>
+  <data name="OffersOppenedConfirmed" xml:space="preserve">
+    <value>تم فتح العروض</value>
+  </data>
+  <data name="OffersOppenedPending" xml:space="preserve">
+    <value>بإنتظار إعتماد تقرير فتح العروض</value>
+  </data>
+  <data name="OffersOppenedRejected" xml:space="preserve">
+    <value>تم رفض تقرير فتح العروض</value>
+  </data>
+  <data name="OffersOppening" xml:space="preserve">
+    <value>مرحلة فتح العروض</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>يانتظار الاعتماد</value>
+  </data>
+  <data name="Rejected" xml:space="preserve">
+    <value>مرفوضة</value>
+  </data>
+  <data name="SaveAwarding" xml:space="preserve">
+    <value>تم إدخال بيانات الترسية بنجاح</value>
+  </data>
+  <data name="SelectAgency" xml:space="preserve">
+    <value>إختر جهة</value>
+  </data>
+  <data name="SendInvitations" xml:space="preserve">
+    <value>تم الارسال بنجاح</value>
+  </data>
+  <data name="SendRequestToJoiningATander" xml:space="preserve">
+    <value>تم ارسال طلب الانضمام بنجاح</value>
+  </data>
+  <data name="SubscribtionMessage" xml:space="preserve">
+    <value>عزيزنا مستخدم منصة إعتماد كى تستطيع إستخدام مزايا البحث المتقدم  يجب عليك الإشتراك من خلال حسابك على بوابة إعتماد</value>
+  </data>
+  <data name="TenderApproved" xml:space="preserve">
+    <value>تم اعتماد المنافسه بنجاح</value>
+  </data>
+  <data name="TenderReopen" xml:space="preserve">
+    <value>تمت اعادة الفتح بنجاح</value>
+  </data>
+  <data name="TenderSent" xml:space="preserve">
+    <value>تم ارسال المنافسة للاعتماد بنجاح</value>
+  </data>
+  <data name="UnderEstablishing" xml:space="preserve">
+    <value>تحت الانشاء</value>
+  </data>
+  <data name="youHaveAlreadyARequest" xml:space="preserve">
+    <value>يوجد طلب مسبق للانضمام على هذه المنافسه</value>
+  </data>
+  <data name="DataRemoved" xml:space="preserve">
+    <value>تم حذف البيانات</value>
+  </data>
+  <data name="AddTenderToFavourite" xml:space="preserve">
+    <value>تم الإضافة إلى قائمة المنافسات المفضلة</value>
+  </data>
+  <data name="RemoveTenderFromFavourite" xml:space="preserve">
+    <value>تم  الحذف من قائمة المنافسات المفضلة</value>
+  </data>
+  <data name="AddToFvouriteSuccessfully" xml:space="preserve">
+    <value>تم الإضافة إلى قائمة المنافسات المفضلة</value>
+  </data>
+  <data name="DeleteFromFavouriteSuccessfully" xml:space="preserve">
+    <value>تم حذف المنافسة من قائمة المفضلة</value>
+  </data>
+  <data name="UserDeletedSuccessfully" xml:space="preserve">
+    <value>تم حذف المستخدم بنجاح</value>
+  </data>
+  <data name="Ended" xml:space="preserve">
+    <value>منتهى الصلاحية</value>
+  </data>
+  <data name="Valid" xml:space="preserve">
+    <value>سارى المفعول</value>
+  </data>
+  <data name="EditCommitteesSuccessfully" xml:space="preserve">
+    <value>تم تعديل اللجان بنجاح</value>
+  </data>
+  <data name="ExtendDatesSuccessfully" xml:space="preserve">
+    <value>تم تمديد تواريخ المنافسة بنجاح</value>
+  </data>
+  <data name="EditAreaSuccessfully" xml:space="preserve">
+    <value>تم تعديل المناطق بنجاح</value>
+  </data>
+  <data name="ShowToPublicConfirm" xml:space="preserve">
+    <value>تأكيد عملية اظهار الدعوة على العام في منطقة المورد . لا يمكن التراجع عن هذه العملية</value>
+  </data>
+  <data name="ConditionsbookletIsZero" xml:space="preserve">
+    <value>الرجاء العلم ان قيمة كراسة الشروط هى صفر</value>
+  </data>
+  <data name="EnterInitialGuranteePresentationAddress" xml:space="preserve">
+    <value>الرجاء إدخال عنوان تقديم الضمان الإبتدائى</value>
+  </data>
+  <data name="TenderHasBeenSentToUnitForReview" xml:space="preserve">
+    <value>تم إرسال المنافسة الى مركز تحقيق كفاءة الإنفاق للمراجعة</value>
+  </data>
+  <data name="InvitationAccepted" xml:space="preserve">
+    <value>تم تأكيد قبول الدعوة</value>
+  </data>
+  <data name="EnterOffersCheckingData" xml:space="preserve">
+    <value>الرجاء إدخال تاريخ فحص العروض </value>
+  </data>
+  <data name="ApprovedByManager" xml:space="preserve">
+    <value>معتمدة من المدير</value>
+  </data>
+  <data name="MustBeEqualOrGreaterThan5000000" xml:space="preserve">
+    <value>يجب أن تكون القيمة أكبر أو يساوي 5 ملايين</value>
+  </data>
+  <data name="RejectedByManager" xml:space="preserve">
+    <value>مرفوضة من المدير</value>
+  </data>
+  <data name="RejectedFromUnit" xml:space="preserve">
+    <value>مرفوضة من مركز تحقيق كفاءة الإنفاق</value>
+  </data>
+  <data name="ReturnedToAgencyForEdit" xml:space="preserve">
+    <value>معادة للجهة للتعديل</value>
+  </data>
+  <data name="TenderTransferdToLevelTwo" xml:space="preserve">
+    <value>تم التحويل الى المستوى الثاني</value>
+  </data>
+  <data name="UnderReviewing" xml:space="preserve">
+    <value>تحت المراجعة</value>
+  </data>
+  <data name="UnderUnitReviewLevelOne" xml:space="preserve">
+    <value>تحت المراجعة المستوى الأول</value>
+  </data>
+  <data name="UnderUnitReviewLevelTwo" xml:space="preserve">
+    <value>تحت المراجعة المستوى الثاني</value>
+  </data>
+  <data name="UnitStaging" xml:space="preserve">
+    <value>مرحلة مركز تحقيق كفاءة الإنفاق</value>
+  </data>
+  <data name="WaitingManagerApprove" xml:space="preserve">
+    <value>بإنتظار اعتماد رئيس مركز تحقيق كفاءة الانفاق</value>
+  </data>
+  <data name="WaitingUnitSecretaryReview" xml:space="preserve">
+    <value>بإنتظار مراجعة مختص مركز تحقيق كفاءة الإنفاق</value>
+  </data>
+  <data name="RequestSentToApproval" xml:space="preserve">
+    <value>تم إرسال الطلب للإعتماد</value>
+  </data>
+  <data name="Bidding" xml:space="preserve">
+    <value>مرحلة المزايدة</value>
+  </data>
+  <data name="BiddingApproved" xml:space="preserve">
+    <value>تم إعتماد المزايدة</value>
+  </data>
+  <data name="SendTechnicalEvaluationToApprove" xml:space="preserve">
+    <value>سيتم  ارسال طلب اعتماد التقييم الفني للمنافسة</value>
+  </data>
+  <data name="RejectionReasonRequired" xml:space="preserve">
+    <value>الرجاء إختيار سبب الإلغاء</value>
+  </data>
+  <data name="SelectSupplierViolator" xml:space="preserve">
+    <value>الرجاء إختيار المورد المخالف</value>
+  </data>
+  <data name="UnderManagerReviewing" xml:space="preserve">
+    <value>تحت مراجعة رئيس مركز تحقيق كفاءة الإنفاق</value>
+  </data>
+  <data name="NoTechnicalCommittee" xml:space="preserve">
+    <value>لا يوجد جهة فنية للرد على الإستفسارات</value>
+  </data>
+  <data name="VROOffersFinancialChecking" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في مرحلة فحص العروض المالي</value>
+  </data>
+  <data name="VROOffersFinancialCheckingApproved" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في مرحلة تم اعتماد فحص العروض المالي</value>
+  </data>
+  <data name="VROOffersFinancialCheckingPending" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في مرحلة بانتظار اعتماد فحص العروض المالي</value>
+  </data>
+  <data name="VROOffersFinancialCheckingRejected" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في مرحلة تم رفض فحص العروض المالي</value>
+  </data>
+  <data name="VROOffersTechnicalChecking" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في مرحلة فحص العروض الفني </value>
+  </data>
+  <data name="VROOffersTechnicalCheckingApproved" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في مرحلة تم اعتماد فحص العروض الفني </value>
+  </data>
+  <data name="VROOffersTechnicalCheckingPending" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في مرحلة بانتظار اعتماد فحص العروض الفني</value>
+  </data>
+  <data name="VROOffersTechnicalCheckingRejected" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في مرحلة تم رفض فحص العروض الفني</value>
+  </data>
+  <data name="VROOffersChecking" xml:space="preserve">
+    <value>يجب أن تكون المنافسة في مرحلة فحص العروض</value>
+  </data>
+  <data name="BookletNotBeReturnedToSupplier" xml:space="preserve">
+    <value>لن يتم اعادة قيمة الكراسة للمورد المخالف</value>
+  </data>
+  <data name="CancelPrequalificationSentToApproval" xml:space="preserve">
+    <value>تم ارسال طلب إلغاء دعوة التأهيل</value>
+  </data>
+  <data name="AreYouSureDeleteTender" xml:space="preserve">
+    <value>هل أنت متأكد من حذف المنافسة؟</value>
+  </data>
+  <data name="PrequalificationCancelConfirmation" xml:space="preserve">
+    <value>هل أنت متأكد من إلغاء دعوة التأهيل</value>
+  </data>
+  <data name="TenderCancelConfirmation" xml:space="preserve">
+    <value>عند التأكيد سيتم الغاء المنافسة</value>
+  </data>
+  <data name="EnterInitialGuranteeValue" xml:space="preserve">
+    <value>الرجاء إدخال نسبة الضمان الإبتدائى</value>
+  </data>
+  <data name="WrongInitialGuranteePercent" xml:space="preserve">
+    <value>الرجاء إدخال نسبة ضمان إبتدائى صحيحة</value>
+  </data>
+  <data name="MaximumValueIsFiveMillions" xml:space="preserve">
+    <value>الحد الأقصي للقيمة التقديرية خمسة ملايين ريال سعودى</value>
+  </data>
+  <data name="ExtendDatesSentSuccessfully" xml:space="preserve">
+    <value>تم انشاء طلب تمديد تواريخ المنافسة بنجاح</value>
+  </data>
+  <data name="MaximumValueLessThanFiveMillions" xml:space="preserve">
+    <value>يجب أن تقل القيمة التقديرية عن خمسة ملايين ريال سعودى</value>
+  </data>
+  <data name="WillSendForApproval" xml:space="preserve">
+    <value>سيتم إرسال المنافسة للإعتماد</value>
+  </data>
+  <data name="NotActive" xml:space="preserve">
+    <value>غير فعال</value>
+  </data>
+  <data name="recordNotFound" xml:space="preserve">
+    <value>لم يتم العثور على السجل</value>
+  </data>
+  <data name="IDmSadadDetailsNotExist" xml:space="preserve">
+    <value>حدث خطأ . يرجي المحاولة في وقت لاحق</value>
+  </data>
+  <data name="WilEndOpenFinantialOffersStage" xml:space="preserve">
+    <value>سيتم إنهاء مرحلة فتح العرض المالي</value>
+  </data>
+  <data name="PublishTenderToGeneral" xml:space="preserve">
+    <value>تم نشر المنافسة للعام</value>
+  </data>
+  <data name="ApproveAwarding" xml:space="preserve">
+    <value>تم إعتماد تقرير الترسية </value>
+  </data>
+  <data name="ApproveInitialAwarding" xml:space="preserve">
+    <value>تم إعتماد تقرير الترسية المبدئي بنجاح</value>
+  </data>
+  <data name="RejectAwarding" xml:space="preserve">
+    <value>تم رفض تقرير الترسية </value>
+  </data>
+  <data name="RejectInitialAwarding" xml:space="preserve">
+    <value>تم رفض تقرير الترسية المبدئي </value>
+  </data>
+  <data name="SendAwardingToApprove" xml:space="preserve">
+    <value>تم إرسال  تقرير الترسية للإعتماد بنجاح</value>
+  </data>
+  <data name="SendInitialAwardingToApprove" xml:space="preserve">
+    <value>تم إرسال  تقرير الترسية المبدئي للإعتماد بنجاح</value>
+  </data>
+  <data name="AllOffersRejectedTechnically" xml:space="preserve">
+    <value>لا يمكن فتح العروض المالية حيث أنه لم يتم قبول أي من العروض  فنيا ويمكن إلغاء المنافسة</value>
+  </data>
+  <data name="IDmSadadDetailsError" xml:space="preserve">
+    <value>معلومات سداد الخاصة بالجهة غير صحيحة</value>
+  </data>
+  <data name="DescriptionRequired" xml:space="preserve">
+    <value>الرجاء ادخال الوصف</value>
+  </data>
+  <data name="DefineTenderPlaceHolder" xml:space="preserve">
+    <value>يتم تعريف وتحديد الغرض من الكراسة ويمكن للجهة إضافة أي مقدمات أو شرح عنها أو عن المشروع كما تراه مناسباً.</value>
+  </data>
+  <data name="CoordinationRequirements" xml:space="preserve">
+    <value>تحدد الجهة متطلبات التنسيق الإضافية  للملف، وما يلي مثال على ذلك:
+‌أ.حجم الخط
+‌ب.نوع الملفات الالكترونية (PDF)
+‌ج.توقيع جميع الصفحات (في حال التضامن، يجب أن يوقع العرض من قبل ممثل مفوض من الشركات المتضامنة، وأن يكون ملزماً قانونياً لجميع الأعضاء كما يتضح من خلال توكيل موقع من ممثليهم المعتمدين قانونا).</value>
+  </data>
+  <data name="EmploymentConditions" xml:space="preserve">
+    <value>(تضيف الجهة الشروط الخاصة التي تراها مناسبة بحسب نطاق العمل)</value>
+  </data>
+  <data name="ProjectScopePlaceHolder" xml:space="preserve">
+    <value>في هذه الفقرة يتم توضيح نطاق العمل الخاص بالمشروع والعقد والتفاصيل التي يجب مراعاتها عند تقديم الخدمة من المتعاقد.</value>
+  </data>
+  <data name="WorkLocation" xml:space="preserve">
+    <value>في هذه الفقرة يتم توضيح معلومات وتفاصيل الموقع الذي سيتم فيه العمل بالإضافة إلى توضيح ما إذا كان سيتم توفير مخططات ورسومات وما شابه.</value>
+  </data>
+  <data name="WorkProgram" xml:space="preserve">
+    <value>في هذه الفقرة يتم توضيح برنامج العمل الخاص بالمشروع من خلال تفصيل مراحل التنفيذ والأوقات الفعلية لإكمال الأعمال كما تقوم الجهة الحكومية بطلب خطة توزيع اصناف والاوقات الفعلية المتعاقد خلال مراحل المشروع والجدول الزمني لذلك.</value>
+  </data>
+  <data name="WorForceSpecification1" xml:space="preserve">
+    <value>‌أ.	يجب على المتعاقد أن يتخذ الترتيبات الخاصة لاستخدام الموظفين ومعاملتهم -مواطنين كانوا أو أجانب- وفقًا لأحكام نظام العمل ونظام التأمينات الاجتماعية والأنظمة الأخرى ذات العلاقة. 
+‌ب.	يجب على المتعاقد الالتزام بدفع أتعاب الموظفين.
+‌ج.	يحظر على المتعاقد استقطاب أو محاولة استقطاب أي من موظفي الجهة.
+‌د.	يجب على المتعاقد في جميع الأوقات اتخاذ جميع الاحتياطات اللازمة للحفاظ على صحة موظفيه وسلامتهم، وتكون له سلطة إصدار التعليمات واتخاذ التدابير الوقائية لمنع وقوع الحوادث. ويجب على المتعاقد إرسال تفاصيل أي حادث إلى ممثل الجهة في أقرب وقت ممكن بعد وقوعه
+‌ه.	يجب على المتعاقد توفير فريق عمل من ذوي الخبرة اللازمة بناءً على المؤهلات المطلوبة لكل وظيفة موضحة في جدول مواصفات فريق العمل. وللجهة الحق في جميع الأحوال أن تطلب – كتابة – من المتعاقد استبعاد أي شخص غير مرغوب فيه، وأن يستعين بشخص آخر بدلاً منه خلال (15) خمسة عشر يوماً من تاريخ إبلاغه. 
+‌و.	يجب على المتعاقد تزويد الجهة بسجلات مفصلة لفريق عمله مصنفين حسب المهارات. 
+‌ز.	يجب على المتعاقد التأكد من أن جميع أعضاء فريق العمل على كفالته أو كفالة المتعاقد من الباطن المتفق عليهم في هذا العقد. ويجب كذلك وجود عقد عمل رسمي لهم معتمد من الجهة.
+‌ح.	يلتزم المتعاقد باستخراج الإقامات اللازمة للموظفين حسب الإجراءات النظامية وفقاً للأنظمة المعمول بها في المملكة.
+‌ط.	يلتزم المتعاقد بتأمين الموظفين اللازمة حسب المسمى الوظيفي والمؤهلات والخبرة المبينة بالجدول التالي (جدول مواصفات فريق العمل).
+‌ي.	يلتزم المتعاقد بتخصيص موظفات للعمل في الأقسام النسائية أو المواقع التي تتطلب ذلك.</value>
+  </data>
+  <data name="WorForceSpecification2" xml:space="preserve">
+    <value>‌أ.	يجب على المتعاقد أن يتخذ الترتيبات الخاصة لاستخدام العمال ومعاملتهم -مواطنين كانوا أو أجانب- وفقًا لأحكام نظام العمل ونظام التأمينات الاجتماعية والأنظمة الأخرى ذات العلاقة. ويلتزم المتعاقد بتوفير المتطلبات الضرورية لعماله بما في ذلك السكن الصحي ووسائل النقل والرعاية الصحية ووسائل السلامة.
+‌ب.	يجب على المتعاقد الالتزام بدفع أتعاب العمالة ومراقبة حالة العمل على ألا تكون أقل من المتعارف عليه في القطاع أو نوع الخدمة الذي ينفذ فيه العمل. 
+‌ج.	يحظر على المتعاقد استقطاب أو محاولة استقطاب أي من موظفي الجهة.
+‌د.	باستثناء ما قد ينص عليه العقد فيما بعد، لا يجوز القيام تنفيذ العمل أثناء الليل أو خلال أيام الجمع، أو أيام الإجازات الرسمية الأخرى بدون إذن مكتوب من الجهة أو ممثل الجهة إلا إذا كان العمل ضرورياً أو لا يمكن الاستغناء عنه مطلقاً من أجل إنقاذ الأرواح أو الممتلكات أو من أجل ضمان سلامة الأعمال. على أن يخطر المتعاقد في مثل هذه الحالة الجهة أو ممثل الجهة فوراً. ويراعى دائما أن أحكام هذه الفقرة لا تكون واجبة التطبيق في الحالات التي يكون فيها من المعتاد تنفيذ العمل بالتناوب أو على فترتين. 
+‌ه.	يجب على المتعاقد في جميع الأوقات اتخاذ جميع الاحتياطات اللازمة للحفاظ على صحة موظفيه وسلامتهم. وتعيين مسؤول للحفاظ على السلامة والوقاية من الحوادث داخل الموقع، وتكون له سلطة إصدار التعليمات واتخاذ التدابير الوقائية لمنع وقوع الحوادث. ويجب على المتعاقد إرسال تفاصيل أي حادث إلى ممثل الجهة في أقرب وقت ممكن بعد وقوعه. يجب على المتعاقد الاحتفاظ بسجلات وتقديم تقارير بشأن صحة وسلامة العمال والأضرار التي لحقت بالممتلكات. يجب على المتعاقد القيام ببرامج توعوية عن الأمراض واتخاذ التدابير الأخرى اللازمة للحد من مخاطر انتقالها بين موظفيه.
+‌و.	يجب على المتعاقد توفير القوى العاملة ذات الخبرة اللازمة بناءً على المؤهلات المطلوبة لكل وظيفة موضحة في جدول مواصفات العمالة. وللجهة الحق في جميع الأحوال أن تطلب – كتابة – من المتعاقد استبعاد أي شخص غير مرغوب فيه، وأن يستعين بشخص آخر بدلاً منه خلال (15) خمسة عشر يوماً من تاريخ إبلاغه. 
+‌ز.	يجب على المتعاقد تزويد الجهة بسجلات مفصلة لموظفيه مصنفين حسب المهارات. حيث يتم تقديم هذه السجلات الى ممثل الجهة شهرياً، باستعمال النماذج التي يوافق عليها ممثل الجهة، وذلك الى أن ينجز المتعاقد الأعمال المطلوبة. 
+‌ح.	يجب على المتعاقد التأكد من أن جميع المهندسين والفنيين والعاملين بالموقع بما في ذلك الجهاز الفني التنفيذي على كفالته أو كفالة المتعاقد من الباطن المتفق عليهم في هذا العقد. ويجب كذلك وجود عقد عمل رسمي لجميع العاملين معتمد من الجهة. يحق للجهة طلب نقل كفالة عمالة المتعاقد (العمال، الفنيين، والمشرفين) التي تعمل مباشرة لدى الجهة إلى المتعاقد الجديد وذلك لضمان جودة تنفيذ الأعمال.
+‌ط.	يجب على المتعاقد اتخاذ الترتيبات اللازمة لتوفير إمدادات كافية من الطعام على النحو المنصوص عليه في العقد. كما يجب على المتعاقد توفير إمدادات كافية من مياه الشرب والمياه الأخرى لاستخدام موظفيه في الموقع.
+‌ي.	يجب على المتعاقد الاحتفاظ بسجلات تفصيلية يبين فيها أسماء جميع موظفيه وعماله وأعمارهم وجنسهم وجنسياتهم وعدد ساعات العمل، وغير ذلك من المعلومات التي قد يطلبها منه ممثل الجهة.‌ك.	يلتزم المتعاقد باستخراج الإقامات اللازمة للعمالة حسب الإجراءات النظامية وفقاً للأنظمة المعمول بها في المملكة.
+‌ل.	يلتزم المتعاقد بتأمين العمالة اللازمة حسب المسمى الوظيفي والمؤهلات والخبرة المبينة بالجدول التالي (جدول مواصفات العمالة).
+‌م.	يلتزم المتعاقد بتخصيص عمالة نسائية للعمل في الأقسام النسائية أو المواقع التي تتطلب ذلك.
+‌ن.	يجب على المتعاقد أن يقوم بتأمين زي موحد للعمالة الموجودين في مواقع العمل، وما يلزم لهم من وسائل السلامة، كالسترات العاكسة وخوذات للرأس.</value>
+  </data>
+  <data name="EquipmentSpecifications" xml:space="preserve">
+    <value>ويفحص المتعاقد جميع المعدات ويوصي باعتمادها في حال كانت مطابقة من جميع النواحي للمواصفات والمقاييس العالمية كما يجب عليه فحص جميع شهادات اختبار هذه المعدات التي أجريت في المصنع ومراقبة وتصديق اختباراتها في الموقع أو مكان الصنع وفي جميع الحالات التي تنص فيها شروط توريد المعدات أو المقاييس العالمية على إجراء هذه الاختبارات كما يجب عليه أن يحتفظ بشهادات الاختبارات التي تجري بهذا الخصوص.</value>
+  </data>
+  <data name="MaterialSpecifications" xml:space="preserve">
+    <value>1	يقوم المتعاقد المواد المستخدمة في تنفيذ الأعمال للتأكد من مطابقتها لمواصفات العرض والمقاييس العالمية كما يطلع على نتائج الاختبارات المعمولة للمواد وإعطاء الموافقة (أو عدمها) عليها وتسجيلها والاحتفاظ بنسخة منها، ويجب كذلك أن 	تكون المواد المستخدمة سواء المحلية أو المستوردة لتنفيذ العقد مطابقة للمواصفات القياسية السعودية وما لم تشمله منها هذه المواصفات فيجب أن يكون مطابقة لإحدى المواصفات العالمية المعروفة والتي تحددها الجهة أو من يمثلها.
+2	ويجوز لممثل الجهة أن يأمر المتعاقد بإعداد بيان واضح ومفصل عن ماهية المواد المستخدمة وعن كل مادة على حدة يرى ممثل الجهة ضرورة استبيانها، وعلى المتعاقد إعداد ذلك البيان كتابةً خلال فترة (10) عشرة أيام من تاريخ طلبها. 
+3	وإذا أخل المتعاقد بتوضيح ماهية المواد المستخدمة في الموعد المحدد فتعتبر تلك المواد خلاف ما تم الاتفاق عليه بالعقد، ولممثل الجهة اتخاذ ما يلزم حسب تقديره من تعليمات أو جزاءات لمعالجة ذلك.</value>
+  </data>
+  <data name="QualitySpecificationsPlaceholder" xml:space="preserve">
+    <value>في هذه البند تقوم الجهة بتوضيح جميع شروط ومواصفات الجودة المطلوبة من المتعاقد من شهادات ومعايير محددة مثل ISO وغيرها.</value>
+  </data>
+  <data name="ServicesAndWorkImplementationsMethodPlaceholder" xml:space="preserve">
+    <value>يتم في هذا البند توضيح:
+‌أ.	 الخدمة التي سيتم عملها من قبل المتعاقد.
+‌ب.	التفاصيل المتعلقة بالخدمة التي سيتم تنفيذها من قبل المتعاقد.
+‌ج.	المواد التي سيتم استعمالها في الخدمة.
+‌د.	القياسات المتعلقة بالمواد التي سيتم استعمالها في تنفيذ الخدمة.‌ 
+‌ه.	تفاصيل الاختبارات الذي يجب عملها عند انتهاء الخدمات.</value>
+  </data>
+  <data name="EnterFragmentationData" xml:space="preserve">
+    <value>الرجاء ادخال بيانات التجزئة</value>
+  </data>
+  <data name="FragmentationMsg" xml:space="preserve">
+    <value>يحق للجهة تجزئة المنافسة عند الترسية إذا اقتضت المصلحة العامة ذلك، بشرط أن تكون طبيعة الأعمال والمشتريات قابلة للتجزئة من حيث القيمة والمدة والبنود والعناصر. وفي حال تمت تجزئة المنافسة فإنه يتم الترسية على أكثر من متعاقد كما يتم تحديد البنود والكميات والأسعار التي تم الترسية عليها لكل متعاقد على حدة.</value>
+  </data>
+  <data name="PrequalificationRelatedToOtherTender" xml:space="preserve">
+    <value>يجب إختيار تأهيل مسبق آخر حيث أن التأهيل الحالي مرتبط بمنافسة أخرى</value>
+  </data>
+  <data name="AwardingWithoutPostQualification" xml:space="preserve">
+    <value>سوف يتم الترسية على المورد دون اجراء تأهيل لاحق</value>
+  </data>
+  <data name="PostQualificationAwarding" xml:space="preserve">
+    <value>في حالة اجراء تأهيل لاحق للمورد وأصبح معتمد من مدير لجنة التأهيل ، يجب اجراء تأهيل لاحق لجميع الموردين المراد الترسية عليهم  </value>
+  </data>
+  <data name="ConfirmedPostQualification" xml:space="preserve">
+    <value>يوجد طلب تاهيل لاحق معتمد يجب اكتماله لاكمال عملية الترسية</value>
+  </data>
+  <data name="PendingPostQualification" xml:space="preserve">
+    <value>يوجد طلب تاهيل لاحق تحت الإنشاء</value>
+  </data>
+  <data name="BiddingOffersCheckedConfirmed" xml:space="preserve">
+    <value>تم إعتماد تقييم العروض الفنية</value>
+  </data>
+  <data name="BiddingOffersCheckedPending" xml:space="preserve">
+    <value>بإنتظار اعتماد تقييم العروض الفنية</value>
+  </data>
+  <data name="BiddingOffersCheckedRejected" xml:space="preserve">
+    <value>تم رفض تقييم العروض الفنية</value>
+  </data>
+  <data name="RemoveExclusionAwardingReason" xml:space="preserve">
+    <value>تم حذف سبب الاستبعاد من  الترسية بنجاح</value>
+  </data>
+  <data name="SaveExclusionAwardingReason" xml:space="preserve">
+    <value>تم ادخال سبب الاستبعاد من الترسية بنجاح </value>
+  </data>
+  <data name="ExcludedRejectExtendOfferValidity" xml:space="preserve">
+    <value>بسبب رفض قبول لطلب تمديد سريان العروض</value>
+  </data>
+  <data name="FailInPostQualification" xml:space="preserve">
+    <value>الرسوب بالتأهيل اللاحق</value>
+  </data>
+  <data name="FailInTechnicalEvaluation" xml:space="preserve">
+    <value>عدم مطابقة عرضكم للمتطلبات الفنية </value>
+  </data>
+  <data name="NotResponseToExtendOfferValidity" xml:space="preserve">
+    <value>لعدم ردكم خلال 10 ايام على طلب تمديد سريان العروض ورفع الضمان البنكي</value>
+  </data>
+  <data name="NotUplodedBankGuarantee" xml:space="preserve">
+    <value>بسبب القبول طلب تمديد سريان العروض بدون رفع الضمان البنكي</value>
+  </data>
+  <data name="RejectExtendOfferValidity" xml:space="preserve">
+    <value>بسبب رفض قبول لطلب تمديد سريان العروض</value>
+  </data>
+  <data name="OffersFinancialChecking" xml:space="preserve">
+    <value>مرحلة تقييم العروض المالية</value>
+  </data>
+  <data name="OffersFinancialOfferCheckingApproved" xml:space="preserve">
+    <value>تم إعتماد تقييم العروض المالية</value>
+  </data>
+  <data name="OffersFinancialOfferCheckingPending" xml:space="preserve">
+    <value>بإنتظار اعتماد تقييم العروض المالية</value>
+  </data>
+  <data name="OffersFinancialOfferCheckingRejected" xml:space="preserve">
+    <value>تم رفض تقييم العروض المالية</value>
+  </data>
+  <data name="OffersOpenFinancialStage" xml:space="preserve">
+    <value>مرحلة فتح العروض المالية</value>
+  </data>
+  <data name="OffersOpenFinancialStageApproved" xml:space="preserve">
+    <value>تم فتح العروض المالية</value>
+  </data>
+  <data name="OffersOpenFinancialStagePending" xml:space="preserve">
+    <value>بانتظار اعتماد تقرير فتح العروض المالية</value>
+  </data>
+  <data name="OffersOpenFinancialStageRejected" xml:space="preserve">
+    <value>تم رفض تقرير فتح العروض المالية</value>
+  </data>
+  <data name="OffersTechnicalOppenedConfirmed" xml:space="preserve">
+    <value>تم فتح العروض الفنية</value>
+  </data>
+  <data name="OffersTechnicalOppenedPending" xml:space="preserve">
+    <value>بإنتظار إعتماد تقرير فتح العروض الفنية</value>
+  </data>
+  <data name="OffersTechnicalOppenedRejected" xml:space="preserve">
+    <value>تم رفض تقرير فتح العروض الفنية</value>
+  </data>
+  <data name="OffersTechnicalOppening" xml:space="preserve">
+    <value>مرحلة فتح العروض الفنية</value>
+  </data>
+  <data name="OffersTechnicalChecking" xml:space="preserve">
+    <value>مرحلة فحص العروض الفنية</value>
+  </data>
+  <data name="BackForAwardingFromPlaintReason" xml:space="preserve">
+    <value>معاد من اللجنة لقبول التظلم</value>
+  </data>
+  <data name="BackForCheckingFromPlaintReason" xml:space="preserve">
+    <value>معاد من اللجنة لقبول التظلم</value>
+  </data>
+  <data name="UnacceptedFinanciallyMessage" xml:space="preserve">
+    <value>تنوية :العرض الغير مقبول ماليا لن يظهر بقائمة عروض الموردين عند البدء بالترسية</value>
+  </data>
+  <data name="CantApprovePresentaionDatePassed" xml:space="preserve">
+    <value>لايمكن اعتماد المنافسة حيث ان التاريخ الحالي أكبر من تاريخ أخر موعد لاستلام العروض</value>
+  </data>
+  <data name="CantSendToApprovePresentaionDatePassed" xml:space="preserve">
+    <value>لايمكن إرسال المنافسة للاعتماد حيث ان التاريخ الحالي أكبر من تاريخ أخر موعد لتقديم العروض</value>
+  </data>
+  <data name="CannotCreateCancelTender" xml:space="preserve">
+    <value> لا يمكن انشاء الطلب لأن هذه المنافسة لها طلب معلق من قبل</value>
+  </data>
+  <data name="DeleteCancelRequest" xml:space="preserve">
+    <value>سيتم حذف طلب الالغاء</value>
+  </data>
+  <data name="FailInFinancialEvaluation" xml:space="preserve">
+    <value>عدم مطابقة عرضكم للمتطلبات المالية</value>
+  </data>
+  <data name="FailInTechnicalAndFinancialEvaluation" xml:space="preserve">
+    <value>عدم مطابقة عرضكم للمتطلبات المالية والفنية</value>
+  </data>
+  <data name="CancelRequestExist" xml:space="preserve">
+    <value>يوجد طلب الغاء على المنافسة رقم : </value>
+  </data>
+  <data name="CancelRequestRejectedBySysytem" xml:space="preserve">
+    <value>قام صاحب صلاحية الالغاء باستكمال سير عمل المنافسة و تم رفض الطلب تلقائيا</value>
+  </data>
+  <data name="StartingSendingEnquiriesCalculated" xml:space="preserve">
+    <value>يتم حساب تاريخ بداية إرسال الأسئلة و الاستفسارات تلقائيا عند اعتماد المنافسة</value>
+  </data>
+  <data name="OffersCheckingTemplateMessage" xml:space="preserve">
+    <value>تفتح لجنة فحص العروض ملف الأسعار التقديرية، كما تقوم بفتح العروض المالية للعروض الفنية المقبولة في الموعد المحدد لذلك بعد إشعار أصحاب العروض الفنية المقبولة بذلك، وتعلن الأسعار للحاضرين من أصحاب العروض</value>
+  </data>
+  <data name="OffersEvaluationCriteriaMessage" xml:space="preserve">
+    <value>تتم الترسية على العرض ذو التكلفة /السعر الأقل من العروض التي اجتازت التقييم الفني للجهة الحكومية.</value>
+  </data>
+  <data name="LifeQuantityTableAlert" xml:space="preserve">
+    <value>"جداول كميات المواد والمعدات والعمالة  للعرض فقط ولن يتم ادخال قيمة لهم في قيمة العرض النهاية .علماً بإن قيمة العرض النهائية ستحسب بناء على جدول كميات الخدمات والمخرجات"</value>
+  </data>
+</root>

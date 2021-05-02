@@ -1,0 +1,110 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <SonarQubeSetting Include="sonar.coverage.exclusions">
+      <Value>**/Models/**</Value>
+    </SonarQubeSetting>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Connected Services\FileNetCheckInService\**" />
+    <Compile Remove="Connected Services\FileNetCheckIn\**" />
+    <Compile Remove="Connected Services\FileNetCheckOutService\**" />
+    <Compile Remove="Connected Services\FileNetCheckOut\**" />
+    <Compile Remove="Connected Services\FileNetDocDownloadService\**" />
+    <Compile Remove="Connected Services\FileNetDocUploadService\**" />
+    <Compile Remove="Connected Services\FileNetDocUpload\**" />
+    <EmbeddedResource Remove="Connected Services\FileNetCheckInService\**" />
+    <EmbeddedResource Remove="Connected Services\FileNetCheckIn\**" />
+    <EmbeddedResource Remove="Connected Services\FileNetCheckOutService\**" />
+    <EmbeddedResource Remove="Connected Services\FileNetCheckOut\**" />
+    <EmbeddedResource Remove="Connected Services\FileNetDocDownloadService\**" />
+    <EmbeddedResource Remove="Connected Services\FileNetDocUploadService\**" />
+    <EmbeddedResource Remove="Connected Services\FileNetDocUpload\**" />
+    <None Remove="Connected Services\FileNetCheckInService\**" />
+    <None Remove="Connected Services\FileNetCheckIn\**" />
+    <None Remove="Connected Services\FileNetCheckOutService\**" />
+    <None Remove="Connected Services\FileNetCheckOut\**" />
+    <None Remove="Connected Services\FileNetDocDownloadService\**" />
+    <None Remove="Connected Services\FileNetDocUploadService\**" />
+    <None Remove="Connected Services\FileNetDocUpload\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Enums\IDMUserCategory.cs" />
+    <Compile Remove="Proxies\OldSystemIntegration.cs" />
+    <Compile Remove="Proxies\PHPFilesProxy.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="MOF.Etimad.Monafasat.Integration.csproj.vspscc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Connected Services\FileNetCheckInService\Reference.cs" />
+    <Compile Include="Connected Services\FileNetCheckOutService\Reference.cs" />
+    <Compile Include="Connected Services\FileNetDocDownloadService\Reference.cs" />
+    <Compile Include="Connected Services\FileNetDocUploadService\Reference.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Connected Services\FileNetCheckInService\ConnectedService.json" />
+    <Content Include="Connected Services\FileNetCheckOutService\ConnectedService.json" />
+    <Content Include="Connected Services\FileNetDocDownloadService\ConnectedService.json" />
+    <Content Include="Connected Services\FileNetDocUploadService\ConnectedService.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
+    <PackageReference Include="MimeMapping" Version="1.0.1.26" />
+    <PackageReference Include="nClam" Version="4.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Configuration.Abstractions">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.configuration.abstractions\2.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.logging.abstractions\2.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="symcsmsnetapi">
+      <HintPath>C:\Users\ahmed ismal\Downloads\Symantec_Protection_Engine_SDK\CSharp\Lib\symcsmsnetapi.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.0.0\ref\netcoreapp2.0\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MOF.Etimad.Monafasat.Core\MOF.Etimad.Monafasat.Core.csproj" />
+    <ProjectReference Include="..\MOF.Etimad.Monafasat.SharedKernel\MOF.Etimad.Monafasat.SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>

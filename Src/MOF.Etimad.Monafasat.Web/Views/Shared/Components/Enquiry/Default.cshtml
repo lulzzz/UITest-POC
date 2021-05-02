@@ -1,0 +1,132 @@
+
+@model List<MOF.Etimad.Monafasat.ViewModel.EnquiryModel>
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using res = MOF.Etimad.Monafasat.Resources
+@{
+   var canAddEnquiry = ViewBag.canAddEnquiry;
+}
+<style>
+   .blockquote .blockquote {
+      background-color: #fff;
+      border-color: #999999;
+
+   }
+
+   @@media print {
+      .blockquote {
+         background-color: #f5f5f5 !important;
+         border-width: 2px !important;
+      }
+      .blockquote span.h5{
+         white-space:normal !important;
+      }
+         span .badge {
+         color: #000 !important;
+      }
+   }
+</style>
+
+<div>
+   @if (Model.Count > 0)
+   {
+      if (User.IsInRole(RoleNames.supplier) && canAddEnquiry == true)
+      {
+         if (Model[0].TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects || (Model[0].TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects && Model[0].TenderStatusId == (int)Enums.TenderStatus.Approved))
+         {
+            <div class="form-group bmd-form-group">
+               <label for="EnquiryName" class="label bmd-label-static">@res.EnquiryResources.DisplayInputs.EnquiryText</label>
+               <textarea id="EnquiryName" name="EnquiryName" rows="3" autocomplete="off" class="form-control" title="@res.EnquiryResources.DisplayInputs.EnterEnquiry"></textarea>
+
+               <div class="pull-left">
+
+                  <span class="bmd-help text-danger" id="txtEnquiryValidation" style="display:none;">@res.EnquiryResources.DisplayInputs.EnterEnquiry</span>
+                  <br />
+               </div>
+               <button type="button" class="btn btn-primary btn-sm btn-round etd-search-btn" id="btnSendEnquiry" onclick="sendEnquiry()">@res.EnquiryResources.DisplayInputs.AddEnquiry</button>
+            </div>
+         }
+      }
+      <div class="card-collapse">
+
+         <h4 class="text-primary">@res.EnquiryResources.DisplayInputs.EnquiryReplyList</h4>
+
+         @foreach (var item in Model)
+         {
+            <div class="card-header" role="tab" id="headingOne">
+
+               <div class="mb-0">
+                  <a class="collapse p-1 collapsed" data-toggle="collapse" href="#@item.EnquiryId" aria-expanded="false" aria-controls="@item.EnquiryId">
+                     <i class="material-icons pull-left">keyboard_arrow_down</i> 
+                     @if (@item.EnquiryName.Length < 180)
+                     {
+
+                        @item.EnquiryName
+                     }
+                     else
+                     {
+                        @item.EnquiryName.Substring(0, 180)
+                     }
+
+                     <span class="badge badge-primary pull-right  m-1">@item.ApprovedEnquiryReplyCount @res.EnquiryResources.DisplayInputs.ApprovedReplyCount</span>
+                     @if (User.IsInRole(RoleNames.TechnicalCommitteeUser))
+                     {
+                        <span class="badge badge-warning pull-right  m-1">@item.PendingEnquiryReplyCount @res.EnquiryResources.DisplayInputs.PendingReplyCount</span>
+                     }
+                     <span class="text-primary pull-right" style="font-size:13px;">
+                        <span class="badge badge-info  m-1">@(item.EnquirySendingDate.HasValue ? @item.EnquirySendingDate.Value.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-US")) : "")</span>
+                     </span>
+                  </a>
+               </div>
+            </div>
+
+            <div id="@item.EnquiryId" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+               <blockquote class="blockquote">
+                  @*<div class="text-left pull-right"><button class="btn btn-just-icon btn-primary btn-link btn-sm d-print-none" onclick="printEnquiry(event)" title="@res.EnquiryResources.DisplayInputs.Print"><i class="material-icons">print</i></button></div>*@
+                  <span class="h5"> @item.EnquiryName</span>
+                  <small class="text-dark-green m-1">  @item.SupplierName</small>
+
+                  @foreach (var reply in item.EnquiryReplies)
+                  {
+                     <blockquote class="blockquote">
+                        <span class="h5">@reply.EnquiryReplyMessage </span>
+                        <small class="text-dark-green">
+                           @reply.CommitteeName
+
+                           @if (reply.EnquiryReplyStatusId != (int)Enums.EnquiryReplyStatus.Approved)
+                           {
+                              <span class="badge badge-warning  m-1"> @res.EnquiryResources.DisplayInputs.PendingReply</span>
+                           }
+                           else
+                           {
+                              <span class="badge badge-primary m-3">@res.SharedResources.DisplayInputs.Approved </span>
+
+                              <span class="badge badge-info m-3"> @res.EnquiryResources.DisplayInputs.ReplyDate :  @(reply.EnquiryReplyDate.HasValue ? @reply.EnquiryReplyDate.Value.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-US")) : "") </span>
+                           }
+
+                        </small>
+                     </blockquote>
+                  }
+               </blockquote>
+            </div>
+
+         }
+         
+
+         @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.TechnicalCommitteeUser) || User.IsInRole(RoleNames.MonafasatAdmin))
+         {
+            <button type="button" class="btn btn-primary pull-right" onclick="window.location = '@Url.Action("SupplierEnquiryList", "Enquiry")'">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.GoToInquieries
+               <div class="ripple-container"></div>
+            </button>
+         }
+      </div>
+   }
+   else
+   {
+      <div class="text-center">
+         <i class="text-primary material-icons" style="font-size:3rem">info</i>
+         <br />
+         @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.NoRecordsFound
+      </div>
+   }
+</div>

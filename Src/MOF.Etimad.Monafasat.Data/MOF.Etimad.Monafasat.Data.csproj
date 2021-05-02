@@ -1,0 +1,716 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+ <SonarQubeSetting Include="sonar.coverage.exclusions">
+ <Value>**/Migrations/*</Value>
+ </SonarQubeSetting>
+ </ItemGroup>
+  
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\**" />
+    <Compile Remove="Repositories\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="Repositories\**" />
+    <None Remove="Data\**" />
+    <None Remove="Repositories\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20190404103959_Block3.cs" />
+    <Compile Remove="Migrations\20190404103959_Block3.Designer.cs" />
+    <Compile Remove="Migrations\20190404134139_Block4.cs" />
+    <Compile Remove="Migrations\20190404134139_Block4.Designer.cs" />
+    <Compile Remove="Migrations\20190407080725_RoleName_Remove.cs" />
+    <Compile Remove="Migrations\20190407080725_RoleName_Remove.Designer.cs" />
+    <Compile Remove="Migrations\20190410123959_datasync.cs" />
+    <Compile Remove="Migrations\20190410123959_datasync.Designer.cs" />
+    <Compile Remove="Migrations\20190415101659_ModifyPhoneNumber.cs" />
+    <Compile Remove="Migrations\20190415101659_ModifyPhoneNumber.Designer.cs" />
+    <Compile Remove="Migrations\20190422135553_Change_lengthes.cs" />
+    <Compile Remove="Migrations\20190422135553_Change_lengthes.Designer.cs" />
+    <Compile Remove="Migrations\20190425100146_Update_EnquiryName_EnquiryReplyName.cs" />
+    <Compile Remove="Migrations\20190425100146_Update_EnquiryName_EnquiryReplyName.Designer.cs" />
+    <Compile Remove="Migrations\20190425153849_1.cs" />
+    <Compile Remove="Migrations\20190425153849_1.Designer.cs" />
+    <Compile Remove="Migrations\20190430090035_BanerMigration.cs" />
+    <Compile Remove="Migrations\20190430090035_BanerMigration.Designer.cs" />
+    <Compile Remove="Migrations\20190430103806_InitialCreation.cs" />
+    <Compile Remove="Migrations\20190430103806_InitialCreation.Designer.cs" />
+    <Compile Remove="Migrations\20190430104757_Update_SupplierAttachment_Scheme.cs" />
+    <Compile Remove="Migrations\20190430104757_Update_SupplierAttachment_Scheme.Designer.cs" />
+    <Compile Remove="Migrations\20190430135455_Update_Entities.cs" />
+    <Compile Remove="Migrations\20190430135455_Update_Entities.Designer.cs" />
+    <Compile Remove="Migrations\20190430145652_AddUnregisterdSuppliersInvitationTable.cs" />
+    <Compile Remove="Migrations\20190430145652_AddUnregisterdSuppliersInvitationTable.Designer.cs" />
+    <Compile Remove="Migrations\20190505135131_Add_NewTenderTypes.cs" />
+    <Compile Remove="Migrations\20190505135131_Add_NewTenderTypes.Designer.cs" />
+    <Compile Remove="Migrations\20190506131547_ApplyOffer.cs" />
+    <Compile Remove="Migrations\20190506131547_ApplyOffer.Designer.cs" />
+    <Compile Remove="Migrations\20190506134627_Add_Agreement.cs" />
+    <Compile Remove="Migrations\20190506134627_Add_Agreement.Designer.cs" />
+    <Compile Remove="Migrations\20190507145234_Add_Agreement_Type.cs" />
+    <Compile Remove="Migrations\20190507145234_Add_Agreement_Type.Designer.cs" />
+    <Compile Remove="Migrations\20190508141123_ApplyOfferSupplier.cs" />
+    <Compile Remove="Migrations\20190508141123_ApplyOfferSupplier.Designer.cs" />
+    <Compile Remove="Migrations\20190509130325_Add_Agreement_Period.cs" />
+    <Compile Remove="Migrations\20190509130325_Add_Agreement_Period.Designer.cs" />
+    <Compile Remove="Migrations\20190512125415_VAT.cs" />
+    <Compile Remove="Migrations\20190512125415_VAT.Designer.cs" />
+    <Compile Remove="Migrations\20190512134559_CommunicationRequestsEntities.cs" />
+    <Compile Remove="Migrations\20190512134559_CommunicationRequestsEntities.Designer.cs" />
+    <Compile Remove="Migrations\20190512140407_TotalPrice.cs" />
+    <Compile Remove="Migrations\20190512140407_TotalPrice.Designer.cs" />
+    <Compile Remove="Migrations\20190512142800_TotalPricee.cs" />
+    <Compile Remove="Migrations\20190512142800_TotalPricee.Designer.cs" />
+    <Compile Remove="Migrations\20190513115858_OfferEntity_For_OfferChecking.cs" />
+    <Compile Remove="Migrations\20190513115858_OfferEntity_For_OfferChecking.Designer.cs" />
+    <Compile Remove="Migrations\20190514095803_SeparateCombinedToCombinedDetails.cs" />
+    <Compile Remove="Migrations\20190514095803_SeparateCombinedToCombinedDetails.Designer.cs" />
+    <Compile Remove="Migrations\20190514095830_AddVroAndPurchaseMethodsInAgency.cs" />
+    <Compile Remove="Migrations\20190514095830_AddVroAndPurchaseMethodsInAgency.Designer.cs" />
+    <Compile Remove="Migrations\20190515111430_ADDTotalVAT.cs" />
+    <Compile Remove="Migrations\20190515111430_ADDTotalVAT.Designer.cs" />
+    <Compile Remove="Migrations\20190515131448_ADDTotalVAT2.cs" />
+    <Compile Remove="Migrations\20190515131448_ADDTotalVAT2.Designer.cs" />
+    <Compile Remove="Migrations\20190515133100_ADDTotalVAT4.cs" />
+    <Compile Remove="Migrations\20190515133100_ADDTotalVAT4.Designer.cs" />
+    <Compile Remove="Migrations\20190515133639_ADDTotalVAT5.cs" />
+    <Compile Remove="Migrations\20190515133639_ADDTotalVAT5.Designer.cs" />
+    <Compile Remove="Migrations\20190515140251_AddOfferAttachedCloumns.cs" />
+    <Compile Remove="Migrations\20190515140251_AddOfferAttachedCloumns.Designer.cs" />
+    <Compile Remove="Migrations\20190515221323_Offer_Changes.cs" />
+    <Compile Remove="Migrations\20190515221323_Offer_Changes.Designer.cs" />
+    <Compile Remove="Migrations\20190516111548_Update_AttachmentType.cs" />
+    <Compile Remove="Migrations\20190516111548_Update_AttachmentType.Designer.cs" />
+    <Compile Remove="Migrations\20190516113010_Update_TenderStatus.cs" />
+    <Compile Remove="Migrations\20190516113010_Update_TenderStatus.Designer.cs" />
+    <Compile Remove="Migrations\20190517122614_update_user_role.cs" />
+    <Compile Remove="Migrations\20190517122614_update_user_role.Designer.cs" />
+    <Compile Remove="Migrations\20190517142851_Update_Offer_.cs" />
+    <Compile Remove="Migrations\20190517142851_Update_Offer_.Designer.cs" />
+    <Compile Remove="Migrations\20190519122816_Update_Tender_Status.cs" />
+    <Compile Remove="Migrations\20190519122816_Update_Tender_Status.Designer.cs" />
+    <Compile Remove="Migrations\20190520084817_addPlaitStatusSeeds.cs" />
+    <Compile Remove="Migrations\20190520084817_addPlaitStatusSeeds.Designer.cs" />
+    <Compile Remove="Migrations\20190520113006_Block1.cs" />
+    <Compile Remove="Migrations\20190520113006_Block1.Designer.cs" />
+    <Compile Remove="Migrations\20190520114631_Block11.cs" />
+    <Compile Remove="Migrations\20190520114631_Block11.Designer.cs" />
+    <Compile Remove="Migrations\20190520130405_Block12.cs" />
+    <Compile Remove="Migrations\20190520130405_Block12.Designer.cs" />
+    <Compile Remove="Migrations\20190521093528_AddFramWorkRealation.cs" />
+    <Compile Remove="Migrations\20190521093528_AddFramWorkRealation.Designer.cs" />
+    <Compile Remove="Migrations\20190521102558_addplaintprocedure.cs" />
+    <Compile Remove="Migrations\20190521102558_addplaintprocedure.Designer.cs" />
+    <Compile Remove="Migrations\20190521114712_Negotiation.cs" />
+    <Compile Remove="Migrations\20190521114712_Negotiation.Designer.cs" />
+    <Compile Remove="Migrations\20190521120133_Block121.cs" />
+    <Compile Remove="Migrations\20190521120133_Block121.Designer.cs" />
+    <Compile Remove="Migrations\20190521121438_NegotiationStatus.cs" />
+    <Compile Remove="Migrations\20190521121438_NegotiationStatus.Designer.cs" />
+    <Compile Remove="Migrations\20190521130020_Block1210.cs" />
+    <Compile Remove="Migrations\20190521130020_Block1210.Designer.cs" />
+    <Compile Remove="Migrations\20190521132218_NegotiationReasons.cs" />
+    <Compile Remove="Migrations\20190521132218_NegotiationReasons.Designer.cs" />
+    <Compile Remove="Migrations\20190521143029_NegotiationSupplierReasons.cs" />
+    <Compile Remove="Migrations\20190521143029_NegotiationSupplierReasons.Designer.cs" />
+    <Compile Remove="Migrations\20190522114531_NegotiationSupplierStatus.cs" />
+    <Compile Remove="Migrations\20190522114531_NegotiationSupplierStatus.Designer.cs" />
+    <Compile Remove="Migrations\20190522130725_addCrToExtendOffersDatesRequest.cs" />
+    <Compile Remove="Migrations\20190522130725_addCrToExtendOffersDatesRequest.Designer.cs" />
+    <Compile Remove="Migrations\20190523075210_SecondStageNegotiation.cs" />
+    <Compile Remove="Migrations\20190523075210_SecondStageNegotiation.Designer.cs" />
+    <Compile Remove="Migrations\20190523081710_addEscalationStatus2.cs" />
+    <Compile Remove="Migrations\20190523081710_addEscalationStatus2.Designer.cs" />
+    <Compile Remove="Migrations\20190523085440_addCommunicationEscalationStatus.cs" />
+    <Compile Remove="Migrations\20190523085440_addCommunicationEscalationStatus.Designer.cs" />
+    <Compile Remove="Migrations\20190523085658_BlockStatus.cs" />
+    <Compile Remove="Migrations\20190523085658_BlockStatus.Designer.cs" />
+    <Compile Remove="Migrations\20190523092311_SecondStageNegotiationDB.cs" />
+    <Compile Remove="Migrations\20190523092311_SecondStageNegotiationDB.Designer.cs" />
+    <Compile Remove="Migrations\20190523111922_SecondStageNegotiationDBStatus.cs" />
+    <Compile Remove="Migrations\20190523111922_SecondStageNegotiationDBStatus.Designer.cs" />
+    <Compile Remove="Migrations\20190523114516_SecondStageNegotiationDBStatuss.cs" />
+    <Compile Remove="Migrations\20190523114516_SecondStageNegotiationDBStatuss.Designer.cs" />
+    <Compile Remove="Migrations\20190523130133_addCommunicationEscalationStatus3.cs" />
+    <Compile Remove="Migrations\20190523130133_addCommunicationEscalationStatus3.Designer.cs" />
+    <Compile Remove="Migrations\20190523135923_BiddingRounds.cs" />
+    <Compile Remove="Migrations\20190523135923_BiddingRounds.Designer.cs" />
+    <Compile Remove="Migrations\20190523141649_SecondStageNegotiationD.cs" />
+    <Compile Remove="Migrations\20190523141649_SecondStageNegotiationD.Designer.cs" />
+    <Compile Remove="Migrations\20190523195701_AddEscalationRejectReason.cs" />
+    <Compile Remove="Migrations\20190523195701_AddEscalationRejectReason.Designer.cs" />
+    <Compile Remove="Migrations\20190523200859_SecondStageNegotiationo.cs" />
+    <Compile Remove="Migrations\20190523200859_SecondStageNegotiationo.Designer.cs" />
+    <Compile Remove="Migrations\20190523201155_SecondStageNegotiationISSupplierAgree.cs" />
+    <Compile Remove="Migrations\20190523201155_SecondStageNegotiationISSupplierAgree.Designer.cs" />
+    <Compile Remove="Migrations\20190524101426_SNQT.cs" />
+    <Compile Remove="Migrations\20190524101426_SNQT.Designer.cs" />
+    <Compile Remove="Migrations\20190524102054_SNQT2.cs" />
+    <Compile Remove="Migrations\20190524102054_SNQT2.Designer.cs" />
+    <Compile Remove="Migrations\20190524104331_SNQT23.cs" />
+    <Compile Remove="Migrations\20190524104331_SNQT23.Designer.cs" />
+    <Compile Remove="Migrations\20190524134256_abcd.cs" />
+    <Compile Remove="Migrations\20190524134256_abcd.Designer.cs" />
+    <Compile Remove="Migrations\20190525203711_Update_Tender.cs" />
+    <Compile Remove="Migrations\20190525203711_Update_Tender.Designer.cs" />
+    <Compile Remove="Migrations\20190526080124_AddCommunicationEscalationRejectReason.cs" />
+    <Compile Remove="Migrations\20190526080124_AddCommunicationEscalationRejectReason.Designer.cs" />
+    <Compile Remove="Migrations\20190526100658_Update_UserRole.cs" />
+    <Compile Remove="Migrations\20190526100658_Update_UserRole.Designer.cs" />
+    <Compile Remove="Migrations\20190527095510_AddingDate.cs" />
+    <Compile Remove="Migrations\20190527095510_AddingDate.Designer.cs" />
+    <Compile Remove="Migrations\20190527183044_changePlaintStructure.cs" />
+    <Compile Remove="Migrations\20190527183044_changePlaintStructure.Designer.cs" />
+    <Compile Remove="Migrations\20190527201057_AddNewStatus21.cs" />
+    <Compile Remove="Migrations\20190527201057_AddNewStatus21.Designer.cs" />
+    <Compile Remove="Migrations\20190528095323_ِAgency3.cs" />
+    <Compile Remove="Migrations\20190528111405_Agency1234.cs" />
+    <Compile Remove="Migrations\20190528111405_Agency1234.Designer.cs" />
+    <Compile Remove="Migrations\20190528111616_AgencyOld.cs" />
+    <Compile Remove="Migrations\20190528111616_AgencyOld.Designer.cs" />
+    <Compile Remove="Migrations\20190528114118_AddingProjectNumber.cs" />
+    <Compile Remove="Migrations\20190528114118_AddingProjectNumber.Designer.cs" />
+    <Compile Remove="Migrations\20190528120649_bankGarantueToOffer.cs" />
+    <Compile Remove="Migrations\20190528120649_bankGarantueToOffer.Designer.cs" />
+    <Compile Remove="Migrations\20190529132210_AddEscalationAttachment.cs" />
+    <Compile Remove="Migrations\20190529132210_AddEscalationAttachment.Designer.cs" />
+    <Compile Remove="Migrations\20190529133937_RemoveEscalationAttachment2.cs" />
+    <Compile Remove="Migrations\20190529133937_RemoveEscalationAttachment2.Designer.cs" />
+    <Compile Remove="Migrations\20190529174413_addeEscalationEntity.cs" />
+    <Compile Remove="Migrations\20190529174413_addeEscalationEntity.Designer.cs" />
+    <Compile Remove="Migrations\20190529175002_addeEscalationEntity2.cs" />
+    <Compile Remove="Migrations\20190529175002_addeEscalationEntity2.Designer.cs" />
+    <Compile Remove="Migrations\20190529182539_addeEscalationEntity3.cs" />
+    <Compile Remove="Migrations\20190529182539_addeEscalationEntity3.Designer.cs" />
+    <Compile Remove="Migrations\20190529185446_addeEscalationEntity34.cs" />
+    <Compile Remove="Migrations\20190529185446_addeEscalationEntity34.Designer.cs" />
+    <Compile Remove="Migrations\20190530100602_addeEscalationEntity55.cs" />
+    <Compile Remove="Migrations\20190530100602_addeEscalationEntity55.Designer.cs" />
+    <Compile Remove="Migrations\20190530100910_DetailsOfNegotiation.cs" />
+    <Compile Remove="Migrations\20190530100910_DetailsOfNegotiation.Designer.cs" />
+    <Compile Remove="Migrations\20190530103517_DetailsOfNegotiation2.cs" />
+    <Compile Remove="Migrations\20190530103517_DetailsOfNegotiation2.Designer.cs" />
+    <Compile Remove="Migrations\20190531204938_UpdateEscalationAcceptanceStatusReference.cs" />
+    <Compile Remove="Migrations\20190531204938_UpdateEscalationAcceptanceStatusReference.Designer.cs" />
+    <Compile Remove="Migrations\20190602211558_AddPlanning.cs" />
+    <Compile Remove="Migrations\20190602211558_AddPlanning.Designer.cs" />
+    <Compile Remove="Migrations\20190605123515_AddPlanningLookUps.cs" />
+    <Compile Remove="Migrations\20190605123515_AddPlanningLookUps.Designer.cs" />
+    <Compile Remove="Migrations\20190606151235_UpdatePlanningLookUps.cs" />
+    <Compile Remove="Migrations\20190606151235_UpdatePlanningLookUps.Designer.cs" />
+    <Compile Remove="Migrations\20190609124227_prePlanningQuarter.cs" />
+    <Compile Remove="Migrations\20190609124227_prePlanningQuarter.Designer.cs" />
+    <Compile Remove="Migrations\20190610135656_hasAlternatinveOfferAndCancelRejectionReasons.cs" />
+    <Compile Remove="Migrations\20190610135656_hasAlternatinveOfferAndCancelRejectionReasons.Designer.cs" />
+    <Compile Remove="Migrations\20190611123938_Update_Tender_Unit_History_EstimateValue.cs" />
+    <Compile Remove="Migrations\20190611123938_Update_Tender_Unit_History_EstimateValue.Designer.cs" />
+    <Compile Remove="Migrations\20190611130502_Verification.cs" />
+    <Compile Remove="Migrations\20190611130502_Verification.Designer.cs" />
+    <Compile Remove="Migrations\20190611153029_Update_Tender_HasGuarantee.cs" />
+    <Compile Remove="Migrations\20190611153029_Update_Tender_HasGuarantee.Designer.cs" />
+    <Compile Remove="Migrations\20190612095541_AddPreQualificatuonCommittee.cs" />
+    <Compile Remove="Migrations\20190612095541_AddPreQualificatuonCommittee.Designer.cs" />
+    <Compile Remove="Migrations\20190612102449_addPlaintNotification.cs" />
+    <Compile Remove="Migrations\20190612102449_addPlaintNotification.Designer.cs" />
+    <Compile Remove="Migrations\20190612115311_AddPreQualificatuonCommitteeFieldToTender.cs" />
+    <Compile Remove="Migrations\20190612115311_AddPreQualificatuonCommitteeFieldToTender.Designer.cs" />
+    <Compile Remove="Migrations\20190613092623_Update_UserRole_UnitSpecialistName.cs" />
+    <Compile Remove="Migrations\20190613092623_Update_UserRole_UnitSpecialistName.Designer.cs" />
+    <Compile Remove="Migrations\20190613103157_alternativeTotals.cs" />
+    <Compile Remove="Migrations\20190613103157_alternativeTotals.Designer.cs" />
+    <Compile Remove="Migrations\20190613103926_AddnewUserRolesforPrequalificationCheking.cs" />
+    <Compile Remove="Migrations\20190613103926_AddnewUserRolesforPrequalificationCheking.Designer.cs" />
+    <Compile Remove="Migrations\20190613115000_Update_Tender_CheckCommittee.cs" />
+    <Compile Remove="Migrations\20190613115000_Update_Tender_CheckCommittee.Designer.cs" />
+    <Compile Remove="Migrations\20190613131227_TechnicianReports_Table.cs" />
+    <Compile Remove="Migrations\20190613131227_TechnicianReports_Table.Designer.cs" />
+    <Compile Remove="Migrations\20190615145348_rejectionReasonForTenderCancl.cs" />
+    <Compile Remove="Migrations\20190615145348_rejectionReasonForTenderCancl.Designer.cs" />
+    <Compile Remove="Migrations\20190615152321_CancelationReason.cs" />
+    <Compile Remove="Migrations\20190615152321_CancelationReason.Designer.cs" />
+    <Compile Remove="Migrations\20190616102711_BlockStatus.cs" />
+    <Compile Remove="Migrations\20190616102711_BlockStatus.Designer.cs" />
+    <Compile Remove="Migrations\20190617090850_AddSupplierViolator.cs" />
+    <Compile Remove="Migrations\20190617090850_AddSupplierViolator.Designer.cs" />
+    <Compile Remove="Migrations\20190617104329_SupplierQuantityTableItem_isSelected.cs" />
+    <Compile Remove="Migrations\20190617104329_SupplierQuantityTableItem_isSelected.Designer.cs" />
+    <Compile Remove="Migrations\20190617115537_combinedDetails.cs" />
+    <Compile Remove="Migrations\20190617115537_combinedDetails.Designer.cs" />
+    <Compile Remove="Migrations\20190617125902_SupplierCombinedDetails.cs" />
+    <Compile Remove="Migrations\20190617125902_SupplierCombinedDetails.Designer.cs" />
+    <Compile Remove="Migrations\20190617132836_detailsCombined.cs" />
+    <Compile Remove="Migrations\20190617132836_detailsCombined.Designer.cs" />
+    <Compile Remove="Migrations\20190617141256_Update_Tender_ContractDraftCreated.cs" />
+    <Compile Remove="Migrations\20190617141256_Update_Tender_ContractDraftCreated.Designer.cs" />
+    <Compile Remove="Migrations\20190618075626_AddApprovalDate.cs" />
+    <Compile Remove="Migrations\20190618075626_AddApprovalDate.Designer.cs" />
+    <Compile Remove="Migrations\20190618091350_NullablNotificationSettingId.cs" />
+    <Compile Remove="Migrations\20190618091350_NullablNotificationSettingId.Designer.cs" />
+    <Compile Remove="Migrations\20190618175010_Initial_Creation.cs" />
+    <Compile Remove="Migrations\20190618175010_Initial_Creation.Designer.cs" />
+    <Compile Remove="Migrations\20190619103238_RemoveOpenningOfferLookUpId.cs" />
+    <Compile Remove="Migrations\20190619103238_RemoveOpenningOfferLookUpId.Designer.cs" />
+    <Compile Remove="Migrations\20190620095708_SupplierItemChangs.cs" />
+    <Compile Remove="Migrations\20190620095708_SupplierItemChangs.Designer.cs" />
+    <Compile Remove="Migrations\20190620115017_AddDateRevisionCheckingDate.cs" />
+    <Compile Remove="Migrations\20190620115017_AddDateRevisionCheckingDate.Designer.cs" />
+    <Compile Remove="Migrations\20190620133718_changePreplanningFields.cs" />
+    <Compile Remove="Migrations\20190620133718_changePreplanningFields.Designer.cs" />
+    <Compile Remove="Migrations\20190621141919_NegotiationUpdates.cs" />
+    <Compile Remove="Migrations\20190621141919_NegotiationUpdates.Designer.cs" />
+    <Compile Remove="Migrations\20190621144517_NegotiationFixColumnConflict.cs" />
+    <Compile Remove="Migrations\20190621144517_NegotiationFixColumnConflict.Designer.cs" />
+    <Compile Remove="Migrations\20190621144822_NegotiationFixColumnConflict2.cs" />
+    <Compile Remove="Migrations\20190621144822_NegotiationFixColumnConflict2.Designer.cs" />
+    <Compile Remove="Migrations\20190621145251_NegotiationFixColumnConflict3.cs" />
+    <Compile Remove="Migrations\20190621145251_NegotiationFixColumnConflict3.Designer.cs" />
+    <Compile Remove="Migrations\20190622132211_VROTypes.cs" />
+    <Compile Remove="Migrations\20190622132211_VROTypes.Designer.cs" />
+    <Compile Remove="Migrations\20190622141308_AddVROCommitteeIdInTender.cs" />
+    <Compile Remove="Migrations\20190622141308_AddVROCommitteeIdInTender.Designer.cs" />
+    <Compile Remove="Migrations\20190624091706_changePlanningProjects.cs" />
+    <Compile Remove="Migrations\20190624091706_changePlanningProjects.Designer.cs" />
+    <Compile Remove="Migrations\20190624095730_CreatedByTypeIdInTender.cs" />
+    <Compile Remove="Migrations\20190624095730_CreatedByTypeIdInTender.Designer.cs" />
+    <Compile Remove="Migrations\20190624122946_AddTenderCreatedByTypes.cs" />
+    <Compile Remove="Migrations\20190624122946_AddTenderCreatedByTypes.Designer.cs" />
+    <Compile Remove="Migrations\20190624135945_UpdateLookups.cs" />
+    <Compile Remove="Migrations\20190624135945_UpdateLookups.Designer.cs" />
+    <Compile Remove="Migrations\20190625135754_vroOfferFields.cs" />
+    <Compile Remove="Migrations\20190625135754_vroOfferFields.Designer.cs" />
+    <Compile Remove="Migrations\20190625160336_Initial_Creation.cs" />
+    <Compile Remove="Migrations\20190625160336_Initial_Creation.Designer.cs" />
+    <Compile Remove="Migrations\20190625160458_Initial_Creation.cs" />
+    <Compile Remove="Migrations\20190625160458_Initial_Creation.Designer.cs" />
+    <Compile Remove="Migrations\20190626120424_editOfferWeightType.cs" />
+    <Compile Remove="Migrations\20190626120424_editOfferWeightType.Designer.cs" />
+    <Compile Remove="Migrations\20190627130232_editOfferWeighNames.cs" />
+    <Compile Remove="Migrations\20190627130232_editOfferWeighNames.Designer.cs" />
+    <Compile Remove="Migrations\20190628142319_CancelationReasonDescription.cs" />
+    <Compile Remove="Migrations\20190628142319_CancelationReasonDescription.Designer.cs" />
+    <Compile Remove="Migrations\20190628162606_CancelationReasonDescriptionInChangeRequest.cs" />
+    <Compile Remove="Migrations\20190628162606_CancelationReasonDescriptionInChangeRequest.Designer.cs" />
+    <Compile Remove="Migrations\20190629072019_BlockAgency.cs" />
+    <Compile Remove="Migrations\20190629072019_BlockAgency.Designer.cs" />
+    <Compile Remove="Migrations\20190629125115_AddCrInUnregisteredSuppliersInvitation.cs" />
+    <Compile Remove="Migrations\20190629125115_AddCrInUnregisteredSuppliersInvitation.Designer.cs" />
+    <Compile Remove="Migrations\20190629160140_addDescriptionColmunInUnRegisteredSuppliersTable.cs" />
+    <Compile Remove="Migrations\20190629160140_addDescriptionColmunInUnRegisteredSuppliersTable.Designer.cs" />
+    <Compile Remove="Migrations\20190701082314_UnregersterSuppliersInvitations.cs" />
+    <Compile Remove="Migrations\20190701082314_UnregersterSuppliersInvitations.Designer.cs" />
+    <Compile Remove="Migrations\20190702131253_AdjustedValuesForQuantityTables.cs" />
+    <Compile Remove="Migrations\20190702131253_AdjustedValuesForQuantityTables.Designer.cs" />
+    <Compile Remove="Migrations\20190703111506_addunitattendencethecommitte.cs" />
+    <Compile Remove="Migrations\20190703111506_addunitattendencethecommitte.Designer.cs" />
+    <Compile Remove="Migrations\20190707092020_VRONewRoles.cs" />
+    <Compile Remove="Migrations\20190707092020_VRONewRoles.Designer.cs" />
+    <Compile Remove="Migrations\20190707102807_VRONewRolesNew.cs" />
+    <Compile Remove="Migrations\20190707102807_VRONewRolesNew.Designer.cs" />
+    <Compile Remove="Migrations\20190717075415_PrePlaning.cs" />
+    <Compile Remove="Migrations\20190717075415_PrePlaning.Designer.cs" />
+    <Compile Remove="Migrations\20190719134702_QualificationsAndConditionsTemplateEntities.cs" />
+    <Compile Remove="Migrations\20190719134702_QualificationsAndConditionsTemplateEntities.Designer.cs" />
+    <Compile Remove="Migrations\20190719141514_UpdateInsertionType.cs" />
+    <Compile Remove="Migrations\20190719141514_UpdateInsertionType.Designer.cs" />
+    <Compile Remove="Migrations\20190719151510_AddTenderPropertiesAndQualificationResultId.cs" />
+    <Compile Remove="Migrations\20190719151510_AddTenderPropertiesAndQualificationResultId.Designer.cs" />
+    <Compile Remove="Migrations\20190719164125_RemoveVersion.cs" />
+    <Compile Remove="Migrations\20190719164125_RemoveVersion.Designer.cs" />
+    <Compile Remove="Migrations\20190719164952_ChangeDataTypeForQualification.cs" />
+    <Compile Remove="Migrations\20190719164952_ChangeDataTypeForQualification.Designer.cs" />
+    <Compile Remove="Migrations\20190719165139_updateTemolate.cs" />
+    <Compile Remove="Migrations\20190719165139_updateTemolate.Designer.cs" />
+    <Compile Remove="Migrations\20190720105715_addauditabledataforqualification.cs" />
+    <Compile Remove="Migrations\20190720105715_addauditabledataforqualification.Designer.cs" />
+    <Compile Remove="Migrations\20190720135423_AddQualificationProject.cs" />
+    <Compile Remove="Migrations\20190720135423_AddQualificationProject.Designer.cs" />
+    <Compile Remove="Migrations\20190720140239_AddQualificationProjectlast.cs" />
+    <Compile Remove="Migrations\20190720140239_AddQualificationProjectlast.Designer.cs" />
+    <Compile Remove="Migrations\20190720140748_AddQualificationProjectfinal.cs" />
+    <Compile Remove="Migrations\20190720140748_AddQualificationProjectfinal.Designer.cs" />
+    <Compile Remove="Migrations\20190720153835_addEstimatedValuetoBranchUser.cs" />
+    <Compile Remove="Migrations\20190720153835_addEstimatedValuetoBranchUser.Designer.cs" />
+    <Compile Remove="Migrations\20190720191552_ChangePointToValue.cs" />
+    <Compile Remove="Migrations\20190720191552_ChangePointToValue.Designer.cs" />
+    <Compile Remove="Migrations\20190720214450_AddQualificationProjectfinalResult.cs" />
+    <Compile Remove="Migrations\20190720214450_AddQualificationProjectfinalResult.Designer.cs" />
+    <Compile Remove="Migrations\20190720214820_AddQualificationProjectfinalResultlast.cs" />
+    <Compile Remove="Migrations\20190720214820_AddQualificationProjectfinalResultlast.Designer.cs" />
+    <Compile Remove="Migrations\20190720215913_SetQualificationFinalResult.cs" />
+    <Compile Remove="Migrations\20190720215913_SetQualificationFinalResult.Designer.cs" />
+    <Compile Remove="Migrations\20190723153640_PrePlaning.cs" />
+    <Compile Remove="Migrations\20190725122401_PrePlaningDefaultValue.cs" />
+    <Compile Remove="Migrations\20190725124251_Defaultvalueforagency.cs" />
+    <Compile Remove="Migrations\20190725142556_mutasem.cs" />
+    <Compile Remove="Migrations\20190725142916_template1.cs" />
+    <Compile Remove="Migrations\20190729135307_SolidarityNamess.cs" />
+    <Compile Remove="Migrations\20190730170621_NegotiationLastChange.cs" />
+    <Compile Remove="Migrations\20190806082220_NulableQT.cs" />
+    <Compile Remove="Migrations\20190807134801_totals.cs" />
+    <Compile Remove="Migrations\20190819075827_Update_Invitation_InvitedByQualification.cs" />
+    <Compile Remove="Migrations\20190820185419_Update_Tender_VRORelatedBranchId.cs" />
+    <Compile Remove="Migrations\20190825181952_Update_Tender_BuildingNumber.cs" />
+    <Compile Remove="Migrations\20190827120500_Update_NotificationOperationCode.cs" />
+    <Compile Remove="Migrations\20190827120500_Update_NotificationOperationCode.Designer.cs" />
+    <Compile Remove="Migrations\20190827120936_Update_NotificationOperationCode_Lengthes.cs" />
+    <Compile Remove="Migrations\20190827120936_Update_NotificationOperationCode_Lengthes.Designer.cs" />
+    <Compile Remove="Migrations\20190905211712_Enguires.cs" />
+    <Compile Remove="Migrations\20190905213454_w.cs" />
+    <Compile Remove="Migrations\20190906140048_Initial_CreationIteration1.cs" />
+    <Compile Remove="Migrations\20190906140048_Initial_CreationIteration1.Designer.cs" />
+    <Compile Remove="Migrations\20190906145836_Update_GovAgency.cs" />
+    <Compile Remove="Migrations\20190906145836_Update_GovAgency.Designer.cs" />
+    <Compile Remove="Migrations\20190907190624_Update_TenderQuantityTableChanges_TenderId.cs" />
+    <Compile Remove="Migrations\20190907191433_Update_TenderQuantityTableChanges_TenderId.cs" />
+    <Compile Remove="Migrations\20190907191433_Update_TenderQuantityTableChanges_TenderId.Designer.cs" />
+    <Compile Remove="Migrations\20190908085347_Add_IsTotallyBlocked.cs" />
+    <Compile Remove="Migrations\20190908101659_Add_IsTotallyBlocked.cs" />
+    <Compile Remove="Migrations\20190908101659_Add_IsTotallyBlocked.Designer.cs" />
+    <Compile Remove="Migrations\20190908140037_adressessAgencies.cs" />
+    <Compile Remove="Migrations\20190908140037_adressessAgencies.Designer.cs" />
+    <Compile Remove="Migrations\20190910100319_offerOpeningAddressess.cs" />
+    <Compile Remove="Migrations\20190910100319_offerOpeningAddressess.Designer.cs" />
+    <Compile Remove="Migrations\20190910130118_Solidarity.cs" />
+    <Compile Remove="Migrations\20190910130118_Solidarity.Designer.cs" />
+    <Compile Remove="Migrations\20190910163016_M.cs" />
+    <Compile Remove="Migrations\20190910163016_M.Designer.cs" />
+    <Compile Remove="Migrations\20190911151212_OfferOriginalAmount.cs" />
+    <Compile Remove="Migrations\20190911151212_OfferOriginalAmount.Designer.cs" />
+    <Compile Remove="Migrations\20190911175728_newNegotiation.cs" />
+    <Compile Remove="Migrations\20190911175728_newNegotiation.Designer.cs" />
+    <Compile Remove="Migrations\20190914142600_Add_BiddingRoundStatus.cs" />
+    <Compile Remove="Migrations\20190914142600_Add_BiddingRoundStatus.Designer.cs" />
+    <Compile Remove="Migrations\20190915144804_changeTemplate.cs" />
+    <Compile Remove="Migrations\20190915144804_changeTemplate.Designer.cs" />
+    <Compile Remove="Migrations\20190915150935_changeTemplate2.cs" />
+    <Compile Remove="Migrations\20190915150935_changeTemplate2.Designer.cs" />
+    <Compile Remove="Migrations\20190916201846_awardingfinalGuaranteeDeliveryAddress.cs" />
+    <Compile Remove="Migrations\20190916201846_awardingfinalGuaranteeDeliveryAddress.Designer.cs" />
+    <Compile Remove="Migrations\20190916204610_awardingfinalGuaranteeDeliveryAddressStringLength.cs" />
+    <Compile Remove="Migrations\20190916204610_awardingfinalGuaranteeDeliveryAddressStringLength.Designer.cs" />
+    <Compile Remove="Migrations\20190919090855_PlaintFilesChanges.cs" />
+    <Compile Remove="Migrations\20190919090855_PlaintFilesChanges.Designer.cs" />
+    <Compile Remove="Migrations\20190919100406_AddPrecisionInQualification.cs" />
+    <Compile Remove="Migrations\20190919100406_AddPrecisionInQualification.Designer.cs" />
+    <Compile Remove="Migrations\20190919101232_AddPrecisionInQualificationTwo.cs" />
+    <Compile Remove="Migrations\20190919101232_AddPrecisionInQualificationTwo.Designer.cs" />
+    <Compile Remove="Migrations\20190919121638_AddPrecisionInQualificationDecimal.cs" />
+    <Compile Remove="Migrations\20190919121638_AddPrecisionInQualificationDecimal.Designer.cs" />
+    <Compile Remove="Migrations\20190919132838_Update_OfferStatus.cs" />
+    <Compile Remove="Migrations\20190919132838_Update_OfferStatus.Designer.cs" />
+    <Compile Remove="Migrations\20190922135254_rejectHistory.cs" />
+    <Compile Remove="Migrations\20190922135254_rejectHistory.Designer.cs" />
+    <Compile Remove="Migrations\20190925133709_extendDatesNewStatus.cs" />
+    <Compile Remove="Migrations\20190925133709_extendDatesNewStatus.Designer.cs" />
+    <Compile Remove="Migrations\20190925140415_Update_Invitation.cs" />
+    <Compile Remove="Migrations\20190925140415_Update_Invitation.Designer.cs" />
+    <Compile Remove="Migrations\20190925165627_Update_Invitation_InvitationType.cs" />
+    <Compile Remove="Migrations\20190925165627_Update_Invitation_InvitationType.Designer.cs" />
+    <Compile Remove="Migrations\20190928165402_nego.cs" />
+    <Compile Remove="Migrations\20190928165402_nego.Designer.cs" />
+    <Compile Remove="Migrations\20190929161145_addDaysField.cs" />
+    <Compile Remove="Migrations\20190929161145_addDaysField.Designer.cs" />
+    <Compile Remove="Migrations\20190930141237_AddSendingDateInInvitationsTable.cs" />
+    <Compile Remove="Migrations\20190930141237_AddSendingDateInInvitationsTable.Designer.cs" />
+    <Compile Remove="Migrations\20191001104134_addRelatedAgencyCodeTobranchTable.cs" />
+    <Compile Remove="Migrations\20191001104134_addRelatedAgencyCodeTobranchTable.Designer.cs" />
+    <Compile Remove="Migrations\20191001104637_addRelatedAgencyCodeToCommiteeTable.cs" />
+    <Compile Remove="Migrations\20191001104637_addRelatedAgencyCodeToCommiteeTable.Designer.cs" />
+    <Compile Remove="Migrations\20191001141845_addRelatedAgencyCodeToCommiteeUserandBranchUserTables.cs" />
+    <Compile Remove="Migrations\20191001141845_addRelatedAgencyCodeToCommiteeUserandBranchUserTables.Designer.cs" />
+    <Compile Remove="Migrations\20191001142056_Update_QunatityTable.cs" />
+    <Compile Remove="Migrations\20191001142056_Update_QunatityTable.Designer.cs" />
+    <Compile Remove="Migrations\20191002142529_Update_TenderChangeQuantityTableRequest.cs" />
+    <Compile Remove="Migrations\20191002142529_Update_TenderChangeQuantityTableRequest.Designer.cs" />
+    <Compile Remove="Migrations\20191009102644_newNotificationColumn.cs" />
+    <Compile Remove="Migrations\20191009102644_newNotificationColumn.Designer.cs" />
+    <Compile Remove="Migrations\20191016144802_Update_TenderChangeRequest.cs" />
+    <Compile Remove="Migrations\20191016144802_Update_TenderChangeRequest.Designer.cs" />
+    <Compile Remove="Migrations\20191020104055_escalationNotes.cs" />
+    <Compile Remove="Migrations\20191020104055_escalationNotes.Designer.cs" />
+    <Compile Remove="Migrations\20191028070958_AddedAddedValueToTenderType.cs" />
+    <Compile Remove="Migrations\20191028070958_AddedAddedValueToTenderType.Designer.cs" />
+    <Compile Remove="Migrations\20191028133053_TenderFragmentationTemplate.cs" />
+    <Compile Remove="Migrations\20191028133053_TenderFragmentationTemplate.Designer.cs" />
+    <Compile Remove="Migrations\20191029101731_addWritePriceToTenderConditionsTemplate.cs" />
+    <Compile Remove="Migrations\20191029101731_addWritePriceToTenderConditionsTemplate.Designer.cs" />
+    <Compile Remove="Migrations\20191029121038_addConfirimJoiningTheTenderToTenderConditionsTemplate.cs" />
+    <Compile Remove="Migrations\20191029121038_addConfirimJoiningTheTenderToTenderConditionsTemplate.Designer.cs" />
+    <Compile Remove="Migrations\20191030072423_CoditionalTemplateStringLength.cs" />
+    <Compile Remove="Migrations\20191030073006_CoditionalTemplateStringLength1.cs" />
+    <Compile Remove="Migrations\20191030073424_CoditionalTemplateStringLengt.cs" />
+    <Compile Remove="Migrations\20191030073424_CoditionalTemplateStringLengt.Designer.cs" />
+    <Compile Remove="Migrations\20191030075340_Add_QuantityTableRowType.cs" />
+    <Compile Remove="Migrations\20191030075340_Add_QuantityTableRowType.Designer.cs" />
+    <Compile Remove="Migrations\20191030075722_Add_QuantityTableRowType.cs" />
+    <Compile Remove="Migrations\20191030075722_Add_QuantityTableRowType.Designer.cs" />
+    <Compile Remove="Migrations\20191030100430_addHideConditionsIDsToTenderConditionsTemplate.cs" />
+    <Compile Remove="Migrations\20191030100430_addHideConditionsIDsToTenderConditionsTemplate.Designer.cs" />
+    <Compile Remove="Migrations\20191031105401_addActionStatusToBillInfo.cs" />
+    <Compile Remove="Migrations\20191031105401_addActionStatusToBillInfo.Designer.cs" />
+    <Compile Remove="Migrations\20191031131220_addActionReasonToBillInfo.cs" />
+    <Compile Remove="Migrations\20191031131220_addActionReasonToBillInfo.Designer.cs" />
+    <Compile Remove="Migrations\20191031132340_addActionReasonToBillInf.cs" />
+    <Compile Remove="Migrations\20191031132340_addActionReasonToBillInf.Designer.cs" />
+    <Compile Remove="Migrations\20191031133836_Add_ActionReason.cs" />
+    <Compile Remove="Migrations\20191031133836_Add_ActionReason.Designer.cs" />
+    <Compile Remove="Migrations\20191101120851_GeneralConditionsTemplate.cs" />
+    <Compile Remove="Migrations\20191101120851_GeneralConditionsTemplate.Designer.cs" />
+    <Compile Remove="Migrations\20191101124450_SpecialConditionsTemplate.cs" />
+    <Compile Remove="Migrations\20191101124450_SpecialConditionsTemplate.Designer.cs" />
+    <Compile Remove="Migrations\20191105173038_updateSaddadBill.cs" />
+    <Compile Remove="Migrations\20191105173038_updateSaddadBill.Designer.cs" />
+    <Compile Remove="Migrations\20191106130321_addeddurationsindaysandmonthsandyears.cs" />
+    <Compile Remove="Migrations\20191106130321_addeddurationsindaysandmonthsandyears.Designer.cs" />
+    <Compile Remove="Migrations\20191107070613_addedvalueaddeddefaultvalueandmorerole.cs" />
+    <Compile Remove="Migrations\20191107070613_addedvalueaddeddefaultvalueandmorerole.Designer.cs" />
+    <Compile Remove="Migrations\20191107131703_ExtendOfferDatesRequestedDate.cs" />
+    <Compile Remove="Migrations\20191107131703_ExtendOfferDatesRequestedDate.Designer.cs" />
+    <Compile Remove="Migrations\20191110075857_addedmigrationrename.cs" />
+    <Compile Remove="Migrations\20191110075857_addedmigrationrename.Designer.cs" />
+    <Compile Remove="Migrations\20191111065201_CreateBillPayementDetails.cs" />
+    <Compile Remove="Migrations\20191111065201_CreateBillPayementDetails.Designer.cs" />
+    <Compile Remove="Migrations\20191111073254_BillPayementDetailsUpdates.cs" />
+    <Compile Remove="Migrations\20191111073254_BillPayementDetailsUpdates.Designer.cs" />
+    <Compile Remove="Migrations\20191111080304_BillPayementDetailsUpdates2.cs" />
+    <Compile Remove="Migrations\20191111080304_BillPayementDetailsUpdates2.Designer.cs" />
+    <Compile Remove="Migrations\20191112111005_RenameUnitRoleNames.cs" />
+    <Compile Remove="Migrations\20191112111005_RenameUnitRoleNames.Designer.cs" />
+    <Compile Remove="Migrations\20191112134806_operationCode.cs" />
+    <Compile Remove="Migrations\20191112134806_operationCode.Designer.cs" />
+    <Compile Remove="Migrations\20191114074912_InitialCreation.cs" />
+    <Compile Remove="Migrations\20191114074912_InitialCreation.Designer.cs" />
+    <Compile Remove="Migrations\20191114104456_addNewRole.cs" />
+    <Compile Remove="Migrations\20191114104456_addNewRole.Designer.cs" />
+    <Compile Remove="Migrations\20191117082830_ChangeQualificationInurancePoints.cs" />
+    <Compile Remove="Migrations\20191117082830_ChangeQualificationInurancePoints.Designer.cs" />
+    <Compile Remove="Migrations\20191117121238_RemoveNotMappedFinalGuaranteeDeliveryAddress.cs" />
+    <Compile Remove="Migrations\20191117121238_RemoveNotMappedFinalGuaranteeDeliveryAddress.Designer.cs" />
+    <Compile Remove="Migrations\20191118123654_ExtendOfferDatesRequestedDate_ChangedTo_DateTime.cs" />
+    <Compile Remove="Migrations\20191118124603_ExtendOfferDatesRequestedDate_ChangedTo_DateTime.cs" />
+    <Compile Remove="Migrations\20191118124603_ExtendOfferDatesRequestedDate_ChangedTo_DateTime.Designer.cs" />
+    <Compile Remove="Migrations\20191118162548_QualificationFinalResult_failingReason.cs" />
+    <Compile Remove="Migrations\20191118162548_QualificationFinalResult_failingReason.Designer.cs" />
+    <Compile Remove="Migrations\20191121105715_newUnitRoleName.cs" />
+    <Compile Remove="Migrations\20191121105715_newUnitRoleName.Designer.cs" />
+    <Compile Remove="Migrations\20191125090711_AddFinantialCostInSeeds.cs" />
+    <Compile Remove="Migrations\20191125090711_AddFinantialCostInSeeds.Designer.cs" />
+    <Compile Remove="Migrations\20191125190206_tenderStatusUnit.cs" />
+    <Compile Remove="Migrations\20191125190206_tenderStatusUnit.Designer.cs" />
+    <Compile Remove="Migrations\20191126110139_InitialCreation.cs" />
+    <Compile Remove="Migrations\20191126110139_InitialCreation.Designer.cs" />
+    <Compile Remove="Migrations\20191203124818_Remove_Unique_Key.cs" />
+    <Compile Remove="Migrations\20191203124818_Remove_Unique_Key.Designer.cs" />
+    <Compile Remove="Migrations\20191216120602_MandatoryListProducts.cs" />
+    <Compile Remove="Migrations\20191216120602_MandatoryListProducts.Designer.cs" />
+    <Compile Remove="Migrations\20191218091817_Test.cs" />
+    <Compile Remove="Migrations\20191218091817_Test.Designer.cs" />
+    <Compile Remove="Migrations\20191218092755_update_mandatorylist.cs" />
+    <Compile Remove="Migrations\20191218092755_update_mandatorylist.Designer.cs" />
+    <Compile Remove="Migrations\20191218114730_test2.cs" />
+    <Compile Remove="Migrations\20191218114730_test2.Designer.cs" />
+    <Compile Remove="Migrations\20191221120612_removeFavSupplierListIDPK.cs" />
+    <Compile Remove="Migrations\20191221120612_removeFavSupplierListIDPK.Designer.cs" />
+    <Compile Remove="Migrations\20191221122313_removeFavSupplierListIDPK.cs" />
+    <Compile Remove="Migrations\20191221122313_removeFavSupplierListIDPK.Designer.cs" />
+    <Compile Remove="Migrations\20191221124135_removeFavSupplierListIDPK.cs" />
+    <Compile Remove="Migrations\20191221124135_removeFavSupplierListIDPK.Designer.cs" />
+    <Compile Remove="Migrations\20191221125251_removeFavSupplierListIDPK.cs" />
+    <Compile Remove="Migrations\20191221125251_removeFavSupplierListIDPK.Designer.cs" />
+    <Compile Remove="Migrations\20191221144704_addedrejectionreason.cs" />
+    <Compile Remove="Migrations\20191221144704_addedrejectionreason.Designer.cs" />
+    <Compile Remove="Migrations\20191222070112_test.cs" />
+    <Compile Remove="Migrations\20191222070112_test.Designer.cs" />
+    <Compile Remove="Migrations\20191222070908_test.cs" />
+    <Compile Remove="Migrations\20191222070908_test.Designer.cs" />
+    <Compile Remove="Migrations\20191222071848_test.cs" />
+    <Compile Remove="Migrations\20191222071848_test.Designer.cs" />
+    <Compile Remove="Migrations\20191222073559_test.cs" />
+    <Compile Remove="Migrations\20191222073559_test.Designer.cs" />
+    <Compile Remove="Migrations\20191222075546_removeBillInqueryHistoryTable.cs" />
+    <Compile Remove="Migrations\20191222075546_removeBillInqueryHistoryTable.Designer.cs" />
+    <Compile Remove="Migrations\20191222081525_removeBlockTrackingStatus.cs" />
+    <Compile Remove="Migrations\20191222081525_removeBlockTrackingStatus.Designer.cs" />
+    <Compile Remove="Migrations\20191222134614_addEstablishmentTypes.cs" />
+    <Compile Remove="Migrations\20191222134614_addEstablishmentTypes.Designer.cs" />
+    <Compile Remove="Migrations\20191223062058_removeAuditableEntityFromEstablishmentTypes.cs" />
+    <Compile Remove="Migrations\20191223062058_removeAuditableEntityFromEstablishmentTypes.Designer.cs" />
+    <Compile Remove="Migrations\20191223114443_Added_MandatoryList_CR.cs" />
+    <Compile Remove="Migrations\20191223114443_Added_MandatoryList_CR.Designer.cs" />
+    <Compile Remove="Migrations\20191223130933_removecoulmnsFromBillTable.cs" />
+    <Compile Remove="Migrations\20191223130933_removecoulmnsFromBillTable.Designer.cs" />
+    <Compile Remove="Migrations\20191224054535_Remainging_MandatoryList_CR.cs" />
+    <Compile Remove="Migrations\20191224054535_Remainging_MandatoryList_CR.Designer.cs" />
+    <Compile Remove="Migrations\20191224095942_MandatoryListVerificationType.cs" />
+    <Compile Remove="Migrations\20191224095942_MandatoryListVerificationType.Designer.cs" />
+    <Compile Remove="Migrations\20191226101706_addsizeToEstablishmentType.cs" />
+    <Compile Remove="Migrations\20191226101706_addsizeToEstablishmentType.Designer.cs" />
+    <Compile Remove="Migrations\20191229074826_test123.cs" />
+    <Compile Remove="Migrations\20191229074826_test123.Designer.cs" />
+    <Compile Remove="Migrations\20191229075542_test1234.cs" />
+    <Compile Remove="Migrations\20191229075542_test1234.Designer.cs" />
+    <Compile Remove="Migrations\20200114075615_RFPMaxLength.cs" />
+    <Compile Remove="Migrations\20200114075615_RFPMaxLength.Designer.cs" />
+    <Compile Remove="Migrations\20200128090740_AddQuantityTableVersionIdInTender.cs" />
+    <Compile Remove="Migrations\20200128090740_AddQuantityTableVersionIdInTender.Designer.cs" />
+    <Compile Remove="Migrations\20200129075303_AddNationalProductPercentageToTender.cs" />
+    <Compile Remove="Migrations\20200129075303_AddNationalProductPercentageToTender.Designer.cs" />
+    <Compile Remove="Migrations\20200129094353_AddedNationalProductSettings.cs" />
+    <Compile Remove="Migrations\20200129094353_AddedNationalProductSettings.Designer.cs" />
+    <Compile Remove="Migrations\20200130063847_addedLCUserToDatabase.cs" />
+    <Compile Remove="Migrations\20200130063847_addedLCUserToDatabase.Designer.cs" />
+    <Compile Remove="Migrations\20200130071650_Remove-OldQuantityTables.cs" />
+    <Compile Remove="Migrations\20200130071650_Remove-OldQuantityTables.Designer.cs" />
+    <Compile Remove="Migrations\20200212080523_Offer_OfferWeightAfterCalcNPA.cs" />
+    <Compile Remove="Migrations\20200212080523_Offer_OfferWeightAfterCalcNPA.Designer.cs" />
+    <Compile Remove="Migrations\20200212083714_Offer_OfferWeightAfterCalcNPA.cs" />
+    <Compile Remove="Migrations\20200212083714_Offer_OfferWeightAfterCalcNPA.Designer.cs" />
+    <Compile Remove="Migrations\20200212084359_Offer_OfferWeightAfterCalcNPA.cs" />
+    <Compile Remove="Migrations\20200212084359_Offer_OfferWeightAfterCalcNPA.Designer.cs" />
+    <Compile Remove="Migrations\20200212092413_Offer_OfferWeightAfterCalcNPA.cs" />
+    <Compile Remove="Migrations\20200212092413_Offer_OfferWeightAfterCalcNPA.Designer.cs" />
+    <Compile Remove="Migrations\20200212093418_Offer_OfferWeightAfterCalcNPA.cs" />
+    <Compile Remove="Migrations\20200212093418_Offer_OfferWeightAfterCalcNPA.Designer.cs" />
+    <Compile Remove="Migrations\20200303120817_AddIsSendToEmarketPlaceToTender.cs" />
+    <Compile Remove="Migrations\20200303120817_AddIsSendToEmarketPlaceToTender.Designer.cs" />
+    <Compile Remove="Migrations\20200317122726_AddCheckingNotificationSentToTenderTable.cs" />
+    <Compile Remove="Migrations\20200317122726_AddCheckingNotificationSentToTenderTable.Designer.cs" />
+    <Compile Remove="Migrations\20200318092347_Remove_FavouriteSupplierTenderId.cs" />
+    <Compile Remove="Migrations\20200318092347_Remove_FavouriteSupplierTenderId.Designer.cs" />
+    <Compile Remove="Migrations\20200323084056_AddExtendDatesStatusInQgecnyCommunicationReque.cs" />
+    <Compile Remove="Migrations\20200323084056_AddExtendDatesStatusInQgecnyCommunicationReque.Designer.cs" />
+    <Compile Remove="Migrations\20200330194809_addIsFinishedStoppingAwardingPeriodTotenderTable.cs" />
+    <Compile Remove="Migrations\20200330194809_addIsFinishedStoppingAwardingPeriodTotenderTable.Designer.cs" />
+    <Compile Remove="Migrations\20200330200225_addIsNotificationSentForStoppingPeriodTotenderTable.cs" />
+    <Compile Remove="Migrations\20200330200225_addIsNotificationSentForStoppingPeriodTotenderTable.Designer.cs" />
+    <Compile Remove="Migrations\20200505140439_addExclusionreasonToOfferTable.cs" />
+    <Compile Remove="Migrations\20200505140439_addExclusionreasonToOfferTable.Designer.cs" />
+    <Compile Remove="Migrations\20200505152310_Init-Announcement.cs" />
+    <Compile Remove="Migrations\20200505152310_Init-Announcement.Designer.cs" />
+    <Compile Remove="Migrations\20200505221945_Init-Announcement-2.cs" />
+    <Compile Remove="Migrations\20200505221945_Init-Announcement-2.Designer.cs" />
+    <Compile Remove="Migrations\20200508043612_Update_Announcement.cs" />
+    <Compile Remove="Migrations\20200508043612_Update_Announcement.Designer.cs" />
+    <Compile Remove="Migrations\20200510234505_Update_Announcement2.cs" />
+    <Compile Remove="Migrations\20200510234505_Update_Announcement2.Designer.cs" />
+    <Compile Remove="Migrations\20200511103738_addJoinRequest.cs" />
+    <Compile Remove="Migrations\20200511103738_addJoinRequest.Designer.cs" />
+    <Compile Remove="Migrations\20200511202408_AddAnnouncementIdToTender.cs" />
+    <Compile Remove="Migrations\20200511202408_AddAnnouncementIdToTender.Designer.cs" />
+    <Compile Remove="Migrations\20200511225117_Updates-In-Announcement.cs" />
+    <Compile Remove="Migrations\20200511225117_Updates-In-Announcement.Designer.cs" />
+    <Compile Remove="Migrations\20200511230340_Announcement-Changes.cs" />
+    <Compile Remove="Migrations\20200511230340_Announcement-Changes.Designer.cs" />
+    <Compile Remove="Migrations\20200529091632_Add-Announcement-In-VerificationType.cs" />
+    <Compile Remove="Migrations\20200529091632_Add-Announcement-In-VerificationType.Designer.cs" />
+    <Compile Remove="Migrations\20200529122724_AddRejectedAnnouncementStatus.cs" />
+    <Compile Remove="Migrations\20200529122724_AddRejectedAnnouncementStatus.Designer.cs" />
+    <Compile Remove="Migrations\20200625133911_Add_TenderQuantitiyItemsJson.cs" />
+    <Compile Remove="Migrations\20200625133911_Add_TenderQuantitiyItemsJson.Designer.cs" />
+    <Compile Remove="Migrations\20200625145718_Update_TenderQuantitiyItemsJson_Add_Join_Column.cs" />
+    <Compile Remove="Migrations\20200625145718_Update_TenderQuantitiyItemsJson_Add_Join_Column.Designer.cs" />
+    <Compile Remove="Migrations\20200625150538_Add_TenderQuantitiyItemsJson.cs" />
+    <Compile Remove="Migrations\20200625150538_Add_TenderQuantitiyItemsJson.Designer.cs" />
+    <Compile Remove="Migrations\20200629103410_Create_QuantitiyItemsJson.cs" />
+    <Compile Remove="Migrations\20200629103410_Create_QuantitiyItemsJson.Designer.cs" />
+    <Compile Remove="Migrations\20200629111809_Create_QuantitiyItemsJson2.cs" />
+    <Compile Remove="Migrations\20200629111809_Create_QuantitiyItemsJson2.Designer.cs" />
+    <Compile Remove="Migrations\20200610144604_Update_AnnouncementJoinRequest.cs" />
+    <Compile Remove="Migrations\20200610144604_Update_AnnouncementJoinRequest.Designer.cs" />
+    <Compile Remove="Migrations\20200927091707_added_FinancialCheckingDateSet.cs" />
+    <Compile Remove="Migrations\20200927091707_added_FinancialCheckingDateSet.Designer.cs" />
+    <Compile Remove="Migrations\20201014085311_negotiationmodifymissingrelation.cs" />
+    <Compile Remove="Migrations\20201014085311_negotiationmodifymissingrelation.Designer.cs" />
+    <Compile Remove="Migrations\20201014085615_negotiationmodifymissingrelation.cs" />
+    <Compile Remove="Migrations\20201014085615_negotiationmodifymissingrelation.Designer.cs" />
+    <Compile Remove="Migrations\20201014085940_negotiationmodifymissingrelation.cs" />
+    <Compile Remove="Migrations\20201014085940_negotiationmodifymissingrelation.Designer.cs" />
+    <Compile Remove="Migrations\20201203091934_addcombinedrole.cs" />
+    <Compile Remove="Migrations\20201203091934_addcombinedrole.Designer.cs" />
+    <Compile Remove="Scripts\Cities - Copy.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="MOF.Etimad.Monafasat.Data.csproj.vspscc" />
+    <None Remove="Scripts\16-09-2020\Ibrahim 1.3.3 Scripts.sql" />
+    <None Remove="Scripts\16-09-2020\Nawaf-tender-statuses.sql" />
+    <None Remove="Scripts\scripts 12-1-2020\Verification Type.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.identity.entityframeworkcore\2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.EntityFrameworkCore">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.entityframeworkcore\2.0.1\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Connected Services\" />
+    <Folder Include="Scripts\15-04-2020\" />
+    <Folder Include="Scripts\Sonar-Fixes\" />
+    <Folder Include="Scripts\script 3-3-2020\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MOF.Etimad.Monafasat.Core\MOF.Etimad.Monafasat.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Scripts\Countries.sql">
+      <LastGenOutput>Cities.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Update="Scripts\TenderActions.sql">
+      <LastGenOutput>Cities.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Update="Scripts\Cities.sql">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Cities.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Scripts\VRO\VRONotificationCodes.sql">
+      <LastGenOutput>Cities.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,98 @@
+@using resDisplayInputs = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs;
+@using MOF.Etimad.Monafasat.SharedKernel
+<a :href="detailsUrl(tender.tenderIdString)" class="dropdown-item">
+   <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details
+</a>
+@if (User.IsInRole(RoleNames.FinancialSupervisor))
+{
+   <a :href="suppliersReport(tender.tenderIdString)" v-if="(tender.canViewSuppliersReportFinancialSupervisor == true)" class="dropdown-item">
+      <i class="material-icons">library_books</i> @resDisplayInputs.AppliedSuppliersReport
+   </a>
+}
+else
+{
+   <a :href="suppliersReport(tender.tenderIdString)" v-if="(tender.tenderStatusId != @((int)Enums.TenderStatus.UnderEstablishing)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.Established)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.Pending)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.Canceled)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.PendingVROAuditerApprove)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.Rejected))" class="dropdown-item">
+      <i class="material-icons">library_books</i> @resDisplayInputs.AppliedSuppliersReport
+   </a>
+}
+@if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PurshaseSpecialist))
+{
+   <a :href="editUrl(tender.tenderIdString)" class="dropdown-item" v-if="((tender.tenderStatusId ==  @((int)Enums.TenderStatus.UnderEstablishing) || tender.tenderStatusId ==  @((int)Enums.TenderStatus.Established))&& tender.tenderTypeId != @((int)Enums.TenderType.SecondStageTender))"><i class="material-icons">edit</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</a>
+   <a href="#" :id="tender.tenderId" @@click="remove(tender.tenderIdString)" class="dropdown-item" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.UnderEstablishing)) || (tender.tenderStatusId == @((int)Enums.TenderStatus.Established)))"><i class="material-icons">clear</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</a>
+   <a :href="invitationUrl(tender.tenderIdString)" id="invitationLink" v-if="tender.hasPreQualification == false && (tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && tender.lastOfferPresentationDate >= tender.currentDate && ((tender.tenderTypeId == @((int)Enums.TenderType.NationalTransformationProjects) || tender.tenderTypeId == @((int)Enums.TenderType.CurrentDirectPurchase) || tender.tenderTypeId == @((int)Enums.TenderType.NewDirectPurchase)) || (tender.invitationTypeId == @((int)Enums.InvitationType.Specific) && tender.preQualificationId == null && (tender.tenderTypeId == @((int)Enums.TenderType.Competition) || tender.tenderTypeId == @((int)Enums.TenderType.ReverseBidding) || tender.tenderTypeId == @((int)Enums.TenderType.FrameworkAgreement) || tender.tenderTypeId == @((int)Enums.TenderType.LimitedTender)))))" class="dropdown-item"><i class="material-icons">send</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendingInvitations</a>
+   <a @@click="showDialog(tender.tenderIdString)" style="cursor:pointer" id="invitationLink" v-if="(tender.tenderStatusId==@((int)Enums.TenderStatus.Approved) && (tender.hasPreQualification==true ||(tender.tenderTypeId==@((int)Enums.TenderType.SecondStageTender))))" class="dropdown-item"><i class="material-icons">send</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendInvitations</a>
+   <a :href="joiningRequest(tender.tenderIdString)" :id="tender.tenderId" class="dropdown-item" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && (tender.tenderTypeId == @((int)Enums.TenderType.CurrentDirectPurchase)) && tender.invitationTypeId == @((int)Enums.InvitationType.Public))"><i class="material-icons">list_alt</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DisplayingJoiningRequests</a>
+   <a :href="UpdateCommittees(tender.tenderIdString)" :id="tender.tenderId" class="dropdown-item" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppening) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedPending)
+      || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedRejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedConfirmed))">
+      <i class="material-icons">edit</i>
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditCommittee
+   </a>
+   <a :href="UpdateAreas(tender.tenderIdString)" :id="tender.tenderId" class="dropdown-item" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)||tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppening)"><i class="material-icons">edit</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditAreas</a>
+   <a :href="UpdateSamplesDeliveryAddress(tender.tenderIdString)" :id="tender.tenderId" class="dropdown-item" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && tender.supplierNeedSample == true)"><i class="material-icons">edit</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditDelivaryAddress</a>
+   <a :href="UpdateDate(tender.tenderIdString)" :id="tender.tenderId" class="dropdown-item" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && tender.extendDatesStatus != @((int)Enums.ChangeStatusType.Pending) && tender.extendDatesStatus != @((int)Enums.ChangeStatusType.Rejected)"><i class="material-icons">edit</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtendDates</a>
+   <a :href="UpdateQuantitiesTables(tender.tenderIdString)" :id="tender.tenderId" class="dropdown-item"
+      v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && tender.tenderTypeId != @((int)Enums.TenderType.ReverseBidding) && tender.tenderTypeId != @((int)Enums.TenderType.FirstStageTender) &&tender.tenderTypeId != @((int)Enums.TenderType.Competition) && tender.lastOfferPresentationDate > tender.currentDate &&
+      (tender.quantitiesTableStatus != @((int)Enums.ChangeStatusType.Pending) && tender.quantitiesTableStatus != @((int)Enums.ChangeStatusType.Rejected))"><i class="material-icons">edit</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditeQuantityTable</a>
+      <a :href="UpdateAttachments(tender.tenderIdString)" :id="tender.tenderId" class="dropdown-item" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && (tender.attachmentsStatus != @((int)Enums.ChangeStatusType.Pending) && tender.attachmentsStatus != @((int)Enums.ChangeStatusType.Rejected))"><i class="material-icons">edit</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditeAttachments</a>
+      <a :href="cancelLink(tender.tenderIdString)" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestedBy != dataEntry && tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Pending)" class="dropdown-item">
+         <i class="material-icons">delete</i>  @resDisplayInputs.CancelTender
+      </a>
+      <a :href="cancelLink(tender.tenderIdString)" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && (tender.changeRequestedBy == dataEntry || tender.changeRequestedBy == purshaseSpecialist)  && tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Rejected)" class="dropdown-item">
+         <i class="material-icons">edit</i> @resDisplayInputs.Reopen
+      </a>
+      <a :href="ExtendDateApproval(tender.tenderIdString)" class="dropdown-item"
+         v-if="(tender.extendDatesStatus == @((int)Enums.ChangeStatusType.New)) && tender.tenderChangeRequestIdsForDataEntry.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+         <i class="material-icons">send</i>  إرسال تحديث التواريخ للإعتماد
+      </a>
+      <a :href="QuantityTableApproval(tender.tenderIdString)" class="dropdown-item"
+         v-if="(tender.quantitiesTableStatus == @((int)Enums.ChangeStatusType.New)) && tender.tenderChangeRequestIdsForDataEntry.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+         <i class="material-icons">send</i>   إرسال تحديث جداول الكميات للإعتماد
+      </a>
+      <a :href="AttachmentsApproval(tender.tenderIdString)" class="dropdown-item"
+         v-if="(tender.attachmentsStatus == @((int)Enums.ChangeStatusType.New)) && tender.tenderChangeRequestIdsForDataEntry.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+         <i class="material-icons">send</i>   إرسال تحديث الملفات للإعتماد
+      </a>
+      <a :href="ExtendDateApproval(tender.tenderIdString)" class="dropdown-item"
+         v-if="(tender.extendDatesStatus == @((int)Enums.ChangeStatusType.Rejected)) && tender.tenderChangeRequestIdsForDataEntry.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+         <i class="material-icons">edit</i>   إغلاق تحديث التواريخ
+      </a>
+      <a :href="QuantityTableApproval(tender.tenderIdString)" class="dropdown-item"
+         v-if="(tender.quantitiesTableStatus == @((int)Enums.ChangeStatusType.Rejected)) && tender.tenderChangeRequestIdsForDataEntry.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+         <i class="material-icons">edit</i>    إغلاق تحديث جداول الكميات
+      </a>
+      <a :href="AttachmentsApproval(tender.tenderIdString)" class="dropdown-item"
+         v-if="(tender.attachmentsStatus == @((int)Enums.ChangeStatusType.Rejected)) && tender.tenderChangeRequestIdsForDataEntry.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+         <i class="material-icons">edit</i>    إغلاق تحديث الملفات
+      </a>
+      <a :href="EditeSecondStage(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.Established)||tender.tenderStatusId == @((int)Enums.TenderStatus.UnderEstablishing)) && tender.tenderTypeId == @((int)Enums.TenderType.SecondStageTender))" class="dropdown-item">
+         <i class="material-icons">edit</i>
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit
+      </a>
+   }
+@if (User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.EtimadOfficer))
+{
+   <div v-if="(tender.changeRequestedBy == dataEntry) || (tender.changeRequestedBy == auditor) || (tender.changeRequestedBy == purshaseSpecialist) || (tender.changeRequestedBy == etimadOfficer)">
+      <a :href="cancelLink(tender.tenderIdString)" v-if="(
+         tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) &&
+         tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending)) && (tender.changeRequestedBy == dataEntry || tender.changeRequestedBy == auditor || tender.changeRequestedBy == purshaseSpecialist || tender.changeRequestedBy == etimadOfficer)" class="dropdown-item">
+         <i class="material-icons">delete_forever</i>  @resDisplayInputs.CancelTenderAudit
+      </a>
+   </div>
+   <a :href="ExtendDateApproval(tender.tenderIdString)" class="dropdown-item"
+      v-if="(tender.extendDatesStatus == @((int)Enums.ChangeStatusType.Pending)) && tender.tenderChangeRequestIdsForAuditor.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+      <i class="material-icons">send</i>   إعتماد تحديث التواريخ
+   </a>
+   <a :href="QuantityTableApproval(tender.tenderIdString)" class="dropdown-item"
+      v-if="(tender.quantitiesTableStatus == @((int)Enums.ChangeStatusType.Pending)) && tender.tenderChangeRequestIdsForAuditor.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+      <i class="material-icons">send</i>    إعتماد تحديث جداول الكميات
+   </a>
+   <a :href="AttachmentsApproval(tender.tenderIdString)" class="dropdown-item"
+      v-if="(tender.attachmentsStatus == @((int)Enums.ChangeStatusType.Pending)) && tender.tenderChangeRequestIdsForAuditor.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+      <i class="material-icons">send</i>  إعتماد تحديث الملفات
+   </a>
+}

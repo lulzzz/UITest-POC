@@ -1,0 +1,31 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+
+@*@if (User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.MonafasatAdmin))
+{
+   <h5 class="text-dark-green">   <span>{{tender.agencyName}}</span></h5>
+
+}*@
+<h5 class="text-dark-green">   <span>{{tender.agencyName}}</span></h5>
+<template v-if="tender.submitionDate">
+
+   <span class="">
+      <i class="material-icons pull-left text-gray">date_range</i> 
+      {{tender.submitionDate.split('T')[0]}}
+   </span>
+</template>
+<template v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.UnderEstablishing) || tender.tenderStatusId == @((int)Enums.TenderStatus.Established) || tender.tenderStatusId == @((int)Enums.TenderStatus.QualificationUnderEstablishingFromCommittee)">
+   <span v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Established)" class="badge badge-warning d-inline-block" style="margin: 0 5px;"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UnderEstablished</span>
+   <span v-else-if="tender.tenderStatusId == @((int)Enums.TenderStatus.QualificationUnderEstablishingFromCommittee) && '@User.UserRole()' !='@RoleNames.PreQualificationCommitteeSecretary' && '@User.UserRole()' !='@RoleNames.PreQualificationCommitteeManager'" class="badge badge-primary d-inline-block" style="margin: 0 5px;">تمت الموافقه</span>
+   <span v-else class="badge badge-warning d-inline-block" style="margin: 0 5px;">{{tender.qualificationStatusName}}</span>
+</template>
+<template v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Pending)|| tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckPending)|| tender.tenderStatusId == @((int)Enums.TenderStatus.QualificationCommitteeApproval) || tender.tenderStatusId == @((int)Enums.TenderStatus.PendingQualificationCommitteeManagerApproval)|| tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentChecking) ">
+   <span v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.PendingQualificationCommitteeManagerApproval) && '@User.UserRole()' !='@RoleNames.PreQualificationCommitteeSecretary' && '@User.UserRole()' !='@RoleNames.PreQualificationCommitteeManager'" class="badge badge-primary d-inline-block" style="margin: 0 5px;">تمت الموافقه</span>
+   <span v-else class="badge badge-warning d-inline-block" style="margin: 0 5px;">{{tender.qualificationStatusName}}</span>
+</template>
+<template v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckConfirmed)">
+   <span class="badge badge-success d-inline-block" style="margin: 0 5px;">{{tender.qualificationStatusName}}</span>
+</template>
+<template v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Canceled) || tender.tenderStatusId == @((int)Enums.TenderStatus.Rejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckRejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.RejectedQualificationApprovalByCommitteeManager) || tender.tenderStatusId == @((int)Enums.TenderStatus.Canceled)">
+   <span v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.RejectedQualificationApprovalByCommitteeManager) && '@User.UserRole()' !='@RoleNames.PreQualificationCommitteeSecretary' && '@User.UserRole()' !='@RoleNames.PreQualificationCommitteeManager'" class="badge badge-primary d-inline-block" style="margin: 0 5px;">تمت الموافقه</span>
+   <span v-else class="badge badge-danger d-inline-block" style="margin: 0 5px;">{{tender.qualificationStatusName}}</span>
+</template>

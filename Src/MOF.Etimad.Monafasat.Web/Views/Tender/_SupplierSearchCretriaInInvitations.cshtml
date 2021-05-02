@@ -1,0 +1,213 @@
+@*@using MOF.Etimad.Monafasat.SharedKernel
+   <div class="row">
+      <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <input type="text" class="form-control" name="CommericalRegisterNo" id="commericalRegisterNo" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)">
+            <input type="hidden" name="InvitationTenderId" value="@(Model.TenderId)" />
+            <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)</span>
+         </div>
+      </div>
+      <div hidden="hidden" class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <input type="text" class="form-control" name="CommericalRegisterName" id="publisher" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)">
+            <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)</span>
+         </div>
+      </div>
+      <div hidden="hidden" class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <input type="text" class="form-control" name="CivilRegisterNo" id="publisher" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.CivilRegisterNo) ">
+            <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.CivilRegisterNo)</span>
+         </div>
+      </div>
+   </div>
+   <div hidden="hidden" class="row">
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group has-success bmd-form-group">
+            <select v-model="selected" v-on:change="getSuppliersById(selected)" id="SuppliersList" name="MainActivitiesId" data-live-search="false" class="selectpicker" data-style="select-with-transition" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SelectMainActivity)" data-size="7">
+               <option v-for="sup in SuppliersDD" v-bind:value="sup.SubjectId">
+                  {{sup.username}}
+               </option>
+            </select>
+
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group has-success bmd-form-group">
+            <select id="subSuppliersList" data-live-search="false" class="selectpicker" name="SubActivitesId" data-style="select-with-transition" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SelectSubActivity) " data-size="7">
+               <option v-for="sup in subSuppliers" v-bind:value="sup.supplierId">
+                  {{sup.supplierName}}
+               </option>
+            </select>
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <input type="text" class="form-control" name="ActivityDescription" id="publisher" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ActivityDescription)">
+            <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ActivityDescription)</span>
+         </div>
+      </div>
+   </div>
+   <div hidden="hidden" class="row">
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group has-success bmd-form-group">
+            <select asp-items="@(new SelectList(Model.TenderAreas,"AreaId","NameAr"))" data-live-search="false" class="selectpicker" name="CityId" data-style="select-with-transition" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SelectArea)" data-size="7"></select>
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <input type="text" class="form-control" name="EMail" id="tb_EMail" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Email)">
+            <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Email)</span>
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group has-success bmd-form-group">
+            <select data-live-search="false" class="selectpicker" name="tb_OrderById" data-style="select-with-transition" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseOrderBy" data-size="7">
+               <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
+               <option data-tokens="mustard">Burger, Shake and a Smile</option>
+               <option data-tokens="frosting">Sugar, Spice and all things nice</option>
+            </select>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <span class="bmd-help text-danger" style="position:relative" id="vdSearch">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.EnterSearchFields)</span>
+   </div>
+   <div class="row">
+      <div class="col-12 form-group etd-search-btn">
+         <button type="button" class="btn btn-primary" name="button" @@click="search">
+            <i class="material-icons">search</i> @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search)
+         </button>
+         <button type="reset" class="btn text-center" name="button">
+            <i class="material-icons">close</i> @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear)
+         </button>
+      </div>
+   </div>*@
+@using MOF.Etimad.Monafasat.SharedKernel
+<div class="row">
+   <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <input type="text" class="form-control" name="CommericalRegisterNo" id="commericalRegisterNo" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)">
+         <input type="hidden" name="InvitationTenderId" value="@(Model.TenderId)" />
+         @*<span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)</span>*@
+         <span class="text-danger hide" id="spnCRmessage">   الرجاء ادخال رقم صحيح باللغة الانجليزية 0123456789</span>
+      </div>
+   </div>
+   <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <input type="text" class="form-control" name="CommericalRegisterName" id="commericalRegisterName" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)">
+         <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)</span>
+      </div>
+   </div>
+
+   <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <select data-live-search="false" id="mainActivityList" name="MainActivitiesId" class="selectpicker" @@change="GetSecondryActitvitiesByParentId()" title="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.MainActivity" v-model="selectedMainActivity" data-style="select-with-transition">
+            <option value="-1">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+            <option :value="ac.id" v-for="ac in MainActitvities">{{ac.name}}</option>
+         </select> <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.MainActivity</span>
+      </div>
+   </div>
+   <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <select data-live-search="false" id="secondryActivityList" name="SubActivitesId" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.SecondaryActivity" v-model="selectedSecondryActivity" data-style="select-with-transition">
+            <option value="-1">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+            <option :value="ac.id" v-for="ac in SecondaryActivities">{{ac.name}}</option>
+         </select> <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.SecondaryActivity</span>
+      </div>
+   </div>
+
+   <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <input type="text" class="form-control" name="ActivityDescription" id="activityDescription" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ActivityDescription) ">
+         <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ActivityDescription)</span>
+      </div>
+   </div>
+   <div class="col-lg-4 col-sm-6 col-xs-12">
+      <div class="form-group has-success bmd-form-group">
+         <select id="cityNameList" data-live-search="true" class="selectpicker" name="CityName" data-style="select-with-transition" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.City)" data-size="7">
+            <option value="" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.City)">
+               @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose)
+            </option>
+            <option v-for="city in cities" v-bind:value="city.name">
+               {{city.name}}
+            </option>
+         </select>
+      </div>
+   </div>
+   <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <input type="text" class="form-control" name="EMail" id="eMail" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Email) ">
+         <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Email)</span>
+      </div>
+   </div>
+   <div hidden="hidden" class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <input type="text" class="form-control" name="CivilRegisterNo" id="civilRegisterNo" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.CivilRegisterNo) ">
+         <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.CivilRegisterNo)</span>
+      </div>
+   </div>
+</div>
+
+<div hidden="hidden" class="row">
+   <div class="col-lg-4 col-sm-6 col-xs-12">
+      <div class="form-group has-success bmd-form-group">
+         <select v-model="selected" v-on:change="getSuppliersById(selected)" id="SuppliersList" name="MainActivitiesId" data-live-search="false" class="selectpicker" data-style="select-with-transition" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SelectMainActivity)" data-size="7">
+            <option v-for="sup in SuppliersDD" v-bind:value="sup.SubjectId">
+               {{sup.username}}
+            </option>
+         </select>
+      </div>
+   </div>
+   <div class="col-lg-4 col-sm-6 col-xs-12">
+      <div class="form-group has-success bmd-form-group">
+         <select id="subSuppliersList" data-live-search="false" class="selectpicker" name="SubActivitesId" data-style="select-with-transition" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SelectSubActivity) " data-size="7">
+            <option v-for="sup in subSuppliers" v-bind:value="sup.supplierId">
+               {{sup.supplierName}}
+            </option>
+         </select>
+      </div>
+   </div>
+   <div class="col-lg-4 col-sm-6 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <input type="text" class="form-control" name="ActivityDescription" id="publisher" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ActivityDescription)">
+         <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ActivityDescription)</span>
+      </div>
+   </div>
+</div>
+<div hidden="hidden" class="row">
+   <div class="col-lg-4 col-sm-6 col-xs-12">
+      <div class="form-group has-success bmd-form-group">
+         <select asp-items="@(new SelectList(Model.TenderAreas,"AreaId","NameAr"))" data-live-search="false" class="selectpicker" name="CityId" data-style="select-with-transition" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SelectArea)" data-size="7"></select>
+      </div>
+   </div>
+   <div class="col-lg-4 col-sm-6 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <input type="text" class="form-control" name="EMail" id="tb_EMail" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Email)">
+         <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Email)</span>
+      </div>
+   </div>
+   <div class="col-lg-4 col-sm-6 col-xs-12">
+      <div class="form-group has-success bmd-form-group">
+         <select data-live-search="false" class="selectpicker" name="tb_OrderById" data-style="select-with-transition" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseOrderBy" data-size="7">
+            <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
+            <option data-tokens="mustard">Burger, Shake and a Smile</option>
+            <option data-tokens="frosting">Sugar, Spice and all things nice</option>
+         </select>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <span class="bmd-help text-danger" style="position:relative" id="vdSearch">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.EnterSearchFields)</span>
+</div>
+<div class="row">
+   <div class="col-12 form-group etd-search-btn">
+      <button type="button" class="btn btn-primary" name="button" @@click="search">
+         <i class="material-icons">search</i> @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search)
+
+      </button>
+      <button type="reset" class="btn text-center" name="button" @@click="clear($event)">
+         <i class="material-icons">close</i> @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear)
+
+      </button>
+   </div>
+</div>

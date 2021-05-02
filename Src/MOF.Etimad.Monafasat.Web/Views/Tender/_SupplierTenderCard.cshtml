@@ -1,0 +1,185 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+<div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="cardsresult">
+   <div class="row" v-if="Tenders && Tenders.length > 0">
+      <div class="monafasa-item col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12" v-for="(tender, $index) in Tenders">
+         <div class="card">
+            <div class="card-body">
+               <div class="row">
+                  <div class="agncy_logo col-12">
+                     <div class="dropdown pull-right">
+                        <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i> <div class="ripple-container"></div></button>
+                        <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                           <a :href="purchaseTenderBook(tender.tenderIdString)" v-if="((tender.tenderTypeId == @((int)Enums.TenderStatus.Approved))  && (tender.tenderTypeId == @((int)Enums.TenderType.CurrentTender))) " class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PurchaseConditionsBooklet</a>
+                           <a :href="tenderDetailsUrl(tender.tenderIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details</a>
+                           <a target="_blank"
+                              :href="openOffersReports(tender.tenderIdString)"
+                              v-if="(tender.tenderTypeId != @((int)Enums.TenderType.FirstStageTender) && tender.tenderTypeId != @((int)Enums.TenderType.NewDirectPurchase) && showOpenOffersReport(tender.tenderStatusId, tender.isPurchased, tender.invitationStatusId))"
+                              class="dropdown-item">
+                              <i class="material-icons">library_books</i>   @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OpenOffersReport
+                           </a>
+                           <a :href="openAwardOffersReport(tender.tenderIdString)"
+                              target="_blank"
+                              v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedConfirmed))"
+                              class="dropdown-item">
+                              <i class="material-icons">library_books</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierAwardingRepoer
+                           </a>
+                        </div>
+                     </div>
+                     <h5 class="text-dark-green m-0 p-0 " style="overflow:hidden">
+                        <span>@Html.Partial("_AgencyLogo")</span>
+                        <a class="text-primary h5" style=" margin-right: 22px;display: table;" v-if="tender.tenderName.length > 100" :href="detailsUrl(tender.tenderIdString)">{{tender.tenderName.substring(0, 100) + ' ...'}}</a>
+                        <a class="text-primary h5" style=" margin-right: 22px;display: table;" v-else :href="detailsUrl(tender.tenderIdString)">{{tender.tenderName}}</a>
+                     </h5>
+                     <div class="row">
+                        <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 p-2">
+                           <h5 class="text-dark-green m-0">
+                              {{tender.agencyName}}
+                           </h5>
+                           <template v-if="tender.submitionDate">
+                              <span class="" data-toggle="tooltip" data-placement="top" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderPublishDate">
+                                 <i class="material-icons pull-left text-gray">date_range</i> 
+                                 {{tender.submitionDate.split('T')[0]}}
+                              </span>
+                           </template>
+                           @Html.Partial("_InvitationStatuses.cshtml")
+                           @Html.Partial("_TenderStatuses.cshtml")
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 p-2">
+                           <template v-if="tender.lastOfferPresentationDate">
+                              <div class="progress pull-right" :data-percentage="percentageLeft(tender.submitionDate,tender.lastOfferPresentationDate,tender.remainingDays,tender.remainingHours, tender.tenderStatusId)">
+                                 <span class="progress-left">
+                                    <span class="progress-bar"></span>
+                                 </span>
+                                 <span class="progress-right">
+                                    <span class="progress-bar"></span>
+                                 </span>
+                                 <div class="progress-value">
+                                    @Html.Partial("~/Views/Shared/_ElapsedTime.cshtml")
+                                 </div>
+                              </div>
+                           </template>                         
+                        </div>
+                     </div>
+                  </div>
+                  <div class="clearfix"></div>
+                  <div class="monafasa-content col-12">
+                     <div class="row">
+                        <div class="col-12">
+                           <ul class="list-group form-details-list">
+                              <li class="list-group-item">
+                                 <div class="row">
+                                    <div class="col-6 etd-item-title">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber
+                                    </div>
+                                    <div class="col-6 etd-item-info">
+                                       <span>{{tender.referenceNumber}}</span>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="list-group-item">
+                                 <div class="row">
+                                    <div class="col-6 etd-item-title">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType
+                                    </div>
+                                    <div class="col-6 etd-item-info">
+                                       <span>{{tender.tenderTypeName}}</span>
+                                    </div>
+                                 </div>
+                              </li>
+                              <template v-if="tender.lastOfferPresentationDate">
+                                 <li class="list-group-item">
+                                    <div class="row">
+                                       <div class="col-6 etd-item-title">
+                                          @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate
+                                       </div>
+                                       <div class="col-6 etd-item-info">
+                                          {{tender.lastOfferPresentationDate.split('T')[0]}}
+                                          <br />
+                                          {{tender.lastOfferPresentationDateHijri}}
+                                          <br />
+                                          {{tender.lastOfferPresentationDate.split('T')[1].substring(0,5)}}
+                                       </div>
+                                    </div>
+                                 </li>
+                              </template>
+                              <template v-else>
+                              </template>
+                              <li class="list-group-item">
+                                 <div class="row">
+                                    <div class="col-6 etd-item-title">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferOpenDateTime
+                                    </div>
+                                    <div class="col-6 etd-item-info">
+                                       <template v-if="tender.offersOpeningDate">
+                                          {{tender.offersOpeningDate.split('T')[0]}}
+                                          <br />
+                                          {{tender.offersOpeningDateHijri}}
+                                          <br />
+                                          {{tender.offersOpeningDate.split('T')[1].substring(0,5)}}
+                                       </template>
+                                       <template v-else>
+                                          @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist
+                                       </template>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="list-group-item">
+                                 <div class="row">
+                                    <div class="col-6 etd-item-title">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersCheckingDate
+                                    </div>
+                                    <div class="col-6 etd-item-info">
+                                       <template v-if="tender.offersCheckingDate">
+                                          {{tender.offersCheckingDate.split('T')[0]}}
+                                          <br />
+                                          {{tender.offersCheckingDateHijri}}
+                                          <br />
+                                          {{tender.offersCheckingDate.split('T')[1].substring(0,5)}}
+                                       </template>
+                                       <template v-else>
+                                          @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist
+                                       </template>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="list-group-item">
+                                 <div class="row">
+                                    <div class="col-6 etd-item-title">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletPrice
+                                    </div>
+                                    <div class="col-6 etd-item-info">
+                                       <span class=" text-primary h5" v-if="(tender.condetionalBookletPrice + tender.financialFees) > 0">{{tender.condetionalBookletPrice + tender.financialFees}} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Riyal</span>
+                                       <span class=" text-primary h5" v-else>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Free</span>
+                                    </div>
+                                 </div>
+                              </li>
+                           </ul>
+                        </div>                        
+                     </div>
+                  </div>
+               </div>
+            </div>
+            @if (User.UserRoles().Count != 0)
+            {
+               @Html.Partial("_SupplierCardFooterActions.cshtml");
+            }
+            else
+            {
+               <div class="card-footer row">
+                  <div class="col-md-12 text-right">
+                     <a :href="tenderDetailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details
+                     </a>
+                  </div>
+               </div>
+            }
+         </div>
+      </div>
+   </div>
+   <div class="col-12" v-else>
+      @Html.Partial("~/Views/Shared/_NoData.cshtml")
+   </div>
+   <div class="col-12 m-5 m-auto">
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+</div>

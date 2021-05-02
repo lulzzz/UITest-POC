@@ -1,0 +1,38 @@
+
+
+<template v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.UnderEstablishing) || tender.tenderStatusId == @((int)Enums.TenderStatus.Established)">
+   <span v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Established)" class="badge badge-warning d-inline-block" style="margin: 0 5px;"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UnderEstablished</span>
+   <span v-else class="badge badge-warning d-inline-block" style="margin: 0 5px;">{{tender.tenderStatusName}}</span>
+</template>
+
+<template v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppening) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedPending) ||
+          tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwarding) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingPending) ||
+          tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedPending)|| tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingPending)
+          || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOpenFinancialStage)">
+   <span class="badge badge-warning d-inline-block" style="margin: 0 5px;">{{tender.tenderStatusName}}</span>
+</template>
+
+<template v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Pending) ||tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedPending) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedPending)   ||
+          tender.tenderStatusId == @((int)Enums.TenderStatus.OffersInitialAwardedPending) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedPending)  || (tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && (tender.unitStatusId == @((int)Enums.TenderUnitStatus.WaitingManagerApprove) ||
+          tender.unitStatusId == @((int)Enums.TenderUnitStatus.UnderReviewing) || tender.unitStatusId == @((int)Enums.TenderUnitStatus.WaitingUnitSecretaryReview)))  ||
+          tender.tenderStatusId == @((int)Enums.TenderStatus.OffersChecking) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialChecking)
+          || tender.tenderStatusId == @((int)Enums.TenderStatus.DirectPurchaseOffersChecking) || tender.tenderStatusId == @((int)Enums.TenderStatus.DirectPurchaseOffersCheckingApprovePending)">
+   <span class="badge badge-warning d-inline-block" style="margin: 0 5px;">{{tender.tenderStatusName}}</span>
+</template>
+
+<template v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedConfirmed) ||
+          tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedConfirmed)  || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersInitialAwardedConfirmed) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedConfirmed) ||
+          tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedConfirmed)|| tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingApproved)||
+          tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed)
+          || tender.tenderStatusId == @((int)Enums.TenderStatus.DirectPurchaseOffersCheckingApproved)">
+   <span class="badge badge-success d-inline-block" style="margin: 0 5px;">{{tender.tenderStatusName}}</span>
+</template>
+
+<template v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Rejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedRejected)  ||
+          tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedRejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersInitialAwardedRejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedRejected) ||
+          tender.tenderStatusId == @((int)Enums.TenderStatus.Canceled) || (tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && tender.unitStatusId == @((int)Enums.TenderUnitStatus.RejectedByManager)) ||
+          tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedRejected)|| tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingRejected)||
+          tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected)
+          || tender.tenderStatusId == @((int)Enums.TenderStatus.DirectPurchaseOffersCheckingRejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.BackForCheckingFromPlaint)">
+   <span class="badge badge-danger d-inline-block" style="margin: 0 5px;">{{tender.tenderStatusName}}</span>
+</template>

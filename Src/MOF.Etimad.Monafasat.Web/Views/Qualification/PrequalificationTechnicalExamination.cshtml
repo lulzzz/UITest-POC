@@ -1,0 +1,71 @@
+@model MOF.Etimad.Monafasat.ViewModel.Qualification.PrequalificationTechnicalExaminationModel
+@{
+   Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="ar-sa">
+<head>
+   <title></title>
+</head>
+ 
+<body>
+   <div class="row">
+      <div class="col-md-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label class="label bmd-label-static">رقم دعوة التأهيل المسبق :</label><span class="text-danger">*</span>
+            <label class="form-control" onkeypress="return allowNumericWithDecimal(event)" type="text" id="TenderPointsToPass">@Model.QualificationNumber</label>
+         </div>
+      </div>
+      <div class="col-md-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label class="label bmd-label-static">تاريخ طرح  دعوة التأهيل المسبق :</label><span class="text-danger">*</span>
+            <label class="form-control" onkeypress="return allowNumericWithDecimal(event)" type="text" id="TenderPointsToPass">@Model.SubmitionDate</label>
+         </div>
+      </div>
+      <div class="col-md-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label class="label bmd-label-static">مكان الإعلان عن  دعوة التأهيل المسبق :</label><span class="text-danger">*</span>
+            <label class="form-control" onkeypress="return allowNumericWithDecimal(event)" type="text" id="TenderPointsToPass">@Model.AnnouncementPlace</label>
+         </div>
+      </div>
+   </div>
+
+
+
+   <label>إشارة إلى لجنة الفحص الفني الخاصة بعلمية دراسة المشروع ( اسم المشروع) فقد تم حصر متطلبات التأهيل للمتقدمين الموضحة أدناه:</label>
+   <div class="table-responsive">
+      <table class="table table-striped" summary="">
+         <thead style="background-color: #e0efe8;">
+            <tr>
+               <th scope="col">إسم مقدم العطاء</th>
+            </tr>
+            <tr>
+         </thead>
+         <tbody>
+            @{ if (Model.SupplierList.Count() > 0)
+               {
+                  @foreach (var sup in Model.SupplierList)
+                  {
+                     <tr>
+                        <td>
+                           @sup.ComercialName
+                        </td>
+                     </tr>
+                  }
+               }
+               else
+               {
+                  <tr>
+                     <td>
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.Messages.NoDataFound
+                     </td>
+                  </tr>
+               }
+            }
+         </tbody>
+      </table>
+   </div>
+</body>
+</html>

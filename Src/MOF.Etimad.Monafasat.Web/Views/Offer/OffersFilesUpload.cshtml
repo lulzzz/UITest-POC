@@ -1,0 +1,10 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.ApplyOfferModel
+
+@using res = MOF.Etimad.Monafasat.Resources
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+   ViewData["Title"] = @res.OfferResources.DisplayInputs.OfferDataDetails;
+}
+@await Component.InvokeAsync("OfferAttachmentsUpdate", new { offerId = Model.OfferId })
+

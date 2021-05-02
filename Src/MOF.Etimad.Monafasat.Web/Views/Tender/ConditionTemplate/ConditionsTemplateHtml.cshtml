@@ -1,0 +1,3050 @@
+@model MOF.Etimad.Monafasat.ViewModel.GetConditionTemplateModel
+@{
+   Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+   <title>كراسة الشروط والمواصفات</title>
+   @*<meta charset="utf-8">*@
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta charset="UTF-8">
+
+   <link href="https://fonts.googleapis.com/css?family=Tajawal:400,700&display=swap" rel="stylesheet">
+
+   <style>
+      @@media print {
+
+         a {
+            text-decoration: none
+         }
+
+         .table .thead-dark th {
+            color: #fff !important;
+            background: #343a40 !important;
+            border-color: #454d55 !important;
+            -webkit-print-color-adjust: exact;
+         }
+
+         .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0,0,0,.05) !important;
+            -webkit-print-color-adjust: exact;
+         }
+
+         body {
+            text-align: right;
+            font-family: 'Tajawal', sans-serif !important;
+         }
+
+         .table-bordered {
+            border: 1px solid #dee2e6 !important;
+         }
+
+            .table-bordered td, .table-bordered th {
+               border: 1px solid #dee2e6 !important;
+            }
+      }
+
+      a {
+         text-decoration: none
+      }
+
+      .table .thead-dark th {
+         color: #fff !important;
+         background-color: #343a40 !important;
+         border-color: #454d55 !important;
+         -webkit-print-color-adjust: exact;
+      }
+
+      .table-striped tbody tr:nth-of-type(odd) {
+         background-color: rgba(0,0,0,.05) !important;
+         -webkit-print-color-adjust: exact;
+      }
+
+      body {
+         text-align: right;
+         font-family: 'Tajawal', sans-serif !important;
+      }
+
+      .table-bordered {
+         border: 1px solid #dee2e6 !important;
+      }
+
+         .table-bordered td, .table-bordered th {
+            border: 1px solid #dee2e6 !important;
+         }
+
+      body {
+         text-align: right;
+         font-family: 'Tajawal', sans-serif;
+         font-size: 100%;
+      }
+
+      .page-footer {
+         background: #fff
+      }
+
+
+
+      .sub-section-content {
+         padding-right: 50px;
+      }
+
+         .sub-section-content span {
+            padding-right: 10px;
+            color: #666
+         }
+
+      .col-6 {
+         width: 50%
+      }
+
+      .col-1 {
+         width: 10%;
+         float: left;
+      }
+
+      .main-section-content > a > div > div > b {
+         font-size: 17px
+      }
+
+      .sub-section-content > div > div > b {
+         font-size: 15px
+      }
+
+      .text-success {
+         color: darkgreen !important;
+      }
+
+      .main-section-content a {
+         color: darkgreen;
+      }
+
+      p {
+         text-align: justify
+      }
+
+      span, p, li {
+         font-size: 15px;
+      }
+
+      .col-6 b {
+         font-size: 20px
+      }
+
+      b > span {
+         font-size: 20px
+      }
+
+      .text-center {
+         text-align: center
+      }
+
+      .text-left {
+         text-align: left;
+      }
+
+      .p-2 {
+         padding: 10px
+      }
+
+      .sub-section-content b, .sub-section-content b span {
+         font-size: 15px;
+      }
+
+      a {
+         text-decoration: none;
+         display: block;
+      }
+
+      .page-header, .page-header-space {
+         height: 100px;
+      }
+
+      .page-footer, .page-footer-space {
+         height: 100px;
+      }
+
+      .page-footer {
+         position: fixed;
+         bottom: 0;
+         width: 100%;
+         z-index: 1;
+      }
+
+      .page-header {
+         position: fixed;
+         top: 0mm;
+         width: 100%;
+         background: #fff;
+         z-index: 1;
+      }
+
+      .page {
+         page-break-after: always;
+      }
+
+      @@page {
+         margin: 10mm;
+      }
+
+      @@media print {
+         .btn-print {
+            display: none;
+         }
+
+         thead {
+            display: table-header-group;
+         }
+
+         tfoot {
+            display: table-footer-group;
+         }
+
+         tbody {
+            display: table-row-group;
+         }
+
+         tr {
+            page-break-inside: avoid
+         }
+
+         body {
+            margin: 0;
+         }
+
+         table {
+            overflow: visible !important;
+         }
+      }
+
+      table {
+         width: 100%;
+      }
+
+         table td, table th {
+            padding: 7px;
+         }
+
+      .container {
+         max-width: 1200px;
+         margin: 0 auto
+      }
+
+      .m-0 {
+         margin: 0
+      }
+
+      td b {
+         font-size: 15px;
+      }
+
+      h5 b {
+         font-size: 17px;
+      }
+
+      h4 b {
+         font-size: 20px;
+      }
+
+      h2 span {
+         font-size: 20px;
+      }
+
+      .position-fixed {
+         position: fixed;
+      }
+
+      .btn-success {
+         position: relative;
+         /*padding: 12px 30px;*/
+         margin: .3125rem 1px;
+         font-family: 'Tahoma',sans-serif;
+         font-weight: 400;
+         /*line-height: 1.42857;*/
+         text-decoration: none;
+         text-transform: uppercase;
+         letter-spacing: 0;
+         cursor: pointer;
+         /*background-color: transparent;*/
+         border: 0;
+         /*border-radius: .2rem;*/
+         outline: 0;
+         transition: box-shadow 0.2s cubic-bezier(.4,0,1,1),background-color 0.2s cubic-bezier(.4,0,.2,1);
+         will-change: box-shadow,transform;
+         color: #fff;
+         background-color: #29ad6f;
+         border-color: #29ad6f;
+         box-shadow: 0 2px 2px 0 rgba(41,173,111,.14), 0 3px 1px -2px rgba(41,173,111,.2), 0 1px 5px 0 rgba(41,173,111,.12);
+         padding: .40625rem 1.25rem;
+         font-size: 1rem;
+         line-height: 1.5;
+         border-radius: .2rem;
+      }
+   </style>
+</head>
+<body>
+   <div class="col-12 text-left position-fixed" style="left:20px; top:20px; z-index:2">
+      <button class="btn btn-success p-2 btn-print  pull-left btn-sm d-print-none" role="button" onclick="printData()" aria-expanded="false" aria-controls="SearchInBlocked">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Print </button>
+   </div>
+   <div class="page-header">
+      <div class="container">
+         @Html.Partial("Header.cshtml")
+      </div>
+
+
+   </div>
+
+   <div class="page-footer">
+      <div class="container">
+         @Html.Partial("Footer.cshtml")
+      </div>
+
+   </div>
+   <div class="container" style="">
+      <table summary="البيانات">
+
+         <thead>
+            <tr>
+               <th id="th311">
+                  <!--place holder for the fixed-position header-->
+                  <div class="page-header-space"></div>
+               </th>
+            </tr>
+         </thead>
+
+         <tbody>
+            <tr>
+               <td>
+
+
+                  <!--*** CONTENT GOES HERE ***-->
+
+
+                  <div class="page">
+                     <!--اصفحة البداية-->
+                     <div class="row">
+                        <div class="col-12 doc-vertical-spacer m-5"></div>
+                        <div class="col-12 doc-vertical-spacer m-5"></div>
+                        <div class="col-12 doc-vertical-spacer m-5"></div>
+                        <div class="col-12 doc-vertical-spacer m-5"></div>
+                        <div class="col-12 doc-vertical-spacer m-5"></div>
+                        <div class="col-12 text-center">
+                           <img src="@Model.AgencyLogo" style="max-width:200px" alt="@Model.AgencyName" />
+                           <h2>
+                              نموذج كراسة الشروط والمواصفات (
+                              <span class="text-success">@(!string.IsNullOrEmpty(Model.TenderName) ? Model.TenderName : "**********")</span>)
+                           </h2>
+                           @if (!string.IsNullOrEmpty(Model.TenderName))
+                           {
+                              <h4>
+                                 اسم المشروع:
+                                 <span class="text-success">@(!string.IsNullOrEmpty(Model.TenderName) ? Model.TenderName : "**********")</span>
+                              </h4>
+                           }
+                           @if (!string.IsNullOrEmpty(Model.ReferenceNumber))
+                           {
+                              <h4>
+                                 رقم الكراسة:
+                                 <span class="text-success">@(!string.IsNullOrEmpty(Model.ReferenceNumber) ? Model.TenderNumber : "**********")</span>
+                              </h4>
+                           }
+                           @if (!string.IsNullOrEmpty(Model.PurchaseDate))
+                           {
+                              <h4>
+                                 تاريخ الكراسة:
+                                 <span class="text-success">@(!string.IsNullOrEmpty(Model.PurchaseDate) ? Model.PurchaseDate : "**********")</span>
+                              </h4>
+                           }
+                        </div>
+                     </div>
+                     <!--اصفحة البداية-->
+                  </div>
+                  <div class="page">
+                     <!--االفهرس-->
+                     <div class="row">
+                        <div class="col-12">
+                           <h3>الفهرس</h3>
+                        </div>
+                        <div class="col-12 index-content">
+                           <div class="row">
+                              <div class="col-12 main-section-content">
+                                 <a href="#1">
+                                    <div class="row">
+                                       <div class="col-6">
+                                          <strong>القسم الأول : <span>مقدمة</span></strong>
+                                       </div>
+                                       <div class="col dots"></div>
+
+                                    </div>
+                                 </a>
+                                 <div class="row">
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#1.1">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>1<span>تعريف عن المنافسة</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#1.2">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>2<span>قيمة وثائق المنافسة</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#1.3">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>3<span>المواعيد المتعلقة بالمنافسة</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#1.4">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>4<span>أهلية مقدمي العروض</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#1.5">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>5<span>السجلات والتراخيص النظامية</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#1.6">
+
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>6<span>ممثل الجهة </span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#1.7">
+
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>7<span>مكان التسليم</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#1.8">
+
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>8<span>نظام المنافسة</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-12 main-section-content">
+                                 <a href="#2">
+                                    <div class="row">
+                                       <div class="col-6">
+                                          <strong>القسم الثاني : <span>الأحكام العامة</span></strong>
+                                       </div>
+                                       <div class="col dots"></div>
+
+                                    </div>
+                                 </a>
+                                 <div class="row">
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.1">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>1<span>تعريفات</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.2">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>2<span>المساواة والشفافية</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.3">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>3<span>تعارض المصالح</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.4">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>4<span>السلوكيات والأخلاقيات</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.5">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>5<span>السرية</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.6">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>6<span>الإعلان</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.7">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>7<span>ملكية وثائق المنافسة </span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.8">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>8<span>حقوق الملكية الفكرية  </span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.9">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>9<span>أنظمة وأحكام الإستيراد</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.10">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>10<span>تجزئة المنافسة</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.11">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>11<span>الإستبعاد من المنافسة</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.12">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>12<span>إلغاء المنافسة</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.13">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>13<span>	التفاوض مع أصحاب العروض</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.14">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>14<span>التضامن</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.15">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>15<span>التعاقد من الباطن</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.16">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>16<span>التأهيل اللاحق </span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#2.17">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>17<span>الموافقة على الشروط  </span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+
+                                 </div>
+                              </div>
+                              <div class="col-12 main-section-content">
+                                 <a href="#3">
+                                    <div class="row">
+                                       <div class="col-6">
+                                          <strong>القسم الثالث : <span>إعداد العروض</span></strong>
+                                       </div>
+                                       <div class="col dots"></div>
+
+                                    </div>
+                                 </a>
+                                 <div class="row">
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.1">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>1<span>تأكيد المشاركة بالمنافسة</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.2">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>2<span>لغة العرض</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.3">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>3<span>العملة المعتمدة</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.4">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>4<span>صلاحية العروض</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.5">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>5<span>تكلفة إعداد العروض</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.6">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>6<span>الإخطارات والمراسلات</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.7">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>7<span>ضمان المعلومات</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.8">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>8<span>الأسئلة والاستفسارات</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.9">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>9<span>زيارة موقع الأعمال</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.10">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>10<span>وثائق العرض الفني</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.11">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>11<span>وثائق العرض المالي</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.12">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>12<span>كتابة الأسعار</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.13">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>13<span>جدول الدفعات</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.14">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>14<span>الضرائب والرسوم</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.15">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>15<span>الأحكام العامة للضمانات</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.16">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>16<span>الضمان الابتدائي</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.17">
+
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>17<span>مصادرة الضمانات</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.18">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>18<span>العروض البديلة</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#3.19">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>19<span>متطلبات التنسيق</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-12 main-section-content">
+                                 <a href="#4">
+                                    <div class="row">
+                                       <div class="col-6">
+                                          <strong>القسم الرابع : <span>تسليم العروض</span></strong>
+                                       </div>
+                                       <div class="col dots"></div>
+
+                                    </div>
+                                 </a>
+                                 <div class="row">
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#4.1">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>1<span>تقديم العروض</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#4.2">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>2<span>التسليم المتأخر</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#4.3">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>3<span>تمديد فترة تلقي العروض وتأجيل فتحه</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#4.4">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>4<span>الانسحاب</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#4.5">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>5<span>فتح العروض</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-12 main-section-content">
+                                 <a href="#5">
+                                    <div class="row">
+                                       <div class="col-6">
+                                          <strong>القسم الخامس : <span>تقييم العروض</span></strong>
+                                       </div>
+                                       <div class="col dots"></div>
+
+                                    </div>
+                                 </a>
+                                 <div class="row">
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#5.1">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>1<span>سرية تقييم العروض</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#5.2">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>2<span>معايير تقييم العروض</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#5.3">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>3<span> تصحيح العروض</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#5.4">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>4<span>فحص العروض</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#5.5">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>5<span> الإعلان عن نتائج المنافسة</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#5.6">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>6<span>فترة التوقف  </span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+
+                                 </div>
+                              </div>
+                              <div class="col-12 main-section-content">
+                                 <a href="#6">
+                                    <div class="row">
+                                       <div class="col-6">
+                                          <strong>القسم السادس : <span>متطلبات التعاقد</span></strong>
+                                       </div>
+                                       <div class="col dots"></div>
+
+                                    </div>
+                                 </a>
+                                 <div class="row">
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#6.1">
+
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>1<span>إخطار الترسية</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#6.1">
+
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>2<span>الضمان النهائي</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#6.3">
+
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>3<span>توقيع العقد</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-12 main-section-content">
+                                 <a href="#7">
+                                    <div class="row">
+                                       <div class="col-6">
+                                          <strong>القسم السابع : <span>نطاق العمل المفصل</span></strong>
+                                       </div>
+                                       <div class="col dots"></div>
+
+                                    </div>
+                                 </a>
+                                 <div class="row">
+                                    @*<div class="col-12 sub-section-content">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>63<span>التعريفات الفنية</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </div>*@
+                                    <div class="col-12 sub-section-content">
+                                       <a href="#7.1">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>1<span>نطاق عمل المشروع</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+
+                                          </div>
+                                       </a>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <div class="row">
+                                          <div class="col-6">
+                                             <strong>2<span>برنامج العمل</span></strong>
+                                          </div>
+                                          <div class="col dots"></div>
+
+                                       </div>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <div class="row">
+                                          <div class="col-6">
+                                             <strong>3<span>موقع العمل</span></strong>
+                                          </div>
+                                          <div class="col dots"></div>
+                                          @* <div class="col-1">1</div>*@
+                                       </div>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <div class="row">
+                                          <div class="col-6">
+                                             <strong>4<span>جدول الكميات</span></strong>
+                                          </div>
+                                          <div class="col dots"></div>
+                                          @* <div class="col-1">1</div>*@
+                                       </div>
+                                    </div>
+                                    @if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.Outputs) && !Model.ShowGeneralOnly)
+                                    {
+                                       <div class="col-12 sub-section-content">
+                                          <div class="row">
+                                             <div class="col-6">
+                                                <strong>5<span>المخرجات</span></strong>
+                                             </div>
+                                             <div class="col dots"></div>
+                                          </div>
+                                       </div>
+                                    }
+                                 </div>
+                              </div>
+                              <div class="col-12 main-section-content">
+                                 <a>
+                                    <div class="row">
+                                       <div class="col-6">
+                                          <strong>القسم الثامن : <span>المواصفات المطلوبة</span></strong>
+                                       </div>
+                                       <div class="col dots"></div>
+
+                                    </div>
+                                 </a>
+                                 <div class="row">
+                                    <div class="col-12 sub-section-content">
+                                       <div class="row">
+                                          <div class="col-6">
+                                             <strong>68<span>العمالة</span></strong>
+                                          </div>
+                                          <div class="col dots"></div>
+                                          @* <div class="col-1">1</div>*@
+                                       </div>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <div class="row">
+                                          <div class="col-6">
+                                             <strong>69<span>المواد</span></strong>
+                                          </div>
+                                          <div class="col dots"></div>
+
+                                       </div>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <div class="row">
+                                          <div class="col-6">
+                                             <strong>70<span>المعدات</span></strong>
+                                          </div>
+                                          <div class="col dots"></div>
+                                          @* <div class="col-1">1</div>*@
+                                       </div>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <div class="row">
+                                          <div class="col-6">
+                                             <strong>71<span>كيفية تنفيذ الأعمال والخدمات</span></strong>
+                                          </div>
+                                          <div class="col dots"></div>
+                                          @* <div class="col-1">1</div>*@
+                                       </div>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <div class="row">
+                                          <div class="col-6">
+                                             <strong>72<span>مواصفات الجودة</span></strong>
+                                          </div>
+                                          <div class="col dots"></div>
+                                          @* <div class="col-1">1</div>*@
+                                       </div>
+                                    </div>
+                                    <div class="col-12 sub-section-content">
+                                       <div class="row">
+                                          <div class="col-6">
+                                             <strong>73<span>مواصفات السلامة</span></strong>
+                                          </div>
+                                          <div class="col dots"></div>
+
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-12 main-section-content">
+                                 <a>
+                                    <div class="row">
+                                       <div class="col-6">
+                                          <strong>القسم التاسع : <span>الشروط الخاصة</span></strong>
+                                       </div>
+                                       <div class="col dots"></div>
+
+                                    </div>
+                                 </a>
+                              </div>
+                              <div class="col-12 main-section-content">
+                                 <a>
+                                    <div class="row">
+                                       <div class="col-6">
+                                          <strong>القسم العاشر : <span>الملحقات</span></strong>
+                                       </div>
+                                       <div class="col dots"></div>
+
+                                    </div>
+                                 </a>
+
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <!--االفهرس-->
+                  </div>
+                  <div class="page">
+                     <!-- القسم الأول -->
+                     <div class="row" id="1">
+                        <div class="col-12" id="1.1">
+                           <h4 class="text-success">
+                              <strong>القسم الأول : المقدمة</strong>
+                           </h4>
+                           <h5>
+                              <strong>1- تعريف عن المنافسة : </strong>
+                           </h5>
+                           <p>
+                              @Html.Raw(Model.TenderPurpose.Replace("\n", "<br/>"))
+                           </p>
+                           @*@if (Model.SupplierNeedSample.HasValue && Model.SupplierNeedSample.Value)
+                              {
+                                 <p>
+                                    عنوان تسليم العينات: @Html.Raw(Model.SamplesDeliveryAddress.Replace("\n", "<br/>"))
+                                 </p>
+
+                                 <p>
+                                    تاريخ تسليم العينات: @Html.Raw(Model.DeliveryDate)
+                                 </p>
+                              }*@
+                        </div>
+                        <div class="col-12" id="1.2">
+                           <h5>
+                              <strong>2- قيمة وثائق المنافسة :</strong>
+                           </h5>
+                        </div>
+                        <div class="col-12">
+                           @*@if (Model.TenderConditionsTemplatePriceNumbers.HasValue && Model.TenderConditionsTemplatePriceNumbers > 0)*@
+                           @if (Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.SecondStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition)
+                           {
+                              <table class="table table-striped" aria-describedby="قيمة وثائق المنافسة">
+                                 <thead class="thead-dark">
+                                    <tr>
+                                       <th id="thvalue1301" colspan="2" style="width:600px">قيمة وثائق المنافسة</th>
+
+                                       <th scope="col">اّلية الدفع</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    <tr>
+                                       <td class="text-center text-success">
+                                          <strong>
+                                             @(Model.TenderConditionsTemplatePriceNumbers.HasValue ? Model.TenderConditionsTemplatePriceNumbers.Value : 0)
+                                          </strong>
+                                       </td>
+                                       <td class="text-center text-success">
+                                          <strong>
+                                             @(!string.IsNullOrEmpty(Model.TenderConditionsTemplatePriceText) ? Model.TenderConditionsTemplatePriceText : "**********")
+                                          </strong>
+                                       </td>
+                                       <td>
+                                          نظام سداد
+                                       </td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                           }
+                           else
+                           {
+                              <span>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist</span>
+                           }
+                        </div>
+                        <div class="col-12" id="1.3">
+                           <h5>
+                              <strong>3- المواعيد المتعلقة بالمنافسة :</strong>
+                           </h5>
+                           <p>
+                              يتم اتباع كافة المواعيد المتعلقة بالمنافسة حسب الجدول أدناه. وفي حال تعطل البوابة لأسباب تقنية لمدة لا
+                              تزيد على ثلاثة أيام متصلة فيتم تمديد مدة تنفيذ الإجراءات لمدة تماثل مدة تعطل البوابة وذلك على النحو المبين تفصيلاً بالبند
+                              ثالثاً من المادة الثامنة من اللائحة التنفيذية لنظام المنافسات والمشتريات الحكومية.
+                              وإن استمر العطل التقني لمدة تزيد على ثلاثة أيام وتعذر على الجهة الحكومية أو المتنافس تنفيذ الإجراء بأي وسيلة بديلة،
+                              تعين تنفيذه بشكل ورقي، على أن ترفع الجهة ما تم عمله من إجراءات إلى البوابة فور زوال العطل.
+                           </p>
+                        </div>
+                        <div class="col-12">
+                           <table aria-describedby="المواعيد المتعلقة بالمنافسة" class="table table-striped">
+                              <thead class="thead-dark">
+                                 <tr>
+                                    <th scope="col">المرحلة </th>
+
+                                    <th scope="col">تاريخ الاستحقاق </th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 @*@if (!string.IsNullOrEmpty(Model.SendQuestionsDate))
+                                    {
+                                       <tr>
+                                          <td class="text-success">
+                                             <strong>إرسال الأسئلة والاستفسارات</strong>
+                                          </td>
+                                          <td class="text-success">
+                                             <strong>@(!string.IsNullOrEmpty(Model.SendQuestionsDate) ? Model.SendQuestionsDate : "**********")</strong>
+                                          </td>
+                                       </tr>
+                                    }*@
+                                 @if (!string.IsNullOrEmpty(Model.LastSendQuestionsDate))
+                                 {
+                                    <tr>
+                                       <td class="text-success">
+                                          <strong>اخر موعد لارسال الأسئلة والاستفسارات</strong>
+                                       </td>
+                                       <td class="text-success">
+                                          <strong>@(!string.IsNullOrEmpty(Model.LastSendQuestionsDate) ? Model.LastSendQuestionsDate : "**********")</strong>
+                                       </td>
+                                    </tr>
+                                 }
+                                 @if (!string.IsNullOrEmpty(Model.LastApplyOffersDate))
+                                 {
+                                    <tr>
+                                       <td class="text-success">
+                                          <strong>اخر تاريخ لتقديم العروض</strong>
+                                       </td>
+                                       <td class="text-success">
+                                          <strong>@(!string.IsNullOrEmpty(Model.LastApplyOffersDate) ? Model.LastApplyOffersDate : "**********")</strong>
+                                       </td>
+                                    </tr>
+                                 }
+                                 @if (!string.IsNullOrEmpty(Model.LastApplyOffersTime))
+                                 {
+                                    <tr>
+                                       <td class="text-success">
+                                          <strong>اخر موعد لتقديم العروض </strong>
+                                       </td>
+                                       <td class="text-success">
+                                          <strong>@(!string.IsNullOrEmpty(Model.LastApplyOffersTime) ? Model.LastApplyOffersTime : "**********")</strong>
+                                       </td>
+                                    </tr>
+                                 }
+                                 @if (!string.IsNullOrEmpty(Model.OpenOffersDate))
+                                 {
+                                    <tr>
+                                       <td class="text-success">
+                                          <strong>تاريخ فتح العروض</strong>
+                                       </td>
+                                       <td class="text-success">
+                                          <strong>@(!string.IsNullOrEmpty(Model.OpenOffersDate) ? Model.OpenOffersDate : "لا يوجد")</strong>
+                                       </td>
+                                    </tr>
+                                 }
+                                 @if (!string.IsNullOrEmpty(Model.OpenOffersTime))
+                                 {
+                                    <tr>
+                                       <td class="text-success">
+                                          <strong>تاريخ فتح العروض (وقت)</strong>
+                                       </td>
+                                       <td class="text-success">
+                                          <strong>@(!string.IsNullOrEmpty(Model.OpenOffersTime) ? Model.OpenOffersTime : "لا يوجد")</strong>
+                                       </td>
+                                    </tr>
+                                 }
+                                 @if (!string.IsNullOrEmpty(Model.OpenOffersLocation))
+                                 {
+                                    <tr>
+                                       <td class="text-success">
+                                          <strong>مكان فتح العروض</strong>
+                                       </td>
+                                       <td class="text-success">
+                                          <strong>@(!string.IsNullOrEmpty(Model.OpenOffersLocation) ? Model.OpenOffersLocation : "لا يوجد")</strong>
+                                       </td>
+                                    </tr>
+                                 }
+                              </tbody>
+                           </table>
+                        </div>
+                        <div class="col-12" id="1.4">
+                           <h5>
+                              <strong>4- أهلية مقدمي العروض :</strong>
+                           </h5>
+                           <p>
+                              لا تحق المشاركة في المنافسة للأشخاص المشار إليهم فيما يلي:
+                              <ol type="1" list-style>
+                                 <li>
+                                    موظفو الدولة ويستثنى من ذلك ما يلي:
+                                    <ol>
+                                       <li>الأعمال غير التجارية إذا رخص لهم بمزاولتها.</li>
+                                       <li>‌بشراء مصنفاتهم أو أي من حقوق الملكية الفكرية، سواء منهم مباشرة أو من خلال دور النشر أو غيرها.</li>
+                                       <li>تكليفهم بأعمال فنية. </li>
+                                       <li>الدخول في المزايدات العلنية، إذا كانت الأشياء المرغوب في شرائها لاستعمالهم الخاص.</li>
+                                    </ol>
+                                 </li>
+                                 <li>من تقضي الأنظمة بمنع التعامل معهم بما في ذلك من صدر بمنع التعامل معهم حكم قضائي أو قرار من جهة مخولة بذلك نظاماً، وذلك حتى تنتهي مدة المنع.</li>
+                                 <li>
+                                    المفلسون أو المتعثرون وفقاً لأحكام نظام الإفلاس، أو من ثبت إعسارهم، أو صدر أمر بوضعهم تحت الحراسة القضائية..
+                                 </li>
+                                 <li>الشركات التي جرى حلها او تصفيتها. </li>
+                                 <li>من لم يبلغ من العمر (ثمانية عشر) عاماً. </li>
+                                 <li>ناقصو الأهلية. </li>
+                              </ol>
+                           </p>
+                        </div>
+                        @if (Model.Certificates != null)
+                        {
+                           <div class="col-12" id="1.5">
+                              <h5>
+                                 <strong>5- السجلات والتراخيص النظامية :</strong>
+                              </h5>
+                              <p>
+                                 يجب أن تتوفر لدى المتنافسين وتعاقديهم من الباطن الوثائق التالية وأن تكون هذه الوثائق سارية المفعول:
+                                 <ul type=1>
+                                    @foreach (var item in Model.Certificates)
+                                    {
+                                       <li>@item.Name</li>
+                                    }
+
+                                 </ul>
+                              </p>
+                           </div>
+                        }
+
+                        <div class="col-12" id="1.6">
+                           <h5>
+                              <strong>6- ممثل الجهة  :</strong>
+                           </h5>
+                           <p>
+                              يتم التواصل مع ممثل الجهة المذكور ادناه في حال تعذر استعمال استخدام البوابة الإلكترونية
+                           </p>
+                        </div>
+                        <div class="col-12">
+                           <table aria-describedby="ممثل الجهة" class="table table-striped">
+                              <thead class="thead-dark">
+                                 <tr>
+                                    <th id="thinfo1489" colspan="2">معلومات اتصال ممثل الجهة  </th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr>
+                                    <td class="text-center text-success">الإسم</td>
+                                    <td class="text-center ">
+                                       <strong>@(!string.IsNullOrEmpty(Model.AgentName) ? Model.AgentName : "**********")</strong>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="text-center text-success">الوظيفة</td>
+                                    <td class="text-center ">
+                                       <strong>@(!string.IsNullOrEmpty(Model.AgentJob) ? Model.AgentJob : "**********") </strong>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="text-center text-success">الهاتف</td>
+                                    <td class="text-center ">
+                                       <strong>@(!string.IsNullOrEmpty(Model.AgentPhone) ? Model.AgentPhone : "**********") </strong>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="text-center text-success">الفاكس</td>
+                                    <td class="text-center ">
+                                       <strong>@(!string.IsNullOrEmpty(Model.AgentFax) ? Model.AgentFax : "**********") </strong>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="text-center text-success">البريد اللكتروني</td>
+                                    <td class="text-center ">
+                                       <strong>@(!string.IsNullOrEmpty(Model.AgentEmail) ? Model.AgentEmail : "**********") </strong>
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </div>
+
+                        <div class="col-12" id="1.7">
+                           <h5>
+                              <strong>7- مكان التسليم :</strong>
+                           </h5>
+                           <p>
+                              يتم تسليم العروض وجميع ما يتعلق بالمنافسة لممثل الجهة الحكومية في العنوان المذكور أدناه في حال تعذر تسليم العروض من خلال البوابة الإلكترونية.
+                           </p>
+                           <div class="col-12">
+                              <table aria-describedby="مكان التسليم" class="table table-striped">
+                                 <thead class="thead-dark">
+                                    <tr>
+                                       <th id="thplace1538" colspan="2">مكان تسليم العروض  </th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    <tr>
+                                       <td class="text-center text-success">العنوان</td>
+                                       <td class="text-center ">
+                                          <strong>@(!string.IsNullOrEmpty(Model.SamplesDeliveryAddress) ? Model.SamplesDeliveryAddress : "**********")</strong>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td class="text-center text-success">المبنى</td>
+                                       <td class="text-center ">
+                                          <strong>@(!string.IsNullOrEmpty(Model.BuildingName) ? Model.BuildingName : "**********") </strong>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td class="text-center text-success">الطابق</td>
+                                       <td class="text-center ">
+                                          <strong>@(!string.IsNullOrEmpty(Model.FloarNumber) ? Model.FloarNumber : "**********") </strong>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td class="text-center text-success">الغرفة /اسم الإدارة</td>
+                                       <td class="text-center ">
+                                          <strong>@(!string.IsNullOrEmpty(Model.DepartmentName) ? Model.DepartmentName : "**********") </strong>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td class="text-center text-success">وقت التسليم</td>
+                                       <td class="text-center ">
+                                          <strong>@(!string.IsNullOrEmpty(Model.DeliveryDate) ? Model.DeliveryDate : "**********") </strong>
+                                       </td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                           </div>
+                        </div>
+                        <div class="col-12" id="1.8">
+                           <h5>
+                              <strong>8- نظام المنافسة :</strong>
+                           </h5>
+                           <p>
+                              @*تخضع هذه المنافسة لنظام المنافسات والمشتريات الحكومية ولائحته التنفيذية الصادر بتاريخ  @(!string.IsNullOrEmpty(Model.RegulationsDate) ? Model.RegulationsDate : "**********")*@
+                              تخضع هذه المنافسة لنظام المنافسات والمشتريات الحكومية ولائحته التنفيذية
+                              ولائحة تفضيل المحتوى المحلي والمنشآت الصغيرة والمتوسطة والشركات المدرجة بالسوق المالية في حال إصدارها من قبل مجلس الوزراء،
+                              ولائحة تنظيم تعارض المصالح، ولائحة سلوكيات وأخلاقيات القائمين على تطبيق النظام، في حال إصدارها من قبل مجلس الوزراء.
+                           </p>
+                        </div>
+                     </div>
+                     <!-- القسم الأول -->
+                  </div>
+                  <div class="page">
+                     <!-- القسم الثاني -->
+                     <div class="row" id="2">
+
+                        <div class="col-12" id="2.1">
+                           <h4 class="text-success">
+                              <strong>القسم الثاني: الأحكام العامة </strong>
+                           </h4>
+                           <h5>
+                              <strong>1- تعريفات </strong>
+                           </h5>
+                        </div>
+                        <div class="col-12">
+                           <table aria-describedby="تعريفات المنافسه" class="table table-striped">
+                              <thead class="thead-dark">
+                                 <tr>
+                                    <th scope="col">المصطلح </th>
+
+                                    <th scope="col">التعريف</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr>
+                                    <td class="text-right text-success">
+                                       <strong>الجهة </strong>
+                                    </td>
+                                    <td class="text-right text-success">
+                                       @(!string.IsNullOrEmpty(Model.AgencyDecalration) ? Model.AgencyDecalration : "**********")
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="text-right text-success">
+                                       <strong>المتنافس </strong>
+                                    </td>
+                                    <td class="text-right text-success">مقدم العرض أو المشارك في المنافسة الراغب في تقديم العرض. </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="text-right text-success">
+                                       <strong>المنافسة </strong>
+                                    </td>
+                                    <td class="text-right text-success">
+                                       تشمل جميع إجراءات ووثائق طلب تقديم العروض من قبل الجهة ومقدمي العروض
+                                       حتى الترسية.
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="text-right text-success">
+                                       <strong>النظام </strong>
+                                    </td>
+                                    <td class="text-right text-success">نظام المنافسات والمشتريات الحكومية. </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="text-right text-success">
+                                       <strong>اللائحة </strong>
+                                    </td>
+                                    <td class="text-right text-success">اللائحة التنفيذية لنظام المنافسات والمشتريات الحكومية. </td>
+                                 </tr>
+                                 <tr>
+                                    <td class="text-right text-success">
+                                       <strong>المفردات والجمع </strong>
+                                    </td>
+                                    <td class="text-right text-success">
+                                       تدل الكلمات الواردة بصيغة المفرد على ذات المدلول بصيغة الجمع ويكون
+                                       العكس صحيحاً أيضا إذا تطلب النص ذلك.
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </div>
+                        <div class="col-12" id="2.2">
+
+                           <h5>
+                              <strong>2- المساواة والشفافية </strong>
+                           </h5>
+                           <p>
+                              على الجهة الحكومية اطلاع كافة المتنافسين على المعلومات ذات العلاقة بنطاق العمل في المشروع بما يمكنهم من تقييم الأعمال قبل الحصول على وثائق المنافسة،
+                              وتقديم الإيضاحات والبيانات اللازمة عن الأعمال والمشتريات المطلوب تنفيذها قبل ميعاد تقديم العروض بوقتٍ كافٍ وتلتزم الجهة عدم التمييز بين المتنافسين في أي مما سبق.
+                              كما سيتم إخطار كافة المتقدمين للمنافسة بأي تغيرات تطرأ على المنافسة عبر البوابة الإلكترونية أو إذا تعذر ذلك فعن طريق البريد الرسمي أو البريد الإلكتروني على النحو المبين بأحكام النظام واللائحة.
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.3">
+
+                           <h5>
+                              <strong>3- تعارض المصالح </strong>
+                           </h5>
+                           <p>
+                              يلتزم الطرف الثاني والعاملون لديه والشركات التابعة له ومقاولوه من الباطن، وكل من له علاقة مباشرة أو غير مباشرة بتنفيذ وتأمين الأعمال والمشتريات المضمنة في نطاق هذه المنافسة،
+                              بإبلاغ الطرف الأول والإفصاح كتابة عن أي حالة تعارض في المصالح أو أي مصلحة خاصة نشأت أو ستنشأ أو قد تنشأ عن أي تعامل يكون مرتبطاً بأنشطة الطرف الأول.
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.4">
+
+                           <h5>
+                              <strong>4- السلوكيات والأخلاقيات </strong>
+                           </h5>
+                           <p>
+                              يحظر على الطرف الثاني والعاملين لديه والشركات التابعة له ومقاوليه من الباطن، وكل من له علاقة مباشرة أو غير مباشرة بتنفيذ وتأمين الأعمال والخدمات  التي  تتضمنها هذه المنافسة،
+                              مخالفة الأحكام الواردة في لائحة تنظيم سلوكيات وأخلاقيات القائمين على تطبيق نظام المنافسات والمشتريات الحكومية وبقواعد السلوك المهني وقواعد أخلاقيات المهنة وغيرها من القواعد التي نصت عليها الأنظمة المعمول بها أو المفروضة عليهم بموجب عضويتهم في أي منظمة مهنية
+                              أو هيئة ذات علاقة وفي كل الأحوال يلتزم بعدم الحصول أو محاولة الحصول على ميزة غير مستحقة بأي طريقة كانت أو تقديم أي هدية أو أي منفعة سواءً مادية أو معنوية للحصول على معاملة تفضيلية من موظفي الطرف الأول في كافة مراحل تنفيذ هذا العقد.
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.5">
+
+                           <h5>
+                              <strong>5- السرية </strong>
+                           </h5>
+                           <p>
+                              يلتزم المتنافسين بعدم إفشاء أي بيانات أو رسومات أو وثائق أو معلومات تتعلق بالمنافسة سواءً كانت تحريرية أو
+                              شفوية أو استغلالها أو الإفصاح عنها. ويسري ذلك على كل ما بحوزته أو ما يكون قد اطلع عليه في العرض من أسرار
+                              وتعاملات أو شؤون تخص الجهة الحكومية.
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.6">
+
+                           <h5>
+                              <strong>6- الإعلان  </strong>
+                           </h5>
+                           <p>
+                              لا يجوز للمتنافسين نشر أي معلومة عن المنافسة وكل ما يتعلق بها عبر كافة وسائل الإعلام إلا بعد أخذ موافقة كتابية من الجهة الحكومية مسبقاً.
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.7">
+
+                           <h5>
+                              <strong>7- ملكية وثائق المنافسة </strong>
+                           </h5>
+                           <p>
+                              <strong>أولا</strong>: تعود ملكية وثائق المنافسة وجميع نسخها للجهة الحكومية ويجب على المتنافسين إتلاف تلك الوثائق وجميع نسخها عند طلب الجهة الحكومية ذلك. والجهة الحكومية غير ملزمة بإعادة وثائق العروض.
+                           </p>
+                           <p>
+
+                              <strong>ثانيا</strong>: حقوق الطبع والنشر لأي وثائق ومواد مقدمة من الجهة الحكومية ضمن هذه المنافسة مملوكة للجهة، وعلى ذلك لا يجوز نسخ هذه الوثائق والمواد، كليًا أو جزئيًا، أو إعادة إنتاجها أو توزيعها
+                              أو إتاحتها لأي طرف ثالث أو استخدامها دون الحصول على موافقة كتابية مسبقة من الجهة الحكومية. وتجب إعادة جميع الوثائق التي قدمتها الجهة الحكومية فيما يتعلق بطلب تقديم العروض عند الطلب،
+                              دون الاحتفاظ بأي نسخ من قبل مقدم العرض أو أي شخص آخر.
+                           </p>
+
+
+                        </div>
+                        <div class="col-12" id="2.8">
+
+                           <h5>
+                              <strong>8- حقوق الملكية الفكرية </strong>
+                           </h5>
+                           <p>
+                              تعود حقوق الملكية الفكرية لجميع الوثائق والمواد والتقارير المقدمة من المتنافسين ضمن هذه المنافسة للجهة،
+                              كما يحق للجهة استعمالها بما تراه مناسباً لتحقيق المصلحة العامة.
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.9">
+                           <h5>
+                              <strong>9- أنظمة وأحكام الإستيراد </strong>
+                           </h5>
+                           <p>
+                              يقر المتنافسون بأن أنظمة وأحكام الاستيراد والجمارك في المملكة العربية السعودية هي التي يتم تطبيقها على توريد وشحن أي منتجات أو أجزاء من أو إلى المملكة.
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.10">
+                           <h5>
+                              <strong>10- تجزئة المنافسة   </strong>
+                           </h5>
+                           <p>
+                              @(!string.IsNullOrEmpty(Model.TenderFragmentation) ? Model.TenderFragmentation : "**********")
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.11">
+                           <h5>
+                              <strong>11- الإستبعاد من المنافسة</strong>
+                           </h5>
+                           <p>
+                              حق للجهة استبعاد أي عرض اجتاز التقييم الفني بسبب تدني أسعاره بنسبة (25%) خمسة وعشرين بالمائة فأكثر عن التكلفة التقديرية والأسعار السائدة في السوق
+                              وذلك بعد أن تقوم لجنة فحص العروض بمراجعة الأسعار التقديرية ومناقشة صاحب العرض المنخفض وعدم اقتناعها بمقدرته
+                              على تنفيذ العقد بعد الطلب منه كتابياً تقديم تفاصيل للعناصر المكونة لعرضه وشرح أسباب انخفاضها.
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.12">
+                           <h5>
+                              <strong>12- إلغاء المنافسة </strong>
+                           </h5>
+                           <p>
+                              <strong>أولاً</strong>: للجهة الحق في إلغاء المنافسة قبل الترسية في الحالات الأتية:
+
+                              <ol>
+                                 <li>  وجود أخطاء جوهرية في وثائق المنافسة.</li>
+                                 <li> مخالفة إجراءات المنافسة لأحكام النظام واللائحة.</li>
+                                 <li> إذا اقتضت المصلحة العامة إلغاء المنافسة.</li>
+                                 <li>ارتكاب أي من المخالفات الواردة في الفقرة (3) من المادة (الحادية والخمسين) من النظام، وذلك لمن لا علاقة لهم بتلك المخالفات من المتنافسين.</li>
+                                 <li>إذا لم تتمكن الجهة الحكومية من تخفيض أسعار العروض التي تتخطى أسعار السوق السائدة بشكل ظاهر أو تتجاوز المبالغ المعتمدة من خلال التفاوض.</li>
+                                 <li>ارتفاع أسعار العروض عن المبالغ المعتمدة.</li>
+
+                              </ol>
+
+                           </p>
+                           <p>
+                              <strong>ثانياً</strong>: تعاد قيمة وثائق المنافسة إلى أصحاب العروض إذا تم إلغاء المنافسة، في الحالات التالية
+                              <ol>
+                                 <li>وجود أخطاء جوهرية في وثائق المنافسة.</li>
+                                 <li>مخالفة إجراءات المنافسة لأحكام النظام أو اللائحة.</li>
+                                 <li>إذا اقتضت المصلحة العامة الغاء المنافسة.</li>
+                                 <li> ارتكاب أي من المخالفات، الواردة في الفقرة (3) من المادة (الحادية والخمسين) من النظام، وذلك لمن لا علاقة له بتلك المخالفات المتنافسين.</li>
+                                 <li>ارتفاع أسعار العروض عن المبالغ المعتمدة.</li>
+                              </ol>
+
+
+                           </p>
+                           <p>
+                              ولا تعاد قيمة وثائق المنافسة إذا كان الإلغاء بعد فتح المظاريف إلا لمن تقدم بعرضه للمنافسة.
+                              <br />
+                              وفي حال تم تمديد تلقي العروض للمرة الثانية، وأبدى المشتري عدم رغبته في الاستمرار في المنافسة تعاد له قيمة وثائق المنافسة.
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.13">
+                           <h5>
+                              <strong>13-التفاوض مع أصحاب العروض </strong>
+                           </h5>
+                           <p>
+                              <strong>أولاً</strong>: يحق للجهة التفاوض في حال ارتفاع أسعار العروض عن الأسعار السائدة في السوق بشكل ظاهر مع مراعاة ما يلي
+                              <ol>
+                                 <li>يحدد السعر المناسب بما يتفق مع الأسعار السائدة في السوق.</li>
+                                 <li>تتم الكتابة لصاحب العرض الفائز، بطلب تخفيض عرضه للسعر المحدد. وفي حال رفضه فإنه يتم الانتقال للعرض الذي يليه في الترتيب وهكذا.</li>
+                                 <li>تتم الترسية على صاحب العرض الذي يصل بسعره إلى المبلغ المحدد أو المطلوب.</li>
+                                 <li>إذا لم يتم الوصول إلى السعر المحدد من قبل لجنة فحص العروض، يكون إلغاء المنافسة بتوصية من لجنة فحص العروض إلى صاحب الصلاحية بالإلغاء؛ والذي يتوجب عليه في تلك الحالة إلغاءها.</li>
+                              </ol>
+
+                           </p>   <p>
+                              <strong>ثانياً</strong>: يحق للجهة التفاوض في حال ارتفاع أسعار العروض عن المبالغ المعتمدة باتباع المرحلتين التاليين
+                              <ol>
+                                 <li>يتم التفاوض بتخفيض الأسعار وفقاً لما ورد في الفقرة الأولى من هذه المادة.</li>
+                                 <li>في حال عدم قبول المتنافسين تخفيض أسعارهم يتم إلغاء أو تخفيض بعض البنود، بشرط ألا يؤثر ذلك على مراكز المتنافسين، وعلى الانتفاع من المشروع، وفي حال عدم الوصول للسعر المناسب، تلغى المنافسة.</li>
+                              </ol>
+
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.14">
+                           <h5>
+                              <strong>14- التضامن   </strong>
+                           </h5>
+                           <p>
+                              يحق للمتنافسين التضامن لتنفيذ مشروع واحد أو عدة مشاريع مع مراعاة الشروط التالية:
+                              <ol>
+                                 <li>أن يتم التضامن قبل تقديم العرض، وبموجب اتفاقية تضامن مبرمة بين أطراف التضامن، ومصدقة من الغرفة التجارية أو من الجهات المخولة بالتوثيق. ويجب أن تسلم هذه الوثيقة مع العرض.</li>
+                                 <li>أن يحدد في الاتفاقية قائد التضامن كممثل قانوني أمام الجهة الحكومية لاستكمال إجراءات التعاقد وتوقيع العقد، ولأغراض المراسلات والمخاطبات.</li>
+                                 <li>أن يوضح في الاتفاقية الأعمال التي سيقوم بها كل طرف من أطراف التضامن.</li>
+                                 <li>أن تنص الاتفاقية على التزام ومسؤولية المتضامنين مجتمعين أو منفردين عن تنفيذ كافة الأعمال المطروحة في المنافسة.</li>
+                                 <li>أن يُختم العرض وجميع وثائقه ومستنداته من جميع أطراف التضامن.</li>
+                                 <li>أن تقدم اتفاقية التضامن مع العرض وجميع وثائقه ومستنداته.</li>
+                                 <li>ألا يتقدم أي طرف من أطراف التضامن للمنافسة بعرض منفرد أو التضامن مع منافس آخر.</li>
+                                 <li>
+                                    ألا يتم تعديل اتفاقية التضامن بعد تقديمها إلا بعد الحصول على موافقة الجهة الحكومية.
+                                 </li>
+                                 <li>مراعاة أحكام نظام تصنيف المقاولين، في حال كان التضامن بين مقاولين.</li>
+                              </ol>
+
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.15">
+                           <h5>
+                              <strong>15- التعاقد من الباطن   </strong>
+                           </h5>
+                           <p>
+                              مع مراعاة ما ورد في المادة (الحادية والسبعين) من النظام، يشترط في التعاقد من الباطن ما يلي:
+                              <ol>
+                                 <li>الحصول على موافقة الجهة الحكومية المسبقة قبل التعاقد.</li>
+                                 <li>أن تشتمل العقود المبرمة مع المتعاقدين من الباطن على الكميات والأعمال الموكلة لهم وأسعار التعاقد معهم وفقاً لمتطلبات وشروط ومواصفات المشروع.</li>
+                                 <li>أن يكون المتعاقد من الباطن مرخصاً في الأعمال المتعاقد على تنفيذها، ومصنفاً في المجال وبالدرجة المطلوبة إذا كانت الأعمال مما يشترط لها التصنيف، وأن يكون لديه المؤهلات والقدرات الكافية لتنفيذ تلك الأعمال.</li>
+                                 <li>ألّا تزيد نسبة الأعمال والمشتريات المسندة إلى المتعاقد من الباطن على (30%) من قيمة العقد.</li>
+                                 <li>أن يكون المتعاقد الرئيس مسؤولاً أمام الجهة الحكومية عن الأعمال المتعاقد على تنفيذها من الباطن وفقاً للشروط والمواصفات الموضحة في العقد.</li>
+                                 <li>عدم جواز قيام المتعاقد من الباطن بالتعاقد مع أي متعاقد آخر من الباطن لتنفيذ الأعمال المتعاقد معه على تنفيذها.</li>
+                                 <li>أن يقدم المتعاقد الرئيس إقراراً منه يسمح للجهة الحكومية أن تتولى صرف مستحقات متعاقدي الباطن عن الأجزاء التي قاموا بتنفيذها من المشروع من مستحقاته لدى الجهة، وذلك في حال تأخره أو عدم قيامه بذلك</li>
+                              </ol>
+
+                           </p>
+                        </div>
+                        <div class="col-12" id="2.16">
+                           <h5>
+                              <strong>16- التأهيل اللاحق  </strong>
+                           </h5>
+                           <p>
+                              <strong>أولاً</strong>: 	يجب على الجهة الحكومية إجراء تأهيل لاحق لصاحب العرض الفائز في الحالات التي لا يتم فيها إجراء تأهيل مسبق.
+                           </p>
+                           <p>
+                              <strong>ثانياً</strong>: 	مع مراعاة ما ورد في المادة (العشرين) من النظام، والمادة (السادسة عشرة) من هذه اللائحة، على الجهة الحكومية إجراء تأهيل لاحق لصاحب العرض الفائز في المنافسة الذي سبق تأهيله تأهيلاً مسبقاً، متى كانت المدة بين إجراء التأهيل المسبق والترسية تزيد على (سنة)؛ وذلك للتأكد من استمرار مؤهلاته.
+                           </p>
+                           <p>
+                              <strong>ثالثاً</strong>: عند عدم اجتياز صاحب العرض الفائز لمرحلة التأهيل اللاحق فيتم الانتقال لصاحب العرض الذي يليه في الترتيب وهكذا، وتلغى المنافسة إذا لم يجتزه جميع المتنافسين.
+                           </p>
+                           <p>
+                              <strong>رابعاً</strong>: يجب على الجهة الحكومية في حال إجرائها تأهيل لاحق لصاحب العرض الفائز أن استخدامها تطبق ذات المعايير والشروط والآلية المنصوص عليها في وثائق التأهيل التي يعدها مركز تحقيق كفاءة الإنفاق والمطبقة في مرحلة التأهيل المسبق. عدم الالتزام بالتعاقد.
+                              لا يجوز تفسير طلب تقديم العروض والاشتراك في هذه المنافسة وتقديم العروض بأي شكل من الأشكال على أنه التزام تعاقدي أو قانوني من طرف الجهة الحكومية طالبة العروض.
+                           </p>
+
+
+                        </div>
+                        <div class="col-12" id="2.17">
+                           <h5>
+                              <strong>17- الموافقة على الشروط   </strong>
+                           </h5>
+                           <p>
+                              يعتبر المتنافس موافقاً لكافة شروط ومواصفات وأحكام المنافسة من خلال مشاركته في عملية تقديم العروض. ويستبعد العرض المخالف لذلك إلا في الحالات التي تكون المخالفة شكلية وغير مؤثرة.
+                           </p>
+                        </div>
+                     </div>
+                     <!-- القسم الثاني -->
+                  </div>
+                  <div class="page">
+                     <!-- القسم الثالث -->
+                     @*<a href="#3">
+                           <div class="row">
+                              <div class="col-6">
+                                 <strong>القسم الثالث : <span>إعدادا العروض</span></strong>
+                              </div>
+                              <div class="col dots"></div>
+
+                           </div>
+                        </a>*@
+                     <div class="row" id="3">
+
+                        <div class="col-12" id="3.2">
+                           <h4 class="text-success">
+                              <strong>القسم الثالث : <span>إعداد العروض</span></strong>
+                           </h4>
+                           <h5>
+                              <strong>1- تأكيد المشاركة بالمنافسة </strong>
+                           </h5>
+                           @if (!string.IsNullOrEmpty(Model.ConfirimJoiningTheTender))
+                           {
+                              <p>
+                                 @Model.ConfirimJoiningTheTender
+                              </p>
+                           }
+                           <p>
+                              على المتنافسين الراغبين في المشاركة في هذه المنافسة إخطار الجهة الحكومية لتأكيد عدم وجود أي تعارض في المصالح ونيتهم بتسليم العرض في المواعيد المحددة.
+                           </p>
+                        </div>
+                        <div class="col-12" id="3.2">
+                           <h5>
+                              <strong>2- لغة العرض </strong>
+                           </h5>
+                           <p>
+                              يجب أن تقدم العروض باللغة العربية مع إمكانية تقديم بعض الوثائق أو جزء من العرض باللغة الإنجليزية، أو تقديم
+                              الوثائق الداعمة للعرض بإحدى اللغات الأجنبية عند الحاجة مع تقديم ترجمة لتلك الوثائق. مع العلم بأنه في حال وجد
+                              تعارض بين النص العربي والنص الإنجليزي للعروض فإنه يؤخذ بالنص الوارد باللغة العربية.
+                           </p>
+                        </div>
+                        <div class="col-12" id="3.3">
+                           <h5>
+                              <strong>3- العملة المعتمدة </strong>
+                           </h5>
+                           <p>
+                              تعتبر العملة السعودية (الريال السعودي) العملة المعتمدة بكافة التعاملات المتعلقة بالمنافسة ما لم ينص في
+                              الشروط الخاصة على عملة أخرى. ويتم الصرف طبقاً للأنظمة واللوائح المالية المتبعة في نظام المنافسات والمشتريات
+                              الحكومية.
+                           </p>
+                        </div>
+                        <div class="col-12" id="3.4">
+                           <h5>
+                              <strong>4- صلاحية العروض </strong>
+                           </h5>
+                           <p>
+                              يجب أن تكون مدة سريان العروض في هذه المنافسة (90) تسعون يومًا من التاريخ المحدد لتسليم العروض.
+                           </p>
+                        </div>
+                        <div class="col-12" id="3.5">
+                           <h5>
+                              <strong>5- كلفة إعداد العروض </strong>
+                           </h5>
+                           <p>
+                              يتحمل المتنافسين جميع التكاليف المرتبطة بالمنافسة، ولا تتحمل الجهة الحكومية أي مسؤولية لتغطية تكاليف
+                              المتنافسين في إعداد العروض، والتي تتضمن تلك التكاليف التي يتكبدها المتنافسين للقيام بالعناية الواجبة،
+                              والتكاليف المتعلقة بتقديم أي معلومات إضافية للجهة، بالإضافة إلى التكاليف المرتبطة بأي مفاوضات مع الجهة
+                              الحكومية. كما يجب على المتنافسين إمداد الجهة الحكومية بأي توضيحات مطلوبة طوال مدة المنافسة، دون إلزام الجهة
+                              الحكومية بتغطية التكاليف المرتبطة بذلك.
+                           </p>
+                        </div>
+                        <div class="col-12" id="3.6">
+                           <h5>
+                              <strong>6- الإخطارات والمراسلات </strong>
+                           </h5>
+                           <p>
+                              تعد البوابة الإلكترونية هي الوسيلة المعتمدة لكافة الإخطارات والمراسلات المتعلقة بالمنافسة، وفي حال تعذر ذلك
+                              فيتم التواصل مع ممثل الجهة الحكومية المذكور في المقدمة أعلاه.
+                           </p>
+                        </div>
+                        <div class="col-12" id="3.7">
+                           <h5>
+                              <strong>7- ضمان المعلومات </strong>
+                           </h5>
+                           <p>
+                              تعتبر كافة المعلومات المقدمة في هذه الكراسة إرشادية فقط، ويقع على عاتق مقدم العرض وحده مسؤولية القيام بأي
+                              إجراءات لازمة للتحقق من دقة المعلومات المقدمة أو المستلمة فيما يتعلق بالمنافسة أو غير ذلك. كما يجب على
+                              المتنافسين أن يكونوا على دراية بجميع الأنظمة واللوائح والقرارات ذات العلاقة بنطاق عمل المنافسة وأخذها بعين
+                              الاعتبار عند تحديد الأسعار.
+                           </p>
+                        </div>
+                        <div class="col-12" id="3.8">
+                           <h5>
+                              <strong>8- الأسئلة والاستفسارات </strong>
+                           </h5>
+                           <p>
+                              يمكن للمتنافسين في حال وجود أي استفسارات عن المنافسة، أن يرسلوا استفساراتهم عن طريق البوابة الإلكترونية خلال
+                              @Model.MaxTimeToSendQuestions أيام من تاريخ طرح المنافسة. وتلتزم الجهة الحكومية بالرد
+                              على استفسارات المتنافسين عن طريق البوابة الإلكترونية خلال مدة لا تتجاوز @Model.MaxTimeToAnswerQuestions أيام من ذلك التاريخ، وفي حال تعذر ذلك فعلى الجهة الحكومية الرد عن طريق البريد الرسمي (@Model.AlternativeEmailForCommuncation)
+                              . كما تلتزم الجهة الحكومية بجمع كافة الاستفسارات المقدمة من
+                              المتنافسين والإجابة عليها ومشاركتها مع جميع المتنافسين عن طريق البوابة الإلكترونية أو عن طريق تنظيم ورشة عمل
+                              لمناقشة كافة الاستفسارات المقدمة والإجابة عليها.
+                           </p>
+                        </div>
+                        <div class="col-12" id="3.9">
+                           <h5>
+                              <strong>9- حصول المتنافسين على كافة المعلومات الضرورية وزيارة موقع الأعمال </strong>
+                           </h5>
+                           <p>
+                              على صاحب العرض المتقدم لتنفيذ الأعمال والمشتريات أن يتحرى قبل تقديم عرضه، عن طبيعة الأعمال المتقدم لها،
+                              والظروف المصاحبة للتنفيذ، ومعرفة بياناتها وتفصيلاتها على وجه الدقة، وما يمكن أن يؤثر في فئات عرضه ومخاطر
+                              التزاماته، وعليه بشكل عام أن يسعى للحصول على كافة المعلومات الضرورية واللازمة لتنفيذ عطائه
+                              وأن يقوم بفحص موقع الأعمال ومعاينته وكذلك الأماكن المحيطة به.
+                           </p>
+                        </div>
+                        @*@if (!Model.HideTechnicalDocumentSections)
+                           {*@
+                        <div class="col-12" id="3.10">
+                           <h5>
+                              <strong>10- وثائق العرض الفني </strong>
+                           </h5>
+                           <p>
+                              يشمل العرض الفني المتطلبات التالية:
+                              <ol>
+                                 @{
+                                    if (!string.IsNullOrEmpty(Model.TechnicalOfferDocuments))
+                                    {
+                                       var items = Model.TechnicalOfferDocuments.Split('#');
+                                       foreach (var item in items)
+                                       {
+                                          if (!string.IsNullOrEmpty(item))
+                                          {
+                                             <li>@item</li>
+                                          }
+                                       }
+                                    }
+                                 }
+                              </ol>
+                           </p>
+                        </div>
+                        @*}*@
+                        @if (Model.TenderTypeId != (int)Enums.TenderType.Competition &&
+Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender &&
+Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding)
+                        {
+                           <div class="col-12" id="3.11">
+                              <h5>
+                                 <strong>11- وثائق العرض المالي </strong>
+                              </h5>
+                              <p>
+                                 يشمل العرض المالي المتطلبات التالية:
+                                 <ol>
+                                    @{
+                                       if (!string.IsNullOrEmpty(Model.FinancialOfferDocuments))
+                                       {
+                                          var FinancialOfferDocuments = Model.FinancialOfferDocuments.Split('#');
+                                          foreach (var item in FinancialOfferDocuments)
+                                          {
+                                             if (!string.IsNullOrEmpty(item))
+                                             {
+                                                <li>@item</li>
+                                             }
+                                          }
+                                       }
+                                    }
+                                 </ol>
+                              </p>
+                           </div>
+                        }
+                        <div class="col-12" id="3.12">
+                           <h5>
+                              <strong>12- كتابة الأسعار </strong>
+                           </h5>
+                           <ol type="1">
+                              <li>
+                                 يجب على المتنافس تقديم سعره وفقاً للشروط والمواصفات، وجداول الكميات المعتمدة وألا يقوم بإجراء أي تعديل أو إبداء
+                                 أي تحفظ عليها، كما يجب ألا يقوم بشطب أي بند من بنود المنافسة أو مواصفاتها، حيث أنه سيتم استبعاد العرض
+                                 المخالف لذلك.
+                              </li>
+                              <li>
+                                 تدوين أسعار العرض الإفرادية والإجمالية في جداول الكميات رقماً وكتابة بالعملة المحلية، ما لم ينص على تقديمها بعملة أخرى.
+                              </li>
+                              <li>
+                                 لا يجوز لمقدم العرض التعديل أو المحو أو الطمس على قائمة الأسعار، ويجب إعادة تدوين أي تصحيح يجريه صاحب العرض عليها رقماً وكتابة والتوقيع عليه وختمه.
+                              </li>
+                              <li>
+                                 يجوز استبعاد العرض إذا بلغت فئات الأسعار التي جرى عليها التعديل أو المحو أو الطمس أكثر من (10%) من قائمة الأسعار، أو من القيمة الإجمالية للعرض
+                              </li>
+                              @if (string.IsNullOrEmpty(Model.WritePrice))
+                              {
+                                 <li>@Model.WritePrice</li>
+                              }
+                           </ol>
+                        </div>
+
+                        <div class="col-12" id="3.13">
+                           <h5>
+                              <strong>13- جدول الدفعات </strong>
+                           </h5>
+                           <p>
+                              يقدم المتنافس جدولاً للدفعات يحدد فيه قيمة الدفعات المطلوبة ونسبتها من قيمة العرض ومرحلة استحقاقها.
+                              ويجوز للجهة الحكومية مراجعة جدول الدفعات وتعديله وفق ما تراه متوافقا مع جدول المشروع.
+                           </p>
+                        </div>
+                        <div class="col-12" id="3.14">
+                           <h5>
+                              <strong>14- الضرائب والرسوم </strong>
+                           </h5>
+                           <p>
+                              يجب أن تشمل جميع الأسعار المقدمة من قبل المتنافس كافة التكاليف من ضرائب ورسوم وغيرها من المصاريف، ولا تتحمل
+                              الجهة الحكومية أي مصاريف إضافية لم يتم ذكرها في عرض الأسعار.
+                           </p>
+                        </div>
+                        <div class="col-12" id="3.15">
+                           <h5>
+                              <strong>15- الأحكام العامة للضمانات </strong>
+                           </h5>
+                           <p>
+                              يجب على المتنافس عند تقديم الضمانات مراعاة الشروط التالية:
+                              <ol>
+                                 <li>
+                                    يجوز أن يقدم الضمان من بنوك عدة، على أن يلتزم بموجبه كل بنك بأداء نسبة محددة من قيمة الضمان تكون محددة
+                                    في خطاب الضمان المقدم من كل بنك بما يتساوى في قيمه المجتمعة بالضمان المطلوب كحدٍ أدنى.
+                                 </li>
+                                 <li>
+                                    إذا قُدمَ الضمان من بنك أجنبي بوساطة أحد البنوك المحلية، يجب على البنك المحلي الالتزام بشروط وقواعد
+                                    الضمانات البنكية المحددة في النظام واللائحة.
+                                 </li>
+                                 <li>
+                                    يكون الضمان واجب ومستحق الدفع عند أول طلب من جانب الجهة الحكومية، دون حاجة إلى حكم قضائي أو قرار من هيئة
+                                    تحكيم.
+                                 </li>
+                                 <li>
+                                    يجب أن يكون الضمان غير مشروط، وغير قابل للإلغاء، وتكون قيمته خالية من أية حسومات تتعلق بالضرائب، أو
+                                    الرسوم، أو النفقات الأخرى.
+                                 </li>
+                                 <li>
+                                    يجوز استبدال الضمانات البنكية من بنك لآخر، على ألا يفرج عن الضمان إلا بعد الحصول على الضمان البديل.
+                                 </li>
+                                 <li>
+                                    يتم التقيد بنماذج وصيغ الضمانات البنكية المعتمدة من وزارة المالية.
+                                 </li>
+                              </ol>
+                           </p>
+                        </div>
+                        <div class="col-12" id="3.16">
+                           <h5>
+                              <strong>16- الضمان الابتدائي </strong>
+                           </h5>
+                           <p>
+                              <strong><u>أولا : </u></strong> على المتنافس تقديم الضمان الابتدائي بقيمة @Model.InitialGuaranteePercentage % من القيمة الإجمالية للعرض مع مراعاة الأحكام العامة للضمانات أعلاه ووفقاً للشروط التالية:
+                              <ol>
+                                 <li>
+                                    لن يتم قبول العرض الذي يقدم بدون ضمان ابتدائي أو يقدم معه ضمان ابتدائي ناقص اذا كانت لا تتجاوز فيه نسبة
+                                    النقص (10%) عشرة بالمئة من قيمة الضمان المطلوب، على ان يستكمل مقدم الضمان الناقص النقص في الضمان قبل
+                                    التوصية بالترسية في مدة تحددها لجنة فحص العروض، وإلا يعد منسحباً ولا يعاد إليه الضمان الابتدائي.
+                                 </li>
+                                 <li>
+                                    يكون الضمان الابتدائي ساري المفعول مدة لا تقل عن (90) تسعين يوماً من التاريخ المحدد لفتح المظاريف، ويجوز
+                                    للجهة الحكومية أن تطلب تمديد مدة الضمان الناقص إذا كان النقص في المدة لا يتجاوز عشرة أيام، وعلى مقدم
+                                    الضمان الناقص المدة استكمال النقص في الضمان قبل التوصية بالترسية في مدة تحددها لجنة فحص العروض، وإلا يعد
+                                    منسحباً ولا يعاد إليه الضمان الابتدائي، ولا يعد اليوم واليومين نقصاً في مدة الضمان.
+                                 </li>
+                                 <li>
+                                    يجب على من رست عليه الجهة الأعمال تمديد الضمان الابتدائي في حال انتهاء مدة سريانه قبل تقديم الضمان
+                                    النهائي.
+                                 </li>
+                                 <li>
+                                    ترد الضمانات الابتدائية إلى أصحاب العروض بعد البت في الترسية، وكذلك في حال إلغاء المنافسة، أو بعد انتهاء
+                                    الوقت المحدد لسريان العروض، ما لم يبد صاحب العرض رغبته في الاستمرار في الارتباط بعرضه وفقا لأحكام النظام وهذه اللائحة.
+                                 </li>
+                                 <li>
+                                    يجوز للجهة بناءً على تقديرها أو بطلب من أصحاب العروض بالإفراج عن ضماناتهم الابتدائية قبل البت في الترسية،
+                                    إذا تبين بعد فتح المظاريف وانكشاف الأسعار أن أسعار تلك العروض مرتفعة، أو مخالفة للشروط والمواصفات، بما
+                                    يحول دون الترسية على أي منها.
+                                 </li>
+                                 <li>
+                                    ‌في حال تقديم العرض في ملفين إلكترونيين، يقدم الضمان الابتدائي في ملف العرض المالي.
+                                 </li>
+                              </ol>
+                           </p>
+                           <p>
+                              <strong><u>ثانيا : </u></strong>ويستثنى من تقديم الضمان الابتدائي وفقاً للحالات التالية :
+                              <ol>
+                                 <li>  الشراء المباشر</li>
+                                 <li>
+                                    المسابقة
+                                 </li>
+                                 <li>
+                                    ‌تعاقدات الجهات الحكومية فيما بينها، بشرط أن تنفذ الأعمال وتؤمن المشتريات بنفسها
+                                 </li>
+                                 <li>
+                                    التعاقد مع مؤسسة أو جمعية أهلية أو كيان غير هادف إلى الربح، بشرط أن تتولى بنفسها القيام بما تم التعاقد عليه
+                                 </li>
+                                 <li>
+                                    التعاقد مع المنشآت الصغيرة والمتوسطة المحلية
+                                 </li>
+                              </ol>
+                           </p>
+                        </div>
+                        <div class="col-12" id="3.17">
+                           <h5>
+                              <strong>17- مصادرة الضمانات </strong>
+                           </h5>
+                           <p>
+                              <strong>أولاً</strong> على الجهة الحكومية عند توافر أسباب مصادرة الضمان البنكي، العرض على لجنة فحص العروض أو لجنة فحص عروض الشراء المباشر بحسب الحال؛
+                              لدراسة الحالة وتقديم توصية مسببة إلى صاحب الصلاحية في الترسية،مع الأخذ في الاعتبار الآثار المترتبة على المصادرة ومدة سريان الضمان.
+                              ويجوز للجهة طلب تمديد الضمان مدة معقولة إذا كانت إجراءات اتخاذ قرار المصادرة تتطلب ذلك.
+                           </p>
+                           <p>
+                              <strong>ثانياً</strong> : لا يجوز مصادرة الضمان إلّا للأسباب التي تم تقديم الضمان لأجلها، ويكون طلب المصادرة مقتصراً على الضمان الخاص بالعملية التي أخل المتعاقد فيها بالتزاماته،
+                              ولا يمتد إلى مصادرة الضمانات الخاصة بالعمليات الأخرى سواء كانت لدى جهة واحدة أو عدة جهات
+                           </p>
+                           <p>
+                              <strong>ثالثاً</strong> : عند مصادرة الضمان الابتدائي في المنافسات المجزأة، تقتصر المصادرة على جزء من قيمة الضمان منسوبة إلى قيمة الأعمال
+                              التي تمت ترسيتها على المتعاقد
+                           </p>
+                           <p>
+                              <strong>رابعاً</strong> : إذا قررت الجهة الحكومية مصادرة الضمان، فتطلب مصادرته من البنك مصدر الضمان مباشرة وباستخدام عبارة "مصادرة الضمان" بشكل صريح،
+                              وعلى البنك الاستجابة لطلب المصادرة فوراً.
+                           </p>
+                        </div>
+                        @if (Model.HasAlternativeOffer)
+                        {
+                           <div class="col-12" id="3.18">
+                              <h5>
+                                 <strong>18- العروض البديلة</strong>
+                              </h5>
+                              <p>
+                                 الجهة الحكومية تتيح تقديم العروض البديلة مقبولة في المنافسة.
+                              </p>
+                           </div>
+                        }
+
+                        <div class="col-12" id="3.19">
+                           <h5>
+                              <strong>19- متطلبات التنسيق</strong>
+                           </h5>
+                           <p>
+                              @Html.Raw(Model.DocumentStyle.Replace("\n", "<br/>"))
+                           </p>
+                        </div>
+                     </div>
+                     <!-- القسم الثالث -->
+                  </div>
+                  <div class="page">
+                     <!-- القسم الرابع -->
+                     <div class="row" id="4">
+                        <div class="col-12" id="4.1">
+                           <h4 class="text-success">
+                              <strong>القسم الرابع : تسليم العروض </strong>
+                           </h4>
+                           <h5>
+                              <strong>1- تقديم العروض </strong>
+                           </h5>
+                           <p>
+                              يقوم المتنافس بتقديم عرضه في الموعد المحدد من خلال البوابة الإلكترونية. وفي حال تعطل البوابة الالكترونية
+                              لمدة تزيد عن ثلاثة أيام فيجوز تقديم العروض بشكل ورقي لممثل الجهة في المكان المحدد. يتم تقديم العروض على
+                              النحو الآتي:
+                              <ol>
+                                 @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles)
+                                 {
+                                    <li>
+                                       تقدم العروض بواسطة مظروفين
+                                    </li>
+                                 }
+                                 else
+                                 {
+                                    <li>
+                                       تقدم العروض بواسطة مظروف واحد
+                                    </li>
+                                 }
+                                 <li>
+                                    أن يكون مكتوباً على النماذج المختومة المستلمة عبر البوابة في ملفين مشفرين أو مختومين لكل من العرض
+                                    الفني والمالي.
+                                 </li>
+                                 <li>
+                                    ‌ 	يقدم العرض -وكافة مرفقاته التي تتطلب ذلك- مختوماً بختم مقدمه.
+                                 </li>
+                                 <li>
+                                    تقدم مع العرض صورة من الوثائق المشار إليها في المادة (الثالثة عشرة) من اللائحة.
+                                 </li>
+                                 <li>
+                                    ‌في حال تعذر تقديم العروض من خلال البوابة الإلكترونية لأسباب فنية، يتم تقديمها في مظاريف مختومة بواسطة البريد الرسمي، أو تسليمها للجهة الحكومية في المكان المحدد لاستقبال العروض،
+                                    مع أخذ إيصال يبين فيه تاريخ وساعة التسليم، وعلى الجهة رفع العروض التي تقدم ورقياً على البوابة لحفظها في سجلاتها، وذلك بعد فتحها من قبل لجنة فتح.
+                                 </li>
+                                 <li>
+                                    في حال تعذر تقديم العروض من خلال البوابة الإلكترونية لأسباب فنية، يتم تقديمها في مظاريف مختومة بواسطة
+                                    البريد الرسمي، أو تسليمها للجهة الحكومية في المكان المحدد لاستقبال العروض، مع أخذ إيصال يبين فيه تاريخ
+                                    وساعة التسليم.
+                                 </li>
+                                 <li>
+                                    ‌  تعلن أسماء المتنافسين الذين تقدموا بعروضهم في البوابة، وذلك بعد انتهاء موعد تقديم العروض وفتحها،
+                                    فإذا تعذر إعلانها في البوابة، تعلن في الموقع الإلكتروني الجهة الحكومية.
+                                 </li>
+                              </ol>
+                           </p>
+                        </div>
+                        <div class="col-12" id="4.2">
+                           <h5>
+                              <strong>2- التسليم المتأخر </strong>
+                           </h5>
+                           <p>
+                              لا يعتد بكافة العروض التي يتم تسليمها بعد انتهاء المدة المحددة لتقديم العروض.
+                           </p>
+                        </div>
+                        <div class="col-12" id="4.3">
+                           <h5>
+                              <strong>3- تمديد فترة تلقي العروض وتأجيل فتحها </strong>
+                           </h5>
+                           <p>
+                              <strong>أولاً</strong>: إذا لم تتمكن الجهة الحكومية من البت في الترسية خلال مدة سريان العروض، تعد محضرًا توضح فيه أسباب ومبررات التأخير في البت بالترسية، وتُشعر أصحاب العروض برغبتها في تمديد سريان عروضهم لمدة لا تزيد عن (تسعين) يوم أخرى.
+                           </p>  <p>
+                              <strong>ثانياً</strong>: على من يوافق من أصحاب العروض على التمديد، أن يمدد ضماناته وأن يبلغ الجهة الحكومية بذلك خلال (أسبوعين) من تاريخ الإشعار بطلب التمديد. ومن لم يتقدم خلال هذه المدة، عُد غير موافق على تمديد عرضه، ويعاد له ضمانه الابتدائي في هذه الحالة.
+                           </p>  <p>
+                              <strong>ثالثاً</strong>: إذا مضت المدد المشار إليها في هذه المادة، لا يجوز للجهة الحكومية تمديد سريان العروض إلّا بعد موافقة الوزارة بناءً على أسباب مبررة، وإلّا تلغَ المنافسة.
+
+                           </p>
+                        </div>
+                        <div class="col-12" id="4.4">
+                           <h5>
+                              <strong>4- الانسحاب </strong>
+                           </h5>
+                           <p>
+                              يجوز لصاحب العرض أن يسحب عرضه قبل انتهاء المدة المحددة لتلقي العروض، وعلى الجهة الحكومية أن ترد له ضمانه الابتدائي. أما إذا قرر الانسحاب بعد انتهاء المدة المحددة لتلقي العروض،
+                              فيصادر الضمان الابتدائي. وإذا كان صاحب العرض من المنشآت الصغيرة والمتوسطة، يتوجب عليه عند الانسحاب دفع غرامة مالية للجهة الحكومية تساوي قيمة الضمان الابتدائي وذلك إذا قام بسحب عرضه قبل انتهاء مدة سريان العروض.
+                              وفي حال مرور (60) ستين يوماً من تاريخ سحب عرضه دون أن يدفع الغرامة المالية المقررة، يعاقب بمنعه من التعامل مع الجهات الحكومية لمدة سنة من تاريخ استحقاق الغرامة.
+                           </p>
+                        </div>
+                        <div class="col-12" id="4.5">
+                           <h5>
+                              <strong>5- فتح العروض </strong>
+                           </h5>
+                           <p>
+                              مع مراعاة الأحكام الواردة في المادة (الرابعة والأربعين) من النظام، تلتزم لجنة فتح العروض بالآتي:
+                           </p>
+                           <p>
+                              <strong>أولاً</strong>: أن تفتح العروض في الساعة واليوم المحددين لذلك، ويجب أن يكون فتح العروض في موعد انتهاء مدة تلقي العروض، وفي العروض التي تتضمن ملفين إلكترونيين، تفتح اللجنة الملف الفني فقط بحضور من يرغب من أصحاب العروض.
+                           </p>
+                           <p>
+                              <strong>ثانياً</strong>: في حال تقديم العرض في ملفين إلكترونيين، تحال العروض الفنية بعد فتحها، والعروض المالية قبل فتحها، ومحضر اللجنة إلى لجنة فحص العروض.
+                           </p>
+                           <p>
+                              <strong>ثالثاً</strong>: إذا لم تتمكن لجنة فتح العروض من القيام بعملها لأسباب مبررة، يؤجل موعد فتح العروض المدة اللازمة والضرورية، ويحدد له موعد آخر يُبلغ به المتقدمون للمنافسة. ولا يجوز في هذه الحالة قبول عروض جديدة أثناء فترة التأجيل.
+                           </p>
+                           <p> <strong>رابعاً</strong>: تعلن لجنة فتح العروض اسم مقدم العرض، وسعره الإجمالي وما ورد عليه من زيادة أو تخفيض في خطاب العرض الأصلي، وما إذا كان قد قدم ضماناً ابتدائياً وقيمته، وما إذا كان قد قدم الوثائق المطلوبة. وفي العروض التي تكون في ملفين إلكترونيين، تعلن اللجنة عن اسم مقدم العرض فقط.</p>
+                           <p><strong>خامساً</strong>: لا يجوز للجنة فتح العروض أن تستبعد أي عرض أو أن تطلب من أصحاب العروض تصحيح الأخطاء أو تلافي الملاحظات الواردة في عروضهم، كما لا يجوز لها استلام أي عروض أو مظاريف أو خطابات أو عينات يقدمها لها أصحاب العروض أثناء جلسة فتح العروض.</p>
+
+                        </div>
+                     </div>
+                     <!-- القسم الرابع -->
+                  </div>
+                  <div class="page">
+                     <!-- القسم الخامس-->
+                     <div class="row" id="5">
+                        <div class="col-12" id="5.1">
+                           <h4 class="text-success">
+                              <strong>القسم الخامس : تقييم العروض </strong>
+                           </h4>
+                           <h5>
+                              <strong>1- سرية تقييم العروض </strong>
+                           </h5>
+                           <p>
+                              تلتزم الجهة الحكومية بعدم إفشاء أي بيانات أو رسومات أو وثائق أو معلومات تتعلق بتقييم العروض المستلمة، سواءً
+                              كان تحريرياً أو شفوياً، أو استغلالها أو الإفصاح عنها إلى أي شخص كان، ويسري ذلك على كل ما بحوزتها أو ما يكون
+                              قد اطلع عليه في العروض من أسرار وتعاملات وصفقات أو شؤون تخص المتنافسين.
+                           </p>
+                        </div>
+                        <div class="col-12" id="5.2">
+                           <h5>
+                              <strong>2- معايير تقييم العروض</strong>
+                           </h5>
+                           <p>
+                              يجب على الجهة الحكومية الالتزام بإعداد المعايير عند إعداد الكراسة ووثائق المنافسة وفقاً للضوابط المشار إليها في الفقرة (1) من هذه المادة، لاسيما في معايير تقييم العروض.
+                              @*يتم تقييم العروض وفقاً لمعايير ونسب تقييم العروض المحددة في الملحق  @(!string.IsNullOrEmpty(Model.RegulationsDate) ? Model.RegulationsDate : "**********")*@
+                           </p>
+                        </div>
+                        <div class="col-12" id="5.3">
+                           <h5>
+                              <strong>3- تصحيح العروض</strong>
+                           </h5>
+                           <p>
+                              <strong>أولاً</strong>: على لجنة فحص العروض مراجعة جداول الكميات والأسعار الواردة في العرض -سواء في مفرداتها أو مجموعها- وإجراء التصحيحات الحسابية اللازمة في العرض.
+                           </p>
+
+                           <p>
+                              <strong>ثانياً</strong>: إذا وجد اختلاف بين السعر المبين كتابة والسعر المبين بالأرقام، يؤخذ بالسعر المبين كتابة. وإذا وجد اختلاف بين سعر الوحدة وسعر مجموعها، فيؤخذ بسعر الوحدة.
+                           </p>
+
+                           <p>
+                              <strong>ثالثاً</strong>: إذا وجدت دلائل تؤكد عدم صحة السعر وفقاً لأسلوب التصحيح الوارد في الفقرة (2) من هذه المادة، فيحق للجنة فحص العروض -بعد التأكد من التوازن المالي لأسعار البنود ومقارنة السعر مع أمثاله في العرض والعروض الأخرى وسعر السوق والأسعار التقديرية- الأخذ بالسعر الوارد في العرض الذي يثبت لها صحته، ويستبعد المتنافس عند رفضه لهذا السعر.
+                           </p>
+
+                           <p>
+                              <strong>رابعاً</strong>: يجوز للجنة فحص العروض التوصية باستبعاد العرض إذا تجاوزت الأخطاء الحسابية في الأسعار بعد تصحيحها وفقاً لأحكام هذه المادة أكثر من (10%) من قائمة الأسعار أو إجمالي قيمة العرض زيادةً أو نقصاً.
+                           </p>
+
+                        </div>
+                        <div class="col-12" id="5.4">
+                           <h5>
+                              <strong>4- فحص العروض</strong>
+                           </h5>
+
+                           @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles)
+                           {
+                              <p>
+                                 تلتزم لجنة فحص العروض، عند تحليل العروض بمعايير التأهيل ومعايير التقييم وشروط المنافسة، مع الأخذ بعين الاعتبار ما يلي:
+                              </p>
+                              <p>
+                                 <strong>أولاً</strong>: تفتح لجنة فحص العروض ملف الأسعار التقديرية، كما تقوم بفتح العروض المالية للعروض الفنية المقبولة في الموعد المحدد لذلك بعد إشعار أصحاب العروض الفنية المقبولة بذلك، وتعلن الأسعار للحاضرين من أصحاب العروض.
+                              </p>
+                              <p>
+                                 <strong>ثانياً</strong>: إذا لم يقدم صاحب العرض أياً من الشهادات المطلوبة المشار اليها في المادة(الثالثة عشرة) من هذه اللائحة، أو كانت الشهادات المقدمة منتهية الصلاحية، فيمنح صاحب العرض مدة تحددها لجنة فحص العروض على ألا تزيد على(عشرة) أيام عمل لاستكمال تلك الشهادات فإن لم يقدمها في الوقت المحدد يستبعد من المنافسة ويصادر الضمان الابتدائي.
+                              </p>
+                              <p> <strong>ثالثاً</strong>: إذا أغفل المتنافس وضع أسعار لبعض البنود جاز للجنة فحص العروض استبعاد عرضه أو اعتبار البنود غير المسعرة محملة على القيمة الإجمالية للعرض. ويعتبر المتنافس موافقاً على هذا الشرط عند تقديمه للعرض.</p>
+                              <p>
+                                 <strong>رابعاً</strong>: في عقود التوريد يعتبر المتنافس كأن لم يقدم عرضاً بالنسبة إلى الأصناف غير المسعرة، ويستبعد عرضه إذا لم تجز شروط المنافسة التجزئة.
+                              </p>
+                              <p>
+                                 <strong>خامساً</strong>: في حال عدم تنفيذ المتعاقد للبنود المحملة على إجمالي قيمة العرض يتم تنفيذها على حسابه، أو يحسم ما يقابل تكلفتها؛ وذلك بحسب متوسط سعر البند لدى المتقدمين للمنافسة، أو السعر الذي تقدره لجنة فحص العروض في حال العرض الواحد أو عدم تسعير البنود المغفلة من المتنافسين.
+                              </p>
+                              <p>
+                                 <strong>سادساً</strong>: إذا عدلت الجهة الحكومية عن تنفيذ أي بند من البنود المحملة على إجمالي قيمة العرض يُحسم ما يقابل تكلفتها بحسب متوسط سعر البند لدى المتقدمين للمنافسة، أو السعر الذي تقدره لجنة فحص العروض في حال العرض الواحد أو عدم تسعير البنود المغفلة من المتنافسين.
+                              </p>
+                              <p>
+                                 <strong>سابعاً</strong>: إذا تساوى عرضان أو أكثر في التقييم الكلي، فتتم الترسية على أقل العروض سعراً فإذا تساوت في ذلك، فتقوم الجهة الحكومية بتجزئة المنافسة بين العروض المتساوية، متى كانت شروط ومواصفات المنافسة تسمح بذلك، وإذا لم ينص على التجزئة، فتكون الأولوية في الترسية للمنشآت الصغيرة والمتوسطة المحلية، وتجرى منافسة مغلقة بين العروض المتساوية في حال تعذر ذلك.
+                              </p>
+                              @*<p></p>*@
+
+                           }
+                           else
+                           {
+                              <p>
+                                 تلتزم لجنة فحص العروض، عند تحليل العروض بمعايير التأهيل ومعايير التقييم وشروط المنافسة، مع الأخذ بعين الاعتبار ما يلي:
+                              </p>
+                              <p> <strong>أولاً</strong>: إذا لم يقدم صاحب العرض أياً من الشهادات المطلوبة المشار اليها في المادة(الثالثة عشرة) من هذه اللائحة، أو كانت الشهادات المقدمة منتهية الصلاحية، فيمنح صاحب العرض مدة تحددها لجنة فحص العروض على ألا تزيد على(عشرة) أيام عمل لاستكمال تلك الشهادات فإن لم يقدمها في الوقت المحدد يستبعد من المنافسة ويصادر الضمان الابتدائي.</p>
+                              <p>  <strong>ثانياً</strong>: إذا أغفل المتنافس وضع أسعار لبعض البنود جاز للجنة فحص العروض استبعاد عرضه أو اعتبار البنود غير المسعرة محملة على القيمة الإجمالية للعرض.ويعتبر المتنافس موافقاً على هذا الشرط عند تقديمه للعرض.</p>
+                              <p> <strong>ثالثاً</strong>: في عقود التوريد يعتبر المتنافس كأن لم يقدم عرضاً بالنسبة إلى الأصناف غير المسعرة، ويستبعد عرضه إذا لم تجز شروط المنافسة التجزئة.</p>
+                              <p>  <strong>رابعاً</strong>: في حال عدم تنفيذ المتعاقد للبنود المحملة على إجمالي قيمة العرض يتم تنفيذها على حسابه، أو يحسم ما يقابل تكلفتها؛ وذلك بحسب متوسط سعر البند لدى المتقدمين للمنافسة، أو السعر الذي تقدره لجنة فحص العروض في حال العرض الواحد أو عدم تسعير البنود المغفلة من المتنافسين.</p>
+                              <p> <strong>خامساً</strong>: إذا عدلت الجهة الحكومية عن تنفيذ أي بند من البنود المحملة على إجمالي قيمة العرض يُحسم ما يقابل تكلفتها بحسب متوسط سعر البند لدى المتقدمين للمنافسة، أو السعر الذي تقدره لجنة فحص العروض في حال العرض الواحد أو عدم تسعير البنود المغفلة من المتنافسين.</p>
+                              <p> <strong>سادساً</strong>: إذا تساوى عرضان أو أكثر في التقييم الكلي، فتتم الترسية على أقل العروض سعراً فإذا تساوت في ذلك، فتقوم الجهة الحكومية بتجزئة المنافسة بين العروض المتساوية، متى كانت شروط ومواصفات المنافسة تسمح بذلك، وإذا لم ينص على التجزئة، فتكون الأولوية في الترسية للمنشآت الصغيرة والمتوسطة المحلية، وتجرى منافسة مغلقة بين العروض المتساوية في حال تعذر ذلك.</p>
+
+                           }
+                        </div>
+                        <div class="col-12" id="5.5">
+                           <h5>
+                              <strong>5-الإعلان عن نتائج المنافسة  </strong>
+                           </h5>
+                           <p>
+                              تستثنى من الإعلان والنشر مشتريات الأسلحة والذخائر والمعدات العسكرية ولوازمها وتلك المتعلقة بالأمن الوطني.
+                           </p>
+                           <p>
+
+                              <strong>أولاً</strong>: تعلن الجهة الحكومية عن العرض الفائز في المنافسة في البوابة وتبلغ صاحبه بذلك، ويتضمن الإعلان المعلومات الآتية بحد أدنى:
+                              <ol>
+                                 <li>صاحب العرض الفائز</li>
+                                 <li> معلومات عن المشروع</li>
+                                 <li>القيمة الإجمالية للمشروع</li>
+                                 <li>مدة تنفيذ العقد ومكانه</li>
+                              </ol>
+                           </p>
+                           <p>
+                              <strong>ثانياً</strong>: يُبلغ المتنافسون الآخرون بنتائج المنافسة، وأسباب استبعادهم بما في ذلك الدرجات الفنية لعروضهم.
+                           </p>
+                           <p>
+                              <strong>ثالثاً</strong>: تنشر البوابة نتائج وبيانات المنافسات والمشتريات التي تزيد قيمتها على (مئة ألف) ريال، وذلك خلال (ثلاثين) يوماً من التعاقد بحد أقصى، على أن تنشر معلومات كل عقدٍ على حدة، وأن تشمل تلك المعلومات ما يلي:
+                              <ol>
+                                 <li>اسم المتعاقد وعنوانه ونوع العقد</li>
+                                 <li>مدة العقد وقيمته ومكان تنفيذ</li>
+                                 <li> تاريخ تسليم الموقع، وتاريخ استلام الأعمال</li>
+                              </ol>
+
+                           </p>
+
+
+
+                        </div>
+
+                        <div class="col-12" id="5.6">
+                           <h5>
+                              <strong>6- فترة التوقف</strong>
+                           </h5>
+                           <p>
+                              يجب على الجهة الحكومية الالتزام بفترة توقف بعد إخطار المتنافسين بنتائج المنافسة، وذلك وفقاً للضوابط الآتية:
+                           </p>
+                           <p>  <strong>أولاً</strong>: يجب ألّا تقل فترة التوقف عن (خمسة) أيام عمل ولا تزيد عن (عشرة) أيام عمل من تاريخ إعلان نتائج المنافسة، وتلتزم الجهة بالإعلان عنها في البوابة الإلكترونية.</p>
+                           <p><strong>ثانياً</strong>: في حال تعذر الإعلان في البوابة أو موقع الوزارة لأسباب فنية، يبلغ المتنافسين بذلك عبر البريد الإلكتروني.</p>
+                           <p><strong>ثالثاً</strong>: مع مراعاة ما ورد في المادة (السابعة والثمانين) من النظام، تستقبل الجهة الحكومية التظلمات على قرار الترسية أو أي إجراء من إجراءاتها من خلال البوابة.</p>
+                           <p><strong>رابعاً</strong>: لا يجوز للجهة الحكومية أن تقبل أي تظلم بعد انتهاء فترة التوقف.</p>
+                           <p><strong>خامساً</strong>: لا يعد قرار الترسية نافذاً حتى تنتهي فترة التوقف، ويتم البت في التظلمات إن وجدت.</p>
+
+                        </div>
+                     </div>
+                     <!-- القسم الخامس-->
+                  </div>
+                  <div class="page">
+                     <!-- القسم السادس-->
+                     <div class="row" id="6">
+
+                        <div class="col-12" id="6.1">
+                           <h4 class="text-success">
+                              <strong>القسم السادس: متطلبات التعاقد </strong>
+                           </h4>
+                           <h5>
+                              <strong>1- إخطار الترسية </strong>
+                           </h5>
+                           <p>
+                              تقوم الجهة بإرسال خطاب الترسية للمتنافس / المتنافسين الفائزين عن طريق البوابة الإلكترونية، ويتضمن الخطاب نطاق العمل، القيمة والبنود المتفق عليها، تاريخ بداية المشروع، وأي تجهيزات لازمة لتوقيع العقد وبدء الأعمال.
+                           </p>
+                        </div>
+                        <div class="col-12" id="6.2">
+
+                           <h5>
+                              <strong>2- الضمان النهائي </strong>
+                           </h5>
+                           <p>
+                              <strong>أولاً</strong> مع مراعاة ما ورد في الفقرة (1) من المادة (الحادية والستين) من النظام، يجوز للجهة الحكومية رفع نسبة الضمان النهائي بما يتجاوز (5%) من قيمة العقد إذا رأت أن من مصلحة المشروع الأخذ بذلك؛ شريطة أخذ موافقة الوزارة المسبقة على ذلك قبل طرح الأعمال، وأن ينص على نسبة الضمان النهائي تلك في وثائق المنافسة.
+                           </p>
+                           <p>
+                              <strong>ثانياً</strong> : إذا كان صاحب العرض من المنشآت الصغيرة والمتوسطة يتوجب عليه دفع غرامة مالية إلى
+                              الجهة الحكومية تساوي قيمة الضمان الابتدائي، إذا لم يقدم الضمان النهائي في حال تمت الترسية عليه. وفي حال مرور
+                              (60) ستين يوماً من تاريخ انتهاء مهلة تقديم الضمان النهائي دون أن يقوم بدفع الغرامة المالية المقررة، يعاقب
+                              بمنعه من التعامل مع الجهات الحكومية لمدة سنة.
+                           </p>
+                           <p>
+                              <strong>ثالثاً</strong> : لا يلتزم المتعاقد بتقديم الضمان النهائي في حال قام بتوريد جميع الأصناف التي رسا
+                              عليه توريدها، وقبلتها الجهة الحكومية نهائياً خلال المدة المحددة لإيداع الضمان النهائي، أو قام بتوريد جزء
+                              منها وقبل هذا الجزء وكان ثمنه يكفي لتغطية قيمة الضمان النهائي، على ألا يصرف ما يغطي قيمة الضمان إلا بعد
+                              تنفيذ المتعاقد التزاماته. كما لا يلتزم المتعاقد بتقديم الضمان النهائي إذا تم تكليف المتعاقد بأعمال إضافية.
+                           </p>
+                           <p>
+                              <strong>رابعاً</strong>: يجب على الجهة الاحتفاظ بالضمان النهائي إلى أن يفي المتعاقد معه بالتزاماته ويستلم المشروع استلاماً نهائياً، وفقاً لأحكام العقد وشروطه.
+                           </p>
+                        </div>
+                        <div class="col-12" id="6.3">
+                           <h5>
+                              <strong>3- توقيع العقد </strong>
+                           </h5>
+                           <p>
+                              بعد أن يقدم صاحب العرض الفائز بالترسية الضمان النهائي، تحدد الجهة موعداً لتوقيع العقد. فإن تأخر المتعاقد عن
+                              الموعد المحدد دون عذر مقبول، يتم انذاره بذلك، فإذا لم يحضر لتوقيع العقد خلال (@Model.AllowedOfferSiningDays) يوماً
+                              . من تاريخ إخطاره بالإنذار، يتم إلغاء التعاقد ومصادرة الضمان
+                              النهائي وذلك دون إخلال بحق الجهة الحكومية في الرجوع على المتعاقد معه بالتعويض عما لحق بها من ضرر. يتم تزويد
+                              لجنة النظر في الشكاوى والمخالفات بنسخة من القرار لتقييم منع التعامل مع المتعاقد مع الجهة الحكومية مستقبلاً.
+                           </p>
+                        </div>
+                     </div>
+                     <!-- القسم السادس-->
+                  </div>
+                  <div class="page">
+                     <!-- القسم السابع -->
+                     <div class="row" id="7">
+                        <div class="col-12" id="7.1">
+                           <h4 class="text-success">
+                              <strong>القسم السابع: نطاق العمل المفصل </strong>
+                           </h4>
+                        </div>
+
+                        @if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.ProjectWorkScope))
+                        {
+                           <div class="col-12" id="7.1">
+
+                              <h5>
+                                 <strong>1- نطاق عمل المشروع </strong>
+                              </h5>
+                              <p>
+                                 @if (!string.IsNullOrEmpty(Model.ProjectsScope))
+                                 {
+                                    @Html.Raw(Model.ProjectsScope.Replace("\n", "<br/>"))
+                                 }
+                              </p>
+                           </div>
+                        }
+                        @if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.WorkProgram))
+                        {
+                           <div class="col-12" id="7.2">
+
+                              <h5>
+                                 <strong>2- برنامج العمل </strong>
+                              </h5>
+                              <p>
+                                 @if (!string.IsNullOrEmpty(Model.WorksProgram))
+                                 {
+                                    @Html.Raw(Model.WorksProgram.Replace("\n", "<br/>"))
+                                 }
+                              </p>
+                           </div>
+                        }
+                        @if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.WorkLocation))
+                        {
+                           <div class="col-12" id="7.3">
+                              <h5>
+                                 <strong>3- موقع العمل </strong>
+                              </h5>
+                              <p>
+                                 @if (!string.IsNullOrEmpty(Model.WorkLocationDetails))
+                                 {
+                                    @Html.Raw(Model.WorkLocationDetails.Replace("\n", "<br/>"))
+                                 }
+                              </p>
+                              @if (Model.TemplateIds.Count == 1 && Model.TemplateIds.FirstOrDefault() == (int)Enums.ConditionsTemplateCategory.GeneralSuppliesSupply)
+                              {
+                                 <p>
+                                    <ol type="1" list-style>
+                                       <li>يلتزم المورد بتوصيل الأصناف إلى موقع التسليم على نفقته الخاصة، وعلى المورد أن يعطي إشعاراً مسبقاً بالتسليم للمشتري.</li>
+
+                                       <li>يعمل المورد على تفريغ الأصناف فور وصولها لمكان التسليم.</li>
+                                       <li>
+                                          يجوز للجهة أن توجه المورد نحو تغيير تاريخ التسليم أو وضعه أو مكانه. وعلى المورد أن يرسل إشعاراً مكتوباً بأسباب عدم التزامه بهذه التوجيهات، وإذا كان الإلزام بهذه التوجيهات- عدا التزامات المورد القطعية- يتسبب في تحمل المورد لتكلفة أعلى أو أقل مما على المورد أن يتحمله في حالة عدم وجود هذه التوجيهات، تقوم الجهة بتقييم فارق التكلفة وتضيفها أو تخصمها من المبلغ المتعاقد عليه.
+                                       </li>
+
+                                    </ol>
+                                 </p>
+
+                              }
+                           </div>
+                        }
+                        <div class="col-12" id="7.4">
+                           <h5>
+                              <strong>4- جدول الكميات </strong>
+                           </h5>
+                           @*<p>
+                                 إن الكميات المذكورة في قائمة الكميات هي الكميات التقديرية للأعمال، وتجرى المحاسبة على أساس الكميات الفعلية
+                                 التي يتم تنفيذها.
+                              </p>*@
+                           @if (Model != null && Model.QuantityTables.Count > 0)
+                           {
+                              foreach (var item in Model.QuantityTables)
+                              {
+                                 if (item != null)
+                                 {
+                                    @Html.Raw(item)
+                                 }
+                              }
+                           }
+                           @*@if (Model != null && Model.DescriptionQuantityTables.Count > 0)
+                              {
+                                 <h5>
+                                    <strong>جداول المواصفات </strong>
+                                 </h5>
+                                 foreach (var item in Model.DescriptionQuantityTables)
+                                 {
+                                    if (item != null)
+                                    {
+                                       @Html.Raw(item)
+                                    }
+                                 }
+                              }*@
+
+                        </div>
+                        @if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.Outputs) && !Model.ShowGeneralOnly)
+                        {
+                           <div class="col-12" id="7.5">
+                              <h5>
+                                 <strong>5- المخرجات </strong>
+                              </h5>
+                              <p>
+                                 في هذه المادة يتم تحديد المخرجات المطلوبة من المتعاقد حسب ما ذكر في نطاق العمل وذكر التفاصيل اللازمة. وفيما
+                                 يلي، مثال على ذلك:
+                              </p>
+                              <table aria-describedby="مخرجات المنافسه" class="table table-striped">
+                                 <thead class="thead-dark">
+                                    <tr>
+                                       <th scope="col">الرقم </th>
+
+                                       <th scope="col">المرحلة</th>
+                                       <th scope="col">إسم المخرج</th>
+                                       <th scope="col">الوصف</th>
+                                       <th scope="col">موعد التسليم</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    @{
+                                       if (Model.TenderConditionsTemplateOutputs != null)
+                                       {
+                                          int i = 0;
+                                          foreach (var item in Model.TenderConditionsTemplateOutputs)
+                                          {
+                                             <tr>
+                                                <td class="text-right text-success">
+                                                   <strong>@(++i) </strong>
+                                                </td>
+                                                <td class="text-right text-success">@item.OutputStage</td>
+                                                <td class="text-right text-success">@item.OutputName</td>
+                                                <td class="text-right text-success">@item.OutputDescriptions</td>
+                                                <td class="text-right text-success">@item.OutputDeliveryTime</td>
+                                             </tr>
+                                          }
+                                       }
+                                    }
+                                 </tbody>
+                              </table>
+                           </div>
+                        }
+                     </div>
+                     <!-- القسم السابع -->
+                  </div>
+                  <div class="page">
+                     <!-- القسم الثامن -->
+                     <div class="row" id="8">
+                        <div class="col-12" id="8.1">
+                           <h4 class="text-success"><strong>القسم الثامن: المواصفات المطلوبة </strong></h4>
+                           <h5>
+                              <strong>1- العمالة </strong>
+                           </h5>
+                           <strong>أولاً: الشروط الخاصة بالعمالة </strong>
+                           <p>
+                              @if (!string.IsNullOrEmpty(Model.WorkforceSpecifications) && Model.TemplateIds.Count == 1 && Model.TemplateIds.FirstOrDefault() != (int)Enums.ConditionsTemplateCategory.GeneralSuppliesSupply)
+                              {
+                                 @Html.Raw(Model.WorkforceSpecifications.Replace("\n", "<br/>"))
+                              }
+                              else
+                              {
+                                 @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist;
+                              }
+                           </p>
+                           <br>
+
+                           @if (Model != null && Model.DescriptionQuantityTables.ContainsKey((int)Enums.FormCategoryEnum.Workforce) && Model.DescriptionQuantityTables[(int)Enums.FormCategoryEnum.Workforce].Count > 0)
+                           {
+                              <h5>
+                                 <strong>جداول المواصفات </strong>
+                              </h5>
+                              foreach (var item in Model.DescriptionQuantityTables[(int)Enums.FormCategoryEnum.Workforce])
+                              {
+                                 if (item != null)
+                                 {
+                                    @Html.Raw(item)
+                                 }
+                              }
+                           }
+                        </div>
+                        <div class="col-12" id="8.2">
+                           <h5>
+                              <strong>2- المواد</strong>
+                           </h5>
+                           <p>
+                              <strong>أولاً: الشروط الخاصة بالمواد </strong>
+                           </p>
+                           <p>
+                              تخضع المواد المستخدمة في تنفيذ الأعمال للمواصفات والمقاييس المعمول بها في المملكة العربية السعودية.
+                           </p>
+                           <p>
+                              @if (!string.IsNullOrEmpty(Model.MaterialsSpecifications))
+                              {
+                                 @Html.Raw(Model.MaterialsSpecifications.Replace("\n", "<br/>"))
+                              }
+                              else
+                              {
+                                 @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist;
+                              }
+                           </p>
+                           @if (Model != null && Model.DescriptionQuantityTables.ContainsKey((int)Enums.FormCategoryEnum.Material) && Model.DescriptionQuantityTables[(int)Enums.FormCategoryEnum.Material].Count > 0)
+                           {
+                              <h5>
+                                 <strong>جداول المواصفات </strong>
+                              </h5>
+                              foreach (var item in Model.DescriptionQuantityTables[(int)Enums.FormCategoryEnum.Material])
+                              {
+                                 if (item != null)
+                                 {
+                                    @Html.Raw(item)
+                                 }
+                              }
+                           }
+                        </div>
+                        <div class="col-12" id="8.3">
+                           @if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.Equipments))
+                           {
+                              <h5>
+                                 <strong>3- المعدات</strong>
+                              </h5>
+                              <p>
+                                 <strong>أولاً: الشروط الخاصة بالمعدات </strong>
+                              </p>
+                              <p>
+                                 تخضع المعدات المستخدمة في تنفيذ الأعمال للمواصفات والمقاييس المعمول بها في المملكة العربية السعودية.
+                              </p>
+                              <p>
+                                 @if (!string.IsNullOrEmpty(Model.EquipmentsSpecifications))
+                                 {
+                                    @Html.Raw(Model.EquipmentsSpecifications.Replace("\n", "<br/>"))
+                                 }
+                              </p>
+                              @if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.EquipmentAdvanced) && !Model.ShowGeneralOnly)
+                              {
+                                 <ol>
+                                    <li>
+                                       <strong>البيانات الرئيسية للمواصفات</strong>
+                                       <br />
+                                       <p>
+                                          @if (!string.IsNullOrEmpty(Model.BasicInformation))
+                                          {
+                                             @Html.Raw(Model.BasicInformation.Replace("\n", "<br/>"))
+                                          }
+                                       </p>
+                                    </li>
+                                    <li>
+                                       <strong>المستندات الواجب تقديمها قبل التوريد</strong>
+
+                                       <br />
+                                       <p>
+                                          @if (!string.IsNullOrEmpty(Model.RequiredDcoumentationBefore))
+                                          {
+                                             @Html.Raw(Model.RequiredDcoumentationBefore.Replace("\n", "<br/>"))
+                                          }
+                                       </p>
+                                    </li>
+                                    <li>
+                                       <strong>الإختبارات</strong>
+
+                                       <br />
+                                       <p>
+                                          @if (!string.IsNullOrEmpty(Model.Tests))
+                                          {
+                                             @Html.Raw(Model.Tests.Replace("\n", "<br/>"))
+                                          }
+                                       </p>
+                                    </li>
+                                    <li>
+                                       <strong>التركيب والبدء في التشغيل</strong>
+                                       <br />
+                                       <p>
+                                          @if (!string.IsNullOrEmpty(Model.IntilizationAndStartWork))
+                                          {
+                                             @Html.Raw(Model.IntilizationAndStartWork.Replace("\n", "<br/>"))
+                                          }
+                                       </p>
+                                    </li>
+                                    <li>
+                                       <strong>المستندات الواجب تقديمها عند تسليم المعدات</strong>
+
+                                       <br />
+                                       <p>
+                                          @if (!string.IsNullOrEmpty(Model.RequiredDcoumentationAfter))
+                                          {
+                                             @Html.Raw(Model.RequiredDcoumentationAfter.Replace("\n", "<br/>"))
+                                          }
+                                       </p>
+                                    </li>
+                                    <li>
+                                       <strong>التدريب</strong>
+                                       <br />
+                                       <p>
+                                          @if (!string.IsNullOrEmpty(Model.Trainging))
+                                          {
+                                             @Html.Raw(Model.Trainging.Replace("\n", "<br/>"))
+                                          }
+                                       </p>
+                                    </li>
+                                    <li>
+                                       <strong>الضمان</strong>
+                                       <br />
+                                       <p>
+                                          @if (!string.IsNullOrEmpty(Model.Guarantee))
+                                          {
+                                             @Html.Raw(Model.Guarantee.Replace("\n", "<br/>"))
+                                          }
+                                       </p>
+                                    </li>
+                                    <li>
+                                       <strong>الصيانة</strong>
+                                       <br />
+                                       <p>
+                                          @if (!string.IsNullOrEmpty(Model.Maintanance))
+                                          {
+                                             @Html.Raw(Model.Maintanance.Replace("\n", "<br/>"))
+                                          }
+                                       </p>
+                                    </li>
+                                 </ol>
+                                 <p>
+                                    يقوم المتعاقد بفحص جميع المعدات والتوصية باعتمادها في حال كونها مطابقة من جميع النواحي للمواصفات والمقاييس
+                                    العالمية كما يجب عليه فحص جميع شهادات اختبار هذه المعدات التي أجريت في المصنع ومراقبة وتصديق اختباراتها في
+                                    الموقع أو مكان الصنع وفي جميع الحالات التي تنص فيها شروط توريد المعدات أو المقاييس العالمية على إجراء هذه
+                                    الاختبارات كما يجب عليه أن يحتفظ بشهادات الاختبارات التي تجري بهذا الخصوص.
+                                 </p>
+                                 <strong>ثانياً: جدول مواصفات المعدات </strong>
+                                 <ol>
+                                    <li>
+                                       <strong>ضمان الاّلة</strong>
+                                       <br />
+                                       <p>
+                                          @if (!string.IsNullOrEmpty(Model.MachineGuarantee))
+                                          {
+                                             @Html.Raw(Model.MachineGuarantee.Replace("\n", "<br/>"))
+                                          }
+                                       </p>
+                                    </li>
+                                    <li>
+                                       <strong>صيانت الاّلة</strong>
+                                       <br />
+                                       <p>
+                                          @if (!string.IsNullOrEmpty(Model.MachineMaintanance))
+                                          {
+                                             @Html.Raw(Model.MachineMaintanance.Replace("\n", "<br/>"))
+                                          }
+                                       </p>
+                                    </li>
+                                 </ol>
+                              }
+                           }
+                        </div>
+
+                        @if (Model != null && Model.DescriptionQuantityTables.ContainsKey((int)Enums.FormCategoryEnum.Equipment) && Model.DescriptionQuantityTables[(int)Enums.FormCategoryEnum.Equipment].Count > 0)
+                        {
+                           <h5>
+                              <strong>جداول المواصفات </strong>
+                           </h5>
+                           foreach (var item in Model.DescriptionQuantityTables[(int)Enums.FormCategoryEnum.Equipment])
+                           {
+                              if (item != null)
+                              {
+                                 @Html.Raw(item)
+                              }
+                           }
+                        }
+                        @*<div class="col-12" id="8.4">
+                              @if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.ContractBasedOnPerformance) && !Model.ShowGeneralOnly)
+                              {
+                                 <h5>
+                                    <strong>4- العقود القائمة على الأداء </strong>
+                                 </h5>
+                                 <p>
+                                    على المقاول أن ينفذ الأعمال المتفق عليها في هذا العقد، ويتم الدفع حسب الموضح كالآتي:
+                                 </p>
+                                 <P>
+                                    @if (!string.IsNullOrEmpty(Model.ContractBasedOnPerformanceDetails))
+                                    {
+                                       @Html.Raw(Model.ContractBasedOnPerformanceDetails.Replace("\n", "<br/>"))
+                                    }
+                                 </P>
+                              }
+                           </div>*@
+                        <div class="col-12" id="8.5">
+                           @if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.ImplementaionMethod))
+                           {
+                              <h5>
+                                 <strong>5- كيفية تنفيذ الأعمال والخدمات </strong>
+                              </h5>
+                              <p>
+                                 @if (!string.IsNullOrEmpty(Model.ServicesAndWorkImplementationsMethod))
+                                 {
+                                    @Html.Raw(Model.ServicesAndWorkImplementationsMethod.Replace("\n", "<br/>"))
+                                 }
+                                 else
+                                 {
+                                    @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist;
+                                 }
+                              </p>
+                           }
+                        </div>
+                        <div class="col-12" id="8.6">
+
+                           <h5>
+                              <strong>6- مواصفات الجودة </strong>
+                           </h5>
+                           <p>
+                              يلتزم المتعاقد بمواصفات الجودة المطلوبة في تنفيذ نطاق الأعمال والخدمات المذكورة في العقد.
+                              ويجب على المتعاقد إخطار الجهة بما يتسبب او قد يتسبب في عدم الامتثال لمتطلبات الجودة في السلع الموّردة والخدمات المقدمة وبأي تغييرات
+                              أو تعديلات قد تؤثر على هذه الجودة كتغيير موقع تصنيع المواد، أو تغيير المواد الخام ونسبها المستعملة في تصنيع السلع الموّردة.
+                           </p>
+                           <p>
+                              @if (!string.IsNullOrEmpty(Model.QualitySpecifications))
+                              {
+                                 @Html.Raw(Model.QualitySpecifications.Replace("\n", "<br/>"))
+                              }
+                              else
+                              {
+                                 @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist;
+                              }
+                           </p>
+
+
+                        </div>
+                        <div class="col-12" id="8.7">
+                           <h5>
+                              <strong>7- مواصفات السلامة </strong>
+                           </h5>
+                           <p>
+                              يلتزم المتعاقد وخلال جميع مراحل التنفيذ بجميع الأنظمة والقواعد المطبقة في المملكة فيما يخص السلامة والصحة والبيئة،
+                              وأي أنظمة وقواعد تحددها الجهة في نطاق عمل المشروع، ويضمن اتخاذ جميع الإجراءات والاحتياطات اللازمة للامتثال لهذه الأنظمة والقواعد.
+                           </p>
+                           <p>
+                              @if (!string.IsNullOrEmpty(Model.SafetySpecifications))
+                              {
+                                 @Html.Raw(Model.SafetySpecifications.Replace("\n", "<br/>"))
+                              }
+                              else
+                              {
+                                 @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist;
+                              }
+                           </p>
+                        </div>
+                     </div>
+                     <!-- القسم الثامن -->
+                  </div>
+                  <div class="page">
+                     <div class="row" id="9">
+                        <div class="col-12" id="9.1">
+                           <h4 class="text-success">
+                              <strong>القسم التاسع: الشروط الخاصة </strong>
+                           </h4>
+                           <p>
+                              @if (!string.IsNullOrEmpty(Model.SpecialConditions))
+                              {
+                                 @Html.Raw(Model.SpecialConditions.Replace("\n", "<br/>"))
+                              }
+                              else
+                              {
+                                 @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist;
+                              }
+                           </p>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="page">
+                     <!-- القسم التاسع -->
+                     <div class="row" id="10">
+                        <div class="col-12" id="10.1">
+                           <h4 class="text-success">
+                              <strong>القسم العاشر: الملحقات </strong>
+                           </h4>
+                           <p>
+                              @if (!string.IsNullOrEmpty(Model.Attachments))
+                              {
+                                 @Html.Raw(Model.Attachments.Replace("\n", "<br/>"))
+                              }
+                              else
+                              {
+                                 @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist;
+                              }
+                           </p>
+                        </div>
+                     </div>
+                     <!-- القسم التاسع -->
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+         <tfoot>
+            <tr>
+               <td>
+                  <!--place holder for the fixed-position footer-->
+                  <div class="page-footer-space"></div>
+               </td>
+            </tr>
+         </tfoot>
+      </table>
+   </div>
+</body>
+
+</html>
+
+<script>
+   function printData() {
+      window.print()
+   }
+</script>

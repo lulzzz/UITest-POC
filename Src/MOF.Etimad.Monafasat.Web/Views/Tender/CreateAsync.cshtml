@@ -1,0 +1,487 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderModel
+
+<form method="POST" action="">
+   <div id="app">
+
+      <ul class="wizSteps">
+         <li :class="{active:step === 1}">
+            <div>
+               <h4><span class="step-num">1</span>المعلومات الأساسية</h4>
+            </div>
+
+            <div class="col col-11 pull-right" v-if="step === 1">
+               <div class="row">
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <input-radio-checkbox v-model="selectedcommittiName" v-bind:options="monafasaType.options" v-bind:inptype="monafasaType.inputType" v-bind:title="monafasaType.title" v-bind:disabled="monafasaType.disabled" v-bind:name="monafasaType.name" v-bind:requierd="monafasaType.requierd" @@change="setMonafasaType"></input-radio-checkbox>
+
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <input-radio-checkbox v-bind:options="inviteType.options" v-bind:inptype="inviteType.inputType" v-bind:title="inviteType.title" v-bind:disabled="inviteType.disabled" v-bind:name="inviteType.name" v-bind:requierd="inviteType.requierd" @@change="setInviteType"></input-radio-checkbox>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <input-text v-bind:inptype="publisher.inputType" v-model="publisher.value" v-bind:title="publisher.title" v-bind:disabled="publisher.disabled" v-bind:requierd="publisher.requierd" @@input="exportObj"></input-text>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+
+                     <input-select v-model="selectedcommittiName" v-bind:options="committiName.options" v-bind:title="committiName.title" v-bind:disabled="committiName.disabled" v-bind:name="committiName.name" v-bind:requierd="committiName.requierd" @@change="setCommitteeName"></input-select>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <input-select v-model="selectedcommittiName" v-bind:options="committiName.options" v-bind:title="committiName.title" v-bind:disabled="committiName.disabled" v-bind:name="committiName.name" v-bind:requierd="committiName.requierd" @@change="setCommitteeName"></input-select>
+
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <input-select v-model="selectedcommittiName" v-bind:options="committiName.options" v-bind:title="committiName.title" v-bind:disabled="committiName.disabled" v-bind:name="committiName.name" v-bind:requierd="committiName.requierd" @@change="setCommitteeName"></input-select>
+
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">اسم المنافسة <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="publisher" value="">
+                        <span class="bmd-help">We'll never share your email with anyone else.</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">رقم المنافسة <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="publisher" value="">
+                        <span class="bmd-help">We'll never share your email with anyone else.</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">               الغرض من المنافسة <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="publisher" value="">
+                        <span class="bmd-help">We'll never share your email with anyone else.</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static"> قيمة الكراسة  <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="publisher" value="">
+                        <span class="bmd-help">We'll never share your email with anyone else.</span>
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col">
+                     <button class="btn btn-primary" @@click.prevent="next()" v-bind:disabled="stepSaved">
+                        حفظ ومتابعة
+
+                        <i v-if="stepSaved" class="material-icons fa-spin">
+                           cached
+                        </i>
+                     </button>
+                  </div>
+               </div>
+            </div>
+
+            <div class="clearfix"></div>
+         </li>
+         <li :class="{active:step === 2}">
+            <div>
+               <h4><span class="step-num">2</span>التواريخ</h4>
+            </div>
+
+            <div class="col col-11 pull-right" v-if="step === 2">
+               <div class="row">
+                  <div class="col-lg-3 col-sm-4">
+                     <div class="form-group bmd-form-group">
+                        <label for="exampleInput1" class="label">نوع المنافسة</label>
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                              عامة
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <label class="form-check-label">
+                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                              شراء مباشر
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-lg-3 col-sm-4">
+
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col">
+                     <button class="btn btn-default" @@click.prevent="prev()">السابق</button>
+                     <button class="btn btn-primary" @@click.prevent="next()" v-bind:disabled="stepSaved">
+                        حفظ ومتابعة
+                        <i v-if="stepSaved" class="material-icons fa-spin">
+                           cached
+                        </i>
+                     </button>
+                  </div>
+               </div>
+            </div>
+
+            <div class="clearfix"></div>
+         </li>
+         <li :class="{active:step === 3}">
+            <div>
+               <h4><span class="step-num">2</span>التواريخ</h4>
+            </div>
+
+            <div class="col col-11 pull-right" v-if="step === 3">
+               <div class="row">
+                  <div class="col-lg-3 col-sm-4">
+                     <div class="form-group bmd-form-group">
+                        <label for="exampleInput1" class="label">نوع المنافسة</label>
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                              عامة
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <label class="form-check-label">
+                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                              شراء مباشر
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-lg-3 col-sm-4">
+
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col">
+                     <button class="btn btn-default" @@click.prevent="prev()">السابق</button>
+                     <button class="btn btn-primary" @@click.prevent="submit()">
+                        إرسال
+                        <i v-if="stepSaved" class="material-icons fa-spin">
+                           cached
+                        </i>
+                     </button>
+                  </div>
+               </div>
+            </div>
+
+            <div class="clearfix"></div>
+         </li>
+      </ul>
+   </div>
+
+
+</form>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateAsync">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           <div id="app">
+
+              <ul class="wizSteps">
+                 <li :class="{active:step === 1}">
+                    <div>
+                       <h4><span class="step-num">1</span>المعلومات الأساسية</h4>
+                    </div>
+
+                    <div class="col col-11 pull-right" v-if="step === 1">
+                       <div class="row">
+                          <div class="col-lg-4 col-sm-6 col-xs-12">
+                             <input-radio-checkbox v-model="selectedcommittiName" v-bind:options="monafasaType.options" v-bind:inptype="monafasaType.inputType" v-bind:title="monafasaType.title" v-bind:disabled="monafasaType.disabled" v-bind:name="monafasaType.name" v-bind:requierd="monafasaType.requierd" @@change="setMonafasaType"></input-radio-checkbox>
+
+                          </div>
+                          <div class="col-lg-4 col-sm-6 col-xs-12">
+                             <input-radio-checkbox v-bind:options="inviteType.options" v-bind:inptype="inviteType.inputType" v-bind:title="inviteType.title" v-bind:disabled="inviteType.disabled" v-bind:name="inviteType.name" v-bind:requierd="inviteType.requierd" @@change="setInviteType"></input-radio-checkbox>
+                          </div>
+                          <div class="col-lg-4 col-sm-6 col-xs-12">
+                             <input-text v-bind:inptype="publisher.inputType" v-model="publisher.value" v-bind:title="publisher.title" v-bind:disabled="publisher.disabled" v-bind:requierd="publisher.requierd" @@input="exportObj"></input-text>
+                          </div>
+                          <div class="col-lg-4 col-sm-6 col-xs-12">
+
+                             <input-select v-model="selectedcommittiName" v-bind:options="committiName.options" v-bind:title="committiName.title" v-bind:disabled="committiName.disabled" v-bind:name="committiName.name" v-bind:requierd="committiName.requierd" @@change="setCommitteeName"></input-select>
+                          </div>
+                          <div class="col-lg-4 col-sm-6 col-xs-12">
+                             <input-select v-model="selectedcommittiName" v-bind:options="committiName.options" v-bind:title="committiName.title" v-bind:disabled="committiName.disabled" v-bind:name="committiName.name" v-bind:requierd="committiName.requierd" @@change="setCommitteeName"></input-select>
+
+                          </div>
+                          <div class="col-lg-4 col-sm-6 col-xs-12">
+                             <input-select v-model="selectedcommittiName" v-bind:options="committiName.options" v-bind:title="committiName.title" v-bind:disabled="committiName.disabled" v-bind:name="committiName.name" v-bind:requierd="committiName.requierd" @@change="setCommitteeName"></input-select>
+
+                          </div>
+                          <div class="col-lg-4 col-sm-6 col-xs-12">
+                             <div class="form-group bmd-form-group">
+                                <label for="publisher" class="label bmd-label-static">اسم المنافسة <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="publisher" value="">
+                                <span class="bmd-help">We'll never share your email with anyone else.</span>
+                             </div>
+                          </div>
+                          <div class="col-lg-4 col-sm-6 col-xs-12">
+                             <div class="form-group bmd-form-group">
+                                <label for="publisher" class="label bmd-label-static">رقم المنافسة <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="publisher" value="">
+                                <span class="bmd-help">We'll never share your email with anyone else.</span>
+                             </div>
+                          </div>
+                          <div class="col-lg-4 col-sm-6 col-xs-12">
+                             <div class="form-group bmd-form-group">
+                                <label for="publisher" class="label bmd-label-static">               الغرض من المنافسة <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="publisher" value="">
+                                <span class="bmd-help">We'll never share your email with anyone else.</span>
+                             </div>
+                          </div>
+                          <div class="col-lg-4 col-sm-6 col-xs-12">
+                             <div class="form-group bmd-form-group">
+                                <label for="publisher" class="label bmd-label-static"> قيمة الكراسة  <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="publisher" value="">
+                                <span class="bmd-help">We'll never share your email with anyone else.</span>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="row">
+                          <div class="col">
+                             <button class="btn btn-primary" @@click.prevent="next()" v-bind:disabled="stepSaved">
+                                حفظ ومتابعة
+
+                                <i v-if="stepSaved" class="material-icons fa-spin">
+                                   cached
+                                </i>
+                             </button>
+                          </div>
+                       </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                 </li>
+                 <li :class="{active:step === 2}">
+                    <div>
+                       <h4><span class="step-num">2</span>التواريخ</h4>
+                    </div>
+
+                    <div class="col col-11 pull-right" v-if="step === 2">
+                       <div class="row">
+                          <div class="col-lg-3 col-sm-4">
+                             <div class="form-group bmd-form-group">
+                                <label for="exampleInput1" class="label">نوع المنافسة</label>
+                                <div class="form-check">
+                                   <label class="form-check-label">
+                                      <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                                      عامة
+                                      <span class="circle">
+                                         <span class="check"></span>
+                                      </span>
+                                   </label>
+                                   <label class="form-check-label">
+                                      <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                                      شراء مباشر
+                                      <span class="circle">
+                                         <span class="check"></span>
+                                      </span>
+                                   </label>
+                                </div>
+                             </div>
+                          </div>
+                          <div class="col-lg-3 col-sm-4">
+
+                          </div>
+                       </div>
+                       <div class="row">
+                          <div class="col">
+                             <button class="btn btn-default" @@click.prevent="prev()">السابق</button>
+                             <button class="btn btn-primary" @@click.prevent="next()" v-bind:disabled="stepSaved">
+                                حفظ ومتابعة
+                                <i v-if="stepSaved" class="material-icons fa-spin">
+                                   cached
+                                </i>
+                             </button>
+                          </div>
+                       </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                 </li>
+                 <li :class="{active:step === 3}">
+                    <div>
+                       <h4><span class="step-num">2</span>التواريخ</h4>
+                    </div>
+
+                    <div class="col col-11 pull-right" v-if="step === 3">
+                       <div class="row">
+                          <div class="col-lg-3 col-sm-4">
+                             <div class="form-group bmd-form-group">
+                                <label for="exampleInput1" class="label">نوع المنافسة</label>
+                                <div class="form-check">
+                                   <label class="form-check-label">
+                                      <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                                      عامة
+                                      <span class="circle">
+                                         <span class="check"></span>
+                                      </span>
+                                   </label>
+                                   <label class="form-check-label">
+                                      <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                                      شراء مباشر
+                                      <span class="circle">
+                                         <span class="check"></span>
+                                      </span>
+                                   </label>
+                                </div>
+                             </div>
+                          </div>
+                          <div class="col-lg-3 col-sm-4">
+
+                          </div>
+                       </div>
+                       <div class="row">
+                          <div class="col">
+                             <button class="btn btn-default" @@click.prevent="prev()">السابق</button>
+                             <button class="btn btn-primary" @@click.prevent="submit()">
+                                إرسال
+                                <i v-if="stepSaved" class="material-icons fa-spin">
+                                   cached
+                                </i>
+                             </button>
+                          </div>
+                       </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                 </li>
+              </ul>
+           </div>
+            @*<div class="form-group">
+                <label asp-for="TechnicalOrganizationID" class="control-label"></label>
+                <input asp-for="TechnicalOrganizationID" class="form-control" />
+                <span asp-validation-for="TechnicalOrganizationID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OffersOpeningCommitteeID" class="control-label"></label>
+                <input asp-for="OffersOpeningCommitteeID" class="form-control" />
+                <span asp-validation-for="OffersOpeningCommitteeID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OffersCheckingCommitteeID" class="control-label"></label>
+                <input asp-for="OffersCheckingCommitteeID" class="form-control" />
+                <span asp-validation-for="OffersCheckingCommitteeID" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="OfferPresentationWayId" class="control-label"></label>
+                <input asp-for="OfferPresentationWayId" class="form-control" />
+                <span asp-validation-for="OfferPresentationWayId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OfferPresentationPlace" class="control-label"></label>
+                <input asp-for="OfferPresentationPlace" class="form-control" />
+                <span asp-validation-for="OfferPresentationPlace" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OffersOpeningAddress" class="control-label"></label>
+                <input asp-for="OffersOpeningAddress" class="form-control" />
+                <span asp-validation-for="OffersOpeningAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConditionsBookletDeliveryAddress" class="label"></label>
+                <input asp-for="ConditionsBookletDeliveryAddress" class="form-control" />
+                <span asp-validation-for="ConditionsBookletDeliveryAddress" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+                <label asp-for="LastEnqueriesDate" class="control-label"></label>
+                <input asp-for="LastEnqueriesDate" class="form-control" />
+                <span asp-validation-for="LastEnqueriesDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastOfferPresentationDate" class="control-label"></label>
+                <input asp-for="LastOfferPresentationDate" class="form-control" />
+                <span asp-validation-for="LastOfferPresentationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastOfferPresentationTime" class="control-label"></label>
+                <input asp-for="LastOfferPresentationTime" class="form-control" />
+                <span asp-validation-for="LastOfferPresentationTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OffersOpeningDate" class="control-label"></label>
+                <input asp-for="OffersOpeningDate" class="form-control" />
+                <span asp-validation-for="OffersOpeningDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OffersOpeningTime" class="control-label"></label>
+                <input asp-for="OffersOpeningTime" class="form-control" />
+                <span asp-validation-for="OffersOpeningTime" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="TenderId" class="control-label"></label>
+                <input asp-for="TenderId" class="form-control" />
+                <span asp-validation-for="TenderId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TenderTypeId" class="control-label"></label>
+                <input asp-for="TenderTypeId" class="form-control" />
+                <span asp-validation-for="TenderTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InvetationTypeId" class="control-label"></label>
+                <input asp-for="InvetationTypeId" class="form-control" />
+                <span asp-validation-for="InvetationTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InitiatorName" class="control-label"></label>
+                <input asp-for="InitiatorName" class="form-control" />
+                <span asp-validation-for="InitiatorName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TenderName" class="control-label"></label>
+                <input asp-for="TenderName" class="form-control" />
+                <span asp-validation-for="TenderName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TenderNumber" class="control-label"></label>
+                <input asp-for="TenderNumber" class="form-control" />
+                <span asp-validation-for="TenderNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TenderStatusId" class="control-label"></label>
+                <input asp-for="TenderStatusId" class="form-control" />
+                <span asp-validation-for="TenderStatusId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Purpose" class="control-label"></label>
+                <input asp-for="Purpose" class="form-control" />
+                <span asp-validation-for="Purpose" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConditionsBookletPrice" class="control-label"></label>
+                <input asp-for="ConditionsBookletPrice" class="form-control" />
+                <span asp-validation-for="ConditionsBookletPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="InsideKSA" /> @Html.DisplayNameFor(model => model.InsideKSA)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Details" class="control-label"></label>
+                <input asp-for="Details" class="form-control" />
+                <span asp-validation-for="Details" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

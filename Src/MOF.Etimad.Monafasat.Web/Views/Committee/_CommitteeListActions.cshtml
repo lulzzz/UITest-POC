@@ -1,0 +1,45 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using MOF.Etimad.Monafasat.SharedKernal;
+
+<div class="dropdown  text-center">
+   <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i> <div class="ripple-container"></div></button>
+   <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+      <a :href="detailsUrl(committee.committeeIdString + '&committeeTypeIdString=' + committee.committeeTypeIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details</a>
+      <a :href="editUrl(committee.committeeIdString)" class="dropdown-item"><i class="material-icons">edit</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit </a>
+      <a @@click="showDialog(committee.committeeIdString)" class="dropdown-item"><i class="material-icons">clear</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</a>
+      @if (Int32.Parse(Util.Decrypt(ViewData["CommitteeTypeId"])) == (int)Enums.CommitteeType.TechincalCommittee)
+      {
+         <a :href="addUser(committee.committeeIdString)" class="dropdown-item"><i class="material-icons">person_add</i>  @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.AddTechnicalCommitteeMember</a>
+         <a :href="joinCommitteeToTender(committee.committeeIdString)" class="dropdown-item"><i class="fa fa-link" aria-hidden="true"></i> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.JoinAgencyToTender</a>
+
+      }
+      else if (Int32.Parse(Util.Decrypt(ViewData["CommitteeTypeId"])) == (int)Enums.CommitteeType.OpenOfferCommittee)
+      {
+         <a :href="addUser(committee.committeeIdString)" class="dropdown-item"><i class="material-icons">person_add</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddUser</a>
+         <a :href="joinCommitteeToTender(committee.committeeIdString)" class="dropdown-item"><i class="fa fa-link" aria-hidden="true"></i> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.JoinCommitteeToTender</a>
+      }
+      else if (Int32.Parse(Util.Decrypt(ViewData["CommitteeTypeId"])) == (int)Enums.CommitteeType.CheckOfferCommittee)
+      {
+         <a :href="addUser(committee.committeeIdString)" class="dropdown-item"><i class="material-icons">person_add</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddUser</a>
+         <a :href="joinCommitteeToTender(committee.committeeIdString)" class="dropdown-item"><i class="fa fa-link" aria-hidden="true"></i> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.JoinCommitteeToTender</a>
+      }
+      else if (Int32.Parse(Util.Decrypt(ViewData["CommitteeTypeId"])) == (int)Enums.CommitteeType.PurchaseCommittee)
+      {
+
+         <a :href="addUser(committee.committeeIdString)" class="dropdown-item"><i class="material-icons">person_add</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddUser</a>
+         <a :href="joinCommitteeToTender(committee.committeeIdString)" class="dropdown-item"><i class="fa fa-link" aria-hidden="true"></i> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.JoinCommitteeToTender</a>
+      }
+      else if (Int32.Parse(Util.Decrypt(ViewData["CommitteeTypeId"])) == (int)Enums.CommitteeType.VROCommittee)
+      {
+         <a :href="addUser(committee.committeeIdString)" class="dropdown-item"><i class="material-icons">person_add</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddUser</a>
+         <a :href="joinCommitteeToTender(committee.committeeIdString)" class="dropdown-item"><i class="fa fa-link" aria-hidden="true"></i> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.JoinCommitteeToTender</a>
+
+      }
+      else if (Int32.Parse(Util.Decrypt(ViewData["CommitteeTypeId"])) == (int)Enums.CommitteeType.PreQualificationCommittee)
+      {
+         <a :href="addUser(committee.committeeIdString)" class="dropdown-item"><i class="material-icons">person_add</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddUser</a>
+         <a :href="joinCommitteeToTender(committee.committeeIdString)" class="dropdown-item"><i class="fa fa-link" aria-hidden="true"></i> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.JoinCommitteeToTender</a>
+      }
+   </div>
+</div>
+

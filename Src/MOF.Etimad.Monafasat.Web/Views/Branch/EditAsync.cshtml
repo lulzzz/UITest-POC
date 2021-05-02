@@ -1,0 +1,48 @@
+@model MOF.Etimad.Monafasat.ViewModel.BranchModel
+
+@{
+   ViewData["Title"] = (MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.EditBranch);
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Branch")">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Branches</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.EditBranch</li>
+      </ol>
+   </nav>
+
+}
+
+<form method="Post" action="" class="my-form">
+   @Html.AntiForgeryToken()
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="BranchName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.BranchName<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="BranchName" name="BranchName" asp-for="BranchName">
+                  @*<input type="hidden" id="CommitteeTypeIdString" name="CommitteeTypeIdString" value="@(Model.CommitteeTypeIdString)">*@
+                  <input type="hidden" id="BranchIdString" name="BranchIdString" value="@(ViewData["BranchIdString"])">
+                  <span asp-validation-for="BranchName" class="text-danger"></span>
+               </div>
+            </div> 
+            <div class="col-12 ">
+               <button class="btn btn-primary" type="submit">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+               <button class="btn btn-danger" type="reset" onclick="window.location = '@Url.Action("Index", "Branch")'">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+         <button class="btn btn-outline-primary btn-link pull-right" type="button" onclick="window.location = '@Url.Action("Index", "Branch")'">
+            @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BackButton
+            <div class="ripple-container"></div>
+         </button>
+      </div>
+
+   </div>
+</form>
+
+@section Scripts {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

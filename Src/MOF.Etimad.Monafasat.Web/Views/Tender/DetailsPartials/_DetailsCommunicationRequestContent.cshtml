@@ -1,0 +1,150 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderCommunicationRequestModel
+@using MOF.Etimad.Monafasat.SharedKernal;
+@{
+    int tenderId = Util.Decrypt(Model.TenderIdString);
+    int tenderTypeId = Util.Decrypt(Model.TenderTypeIdString);
+    int tenderStatusId = Util.Decrypt(Model.TenderStatusIdString);
+}
+<div class="tab-pane animated bounceInLeft  delay-1s" id="d-8"> 
+   <div class="card">
+      <div class="card-body p-0">
+         <div class="row">
+            <div class="col-md-12 ">
+               <h4 class="text-primary pull-left" style=" margin: 8px 12px;">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.SuppliersRequests</h4>
+               <div class="dropdown pull-right etd-sorting-btn" style="    margin: 8px 12px;">
+                  <span class="d-block" data-toggle="tooltip" data-placement="top" title="@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.CreateRequest" data-container="body" data-original-title=" @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.CreateRequest">
+                     <button href="#sort" class="btn btn-sm btn-primary" data-toggle="dropdown" aria-expanded="false"> <i class="material-icons">add</i>  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.CreateRequest</button>
+                     <div class="dropdown-menu dropdown-menu-left" x-placement="top-end">
+                        <h4 class="dropdown-header"> @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.CreateRequest</h4>
+                        <div class="dropdown-divider"></div>
+                        @if (User.IsInRole(RoleNames.supplier))
+                        {
+                           <a href="../Enquiry/SupplierEnquiriesOnTender/@Model.TenderIdString" class="dropdown-item">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.Inquiry</a>
+
+                           if (tenderStatusId == (int)Enums.TenderStatus.Approved && Model.LastOfferPresentationDate.Value >= DateTime.Now)
+                           {
+                              <a onclick="AddExtendOfferPresDates()" data-toggle="modal" data-target="#myModal" class="dropdown-item">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.ExtendOffersDates</a>
+                           }
+
+                           @if (@Model.CanAddPlaint)
+                           {
+                              <a href="../CommunicationRequest/AddPlaintRequest/@Model.TenderIdString" class="dropdown-item">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.Plaint</a>
+                           }
+                        }
+
+                        @if ((User.IsInRole(RoleNames.OffersCheckSecretary)
+                      && tenderTypeId != (int)Enums.TenderType.NewDirectPurchase)
+                      || (User.IsInRole(RoleNames.OffersPurchaseSecretary) && tenderTypeId == (int)Enums.TenderType.NewDirectPurchase))
+                        {
+                           @if (!(Model.TenderHasExtendOffersValidity) && tenderStatusId == (int)Enums.TenderStatus.OffersAwarding)
+                           {
+                              <a href="../CommunicationRequest/ExtendOffersValidity/@Model.TenderIdString" class="dropdown-item">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.ExtendOffersValidity</a>
+                           }
+
+                        }
+                        @if (User.IsInRole(RoleNames.OffersCheckSecretary) && tenderStatusId == (int)Enums.TenderStatus.OffersAwarding)
+                        {
+                           <a href="../CommunicationRequest/CreateNegotiationRequest/@Model.TenderIdString" class="dropdown-item">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.Negotiate</a>
+                        }
+                     </div>
+                  </span>
+               </div>
+               @Html.Partial("~/Views/Tender/DetailsPartials/_DetailsSuppliersRequestsGrid.cshtml")
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="card">
+      <div class="card-body p-0">
+         <div class="row">
+            <div class="col-md-12">
+               <h4 class="text-primary pull-left" style="margin: 8px 12px;">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.AgencyRequests</h4>
+               @Html.Partial("~/Views/Tender/DetailsPartials/_DetailsAgencyRequestsGrid.cshtml")
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<script>
+
+      var SupplierRequests = new Vue({ 
+           el: '#suppliersRequestsGrid',
+            data: {
+               suppliersRequests: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '/CommunicationRequest/GetSuppliersCommunicationRequestsGridAsync?TenderId=' + '@tenderId',
+               queryString: '',
+               showTable: false
+            },
+             methods: { 
+               updateResource: function (data) {
+                  this.suppliersRequests = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+                },
+                viewSupplierRequestDetails: function (agencyRequestTypeId, agencyRequestId) {
+
+                   if (agencyRequestTypeId ==  @((int)Enums.AgencyCommunicationRequestType.Enquiry) ) {
+                   return '/Enquiry/SupplierEnquiriesOnTender/' + '@Model.TenderIdString';
+                   }
+                   else if (agencyRequestTypeId ==  @((int)Enums.AgencyCommunicationRequestType.Plaint) ) {
+                     return '/CommunicationRequest/VendorPlaintRequestData/' + '@Model.TenderIdString';
+                  }
+                   else if (agencyRequestTypeId ==@((int)Enums.AgencyCommunicationRequestType.ExtendOfferValidtiy)  ) {
+                     return '/CommunicationRequest/ExtendOffersValiditySupplier/' + agencyRequestId;
+                  }
+                   else if (agencyRequestTypeId ==@((int)Enums.AgencyCommunicationRequestType.SupplierOfferExtendDates)  ) {
+                   return '/CommunicationRequest/SupplierExtendOfferDates/' + agencyRequestId;
+                  }
+                   else if (agencyRequestTypeId ==@((int)Enums.enNegotiationType.FirstStage)  ) {
+                     return '/CommunicationRequest/CreateNegotiation/' + '@tenderId' + '/' + agencyRequestId;
+                  }
+                   else if (agencyRequestTypeId ==@((int)Enums.enNegotiationType.SecondStage)  ) {
+                      return '/CommunicationRequest/CreateSecondNegotiationRequest/' + agencyRequestId;
+                  }
+                }
+            }
+         });
+
+         var AgencyRequests = new Vue({
+            el: '#agencyRequestsGrid',
+            data: {
+               AgencyRequests: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '/CommunicationRequest/GetAgencyCommunicationRequestsGridAsync?TenderId=' + '@Model.TenderIdString',
+               queryString: '',
+               showTable: false
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.AgencyRequests = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+               },
+               viewRequestDetails: function (agencyRequestTypeId, negotiationRequests, agencyRequestId) {
+                  
+                  if (agencyRequestTypeId ==  @((int)Enums.AgencyCommunicationRequestType.Plaint)  ) {
+                     return '/CommunicationRequest/VendorPlaintRequestData/' + '@Model.TenderIdString';
+                  }
+                  else if (agencyRequestTypeId ==@((int)Enums.AgencyCommunicationRequestType.ExtendOfferValidtiy)  ) {
+                     return '/CommunicationRequest/ExtendOffersValidity/' + '@Model.TenderIdString';
+                  }
+
+                  else if (agencyRequestTypeId ==@((int)Enums.enNegotiationType.FirstStage)  ) {
+                     return '/CommunicationRequest/CreateNegotiation/' + '@tenderId' + '/' + agencyRequestId;
+                  }
+                  else if (agencyRequestTypeId ==@((int)Enums.enNegotiationType.SecondStage)  ) {
+                     return '/CommunicationRequest/CreateSecondNegotiationRequest/' + agencyRequestId;
+                  }
+               }
+            }
+         });
+
+</script>

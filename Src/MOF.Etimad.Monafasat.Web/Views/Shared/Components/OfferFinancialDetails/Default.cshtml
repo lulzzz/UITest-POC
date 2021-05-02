@@ -1,0 +1,107 @@
+@model MOF.Etimad.Monafasat.ViewModel.Offer.OfferFinancialDetailsModel
+@{
+   ViewData["Title"] = "تفاصيل العرض";
+}
+<div class="" id="basicDetials">
+   <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-12">
+                  <h4 class="text-primary">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation
+                  </h4>
+               </div>
+               <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>@(Model.OfferId)</span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentsAttachments
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              @foreach (var item in Model.Attachments)
+                              {
+                                 if (!string.IsNullOrEmpty( item.FileName) && !string.IsNullOrEmpty(item.FileNetId))
+                                 {
+                                    <a href="#" onclick="RedirectURL('@item.FileNetId','@item.FileName'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                                       @item.FileName
+                                    </a>
+                                 }
+                              }
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Notes
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>@(Model.Notes)</span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+               <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-12 etd-item-title text-center">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue
+                              قيمة العرض
+                           </div>
+                           <div class="col-12 etd-item-info text-center">
+                              <span class="h3 d-inline-block" style="padding:1.7rem 0"> @Model.FinalPrice.Value.ToString("0.00") ريال</span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="card">
+         <table class="table  table-striped" id="TenderTable">
+            <caption></caption>
+            <thead>
+               <tr>
+                  <th scope="col">البيان</th>
+                  <th scope="col">القيمة</th>
+                  <th scope="col">الخصم أو الزيادة</th>
+                  <th scope="col">االمبلغ بعد الخصم أو الزيادة</th>
+               </tr>
+            </thead>
+            <tbody>
+               @foreach (var item in Model.Tables)
+               {
+                  <tr>
+                     <td data-label="البيان">@item.TableName </td>
+                     <td data-label="القيمة">@item.TotalAmount </td>
+                     <td data-label="الخصم أو الزيادة">@item.Discount </td>
+                     <td data-label="االمبلغ بعد الخصم أو الزيادة">@item.TotalAmountAfterDiscount </td>
+                  </tr>
+               }
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div>
+<script>
+   function RedirectURL(ids, names) {
+      window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+   }
+</script>

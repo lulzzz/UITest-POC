@@ -1,0 +1,61 @@
+<div class="col-md-12 text-right">
+   @if (User.IsInRole(RoleNames.DataEntry))
+   {
+      <a :href="detailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Established))">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+      </a>
+      <a href="#" :id="tender.tenderId" @@click="convertInvitationToPublic(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && (tender.tenderTypeId == @((int)Enums.TenderType.CurrentDirectPurchase)) && tender.invitationTypeId == @((int)Enums.InvitationType.Specific) && tender.lastOfferPresentationDate >= tender.currentDate">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ShowToPublic
+      </a>
+      <a :href="detailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Rejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.RejectedFromUnit) || tender.tenderStatusId == @((int)Enums.TenderStatus.ReturnedFromUnitToAgencyForEdit))">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+      </a>
+      <a :href="CreateSecondStage(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedConfirmed) && tender.tenderTypeId == @((int)Enums.TenderType.FirstStageTender)&&  tender.hasAcceptedOffers == true  && tender.hasSecondStage == false)">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreateSecondStage
+      </a>
+
+      <a :href="ReCreateAgreement(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.canRecreateFramWork">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RecreateFramWorkTender</a>
+   }
+   @if (User.IsInRole(RoleNames.PurshaseSpecialist))
+   {
+      <a :href="detailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Established))">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+      </a>
+
+      <a href="#" :id="tender.tenderId" @@click="convertInvitationToPublic(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && (tender.tenderTypeId == @((int)Enums.TenderType.CurrentDirectPurchase)) && tender.invitationTypeId == @((int)Enums.InvitationType.Specific) && tender.lastOfferPresentationDate >= tender.currentDate">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ShowToPublic
+      </a>
+      <a :href="detailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Rejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.RejectedFromUnit) || tender.tenderStatusId == @((int)Enums.TenderStatus.ReturnedFromUnitToAgencyForEdit))">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+      </a>
+      <a :href="CreateSecondStage(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedConfirmed) && tender.tenderTypeId == @((int)Enums.TenderType.FirstStageTender) &&  tender.hasAcceptedOffers == true &&  tender.hasSecondStage == false)">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreateSecondStage
+      </a>
+      <a :href="ReCreateAgreement(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.canRecreateFramWork">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RecreateFramWorkTender</a>
+   }
+   @if (User.IsInRole(RoleNames.Auditer))
+   {
+      <a :href="detailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Pending))">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve</a>
+      <a :href="cancelLink(tender.tenderIdString)" class="btn btn-sm btn-primary"
+         v-if="(tender.tenderStatusId != @((int)Enums.TenderStatus.Canceled) &&
+                                     tender.tenderStatusId != @((int)Enums.TenderStatus.UnderEstablishing) &&
+                                     tender.tenderStatusId != @((int)Enums.TenderStatus.Established) &&
+                                     tender.tenderStatusId != @((int)Enums.TenderStatus.Pending) &&
+                                     tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending)) && (tender.changeRequestedBy == dataEntry || tender.changeRequestedBy == auditor)">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelTenderAudit
+      </a>
+   }
+   @if (User.IsInRole(RoleNames.EtimadOfficer))
+   {
+      <a :href="detailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.PendingVROAuditerApprove) && tender.tenderTypeId == @((int)Enums.TenderType.NationalTransformationProjects))">مراجعة و إعتماد بيانات المنافسه </a>
+      <a :href="detailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Pending) && tender.tenderTypeId == @((int)Enums.TenderType.NationalTransformationProjects))">مراجعة و إعتماد بيانات المنافسه </a>
+      <a :href="cancelLink(tender.tenderIdString)" class="btn btn-sm btn-primary"
+         v-if="(tender.tenderStatusId != @((int)Enums.TenderStatus.Canceled) &&
+                                     tender.tenderStatusId != @((int)Enums.TenderStatus.UnderEstablishing) &&
+                                     tender.tenderStatusId != @((int)Enums.TenderStatus.Established) &&
+                                     tender.tenderStatusId != @((int)Enums.TenderStatus.Pending) &&
+                                     tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending)) && (tender.changeRequestedBy == dataEntry || tender.changeRequestedBy == auditor)">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelTenderAudit
+      </a>
+   }
+</div>

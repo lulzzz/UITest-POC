@@ -1,0 +1,540 @@
+@model MOF.Etimad.Monafasat.ViewModel.SecondStageBasicData
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using Newtonsoft.Json;
+
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddEditTender;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddEditTender</li>
+      </ol>
+   </nav>
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+   .modal {
+      overflow-y: auto;
+   }
+</style>
+<form id="basicStepForm" method="POST" asp-controller="Tender" asp-action="BasicSecondStageData" autocomplete="off" v-cloak>
+   <div id="app">
+      <input asp-for="TenderIdString" type="hidden" />
+      <input asp-for="InitialGuaranteeAddress" type="hidden" />
+      <input asp-for="InitialGuaranteePercentage" type="hidden" />
+      <input asp-for="TenderIdString" type="hidden" />
+      <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+      <input asp-for="TenderFirstStageId" id="hfFirstStageId" type="hidden" />
+      <input asp-for="QuantityTableVersionId" id="hfVersionId" type="hidden" />
+
+      <ul class="wizSteps">
+         <li class="active">
+            <div>
+               <h4 id="hBasicStep"><span class="step-num">1</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation<strong class="step-count"></strong></h4>
+            </div>
+            <div class="col col-11 pull-right">
+               <div id="divBasicStep">
+                  <div class="row">
+                     <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <span class="badge badge-primary pull-right">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy
+                           : <i class="material-icons" style="font-size: 11px;padding: 2px;display: inline;">person</i> 
+                           @(User.FullName())
+                        </span>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divTenderType">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="TenderTypeId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <label asp-for="TenderTypeName" class="form-control" id="TenderTypeName" maxlength="500">@Model.TenderTypeName</label>
+                        </div>
+                        <span asp-validation-for="TenderTypeId" class="text-danger"></span>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="TenderName" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                           <label asp-for="TenderName" class="form-control" id="tb_TenderName" maxlength="500">@Model.TenderName</label>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="TenderNumber" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <label asp-for="TenderNumber" class="form-control noSpecial" name="TenderNumber" id="tb_TenderNo" maxlength="100">@Model.TenderNumber</label>
+                        </div>
+                     </div>
+                     @if (!string.IsNullOrEmpty(Model.ReferenceNumber))
+                     {
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label asp-for="ReferenceNumber" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                              <label asp-for="ReferenceNumber" class="form-control noSpecial" name="ReferenceNumber" id="tb_ReferenceNumber" maxlength="100">@Model.ReferenceNumber</label>
+                           </div>
+                        </div>
+                     }
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divTechnicalCommittee">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="TechnicalOrganizationId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <select data-live-search="true" asp-for="TechnicalOrganizationId" name="TechnicalOrganizationId" class="selectpicker" id="dD_TechnicalOrganizationId" asp-items="@(new SelectList(Model.TechnicalCommittees, "CommitteeId", "CommitteeName"))" data-style="select-with-transition" data-size="7">
+                              <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseTechnicalCommittee </option>
+                           </select>
+                        </div>
+                        <span asp-validation-for="TechnicalOrganizationId" class="text-danger"></span>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divOfferOpeningCommittee">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="OffersOpeningCommitteeId" class="label bmd-label-static"></label>
+                           <select data-live-search="true" class="selectpicker" asp-for="OffersOpeningCommitteeId" id="dD_OffersOpeningCommitteeId" data-style="select-with-transition" asp-items="@(new SelectList(Model.OfferOpenningCommittees, "CommitteeId", "CommitteeName"))" data-size="7">
+
+                              <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseOfferOpenCommitte</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divOfferCheckingCommittee">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="OffersCheckingCommitteeId" class="label bmd-label-static"></label>
+                           <select data-live-search="true" asp-for="OffersCheckingCommitteeId" class="selectpicker" id="dD_OffersCheckingCommitteeId" data-style="select-with-transition" asp-items="@(new SelectList(Model.OfferCheckingCommittees, "CommitteeId", "CommitteeName"))" data-size="7">
+                              <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseOfferCheckCommittee </option>
+                            </select>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divOfferPresentationWay">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="OfferPresentationWayId" class="label bmd-label-static"></label>
+                           <div class="form-check">
+                              <label class="form-check-label">
+                                 <input asp-for="OfferPresentationWayId" name="OfferPresentationWayId" class="form-check-input" checked type="radio" id="OfferPresentationWayId" value="@((int)Enums.OfferPresentationWayId.TwoSepratedFiles)">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TwoSepratedFiles
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                              <label class="form-check-label">
+                                 <input asp-for="OfferPresentationWayId" name="OfferPresentationWayId" class="form-check-input" type="radio" id="OfferPresentationWayId" value="@((int)Enums.OfferPresentationWayId.OneFile)">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OneFile
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                           </div>
+                        </div>
+                        <span id="spanOffer" class="bmd-help text-danger">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RequiredTwoFilesMoreThanFiveMillion </span>
+                        <span asp-validation-for="OfferPresentationWayId" class="text-danger"></span>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="Purpose" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <textarea asp-for="Purpose" class="form-control" maxlength="1024"></textarea>
+                           <span asp-validation-for="Purpose" class="text-danger"></span>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-sm-12 col-xs-12">
+                     <div class="row">
+                        <div class="form-group col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                           <label asp-for="EstimatedValue" class="label bmd-label-static"></label>
+                           <span class="text-danger">*</span>
+                           <input type="number" class="form-control" maxlength="12" id="txtEstimatedValue" name="EstimatedValue" asp-for="EstimatedValue" />
+                           <span asp-validation-for="EstimatedValue" class="text-danger h6"></span>
+                        </div>
+                        <div class="form-group bmd-form-group col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                           <label asp-for="EstimatedValue" class="label bmd-label-static invisible"></label>
+                           <div class="blockquote blockquote-success undefined">
+                              <small id="StringEstimatedValue">
+                              </small>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <input type="hidden" name="AgencyBudgetProjectNumber" id="AgencyBudgetProjectNumber" />
+               @*@if (!(@User.UserIsGovVendor() || @User.UserIsSemiGovAgency()))
+               {
+                  <div id="ProjectItemsGrid">
+                     @Html.Partial("_ProjectItems")
+                     <span style="display:none;" id="applicableBudget" class="h6 badge badge-warning">الميزانية المطلوبة متوفرة, علما ان هذه القيمة متأثرة بالعمليات التي تجري عليها</span>
+                     <span style="display:none;" id="notApplicableBudget" class="h6 badge badge-warning">
+                        الميزانية المطلوبة غير متوفرة ويمكنكم طرح المنافسة, علما انة يجب توفير الميزانية المطلوبة قبل
+                        ترسية المنافسة
+                     </span>
+                  </div>
+
+               }*@
+
+               <div class="row">
+                  <div class="col">
+                     <a href="~/Tender/TenderIndexUnderOperationsStage" class="btn pull-left btn-default etd-search-btn" id="btnBack">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+                     </a>
+                  </div>
+                  <div class="col">
+                     <button type="submit" id="btnSave" class="btn btn-primary etd-search-btn pull-right">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveContinue
+                     </button>
+                  </div>
+
+
+               </div>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+         <li class="">
+            <div>
+               <h4><a id="hDetailsStep" href="#"><span class="step-num">2</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DetailsStep</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+         <li class="">
+            <div>
+               <h4><a id="hRelationStep" href="#"><span class="step-num">3</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+         <li class="">
+            <div>
+               <h4><a id="hQuantatysStep" href="#"><span class="step-num">4</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+         <li class="">
+            <div>
+               <h4><a id="hAttachmentStep" href="#"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+      </ul>
+   </div>
+</form>
+
+@section scripts{
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+      $(document).ready(function () {
+         //var totalCash = 0;
+         //var EstimatedValue = $("#txtEstimatedValue").val();
+         //if (app.projectItems != null) {
+         //   for (var i = 0; i < app.projectItems.length; i++) {
+         //      if (app.projectItems[i].IsGSF == true) {
+         //         totalCash += app.projectItems[i].Cache;// بند
+         //      } else {
+         //         totalCash += app.projectItems[i].Cost;// مشروع
+         //      }
+         //   }
+         //   //if (parseFloat(EstimatedValue.toString()) > totalCash) {
+         //   //   $("#notApplicableBudget").show();
+         //   //   $("#applicableBudget").hide();
+         //   //}
+         //   //else {
+         //   //   $("#applicableBudget").show();
+         //   //   $("#notApplicableBudget").hide();
+         //   //}
+         //}
+
+
+         $("#btnSave").on("click", function () {
+            $('#LoadingSite').fadeIn();
+            if ($("#txtEstimatedValue").val().length > 12) {
+               $('#LoadingSite').fadeOut();
+               return false;
+            }
+         });
+
+
+      });
+
+      function ProgramIndex(number) {
+         var index = -1;
+         $(app.projectItems).each(function (i, e) {
+            if (e.ProjectNumber == number)
+               index = i;
+         })
+         return index;
+      }
+
+      var totalCash = 0;
+      var app = new Vue({
+         el: '#basicStepForm',
+         data: {
+            tenderTypeId: null,
+            projectItems: @Html.Raw(JsonConvert.SerializeObject(Model.AgencyBudgetNumber)),
+            newTask: "",
+            newType: 'true',
+         },
+         watch: {
+            isNeedInitialGuarantee: function () {
+               if (this.isNeedInitialGuarantee == "false") {
+                  $('#tb_InitialGuaranteeAddress').val("");
+               }
+            },
+            isSupplierNeedSample: function () {
+               if (this.isSupplierNeedSample == "false") {
+                  $('#tb_SamplesDeliveryAddress').val("");
+               }
+            }
+         },
+         created: function () {
+            this.tenderType = '@Model.TenderTypeId';
+             if ('@Model.TenderId' == '0') {
+               $.get('/Tender/GetQuantityTableVersion').done(function (result) { 
+                  $("#hfVersionId").val(result);
+               });
+            }
+         },
+         methods: {
+            showAddress: function () {
+               $("#offersOpeningAddressId").parent().hide();
+               $("#offersOpeningAddress").show();
+               $("#OffersOpeningAddressDiv").show();
+               $("#OffersOpeningAddressSlc").hide();
+               $("#btnOffersOpening").attr("hidden", true)
+               $("#btnOffersOpeningHide").attr("hidden", false)
+            },
+            hideAddress: function () {
+               $("#offersOpeningAddressId").parent().show();
+               $("#offersOpeningAddress").hide();
+               $("#OffersOpeningAddressDiv").hide();
+               $("#OffersOpeningAddressSlc").show();
+               $("#btnOffersOpening").attr("hidden", false)
+               $("#btnOffersOpeningHide").attr("hidden", true)
+            },
+            addTask: function (event) {
+               var EstimatedValue = $("#txtEstimatedValue").val();
+              event.preventDefault();
+               var task = this.newTask.trim();
+               var itemType = this.newType == "true" ? true : false;
+                    var _this = this;
+                    if (task) {
+                        var flag = true;
+                        if (task.length > 12) {
+                            flag = false;
+                           AlertFun('الرقم المدخل يجب الا يتجاوز 12 رقم', alertMessageType.Info);
+                        }
+                        if (!_this.projectItems) {
+                            _this.projectItems = [];
+                        }
+                        else {
+                           $.each(_this.projectItems, function (index, value) {
+                              if (value.ProjectNumber == task) {
+                                   flag = false;
+                                 var validateMessage = itemType == true ? "عفوا لا يمكن إدخال نفس البند مرتين" : "عفوا لا يمكن إدخال نفس المشروع مرتين";
+                                   AlertFun(validateMessage, alertMessageType.Info);
+                                }
+                            });
+                            if (flag) {
+                               var projectItemsCopy = [];
+                               $.each(_this.projectItems, function (index, value) {
+                                     var index = ProgramIndex(value.ProjectNumber);
+                                     projectItemsCopy.push(_this.projectItems[index]);
+                               });
+                               app.projectItems = projectItemsCopy;
+                            }
+                        }
+                       if (flag) {
+                           $('#LoadingSite').fadeIn();
+                          var message = this.newType == "true" ? "رقم البند غير صحيح" : "رقم المشروع غير صحيح";
+
+           $.ajax({
+              type: "GET",
+              url: '@Url.Action("AgencyProjectBudget", "Tender")',
+              data: { ProjectNumber: task, IsGfs: itemType},
+              success: function (data) {
+                 if (data.statusCode == "Error") {
+                    $('#LoadingSite').fadeOut();
+                    AlertFun(message, alertMessageType.Danger);
+                 } else {
+                    if (!_this.projectItems)
+                       _this.projectItems = [];
+                    _this.projectItems.push({
+                       ProjectNumber: task,
+                       ProjectName: data.projectName,
+                       Cache: data.cash == null ? 0 : data.cash,
+                       Cost: data.cost == null ? 0 : data.cost,
+                       IsGSF: itemType,
+                       IsProject: itemType
+                    });
+                    $('#addProject').modal('hide');
+                    for (var i = 0; i < app.projectItems.length; i++) {
+                       if (itemType == true) {
+                          totalCash += app.projectItems[i].Cache;// بند
+                       } else {
+                          totalCash += app.projectItems[i].Cost;// مشروع
+                       }
+                    }
+
+                    //if (parseFloat(EstimatedValue.toString()) > totalCash) {
+                    //   $("#notApplicableBudget").show();
+                    //   $("#applicableBudget").hide();
+                    //}
+                    //else {
+                    //   $("#applicableBudget").show();
+                    //   $("#notApplicableBudget").hide();
+                    //}
+                    $('#LoadingSite').fadeOut();
+                 }
+                    $('#LoadingSite').fadeOut();
+                 
+              },
+              error: function () {
+                 $('#LoadingSite').fadeOut();
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ExpiredActivationCode)', alertMessageType.Danger);
+                  }
+                           });
+                        }
+                  this.newTask = "";
+                    }
+                    else {
+                       $('#LoadingSite').fadeOut();
+                       AlertFun('يجب إدخال رقم بند أو مشروع', alertMessageType.Info);
+                    }
+            },
+            removeTask: function (task) {
+               var itemType = task.IsGSF;
+               var EstimatedValue = $("#txtEstimatedValue").val();
+               if (itemType == true) {
+                  totalCash -= task.Cache;// بند
+               } else {
+                  totalCash -= task.Cost;// مشروع
+               }
+               var index = this.projectItems.indexOf(task);
+               this.projectItems.splice(index, 1);
+
+               //if (parseFloat(EstimatedValue.toString()) > totalCash) {
+               //   $("#notApplicableBudget").show();
+               //   $("#applicableBudget").hide();
+               //}
+               //else {
+               //   $("#applicableBudget").show();
+               //   $("#notApplicableBudget").hide();
+               //}
+
+            }
+         }
+      });
+
+
+   var value = document.getElementById("txtEstimatedValue").value;
+   if (!isNaN(value)) {
+      $.ajax({
+         type: "GET",
+         url: "/tender/ConvertNumberToText",
+         data: { estimatedValue: value, }, // update tender estimation value
+         success: function (result) {
+            $('#StringEstimatedValue').text(result);
+         }
+      });
+   }
+      function GetNTISValue() {
+         var projNumber = $('#txtProjectNumber').val();
+         if (projNumber == '') {
+            $('#projectValue').html('');
+            $('#spnVProjectNumber').show().removeAttr('hidden');
+         }
+         else {
+            $.ajax({
+               url: '../../../CommunicationRequest/CheckAvilableCashAsync?ProjectItemNumber=' + projNumber,
+               type: "GET",
+               dataType: "html",
+               success: function (data) {
+                  console.log(data);
+                  $('#projectValue').text(data + ' ريال')
+               }
+            });
+
+
+         }
+      }
+   $("#txtEstimatedValue").on("blur", function () {
+      $('#EstimatedValueValidation').hide();
+      var estimatedValue = document.getElementById("txtEstimatedValue").value;
+      $.ajax({
+         type: "GET",
+         url: "/tender/ConvertNumberToText",
+         data: { estimatedValue: estimatedValue }, // update tender estimation value
+         success: function (result) {
+            $('#StringEstimatedValue').text(result);
+         }
+      });
+   });
+   var fixing = false;
+   function blockSpecialChar(e) {
+      if (fixing)
+         return;
+      fixing = true;
+      var newString = "";
+      var stringValue = $(e.currentTarget).val();
+      for (var i = 0; i < stringValue.length; i++) {
+         var k = stringValue[i];
+         var iChars = "!@@#$%^&*()+=-[]\\\';,./{}|\":<>?_×÷،ٍِِِِِ’َ؟?‘ًَُ~ٍِـ`";
+         if (iChars.indexOf(k) == -1)
+            newString = newString + k;
+      }
+      $(e.currentTarget).val(newString);
+      fixing = false;
+   }
+
+   $("#btnApproveConfirmation").on("click", function () {
+      if (!$('form').valid())
+         return false;
+      $('#LoadingSite').fadeIn();
+      $('form')[0].submit();
+   });
+
+      //$('#txtEstimatedValue').on('keyup', function () {
+      //   var totalCash = 0;
+      //   var EstimatedValue = $("#txtEstimatedValue").val();
+      //   if (app.projectItems != null) {
+      //      for (var i = 0; i < app.projectItems.length; i++) {
+      //         if (app.projectItems[i].IsGSF == true) {
+      //            totalCash += app.projectItems[i].Cache;// بند
+      //         } else {
+      //            totalCash += app.projectItems[i].Cost;// مشروع
+      //         }
+      //      }
+      //      //if (parseFloat(EstimatedValue.toString()) > totalCash) {
+      //      //   $("#notApplicableBudget").show();
+      //      //   $("#applicableBudget").hide();
+      //      //}
+      //      //else {
+      //      //   $("#applicableBudget").show();
+      //      //   $("#notApplicableBudget").hide();
+      //      //}
+      //   }
+      //}).on('keydown', function (e) {
+      //   if (e.keyCode == 8)
+      //      $('#txtEstimatedValue').trigger('keypress');
+      //});
+
+
+        $("#basicStepForm").submit(function (event) {
+           var isvalid = true;
+           if (parseInt($('#txtEstimatedValue').val()) >= 5000000) {
+              if ($("input[name='OfferPresentationWayId']:checked").val() == "1") {
+                 $('#LoadingSite').fadeOut();
+                 $('#spanOffer').show();
+                 return false;
+              }
+           }
+
+            //if (app.projectItems == null || app.projectItems == "") {
+            //   isvalid = false;
+            //} else {
+            //   $('#AgencyBudgetProjectNumber').val(JSON.stringify(app.projectItems).toString());
+            //}
+            //event.preventDefault();
+            //if (!isvalid) {
+            //   AlertFun('من فضلك ادخل بند أو مشروع على الأقل', alertMessageType.Danger);
+            //   $('#LoadingSite').fadeOut();
+            //   return false;
+            //}
+      $(this).unbind('submit').submit();
+   });
+   </script>
+}

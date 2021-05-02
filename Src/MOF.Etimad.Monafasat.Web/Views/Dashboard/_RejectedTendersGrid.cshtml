@@ -1,0 +1,376 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   string rejectionReasonResString = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason;
+   string changeType = MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.RejectionType;
+   string statusResString = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status;
+   string tenderNameResString = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName + "/ " + MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualificaton + "/ " + MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementName;
+   string tenderNumberResString = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber;
+   string tenderReferenceResString = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber;
+   string noDataResString = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData;
+
+
+   string prePlaningNameResString = MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ProjectName;
+   string prePlaningQuarterResString = MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.YearQuarter;
+   string executionPlaceResString = MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ExecutionPlace;
+   string durationInDays = MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.Duration + " (" + MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.DurationInDays + ")";
+   string durationInMonths = MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.Duration + " (" + MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.DurationInMonths + ")";
+   string durationInYears = MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.Duration + " (" + MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.DurationInYears + ")";
+
+   var commercialSupplierName = MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName;
+   var commercialRegistrationNo = MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialRegistrationNo;
+   var blockReason = MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockReason;
+
+
+}
+@if (!(User.IsInRole(RoleNames.PrePlanningCreator) || User.IsInRole(RoleNames.MonafasatBlockListSecritary)))
+{<div class="table-responsive ">
+      <table class="table table-striped" id="RejectedTendersTable" summary="desc">
+         <thead>
+            <tr>
+               <th scope="col">#</th>
+               <th scope="col">@Html.Raw(tenderNameResString)</th>
+               <th scope="col">@Html.Raw(tenderReferenceResString)</th>
+               <th scope="col">@Html.Raw(tenderNumberResString)</th>
+               <th scope="col">@Html.Raw(statusResString)</th>
+               <th scope="col">@Html.Raw(rejectionReasonResString)</th>
+               <th scope="col">@Html.Raw(changeType)</th>
+               <th scope="col">@Html.Raw(@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options)</th>
+            </tr>
+         </thead>
+         <tbody v-if="RejectedTenders && RejectedTenders.length > 0">
+            <tr v-for="(tender, $index) in RejectedTenders">
+               <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+               <td data-label="@Html.Raw(tenderNameResString)"> {{tender.tenderName}} </td>
+               <td data-label="@Html.Raw(tenderNumberResString)"> {{tender.referenceNumber}} </td>
+               <td data-label="@Html.Raw(tenderNumberResString)"> {{tender.tenderNumber}} </td>
+               <td data-label="@Html.Raw(statusResString)"> {{tender.tenderStatusName}} </td>
+               <td data-label="@Html.Raw(rejectionReasonResString)"> {{tender.rejectionReason}} </td>
+               <td data-label="@Html.Raw(changeType)"> {{tender.changeType}} </td>
+               <td data-label="@Html.Raw(@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options)">
+                  <div class="dropdown">
+                     @if (User.IsInRole(RoleNames.OffersOppeningSecretary))
+                     {
+                        <a :href="reOpenTenderOffers(tender.tenderIdString)" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedRejected) && tender.changeRequestTypeId != @((int)Enums.ChangeRequestType.Canceling)" class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenOfferOpening
+                        </a>
+
+                        <a :href="reOpenTenderOffers(tender.tenderIdString)" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalOppeningRejected) && tender.changeRequestTypeId != @((int)Enums.ChangeRequestType.Canceling)" class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenTechnicalOffers
+                        </a>
+
+                        <a :href="checkTenderOffers(tender.tenderIdString)" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOpenFinancialStageRejected) && tender.changeRequestTypeId != @((int)Enums.ChangeRequestType.Canceling)" class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenFinancialOffers
+                        </a>
+                        <a :href="reopenTenderCancel(tender.tenderIdString)"
+                           v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppening)
+                            || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedPending)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedRejected)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedConfirmed)
+
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalOppening)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalOppeningPending)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalOppeningRejected)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalOppeningConfirmed)
+
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOpenFinancialStage)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOpenFinancialStagePending)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOpenFinancialStageRejected)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOpenFinancialStageApproved)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed))
+                           && tender.changeRequestTypeId == @((int)Enums.ChangeRequestType.Canceling))"
+                           class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+                     }
+                     @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PurshaseSpecialist))
+                     {
+                        <div>
+                           <a v-if="tender.announcementStatusId == @((int)Enums.AnnouncementStatus.Rejected)" :href="`/Announcement/GetAnnouncementDetails?AnnouncementIdString=${tender.tenderIdString}`" class="btn btn-primary btn-link btn-sm">
+                              <i class="material-icons">send</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                           </a>
+                        </div>
+                        <div class="wrapper" v-if="tender.tenderTypeId != @((int)Enums.TenderType.PreQualification) && tender.announcementStatusId == 0">
+                           <a :href="detailsUrl(tender.tenderIdString, tender.changeRequestTypeId)" class="btn btn-primary btn-link btn-sm">
+                              <i class="material-icons">send</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                           </a>
+                        </div>
+                        <div v-else>
+                           <a v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Rejected)" :href="`/Qualification/PreQualificationApproval?qualificationIdString=${tender.tenderIdString}`" class="btn btn-primary btn-link btn-sm">
+                              <i class="material-icons">send</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                           </a>
+                           <a v-if="tender.changeRequestTypeId == @((int)Enums.ChangeRequestType.Canceling)" :href="`/Qualification/CancelQualification?reOpen=true&STenderId=${tender.tenderIdString}`" class="btn btn-primary btn-link btn-sm">
+                              <i class="material-icons">send</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                           </a>
+                           <a v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && tender.tenderTypeId == @((int)Enums.TenderType.PreQualification) && tender.changeRequestStatuesId == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestTypeId == @((int)Enums.ChangeRequestType.ExtendDates) " :href="`/Qualification/QualificationExtendDateApprovement?tenderIdString=${tender.tenderIdString}`" class="btn btn-primary  btn-sm">
+                              <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                           </a>
+
+                           <a v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)  && tender.tenderTypeId == @((int)Enums.TenderType.PreQualification)  && tender.changeRequestStatuesId == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestTypeId == @((int)Enums.ChangeRequestType.Attachments) " :href="`/Qualification/QualificationAttachmentsChangesApprovement?tenderIdString=${tender.tenderIdString}`" class="btn btn-primary  btn-sm">
+                              <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                           </a>
+                        </div>
+                     }
+                     @if (User.IsInRole(RoleNames.SecretaryGrievanceCommittee))
+                     {<div class="wrapper" v-if="tender.changeRequestTypeId == '90'">
+                           <a :href="detailsUrl(tender.tenderIdString, tender.changeRequestTypeId)" class="btn btn-primary btn-link btn-sm">
+                              <i class="material-icons">send</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                           </a>
+                        </div>
+
+                     }
+
+                     @if (User.IsInRole(RoleNames.PreQualificationCommitteeSecretary))
+                     {
+
+                        <a :href="approvePreQualificationChecking(tender.tenderIdString)" v-if="((tender.tenderTypeId == @((int)Enums.TenderType.PreQualification) || tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)) && tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckRejected))" class="btn btn-primary btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+                        <a :href="PostQualificationApprovementAction(tender.tenderIdString)" v-if="((tender.tenderTypeId == @((int)Enums.TenderType.PreQualification) || tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)) && tender.tenderStatusId == @((int)Enums.TenderStatus.RejectedQualificationApprovalByCommitteeManager))" class="btn btn-primary btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+                        <a v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && (tender.tenderTypeId == @((int)Enums.TenderType.PreQualification)|| tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)) && tender.changeRequestStatuesId == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestTypeId == @((int)Enums.ChangeRequestType.ExtendDates) " :href="`/Qualification/QualificationExtendDateApprovement?tenderIdString=${tender.tenderIdString}`" class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CloseChange
+                        </a>
+
+                        <a v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)  && (tender.tenderTypeId == @((int)Enums.TenderType.PreQualification) || tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)) && tender.changeRequestStatuesId == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestTypeId == @((int)Enums.ChangeRequestType.Attachments) " :href="`/Qualification/QualificationAttachmentsChangesApprovement?tenderIdString=${tender.tenderIdString}`" class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CloseChange
+                        </a>
+                        <a v-if="tender.changeRequestTypeId == @((int)Enums.ChangeRequestType.Canceling)" :href="`/Qualification/CancelQualification?reOpen=true&STenderId=${tender.tenderIdString}`" class="btn btn-primary  btn-sm">
+                           <i class="material-icons">send</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+                     }
+
+                     @if (User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary))
+                     {
+                        <a :href="ReopenVROOffersTechnicalChecking(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingRejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingRejected)) && tender.changeRequestTypeId != @((int)Enums.ChangeRequestType.Canceling)" class="btn   btn-primary btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+                        <a :href="reopenVROTenderAwarding(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedRejected) && tender.changeRequestTypeId != @((int)Enums.ChangeRequestType.Canceling))" class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenAwarding
+                        </a>
+
+                        <a :href="reopenTenderCancel(tender.tenderIdString)"
+                           v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.VROFinancialCheckingOpening) || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersCheckingAndTechnicalEval)
+                          || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialChecking)|| tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingApproved)
+                          || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingRejected)|| tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingRejected)
+                          || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalChecking) || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingApproved)
+                          || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingPending)
+                          || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingPending)
+                          || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwarding)
+                          || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedPending)
+                          || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersChecking)
+                          || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedConfirmed)
+                          || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedRejected))
+                           && tender.changeRequestTypeId == @((int)Enums.ChangeRequestType.Canceling))
+                        " class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+                     }
+
+                     @if (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager))
+                     {
+                        <a :href="reOpenRejecterdTenderAwarding(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedRejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersInitialAwardedRejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.BackForAwardingFromPlaint))" class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenAwarding
+                        </a>
+                        @if (User.IsInRole(RoleNames.OffersCheckSecretary))
+                        {
+                           <a :href="checkTenderOffers(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedRejected)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingRejected)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.BackForCheckingFromPlaint)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.BiddingOffersCheckedRejected))
+                           && tender.changeRequestTypeId != @((int)Enums.ChangeRequestType.Canceling)" class="btn btn-primary  btn-sm">
+                              <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenCheck
+                           </a>
+
+                        }
+                        else
+                        {
+                           <a :href="checkDirectPurchaseTenderOffers(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedRejected)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingRejected)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.BackForCheckingFromPlaint)
+                           || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected))
+                           && tender.changeRequestTypeId != @((int)Enums.ChangeRequestType.Canceling)" class="btn btn-primary  btn-sm">
+                              <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenCheck
+                           </a>
+                        }
+
+                        <a :href="reopenTenderCancel(tender.tenderIdString)"
+                           v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOpenFinancialStageApproved)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersChecking)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedPending)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingPending)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingPending)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedConfirmed)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedRejected)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialChecking)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingApproved)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedConfirmed)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalChecking)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingRejected)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalOppeningConfirmed)
+
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.BiddingOffersCheckedPending)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.BiddingOffersCheckedRejected)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.BiddingOffersCheckedConfirmed)
+
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwarding)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedPending)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersInitialAwardedPending)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersInitialAwardedConfirmed)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersInitialAwardedRejected)
+                                   || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedRejected))
+                                   && tender.changeRequestTypeId == @((int)Enums.ChangeRequestType.Canceling)  && tender.changeRequestStatuesId == @((int)Enums.ChangeStatusType.Rejected))
+                                      " class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+
+                        <a v-if="tender.changeRequestTypeId == @((int)Enums.ChangeRequestType.Canceling) && tender.changeRequestStatuesId == @((int)Enums.ChangeStatusType.Rejected) && tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)" :href="`/Qualification/CancelQualification?reOpen=true&STenderId=${tender.tenderIdString}`" class="btn btn-primary  btn-sm">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+
+                        <a v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)  && tender.changeRequestStatuesId == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestTypeId == @((int)Enums.ChangeRequestType.ExtendDates) " :href="`/Qualification/QualificationExtendDateApprovement?tenderIdString=${tender.tenderIdString}`" class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+
+                        <a v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)  && tender.changeRequestStatuesId == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestTypeId == @((int)Enums.ChangeRequestType.Attachments) " :href="`/Qualification/QualificationAttachmentsChangesApprovement?tenderIdString=${tender.tenderIdString}`" class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+                        <a v-if="tender.tenderTypeId == @((int)Enums.TenderType.PostQualification) && tender.tenderStatusId == @((int)Enums.TenderStatus.Rejected)" :href="PostQualificationApprovementAction(tender.tenderIdString)" class="btn btn-primary  btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+
+                        <a :href="approvePostQualificationChecking(tender.tenderIdString)" v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification) && tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckRejected))" class="btn btn-primary btn-sm">
+                           <i class="material-icons">undo</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+                        <a v-if="tender.operationType == '@((int)Enums.OperationsNeedsApproval.Negotiation)'" :href="ReopenSecondStageNegotiation(tender.itemIdString)" class="btn btn-primary btn-sm">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+                        <a v-if="tender.operationType == '@((int)Enums.OperationsNeedsApproval.NegotiationFirstStage)'" :href="ReopenNegotiation(tender.tenderIdString,tender.itemIdString,tender.isNewNegotiation)" class="btn btn-primary btn-sm">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+                        <a v-if="tender.agencyRequestTypeId == '@((int)Enums.AgencyCommunicationRequestType.ExtendOfferValidtiy)' " :href="ReopenExtendOffer(tender.tenderIdString,tender.agencyRequestIdString)" class="btn btn-primary btn-sm">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+                        <a v-if="tender.agencyRequestTypeId == '@((int)Enums.AgencyCommunicationRequestType.Plaint)' " :href="ReopenPlaint(tender.tenderIdString,tender.agencyRequestIdString)" class="btn btn-primary btn-sm">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                        </a>
+                     }
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+         <tbody v-else>
+            <tr>
+               <td align="center" style="text-align:center !important" colspan="8">
+                  <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                  <br>
+                  @Html.Raw(noDataResString)
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+}
+
+@if (User.IsInRole(RoleNames.PrePlanningCreator))
+{
+   <div class="table-responsive ">
+      <table class="table table-striped" id="RejectedTendersTable" summary="desc">
+         <thead>
+            <tr>
+               <th scope="col">#</th>
+               <th scope="col">@Html.Raw(prePlaningNameResString)</th>
+               <th scope="col">@Html.Raw(prePlaningQuarterResString)</th>
+               <th scope="col">@Html.Raw(executionPlaceResString)</th>
+               <th scope="col">@Html.Raw(durationInDays)</th>
+               <th scope="col">@Html.Raw(durationInMonths)</th>
+               <th scope="col">@Html.Raw(durationInYears)</th>
+               <th scope="col">@Html.Raw(rejectionReasonResString)</th>
+               <th scope="col">@Html.Raw(@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options)</th>
+            </tr>
+         </thead>
+         <tbody v-if="RejectedTenders && RejectedTenders.length > 0">
+            <tr v-for="(tender, $index) in RejectedTenders">
+               <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+               <td data-label="@Html.Raw(prePlaningNameResString)"> {{tender.projectName}} </td>
+               <td data-label="@Html.Raw(prePlaningQuarterResString)"> {{tender.yearQuarterName}} </td>
+               <td data-label="@Html.Raw(executionPlaceResString)"> {{tender.insideKSAString}} </td>
+               <td data-label="@Html.Raw(durationInDays)"> {{tender.durationInDays}} </td>
+               <td data-label="@Html.Raw(durationInMonths)"> {{tender.durationInMonths}} </td>
+               <td data-label="@Html.Raw(durationInYears)"> {{tender.durationInYears}} </td>
+
+               <td v-if="tender.isDeleteRequested==false&&tender.deleteRejectionReason!=null" data-label="@Html.Raw(rejectionReasonResString)"> {{tender.deleteRejectionReason}} </td>
+               <td v-else data-label="@Html.Raw(rejectionReasonResString)"> {{tender.rejectionReason}} </td>
+
+               <td data-label="@Html.Raw(@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options)">
+                  <div class="wrapper" v-if="tender.tenderTypeId != @((int)Enums.TenderType.PreQualification)">
+                     <a :href="preplanningDetailsUrl(tender.encyptedPrePlanningId)" class="btn btn-primary btn-sm">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+                     </a>
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+         <tbody v-else>
+            <tr>
+               <td align="center" style="text-align:center !important" colspan="8">
+                  <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                  <br>
+                  @Html.Raw(noDataResString)
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+}
+
+@if (User.IsInRole(RoleNames.MonafasatBlockListSecritary))
+{
+   <div class="table-responsive ">
+      <table class="table table-striped" id="RejectedTendersTable" summary="desc">
+         <thead>
+            <tr>
+               <th scope="col">#</th>
+               <th scope="col">@Html.Raw(commercialSupplierName)</th>
+               <th scope="col">@Html.Raw(commercialRegistrationNo)</th>
+               <th scope="col">@Html.Raw(rejectionReasonResString)</th>
+               <th scope="col">@Html.Raw(@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options)</th>
+            </tr>
+         </thead>
+         <tbody v-if="RejectedTenders && RejectedTenders.length > 0">
+            <tr v-for="(tender, $index) in RejectedTenders">
+               <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+               <td data-label="@Html.Raw(commercialSupplierName)"> {{tender.tenderName}} </td>
+               <td data-label="@Html.Raw(commercialRegistrationNo)"> {{tender.tenderNumber}} </td>
+               <td data-label="@Html.Raw(rejectionReasonResString)"> {{tender.rejectionReason}} </td>
+               <td data-label="@Html.Raw(@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options)">
+                  <div class="dropdown">
+
+                     @if (User.IsInRole(RoleNames.MonafasatBlockListSecritary))
+                     {<div class="wrapper" v-if="tender.changeRequestTypeId == '103'">
+
+                           <a :href="detailsUrl(tender.tenderIdString, tender.changeRequestTypeId)" id="DeleteBTN" class="btn btn-sm btn-primary"><i class="material-icons">list</i>   @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Details</a>
+                        </div>
+
+                     }
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+         <tbody v-else>
+            <tr>
+               <td align="center" style="text-align:center !important" colspan="8">
+                  <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                  <br>
+                  @Html.Raw(noDataResString)
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>}

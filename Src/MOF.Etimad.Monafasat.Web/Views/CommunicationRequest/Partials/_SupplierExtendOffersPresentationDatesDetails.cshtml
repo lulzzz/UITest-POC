@@ -1,0 +1,53 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierExtendOfferDatesAgencyRequestModel
+<div class="row" id="basicDetials">
+   <div class="col-12">
+      @if (Model.TenderTypeId == (int)Enums.TenderType.PreQualification || Model.TenderTypeId == (int)Enums.TenderType.PostQualification)
+      {
+      <h4 class="text-primary">طلب تأجيل تقديم وثائق التأهيل</h4>
+      }
+      else
+      {
+         <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.SupplierExtendOfferDatesRequest</h4>
+      }
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <ul class="list-group form-details-list">
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtendOfferDatesRequestReason
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>@(Model.ExtendOfferDatesRequestReason)</span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  تأجيل لتاريخ 
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.ExtendOfferDatesRequestedDate)
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.RequestDate
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.CreatedAtString)
+                  </span>
+               </div>
+            </div>
+         </li>
+
+      </ul>
+   </div>
+</div>
+

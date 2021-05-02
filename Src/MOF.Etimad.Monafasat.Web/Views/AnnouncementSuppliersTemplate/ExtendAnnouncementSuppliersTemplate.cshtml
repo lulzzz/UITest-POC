@@ -1,0 +1,809 @@
+@using res = MOF.Etimad.Monafasat.Resources;
+
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using Microsoft.Extensions.Hosting;
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env;
+@using Microsoft.Extensions.Options;
+@inject IOptionsSnapshot<RootConfiguration> rootConfiguration;
+
+@model MOF.Etimad.Monafasat.ViewModel.ExtendAnnouncementSupplierTemplateModel
+@{
+   var _rootConfiguration = rootConfiguration.Value;
+   ViewData["Title"] = res.AnnouncementResources.DisplayInputs.ExtendAnnouncementTemplate;
+   var activitiesIds = Html.Raw(Json.Serialize(Model.ActivityIds));
+   var areaIds = Html.Raw(Json.Serialize(Model.AreasIds));
+   var countiesIds = Html.Raw(Json.Serialize(Model.CountriesIds));
+   var constructionsIds = Html.Raw(Json.Serialize(Model.ConstructionWorkIds));
+   var maintenanceIds = Html.Raw(Json.Serialize(Model.MaintenanceRunnigWorkIds));
+   var insideKsa = Html.Raw(Json.Serialize(Model.InsideKsa));
+   var announcementTemplateSuppliersListTypeId = Html.Raw(Json.Serialize(Model.AnnouncementTemplateSuppliersListTypeId));
+   var isEffectiveList = Html.Raw(Json.Serialize(Model.IsEffectiveList));
+   var isRequiredAttachmentToJoinList = Html.Raw(Json.Serialize(Model.IsRequiredAttachmentToJoinList));
+   var typesIds = Html.Raw(Json.Serialize(Model.TenderItemTypes));
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.ExtendAnnouncementTemplate</li>
+      </ol>
+   </nav>
+}
+<style>
+   .tab-content > .tab-pane {
+      display: block;
+      height: 0;
+      overflow: hidden;
+   }
+
+   .tab-content > .active {
+      display: block;
+      height: auto;
+      overflow: visible;
+   }
+</style>
+<form id="basicStepForm" method="POST" asp-controller="AnnouncementSuppliersTemplate" asp-action="ExtendAnnouncementSuppliersTemplate" autocomplete="off">
+   @Html.AntiForgeryToken()
+
+   <div class="modal fade" id="extendAnnouncementTemplateModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Confirm</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+
+            <div class="modal-body">
+               <div class="form-group bmd-form-group" style="padding-top:0">
+                  <div class="pull-left">
+                     <p>@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.ExtendAnnouncementSupplierTemplateConfirmationMessage</p>
+                  </div>
+               </div>
+            </div>
+
+            <div class="modal-footer">
+               <button type="submit" id="btnFirstSave" class="btn btn-primary btn-sm" name="button">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div id="app" v-cloak>
+      <input type="hidden" asp-for="AnnouncementIdString" name="announcementIdString" />
+      <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+         <li class="nav-item">
+            <a class="nav-link active" href="#monafasa-info" role="tab" data-toggle="tab">
+               <i class="material-icons">assignment</i>
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation
+            </a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link" href="#RelationStep" role="tab" data-toggle="tab">
+               <i class="material-icons">table_chart</i>
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep
+            </a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link " href="#DatesStep" role="tab" data-toggle="tab">
+               <i class="fa fa-calendar" aria-hidden="true"></i>
+               معلومات الجهة الحكومية
+            </a>
+         </li>
+      </ul>
+
+      <div class="tab-content tab-space p-0">
+         <div class="tab-pane active" id="monafasa-info">
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-lg-12 col-sm-12 col-xs-12">
+                              <span class="badge badge-primary pull-right">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy :
+                                 <i class="material-icons" style="font-size: 11px;padding: 2px;display: inline;">person</i>
+                                 @Model.CreatedBy
+                              </span>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="AnnouncementSupplierTemplateName" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="AnnouncementSupplierTemplateName" class="form-control" name="AnnouncementSupplierTemplateName" maxlength="500" />
+                                 <span asp-validation-for="AnnouncementSupplierTemplateName" class="text-danger"></span>
+                              </div>
+                           </div>
+
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="IntroAboutAnnouncementTemplate" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="IntroAboutAnnouncementTemplate" class="form-control" name="IntroAboutAnnouncementTemplate" maxlength="500" />
+                                 <span asp-validation-for="IntroAboutAnnouncementTemplate" class="text-danger"></span>
+                              </div>
+                           </div>
+
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="RequirementConditionsToJoinList" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="RequirementConditionsToJoinList" class="form-control" name="RequirementConditionsToJoinList" maxlength="500"  />
+                                 <span asp-validation-for="RequirementConditionsToJoinList" class="text-danger"></span>
+
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="TenderTypesId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <select id="tenderTypesId" v-model="tendertypesSelected" name="TenderItemTypes" multiple data-live-search="true" class="selectpicker"
+                                         data-style="select-with-transition" data-size="7">
+                                    <option v-for="option in tendertypes" :key="option.id" :value="option.id">
+                                       {{option.name}}
+                                    </option>
+                                 </select>
+                              </div>
+                              <span asp-validation-for="TenderTypeId" class="text-danger"></span>
+                           </div>
+
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="AnnouncementTemplateSuppliersListTypeId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <div class="form-check">
+                                    <label class="form-check-label">
+                                       <input asp-for="AnnouncementTemplateSuppliersListTypeId" id="AnnouncementTemplateSuppliersListTypeIdGeneral" name="AnnouncementTemplateSuppliersListTypeId" checked="checked" v-model="announcementTemplateSuppliersListTypeId" class="form-check-input" type="radio" value="1">
+                                       @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.GeneralList
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                    <label class="form-check-label">
+                                       <input class="form-check-input" type="radio" id="AnnouncementTemplateSuppliersListTypeIdPrivate" asp-for="AnnouncementTemplateSuppliersListTypeId" v-model="announcementTemplateSuppliersListTypeId" name="AnnouncementTemplateSuppliersListTypeId" value="2">
+                                       @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.PrivateList
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                 </div>
+                                 <span asp-validation-for="AnnouncementTemplateSuppliersListTypeId" id="AnnouncementTemplateSuppliersListTypeSpan" class="text-danger"></span>
+                              </div>
+                           </div>
+
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="TemplateExtendMechanism" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="TemplateExtendMechanism" class="form-control" name="TemplateExtendMechanism" maxlength="500" />
+                                 <span asp-validation-for="TemplateExtendMechanism" class="text-danger"></span>
+                              </div>
+                           </div>
+
+                        </div>
+                        <div class="row">
+                           <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="IsEffectiveList" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <div class="form-check">
+                                    <label class="form-check-label">
+                                       <input asp-for="IsEffectiveList"  id="isEffectiveList" name="IsEffectiveList" checked="checked" v-model="isEffectiveList" class="form-check-input" type="radio" value="true">
+                                       @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.Yes
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                    <label class="form-check-label">
+                                       <input class="form-check-input" type="radio" id="IsEffectiveList2" asp-for="IsEffectiveList" v-model="isEffectiveList" name="IsEffectiveList" value="false">
+                                       @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.No
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                 </div>
+                                 <span asp-validation-for="IsEffectiveList" id="IsEffectiveListSpan" class="text-danger"></span>
+                              </div>
+                           </div>
+
+                           <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12" id="divEffectiveListDate" v-show="isEffectiveListShow==='true'">
+                              <div class="form-group form-check etd-calendar-group">
+                                 <label asp-for="IsEffectiveList" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <input asp-for="EffectiveListDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="effectiveListDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+                                 <span class="form-control-feedback">
+                                    <i class="material-icons">calendar_today</i>
+                                 </span>
+                              </div>
+                              <span class="badge badge-warning" id="effectiveListDateVac" style="display:none">@res.TenderResources.ErrorMessages.WeekendDate </span>
+                              <span asp-validation-for="EffectiveListDate" class="text-danger"></span>
+                           </div>
+
+
+
+                           <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="IsRequiredAttachmentToJoinList" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <div class="form-check">
+                                    <label class="form-check-label">
+                                       <input asp-for="IsRequiredAttachmentToJoinList" id="IsRequiredAttachmentToJoinList1" name="IsRequiredAttachmentToJoinList" checked="checked" v-model="isRequiredAttachmentToJoinList" class="form-check-input" type="radio" value="true">
+                                       @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.Yes
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                    <label class="form-check-label">
+                                       <input class="form-check-input" type="radio" id="IsRequiredAttachmentToJoinList2" asp-for="IsRequiredAttachmentToJoinList" v-model="isRequiredAttachmentToJoinList" name="IsRequiredAttachmentToJoinList" value="false">
+                                       @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.No
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                 </div>
+                                 <span asp-validation-for="IsRequiredAttachmentToJoinList" id="IsEffectiveListSpan" class="text-danger"></span>
+                              </div>
+                           </div>
+
+                           <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12" id="divRequiredAttachmentToJoinList" v-show="isRequiredAttachmentShow==='true'">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="RequiredAttachment" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="RequiredAttachment" class="form-control" name="RequiredAttachment" data-val="false" id="txt_RequiredAttachment" />
+                              </div>
+                           </div>
+
+
+                           <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="ReferenceNumber" class="label bmd-label-static noSpecial"></label>
+                                 <input readonly asp-for="ReferenceNumber" class="form-control" name="ReferenceNumber" maxlength="500" />
+                              </div>
+                           </div>
+
+
+
+                        </div>
+
+                        <div class="row">
+                           <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="Descriptions" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="Descriptions" class="form-control" name="Descriptions" maxlength="500" />
+                                 <span asp-validation-for="Descriptions" class="text-danger"></span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-12">
+                  <button type="button" class="btn btn-primary  next-tab pull-right" onclick="nextTab()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+               </div>
+            </div>
+
+         </div>
+         <div class="tab-pane" id="RelationStep">
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="InsideKsa" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <div class="form-check">
+                                    <label class="form-check-label">
+                                       <input asp-for="InsideKsa" id="InsideKSA1" name="InsideKSA" checked="checked" v-model="insideKsa" class="form-check-input" type="radio" value="true">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InsideKSA
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                    <label class="form-check-label">
+                                       <input class="form-check-input" type="radio" id="InsideKSA2" asp-for="InsideKsa" v-model="insideKsa" name="InsideKSA" value="false">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OutsideKSA
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                 </div>
+                                 <span asp-validation-for="InsideKsa" id="InsideKSASpan" class="text-danger"></span>
+                              </div>
+                           </div>
+
+                           <div id="areasDiv" v-show="insideKsa === 'true'" class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="AreasIds" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <select id="areasSelect" v-model="areasSelected" name="AreasIds" multiple data-live-search="true" class="selectpicker"
+                                         data-style="select-with-transition" data-size="7">
+                                    <option v-for="option in areas" :value="option.id">
+                                       {{ option.name }}
+                                    </option>
+                                 </select>
+                              </div>
+                              <span asp-validation-for="AreasIds" class="text-danger"></span>
+                           </div>
+                           <div id="countriesDiv" v-show="insideKsa === 'false'" class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="CountriesIds" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <select id="contriesSelect" v-model="countriesSelected" name="CountriesIds" multiple data-live-search="true" class="selectpicker"
+                                         data-style="select-with-transition" data-size="7">
+                                    <option v-for="option in countries" :key="option.countryId" :value="option.countryId">
+                                       {{option.name}}
+                                    </option>
+                                 </select>
+                              </div>
+                              <span asp-validation-for="CountriesIds" class="text-danger"></span>
+                           </div>
+
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="ConstructionWorkIds" class="label bmd-label-static"></label>
+                                 <select id="constructionSelect" v-model="constructionsSelected" name="ConstructionWorkIds" multiple data-live-search="true" class="selectpicker"
+                                         data-style="select-with-transition" data-size="7">
+                                    <option v-for="option in constructionWorks" :value="option.constructionWorkId">
+                                       {{ option.name }}
+                                    </option>
+                                 </select>
+                              </div>
+                              <span asp-validation-for="ConstructionWorkIds" class="text-danger"></span>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="MaintenanceRunnigWorkIds" class="label bmd-label-static"></label>
+                                 <select id="maintenanceSelect" v-model="maintenanceSelected" name="MaintenanceRunnigWorkIds" multiple data-live-search="true" class="selectpicker"
+                                         data-style="select-with-transition" data-size="7">
+                                    <option v-for="option in maintenanceWorks" :value="option.maintenanceRunningWorkId">
+                                       {{ option.name }}
+                                    </option>
+                                 </select>
+                              </div>
+                              <span asp-validation-for="MaintenanceRunnigWorkIds" class="text-danger"></span>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group has-success bmd-form-group">
+                                 <label asp-for="ActivityIds" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <select v-model="activitiesSelected" name="ActivityIds" data-live-search="true" id="activitiesSelect" multiple class="selectpicker" data-style="select-with-transition">
+                                    <option :value="item.value" v-for="item in activities">
+                                       {{item.text}}
+                                    </option>
+                                 </select>
+                              </div>
+                              <span asp-validation-for="ActivityIds" class="text-danger"></span>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="ActivityDescription" class="label bmd-label-static"></label>
+                                 <input asp-for="ActivityDescription" class="form-control" name="ActivityDescription" data-val="false" id="txt_ActivityDescription" />
+                              </div>
+                           </div>
+                        </div>
+
+                        <div class="row">
+                           <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="Details" class="label bmd-label-static"></label>
+                                 <textarea asp-for="Details" id="txtDetails" data-val="false" class="form-control" rows="3"></textarea>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div class="row">
+                           <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                              <div class="form-group bmd-form-group p-0">
+                                 <label asp-for="AttachmentReference" class="label bmd-label-static"></label>
+                                 @Html.FileUploaderFor(m => m.AttachmentReference, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+            </div>
+
+            <div>
+               <button type="button" class="btn btn-default  prev-tab" onclick="prevTab()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+               <button type="button" class="btn btn-primary  next-tab pull-right" onclick="nextTab()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+            </div>
+         </div>
+
+         <div class="tab-pane" id="DatesStep">
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label class="label bmd-label-static noSpecial">
+                                    @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.GovAgencyName
+                                 </label>
+                                 <input type="text" class="form-control" readonly value="@User.UserAgencyName()">
+
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="AgencyPhone" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="AgencyPhone" maxlength="15" class="form-control" />
+                                 <span asp-validation-for="AgencyPhone" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="AgencyFax" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="AgencyFax" maxlength="15" class="form-control" />
+                                 <span asp-validation-for="AgencyFax" class="text-danger"></span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="AgencyEmail" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="AgencyEmail" maxlength="1000" class="form-control" />
+                                 <span asp-validation-for="AgencyEmail" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="AgencyAddress" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="AgencyAddress" maxlength="500" class="form-control" />
+                                 <span asp-validation-for="AgencyAddress" class="text-danger"></span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+            </div>
+
+            <div>
+               <button type="button" class="btn btn-default  prev-tab" onclick="prevTab()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+
+               <button type="button"    @@click="btnShowExtendAnnouncementConfirmation()"  class="btn btn-primary pull-right">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+               </button>
+            </div>
+         </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row">
+         <div class="col">
+            <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("AllAgencyAnnouncementSupplierTemplates", "AnnouncementSuppliersTemplate")'">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButtonToMain
+            </button>
+         </div>
+      </div>
+   </div>
+
+</form>
+@section scripts{
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   @{
+
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+   <script>
+      function nextTab() {
+         var divId = $('.etd-wiz-tabs').children().find('a.active').attr('href');
+         var _inputs = $("" + divId + " :input[data-val]");
+         for (var i = 0; i < _inputs.length; i++) {
+            var isValid = true;
+            var inputElm = _inputs[i];
+            var inputElmValue = _inputs[i].value;
+            var inputElmName = _inputs[i].name;
+            var inputTypeName = _inputs[i].type;
+            var inputRequired = inputElm.attributes['data-val'].value;
+
+            var errElm = $("span[data-valmsg-for='" + inputElmName + "']");
+            debugger;
+            if (inputTypeName != 'radio') {
+               if (inputRequired == "true" && inputElmValue == '') {
+                  isValid = false;
+                  var messageRequired = inputElm.attributes['data-val-required'].value;
+                  return postValidate(isValid, messageRequired, errElm, inputElm);
+               } else {
+                  errElm.html('');
+               }
+            }
+         }
+
+         if (divId == "#monafasa-info") {
+            debugger;
+            checkExtendAnnouncementDate();
+         }
+         else if (divId == "#DatesStep") {
+            $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+           
+         } 
+         else if (divId == "#RelationStep") {
+            $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+         } else {
+            $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+         }
+      }
+
+    function postValidate(isValid, errMsg, errElm, inputElm) {
+      if (!isValid) {
+         if (errElm !== undefined && errElm !== null
+            && errMsg !== undefined && errMsg !== null) {
+            errElm.html(errMsg);
+         }
+         if (inputElm !== undefined && inputElm !== null) {
+            inputElm.focus();
+         }
+      }
+      else {
+         if (errElm !== undefined && errElm !== null) {
+            errElm.html('');
+         }
+      }
+   }
+   function prevTab() {
+      $('.etd-wiz-tabs').children().find('a.active').parent().prev().children().click();
+   }
+
+         var obj = new Vue({
+            el: '#app',
+            data() {
+               return {
+                  isEffectiveListShow: '@Model.IsEffectiveList' == 'True' ? "true" : "false",
+                  isRequiredAttachmentShow: '@Model.IsRequiredAttachmentToJoinList' == 'True' ? "true" : "false",
+                  areas: [],
+                  countries: [],
+                  constructionWorks: [],
+                  maintenanceWorks: [],
+                  activities: [],
+                  insideKsa: '@insideKsa',
+                  announcementTemplateSuppliersListTypeId: '@Model.AnnouncementTemplateSuppliersListTypeId' == '@((int)Enums.AnnouncementTemplateSuppliersListTypeId.Private)' ? '@((int)Enums.AnnouncementTemplateSuppliersListTypeId.Private)' : '@((int)Enums.AnnouncementTemplateSuppliersListTypeId.Public)',
+                  isEffectiveList: '@isEffectiveList',
+                  isRequiredAttachmentToJoinList: '@isRequiredAttachmentToJoinList',
+                  areasSelected: Array.from('@areaIds'.replace(']', '').replace('[', '').split(','), Number),
+                  countriesSelected: Array.from('@countiesIds'.replace(']', '').replace('[', '').split(','), Number),
+                  activitiesSelected: Array.from('@activitiesIds'.replace(']', '').replace('[', '').split(','), Number),
+                  constructionsSelected: Array.from('@constructionsIds'.replace(']', '').replace('[', '').split(','), Number),
+                  maintenanceSelected: Array.from('@maintenanceIds'.replace(']', '').replace('[', '').split(','), Number),
+                  tendertypes: @Html.Raw(Json.Serialize(Model.TenderTypes)),
+                  tendertypesSelected:Array.from('@typesIds'.replace(']', '').replace('[', '').split(','), Number),
+               }
+            },
+            created() {
+               axios.get("/Lookup/GetCountriesync")
+                  .then(res => {
+                     this.countries = res.data;
+                     setTimeout(function () {
+                        $('#contriesSelect').selectpicker('refresh');
+                     }, 1000);
+                  })
+                  .catch(res => { console.log(res) });
+               axios.get("/Lookup/GetActivitiesAsync")
+                  .then(res => {
+                     this.activities = res.data;
+                     setTimeout(function () {
+                        $('#activitiesSelect').selectpicker('refresh');
+                     }, 1000);
+                  })
+                  .catch(res => { console.log(res) });
+               axios.get("/Lookup/GetAreasAsync")
+                  .then(res => {
+                     this.areas = res.data
+                     setTimeout(function () {
+                        $('#areasSelect').selectpicker('refresh');
+                     }, 1000);
+                  })
+                  .catch(res => { console.log(res) });
+
+               axios.get("/Lookup/GetConstractionWorkAsync")
+                  .then(res => {
+                     this.constructionWorks = res.data
+                     setTimeout(function () {
+                        $('#constructionSelect').selectpicker('refresh');
+                     }, 1000);
+                  })
+                  .catch(res => { console.log(res) });
+               axios.get("/Lookup/GetmaintenanceWorksAsync")
+                  .then(res => {
+                     this.maintenanceWorks = res.data
+                     setTimeout(function () {
+                        $('#maintenanceSelect').selectpicker('refresh');
+                     }, 1000);
+                  })
+                  .catch(res => { console.log(res) });
+            },
+              methods: {
+               btnShowExtendAnnouncementConfirmation: function () {
+                    $("#extendAnnouncementTemplateModal").modal('show');
+               }
+            },
+            components: {
+            }
+         });
+
+           $('input[type=radio][name=IsEffectiveList]').change(function () {
+         if ($(this).val() == true || $(this).val() == 'true') {
+            $('#divEffectiveListDate').show();
+         }
+         else {
+            $('#divEffectiveListDate').hide();
+         }
+      });
+        $('input[type=radio][name=IsRequiredAttachmentToJoinList]').change(function () {
+         if ($(this).val() == true || $(this).val() == 'true'  ) {
+            $('#divRequiredAttachmentToJoinList').show();
+         }
+         else
+            $('#divRequiredAttachmentToJoinList').hide();
+        });
+
+         $("#btnFirstSave").on("click", function (event) {
+            var CheckFirstStepResult = CheckFirstStep();
+            if (CheckFirstStepResult == false) {
+               event.preventDefault();
+               $("#extendAnnouncementTemplateModal").modal('hide');
+               return false;
+            }
+            var changeExecutionPlaceResult = changeExecutionPlace();
+            if (changeExecutionPlaceResult == false) {
+               event.preventDefault();
+               $("#extendAnnouncementTemplateModal").modal('hide');
+               return false;
+            }
+            var CheckRelationStepResult = CheckRelationStep();
+            if (CheckRelationStepResult == false) {
+               event.preventDefault();
+               $("#extendAnnouncementTemplateModal").modal('hide');
+               return false;
+            }
+            var CheckAgencyInfoResult = CheckAgencyInfo();
+            if (CheckAgencyInfoResult == false) {
+               event.preventDefault();
+               $("#extendAnnouncementTemplateModal").modal('hide');
+               return false;
+            }
+         });
+
+        function CheckAgencyInfo() {
+         if ($('#AgencyAddress').val().trim() == '') {
+            $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+            $('#AgencyAddress').focus();
+              return false;
+         }
+         else if ($('#AgencyFax').val().trim() == '') {
+            $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+            $('#AgencyFax').focus();
+             return false;
+         }
+         else if ($('#AgencyPhone').val().trim() == '') {
+            $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+            $('#AgencyPhone').focus();
+             return false;
+         }
+
+         else if ($('#AgencyEmail').val().trim() == '') {
+            $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+            $('#AgencyEmail').focus();
+             return false;
+         }
+      }
+
+      function CheckRelationStep() {
+         if ($('#activitiesSelect').selectpicker('val') == null) {
+            $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+            $('#activitiesSelect').selectpicker('toggle');
+            $('#activitiesSelect').focus();
+            return false;
+         }
+         else if ($('input[type=radio][name=InsideKSA]:checked').val() == "true" && $('#dD_TenderAreas').selectpicker('val') == null) {
+            $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+            $('#areasSelect').selectpicker('toggle');
+            return false;
+         }
+         else if ($('input[type=radio][name=InsideKSA]:checked').val() == "false" && $('#dD_TenderCountries').selectpicker('val') == null) {
+            $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+            $('#contriesSelect').selectpicker('toggle');
+            return false;
+         }
+      }
+
+         function changeExecutionPlace() {
+            debugger;
+      if ($('input[type=radio][name=InsideKSA]:checked').val() == "true") {
+         var TenderAreaIDs_isvalid = $("select[name='AreasIds'] option:selected").length > 0;
+         var TenderAreaIDs_error = $("span[data-valmsg-for='AreasIds']");
+         TenderAreaIDs_error.text("");
+         if (!TenderAreaIDs_isvalid) {
+            TenderAreaIDs_error.text("@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterTenderAreas)");
+            return false;
+         }
+      }
+      else {
+         var TenderCountryIDs_isvalid = $("select[name='CountriesIds'] option:selected").length > 0;
+         var TenderCountryIDs_error = $("span[data-valmsg-for='CountriesIds']");
+         TenderCountryIDs_error.text("");
+         if (!TenderCountryIDs_isvalid) {
+            TenderCountryIDs_error.text("@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterTenderCountries)");
+            return false;
+         }
+      }
+    }
+
+
+         function CheckFirstStep() {
+            debugger;
+         if ($('#AnnouncementSupplierTemplateName').val() == '') {
+            $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+            $('#AnnouncementSupplierTemplateName').focus();
+            return false;
+         }
+
+               else if ($('#TemplateExtendMechanism').val() == '') {
+            $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+            $('#TemplateExtendMechanism').focus();
+            return false;
+         }
+
+         else if ($('#tenderTypesId').selectpicker('val') == null || $('#tenderTypesId').val() == '') {
+            $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+            $('#tenderTypesId').selectpicker('toggle');
+            $('#tenderTypesId').focus();
+            return false;
+         }
+         else if ($('#IntroAboutAnnouncementTemplate').val() == '') {
+            $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+            $('#IntroAboutAnnouncementTemplate').focus();
+             return false;
+         }
+         else if ($('#RequirementConditionsToJoinList').val() == '') {
+            $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+            $('#RequirementConditionsToJoinList').focus();
+             return false;
+         }
+         else if ($('#Descriptions').val() == '') {
+            $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+            $('#Descriptions').focus();
+             return false;
+         }
+         else if ($("input[name='IsRequiredAttachmentToJoinList']:checked").val() == 'true') {
+            if ($('#txt_RequiredAttachment').val() == '') {
+               $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+               $('#txt_RequiredAttachment').focus();
+                return false;
+            }
+         }
+         else if ($("input[name='IsEffectiveList']:checked").val() == 'true') {
+            if ($("#effectiveListDate").val() == "") {
+               $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+               $('#effectiveListDate').focus();
+               return false;
+            }
+         }
+         }
+
+
+      function checkExtendAnnouncementDate() {
+         debugger;
+         var token = $('input[name=__RequestVerificationToken]').val();
+          var isEffectiveList =$("input[name='IsEffectiveList']:checked").val();
+         var effectiveListDate = $("#effectiveListDate").val();
+         debugger;
+         $.post('@Url.Action("checkExtendAnnouncementSupplierTemplateDate", "AnnouncementSuppliersTemplate")',
+            {
+               IsEffectiveList:isEffectiveList,
+               EffectiveListDate: effectiveListDate,
+               __RequestVerificationToken: token,
+            }).done(function () {
+               $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+            }).fail(function (error) {
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      }
+   </script>
+}

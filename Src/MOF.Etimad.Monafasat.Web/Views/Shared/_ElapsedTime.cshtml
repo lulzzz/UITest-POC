@@ -1,0 +1,14 @@
+<div>
+   <a href="" data-toggle="tooltip" data-placement="top" :title="'@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate' + tender.lastOfferPresentationDate.split('T')[0]" data-container="body" :data-original-title="'@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate' + tender.lastOfferPresentationDate.split('T')[0]">
+      <template v-if="tender.remainingDays>0||tender.remainingHours>0||tender.remainingMins>0">
+         {{ tender.remainingDays }} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Day
+         <br />
+         {{ tender.remainingHours}} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Hour
+         <br />
+         {{ tender.remainingMins}} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Minute
+      </template>
+      <template v-else>
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Ended
+      </template>
+   </a>
+</div>

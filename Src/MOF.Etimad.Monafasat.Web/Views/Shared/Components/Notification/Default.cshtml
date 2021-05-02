@@ -1,0 +1,20 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model IEnumerable<MOF.Etimad.Monafasat.NotificationPanelModel>
+
+@if (Model != null)
+{
+   foreach (var item in Model)
+   {
+      var parms = new Dictionary<string, string>
+   {
+   { "notificationId", item.Id.ToString() },
+      { "Link", $"/{item.Link}" }
+   };
+
+      <a asp-action="SetReadStateToNotification" asp-controller="account" asp-all-route-data="parms" data-read="@item.NotifacationStatusId" class="@if (item.NotifacationStatusId != (int)Enums.NotifacationStatus.Read) { @("new") }  notfication-item btn btn-link btn-block btn-sm">
+         <span class="not-title"> @item.Title</span>
+         <span><i class="material-icons">schedule</i> </span>
+      </a>
+
+   }
+}

@@ -1,0 +1,68 @@
+<div class="col-lg-12 col-sm-12 col-xs-12 modal-content-body" id="divLC">
+   <div class="form-check">
+      <label class="form-check-label text-dark-green" style="margin-bottom:10px">
+         <input class="form-check-input" type="checkbox" id="chLCValue">
+         تقر لجنة فحص العروض بالالتزام بأحكام لائحة تفضيل المحتوى المحلي والمنشآت الصغيرة والمتوسطة المحلية والشركات المدرجة في السوق المالية في الاعمال والمشتريات التي تنطبق على هذه المنافسة
+         <span class="form-check-sign">
+            <span class="check"></span>
+         </span>
+      </label>
+      <span class="h6 text-danger d-block mt-0" id="txtApproveLC" style="display:none !important">@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseAgree</span>
+   </div>
+</div>
+<div class="col-xs-12 modal-content-body" id="divRejectReason">
+   <div class="form-group bmd-form-group">
+      <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+      <textarea class="form-control" id="txtRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason"></textarea>
+      <div class="pull-left">
+         <span style="display:none" class="bmd-help text-danger" id="txtRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+      </div>
+   </div>
+</div>
+<div class="col-lg-12 col-sm-12 col-xs-12 modal-content-body" id="divSendToApproveMessage">
+   <div class="form-group bmd-form-group">
+      <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckApproveRequestWillSent</lable>
+   </div>
+</div>
+<div class="col-lg-12 col-sm-12 col-xs-12 modal-content-body" id="divSendToApproveFinancialMessage">
+   <div class="form-group bmd-form-group">
+      <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckApproveFinancialOffersRequestWillSent</lable>
+   </div>
+</div>
+<div class="col-lg-12 col-sm-12 col-xs-12 modal-content-body" id="divlowbudgetMessage">
+   <div class="form-group bmd-form-group">
+      <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmLowBudgetApproveMessage</lable>
+   </div>
+</div>
+<div class="col-lg-12 col-sm-12 col-xs-12 modal-content-body" id="divReopenMessage">
+   <div class="form-group bmd-form-group">
+      <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WillReopen</lable>
+   </div>
+</div>
+<div class="col-lg-12 col-sm-12 col-xs-12 modal-content-body" id="divReopenFinancialMessage">
+   <div class="form-group bmd-form-group">
+      <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WillReopenFinancialOfferCheck</lable>
+   </div>
+</div>
+<div class="col-lg-12 col-sm-12 col-xs-12 modal-content-body" id="divOpenCheckMessage">
+   <div class="form-group bmd-form-group">
+      <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOfferConfirmStage</lable>
+   </div>
+</div>
+<div class="col-lg-12 col-sm-12 col-xs-12 modal-content-body" id="divApproveMessage">
+   <div class="form-group bmd-form-group">
+      <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfrimCheckResults</lable>
+      <div class="form-group bmd-form-group" id="divVerficationCode">
+         <input type="number" class="form-control col-md-12" id="txtActivationNo" name="ActivationCode" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+         <div>
+            <span class="bmd-help text-danger modal-content-body" id="txtActivationNoValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+         </div>
+         <br />
+         <div>
+            <p class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainigTimeToApprove<span class=" text-danger" id="timer"></span></p>
+         </div>
+
+      </div>
+   </div>
+   <br />
+</div>

@@ -1,0 +1,85 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierTenderMainInfo
+<div class="row" id="basicDetials">
+   <div class="col-12">
+      <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</h4>
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+
+      <ul class="list-group form-details-list">
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>@(Model.TenderTypeName)</span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>@(Model.TenderName)</span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.ReferenceNumber)
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumberFromAgency
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @Model.TenderNumber
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderPurpose
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @Model.PurposeofTender
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.RequestType
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @Model.RequestType
+                  </span>
+               </div>
+            </div>
+         </li>
+      </ul>
+   </div>
+</div>

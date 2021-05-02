@@ -1,0 +1,690 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.OfferModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ApplyOffer;
+   var tableIndex = 0;
+   var validToUpdate = (User.IsInRole(RoleNames.supplier) && (Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)) ? 1 : 0;
+}
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.TenderDetails</li>
+      </ol>
+   </nav>
+}
+<form id="myForm">
+   <input type="hidden" id="ModuleType" value="3" />
+   @Html.AntiForgeryToken()
+   @if (Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)
+   {
+      @section modalTitle{
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+      }
+      @section modalContent{
+         <div class="form-check">
+            <label class="form-check-label text-dark-green" style="margin-bottom:10px">
+               <input class="form-check-input" type="checkbox" id="chVATValue">
+               @MOF.Etimad.Monafasat.Resources.OfferResources.Messages.OfferVATApproval
+               <span class="form-check-sign">
+                  <span class="check"></span>
+               </span>
+            </label>
+         </div>
+         <span class="h6 text-danger d-block" id="txtApproveVAT" style="display:none">@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseAgree</span>
+         <br>
+         @MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.SendOfferFilesConfirm
+      }
+      @section modalButtons{
+         <button type="button" class="btn btn-sm m-1 btn-primary" onclick="sendOffer('@Model.OfferId')">@MOF.Etimad.Monafasat.Resources.OfferResources.Messages.ApproveAndSendOffer</button>
+         <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+         <span id="vsNoAttachmentsDataFound" class="text-danger" style="display:none">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.ApplyOfferAttachmentsDataIssue</span>
+         <span id="vsCombinedLetterAttachments" class="text-danger" style="display:none">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.SaudizationStatus</span>
+      }
+   }
+   <div class="modal fade" id="myModal2" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.UploadFile</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               <form id="formSaveFiles">
+                  <div id="attachementUploader">
+                     <div class="" id="technicalUploader">
+                        <label for="technicalFile">العرض الفني</label>
+                        @Html.FileUploader("technicalFile", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                        <span id="technicalFileReference" class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.EnterFile</span>
+                     </div>
+                  </div>
+                  <div class="" id="combinedUploader">
+                     @Html.FileUploader("combinedFile", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 40, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                     <span id="combinedFilealert" class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.EnterFile</span>
+                  </div>
+               </form>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="button"
+                       onclick="saveFiles('@ViewBag.tenderIdEncrypt');"
+                       value="">
+                  @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Save
+               </button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="modal fade" id="myModal3" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SamplesDeliveryAddress</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="button"
+                       onclick="saveFiles('@ViewBag.tenderIdEncrypt');"
+                       value="">
+                  @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Save
+               </button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-12" id="applyOffer" v-cloak>
+      <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+         <li class="nav-item">
+            <a class="nav-link active" href="#monafasa-info" role="tab" :data-toggle="isEdit? '' : 'tab'" :disabled="isEdit">
+               <i class="material-icons">assignment</i>
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails
+            </a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link" href="#attachments" role="tab" :data-toggle="isEdit? '' : 'tab'" :disabled="isEdit">
+               <i class="material-icons">attach_file</i>
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Atachementes
+            </a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link" href="#combined" role="tab" :data-toggle="isEdit? '' : 'tab'" :disabled="isEdit">
+               <i class="material-icons">group</i>
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Combined
+            </a>
+         </li>
+      </ul>
+      <div class="tab-content tab-space">
+         <div class="tab-pane active" id="monafasa-info">
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        @await Component.InvokeAsync("BasicOfferTenderInfo", new { TenderId = ViewBag.tenderId })
+                     </div>
+                  </div>
+               </div>
+            </div>
+            @Html.Partial("~/Views/Offer/Partial/ApplyOffer/_TechnicalOfferBasicActions.cshtml")
+         </div>
+         <div class="tab-pane" id="attachments">
+            @Html.Partial("~/Views/Offer/Partial/ApplyOffer/_ApplyTechnicalOfferAttachments.cshtml")
+         </div>
+         <div class="tab-pane" id="combined">
+            @Html.Partial("_ApplyOfferCombinedInvitation.cshtml")
+            @Html.Partial("~/Views/Offer/Partial/ApplyOffer/_ApplyOfferActions.cshtml")
+         </div>
+      </div>
+   </div>
+</form>
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script type="text/javascript">
+      function checkSpcialChar(event) {
+
+         console.log(event);
+         if (event.key == '.' && event.target.value.indexOf('.')>0) {
+            return false;
+         }
+         if (!($.isNumeric(event.target.value))) {
+            if (event.keyCode == 8 || (event.key == '.' && event.target.value.split('.').length <= 2)) {
+               event.returnValue = true;
+               return true;
+            }
+            event.returnValue = false;
+            return false;
+         }
+         event.returnValue = true;
+         return true;
+      }
+
+      var attachmentss = [];
+      var combinedAttachments = [];
+      var pWay=0;
+      @if (Model != null && Model.Attachment != null)
+      {
+         @:attachmentss = @Html.Raw(Json.Serialize(Model.Attachment.Where(x=>x.type!= Enums.AttachmentType.SupplierCombinedAttachment)));
+         @:combinedAttachments = @Html.Raw(Json.Serialize(Model.Attachment.Where(x => (int)x.type == 17).ToList()));
+      }
+      $('#divSendTables').hide();
+      var app2 = new Vue({
+         el: '#applyOffer',
+         data: {
+            isEdit: false,
+            isEmpty: false,
+            isNumber: false,
+            attachments: attachmentss,
+            combinedAttachment: combinedAttachments,
+            Suppliers: [],
+            InvitedSuppliers: [],
+            QualifiedSuppliers: [],
+            SuppliersDD: [],
+            subSuppliers: [],
+            inputs: [],
+            selected: 0,
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 6,
+            tb_Email: '',
+            emails: [],
+            isValidToUpdate: true,
+            mobilNoList: [],
+            token: $('input[name=__RequestVerificationToken]').val(),
+            // Here you define the url of your paginated API
+            resource_url: '/Offer/GetSuppliersForCombinedAsync',
+            invitedResource_url: '/Offer/GetCombinedSuppliersByOfferId?OfferId=@Model.OfferId',
+            resourceEmail_url: '',
+            resourceMobil_url: '',
+            queryString: '',
+            showTable: false,
+            showInvitedTable: false
+         },
+         created: function () {
+            this.isValidToUpdate = @validToUpdate == 1 ? true : false;
+            this.queryString = $('#formSearchSuppliers').serialize();
+            this.invitedResource_url = '/Offer/GetCombinedSuppliersByOfferId?OfferId=@Model.OfferId';
+         },
+         methods: {
+            nextTab: function () {
+               if (!this.isEdit) {
+                  $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+               } else {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseMakeSureOfSavingData', 'warning')
+               }
+            },
+            prevTab: function () {
+               if (!this.isEdit) {
+                  $('.etd-wiz-tabs').children().find('a.active').parent().prev().children().click();
+               } else {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseMakeSureOfSavingData', 'warning')
+
+               }
+            },
+            RedirectURL: function (index) {
+               window.open("/Upload/getfile/" + this.attachments[index].fileNetReferenceId + ":" + this.attachments[index].fileName, '_blank');
+            },
+            SumAll: function (items) {
+               items
+            },
+            editmode: function (event) {
+               this.isEdit = !this.isEdit
+               $(event.target).prev().find('input').not("#txtTotPriceItem").not("#txtTotalAfter").not("#txtTotPrice").not("#txtTotAfterDiscount").not("#tblTotalAfterDiscount").not("#tblTotalPrice").attr('disabled', false);
+               $(event.target).toggleClass('d-none');
+               $(event.target).next('.etd-save-btn').toggleClass('d-none');
+            },
+            DeleteAttach: function (index, actionType) {
+               var attach;
+               if (actionType != 'combined') {
+                  attach = this.attachments[index];
+                  this.attachments.splice(index, 1);
+               } else {
+
+                  attach = this.combinedAttachment[index];
+                  this.combinedAttachment.splice(index, 1);
+               }
+               var obj = { AttachmentId: attach.attachmentId, OfferId: attach.offerId }
+               $('#LoadingSite').fadeIn();
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post("/Offer/DeleteSupplierAttachments", {
+                  model: obj, __RequestVerificationToken: token
+               }).done(function () {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DeletedSuccessfully)', alertMessageType.Success);
+
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            },
+            updateResource: function (data) {
+               this.Suppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            updateInvitedResource: function (data) {
+               $.each(data, function (key, value) {
+                  if (value.email != null)
+                     app2.emails.push(value.email);
+                  console.log(value);
+               });
+               $.each(data, function (key, value) {
+                  if (value.commericalRegisterNo != null)
+                     app2.InvitedSuppliers.push(value);
+                  console.log(value);
+               });
+               $.each(data, function (key, value) {
+                  if (value.mobileNumber != null)
+                     app2.mobilNoList.push(value.mobileNumber);
+                  console.log(value);
+               });
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            updateQualifiedSupplierResource: function (data) {
+               this.QualifiedSuppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            updateAcceptedFirstStageSuppliersResource: function (data) {
+               this.QualifiedSuppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            updateEmailResource: function (data) {
+               this.emails = data;
+
+               //this.hasCombination = this.emails.length > 0 ? true : false;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.pageSize;
+            },
+            updateMobileResource: function (data) {
+               this.mobilNoList = data;
+
+               //this.hasCombination = this.emails.length > 0 ? true : false;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.pageSize;
+            },
+            detailsUrl: function (params) {
+            },
+            search: function () {
+               if ($("#commericalRegisterNo").val().trim().length == 0) {
+                  $("#vdSearch").show();
+                  return false;
+               }
+               else {
+                  $("#vdSearch").hide();
+               }
+
+               this.queryString = $('#formSearchSuppliers').serialize();
+               this.resource_url = '/Offer/GetSuppliersForCombinedAsync' + '?' + this.queryString + '&d=' + Date();
+               this.showTable = true;
+               Vue.templateCache = false
+            },
+            ResetFields: function () {
+               $("#commericalRegisterNo").val('');
+            },
+            AddToInvitationGrid: function (Supplier) {
+
+               var existeSupplier = false;
+               $(this.InvitedSuppliers).each(function (i, e) {
+                  if (e.commericalRegisterNo == Supplier.commericalRegisterNo) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.SupplierAlreadyExsit)', alertMessageType.Danger)
+                     existeSupplier = true;
+                  }
+               })
+               if (existeSupplier == false) {
+                  ///Ajax to add to combined
+                  //AddCombinedToOfferAsync
+
+
+                  this.InvitedSuppliers.push(Supplier);
+                  var i = this.Suppliers.indexOf(Supplier);
+                  this.Suppliers.splice(i, 1);
+               }
+            },
+            RemoveInvitationGrid: function (Supplier) {
+               var i = this.InvitedSuppliers.indexOf(Supplier);
+               this.InvitedSuppliers.splice(i, 1);
+            },
+            // Send invitations For Selected Registered Suppliers
+            sendInvitation: function () {
+               var offerId =  @(Model?.OfferId??0);
+               $('#LoadingSite').fadeIn();
+               var combinedSupplierList = {};
+               combinedSupplierList.InvitedSuppliers = [];
+               $(this.InvitedSuppliers).each(function (i, e) {
+                  combinedSupplierList.InvitedSuppliers.push(e.commericalRegisterNo);
+               })
+               combinedSupplierList.MobileNumbers = this.mobilNoList;
+               combinedSupplierList.Emails = this.emails;
+               combinedSupplierList.offerId = offerId;
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Offer/AddCombinedToOfferAsync', { model: combinedSupplierList, __RequestVerificationToken: token })
+                  .done(function (e) {
+                     $('#LoadingSite').fadeOut();
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', 'success')
+                  })
+                  .fail(function () {
+                     $('#LoadingSite').fadeOut();
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     setTimeout(function () {
+                        window.location = "@Url.Action("TenderIndexUnderOperationsStage", "Tender")";
+                     }, 2000);
+                  });
+            },
+            // Add Email To Emails Table
+            addEmail: function (index) {
+
+               var tb_Email = $("#tb_Email").val()
+               if (tb_Email == "") {
+                  $("#spanEmail").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.EnterEmail)');
+               }
+               else if (!this.validEmail(tb_Email)) {
+                  $("#spanEmail").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.WrongEmail)');
+               }
+               else if (this.emails.indexOf(tb_Email) > -1) {
+                  $("#spanEmail").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.EmailExist)');
+               }
+               else {
+                  $("#spanEmail").text("");
+                  this.emails.push(tb_Email);
+               }
+            },
+            // Remove Email From  Table
+            removeEmail: function (index) {
+               this.emails.splice(index, 1);
+            },
+            // Add MobileNo To MobileNo Table
+            addMobilNo: function (index) {
+               var mobileNo = $("#tb_MobilNo").val()
+               if (mobileNo == "") {
+                  $("#spanMobilNo").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.EnterPhone)');
+               }
+               else if (this.mobilNoList.indexOf(mobileNo) > -1) {
+                  $("#spanMobilNo").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.PhoneExist)');
+               }
+               else {
+                  $("#spanMobilNo").text("");
+                  this.mobilNoList.push(mobileNo);
+               }
+            },
+            // Remove Mobile No From  Table
+            removeMobilNo: function (index) {
+               this.mobilNoList.splice(index, 1);
+            },
+            // Send Invitations For Unregistered Suppliers With Email
+            sendEmails: function () {
+
+               var tendarId =  @(Model?.TenderId??0);
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Tender/SendInvitationsByEmailAsync', { tenderId: tendarId, emails: this.emails, __RequestVerificationToken: token }).done(function (e) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SendInvitations)', 'success')
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            },
+            // Send Invitations For Unregiestered Suppliers With SMS
+            sendSms: function () {
+               var tendarId =  @(Model?.TenderId??0);
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Tender/SendInvitationsBySmsAsync', { tenderId: tendarId, mobileNoList: this.mobilNoList, __RequestVerificationToken: token }).done(function (e) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SendInvitations)', 'success')
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            },
+            // Check If Email Is Valid
+            validEmail: function (email) {
+               var re = /^(([^<>()\[\]\\.,;:\s"]+(\.[^<>()\[\]\\.,;:\s"]+)*)|(".+"))((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+               return re.test(email);
+            }
+         }
+      });
+      $("input[name=price]").on("input", function () {
+         var trIndex = $(this).parent().parent().parent().index() + 1;
+         var tableid = $(this).closest('table').attr('id');
+         calcTotal(trIndex, tableid);
+      });
+      $("#btnSend").click(function () {
+         $('#vsNoAttachmentsDataFound').hide();
+      });
+      $("input[name=discount]").on("input", function () {
+         var trIndex = $(this).parent().parent().parent().parent().index() + 1;
+         var tableid = $(this).closest('table').attr('id');
+         calcTotal(trIndex, tableid);
+      });
+      function resetFileUpload(type) {
+         $('.file_uploader_message').html('');
+         $('.qq-upload-list').html('');
+         $('.file_uploader').css('display', 'block');
+         $('#technicalFile').val('');
+         $('#combinedFile').val('');
+
+         if (type == 'combined') {
+            $('#attachementUploader').hide();
+            $('#combinedUploader').show();
+            $('#myModal2').modal('show');
+         } else {
+            $('#attachementUploader').show();
+            $('#combinedUploader').hide();
+         }
+      }
+      function saveFiles(tenderId) {
+         var technicalFileValue = $('#technicalFile').val();
+         var combinedFileValue = $('#combinedFile').val();
+         var obj=[];
+        if ((technicalFileValue) != undefined && technicalFileValue!='') {
+            obj.push({ tenderId: tenderId, files: technicalFileValue, type: 19 });
+            uploadOfferFile(obj);
+         } if ((combinedFileValue) != undefined && combinedFileValue != '') {
+            obj.push( { tenderId: tenderId, files: combinedFileValue, type: 17 });
+            uploadOfferFile(obj);
+         }
+         if (typeof (obj) == 'undefined') {
+             return;
+         }
+         $('#LoadingSite').fadeIn();
+      }
+      function uploadOfferFile(obj)
+      {
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $.post("/Offer/SaveSupplierAttachments", {
+            model: obj, __RequestVerificationToken: token
+         }).done(function (data) {
+            $('#technicalFile').val('');
+            $('#combinedFile').val('');
+            var newAttachements = [];
+            var newCombinedAttachements = [];
+             $.each(data, function (index, value) {
+               console.log(value);
+               if (value.type != '17') {
+                  newAttachements.push(value);
+               } else {
+                  newCombinedAttachements.push(value)
+               }
+             });
+            app2.attachments = newAttachements;
+            app2.combinedAttachment = newCombinedAttachements;
+            $('#myModal2').modal('hide');
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success);
+            }).fail(function (error) {
+               $('#model').val('');
+               $('#financialFile').val('');
+               $('#technicalFile').val('');
+               $('#myModal2').modal('hide');
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+          }
+      $(function () {
+            $('tr.ItemsGrid').find('input').attr('disabled', true);
+         $('.txtDiscount').on('change', function (event) {
+            if (event.keyCode == 8) {
+               event.returnValue = true;
+               return true;
+            }
+            if ($(this).val() > 100) {
+               $(this).val(100);
+               return false;
+            }
+         });
+      });
+         $('a[data-toggle="collapse"]').click(function () {
+            $(this).toggleClass('btn-outline-primary');
+            $(this).toggleClass('btn-primary');
+         });
+
+      function sendOffer(id) {
+
+         console.log(id);
+
+         var _checkVAT = $('#chVATValue').is(':checked');
+         if (!_checkVAT) {
+            $("#txtApproveVAT").show();
+            return false;
+         }
+
+         if (!isFormsValid()) {
+            //$('#vsNoDataFound').show();
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $.post("/Offer/SendOffer", {
+            offerId: id, __RequestVerificationToken: token
+         }).done(function (data) {
+            $('#LoadingSite').fadeOut();
+            setTimeout(function () {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.OfferResources.Messages.DataSaved)', alertMessageType.Success);
+            }, 3000);
+            window.location = "/Tender/SupplierTenders";
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      }
+
+      function isFormsValid() {
+
+         var forms = $('.tableForm');
+         for (var ii = 0; ii < forms.length; ii++) {
+
+            for (var xx = 0; xx < forms[ii].length; xx++) {
+               if (forms[ii][xx].type == 'number' && forms[ii][xx].name == 'price' ) {
+                  //if ((isNaN(parseFloat($('#' + forms[ii][xx].id).val())))) {
+                  if (isNaN(parseFloat(forms[ii][xx].value))) {
+
+                     return false;
+
+                  }
+                  if (parseFloat(forms[ii][xx].value) == 0) {
+
+                     return false;
+                  }
+               }
+            }
+         }
+
+         //if ($('.file_uploader_message').find('div').length == 0) {
+         if ($('#attachmentDelete tbody tr').length == 0) {
+            $('#vsNoAttachmentsDataFound').show();
+            return false;
+         }
+
+         var pWay =@Model.OfferPresentationWayId;
+
+         var ticFile = false;
+         var fiFile = false;
+         var comFile = false;
+         var orgFile = false;
+
+         $.each(app2.attachments, function (index, value) {
+            if (value.type == '15')
+               orgFile = true;
+            if (value.type == '19')
+               ticFile = true;
+            if (value.type == '17')
+               comFile = true;
+            if (value.type == '18')
+               fiFile = true;
+
+          });
+
+
+         //if (pWay == 1) {
+         //   if (app2.attachments.length < 2 || !(ticFile && fiFile)) {
+         //      $('#vsNoAttachmentsDataFound').show();
+         //      return false;
+         //   }
+         //} else {
+            if (app2.attachments.length == 0) {
+               $('#vsNoAttachmentsDataFound').show();
+               return false;
+            }
+
+        // }
+         if (app2.InvitedSuppliers.length > 0 || app2.mobilNoList.length > 0 || app2.emails.length > 0) {
+
+            if (app2.combinedAttachment.length == 0) {
+               $('#vsCombinedLetterAttachments').show();
+               return false;
+            }
+
+         }
+         return true;
+      }
+
+
+   </script>
+}
+
+

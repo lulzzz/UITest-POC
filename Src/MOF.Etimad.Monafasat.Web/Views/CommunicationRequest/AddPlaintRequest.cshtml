@@ -1,0 +1,81 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderPlaintCommunicationRequestModel
+@using res = MOF.Etimad.Monafasat.Resources;
+@{
+   ViewData["Title"] = res.CommunicationRequest.DisplayInputs.AddPlaintRequest;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.TenderDetails</li>
+         <li class="breadcrumb-item active" aria-current="page">@res.CommunicationRequest.DisplayInputs.AddPlaintRequest</li>
+      </ol>
+   </nav>
+}
+<div class="col-12">
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+            @await Component.InvokeAsync("TenderDetailsForPlaint", new { tenderIdString = Model.EncryptedTenderId })
+         </div>
+      </div>
+   </div>
+</div>
+<form method="POST" asp-controller="CommunicationRequest" asp-action="AddPlaintRequest" autocomplete="off">
+   <input type="hidden" asp-for="EncryptedOfferId" />
+   <input type="hidden" asp-for="TenderStatusId" />
+   <input type="hidden" asp-for="CommunicationRequestId" />
+   <input type="hidden" asp-for="EncryptedTenderId" />
+   <input type="hidden" asp-for="PlaintRequestId" />
+   @Html.AntiForgeryToken()
+   <div class="col-12">
+      <div class="row">
+         <div class="card">
+            <div class="card-body">
+               <div class="row">
+
+
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group p-0">
+                        <label asp-for="PlaintReason" class="label bmd-label-static"></label>
+                        <textarea asp-for="PlaintReason" class="form-control" maxlength="1000" rows="4" placeholder=" سبب تقديم التظلم لا يقبل أكثر من 1000 حرف ..."></textarea>
+
+                     </div>
+                     <span asp-validation-for="PlaintReason" class="text-danger"></span>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group bmd-form-group p-0">
+                        <label asp-for="AttachmentReference" class="label bmd-label-static"></label>
+                        @Html.FileUploaderFor(m => m.AttachmentReference, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "rar" })
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <button class="btn btn-outline-primary btn-link pull-right" type="button" onclick="window.location= '@Url.Action("DetailsForSupplier","Tender" , new { STenderId = Model.EncryptedTenderId })'">
+      @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BackButton
+      <div class="ripple-container"></div>
+   </button>
+   <button id="btnSave" type="submit" class="btn btn-primary">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveSend
+   </button>
+</form>
+
+@section scripts{
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   @*<script src="~/Etimad-UI/assets/vendor/calendar/javascriptUtils/DateConverterUtil.js"></script>*@
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+   <script>
+        $("#btnBack").on("click", function () {
+      window.location = '@Url.Action("Index", "Tender")';
+   });
+   </script>
+}

@@ -1,0 +1,76 @@
+@using res = MOF.Etimad.Monafasat.Resources
+
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailModel
+
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails;
+}
+
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails</li>
+      </ol>
+   </nav>
+}
+
+@*@Html.Partial("~/Views/Offer/Partial/OpenningOffers/_CombinedSuppliersActions.cshtml")*@
+
+@if (!string.IsNullOrEmpty(Model.CombinedIdString))
+{
+
+   @await Component.InvokeAsync("OfferAttachmentsDetailsDisplay", new { combinedId = Model.CombinedIdString })
+
+}
+<div class="row">
+   <div class="col">
+      <a class="btn btn-outline-primary btn-link pull-right" onclick="back()">
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+      </a>
+   </div>
+</div>
+@section scripts{
+   <script>
+
+   var appss = new Vue({
+   el: '#CombinedSuppliersGrid',
+   data: {
+   CombinedSuppliersDetails: [],
+   totalCount: 0,
+   currentPage: 1,
+   pageSize: 10,
+      resource_url: '/Offer/GetCombinedSuppliersGridAsync?OfferIdString=' + '@Model.OfferIdString',
+   queryString: ''
+   },
+      methods: {
+         getSupplierInfo: function (CR) {
+            getSupplierInfo(CR);
+         },
+   updateResource: function (data) {
+   this.CombinedSuppliersDetails = data;
+   this.totalCount = this.$refs.vpaginator.totalCount;
+   this.currentPage = this.$refs.vpaginator.currentPage;
+   this.pageSize = this.$refs.vpaginator.pageSize;
+      },
+            SelectSupplier: function (CombinedIdString) {
+               return '/Offer/CombinedSuppliersDetailsReadOnly/' + '@Model.OfferIdString' + '/' + '@Model.TenderIDString' + '/' + CombinedIdString;
+   }
+
+   }
+   });
+         function back() {
+         location.href = document.referrer;
+      }
+
+
+
+
+   </script>
+}

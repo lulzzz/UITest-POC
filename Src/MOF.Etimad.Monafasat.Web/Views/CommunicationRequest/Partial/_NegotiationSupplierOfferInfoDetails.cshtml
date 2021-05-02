@@ -1,0 +1,207 @@
+@model MOF.Etimad.Monafasat.ViewModel.NegotiationFirstSatgeSupplierOfferInfo
+<div class="row" id="basicDetials">
+   <div class="col-12">
+      <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.OfferInfo</h4>
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+
+      <ul class="list-group form-details-list">
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.OfferAmount
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>@(Model.OfferMainAmount)</span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  القيمة المستهدفة للعروض
+                  @*@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.OfferAmountDiscount*@
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>@((Model.OfferMainAmountAfterDiscount).ToString("0.00"))</span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  القيمة المستهدفة للعروض
+                  @*@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.OfferAmountDiscount*@
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.OfferMainAmountAfterDiscountText)
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.DiscountPercentage
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+@*                     @Model.NegotiationPercent*@
+                     @(Model.NegotiationPercent.Value.ToString("0.00")) %
+                  </span>
+               </div>
+            </div>
+         </li>
+
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.DiscountAmount
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.ReductionAmount.ToString("0.00"))
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.SupplierRelplyPeriod
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @Model.SupplierReplayPeroidText
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.RemainingPeriod
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @Model.RemainingPeroidText
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.ReductionLetterrefId
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     <a href="#" onclick="RedirectURL('@Model.ReductionLetter?.FileNetReferenceId','@Model?.ReductionLetter?.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                        @Model?.ReductionLetter?.Name
+                     </a>
+                  </span>
+               </div>
+            </div>
+         </li>
+         @{
+            if (Model.StatusId == Enums.enNegotiationSupplierStatus.PendeingSupplierReply)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Status
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.StatusName)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            } }
+      </ul>
+      @{
+         if (Model.StatusId == Enums.enNegotiationSupplierStatus.PendeingSupplierReply && (Model.RemainingHours > 0 || Model.RemainingDays > 0 || Model.RemaininMinutes > 0))
+         {
+
+
+               <div class="modal fade" id="agreeModal" tabindex="-1" role="dialog">
+                  <div class="modal-dialog" role="document">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <h5 class="modal-title">
+                              @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.ConfirmAgreeDisAgree
+                           </h5>
+                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                           </button>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" onclick="AgreeFirstStageNegotiation()" class="btn btn-primary btn-sm">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.Agree</button>
+                           <button type="button" class="btn btn-danger btn-link btn-sm" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <button type="button" class="btn btn-success" data-toggle="modal" data-target="#agreeModal">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.Agree</button>
+               <button type="button" class="btn btn-success" data-toggle="modal" data-target="#agreeWithExtraDiscountModal">موافق مع تقديم تخفيض إضافي </button>
+               <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#disAgreeModal">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.NotAgree</button>
+
+               <div class="modal fade" id="agreeWithExtraDiscountModal" tabindex="-1" role="dialog">
+                  <div class="modal-dialog" role="document">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <h5 class="modal-title">
+                              @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.ConfirmAgreeDisAgree
+                           </h5>
+                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                           </button>
+                        </div>
+                        <div class="modal-body">
+                           <label class="label bmd-label-static noSpecial">قيمة العرض النهائية بعد التخفيض الاضافى</label><span class="text-danger">*</span>
+                           <input type="text" class="form-control allownumericwithdecimal" id="txtExtraDiscount"name="ExtraDiscountValue" />
+                           <span  class="bmd-help text-danger" id="spanExtraDiscountValidation">يجب ان تكون قيمة التخفيض الإضافي اقل من قيمة التخفيض المستهدفه</span>
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" onclick="AgreeFirstStageNegotiationWithExtraDiscount()" class="btn btn-primary btn-sm">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.Agree</button>
+                           <button type="button" class="btn btn-danger btn-link btn-sm" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="modal fade" id="disAgreeModal" tabindex="-1" role="dialog">
+                  <div class="modal-dialog" role="document">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <h5 class="modal-title">
+                              @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.ConfirmAgreeDisAgree
+                           </h5>
+                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                           </button>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" onclick="DisAgreeFirstStageNegotiation()" class="btn btn-primary btn-sm">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.NotAgree</button>
+                           <button type="button" class="btn btn-danger btn-link btn-sm" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+         }
+      }
+   </div>
+</div>

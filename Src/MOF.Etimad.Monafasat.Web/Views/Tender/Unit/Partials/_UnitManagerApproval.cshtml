@@ -1,0 +1,191 @@
+@if (Model.TenderUnitStatusId == (int)Enums.TenderUnitStatus.WaitingManagerApprove)
+{
+   <div class="modal fade" id="ConfirmReviewModel" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+               </h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AreYouSure
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="button" value="" id="btnConfirmReviewData">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm
+               </button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+}
+@if (Model.TenderUnitStatusId == (int)Enums.TenderUnitStatus.UnderManagerReviewing)
+{
+   <div class="modal fade" id="ApproveModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+               </h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AreYouSure
+               <div class="form-group bmd-form-group" id="divVerficationCode">
+                  <input type="number" class="form-control col-md-12" id="txtActivationNo" name="ActivationCode" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+                  <span class="bmd-help text-danger position-relative" id="txtActivationNoValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+                  <br />
+                  <p class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainigTimeToApprove<span class=" text-danger" id="timer"></span></p>
+               </div>
+            </div>
+
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="button" value="" id="btnConfirmApprove">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm
+               </button>
+               <button type="button" class="btn  btn-primary btn-sm m-1" name="button" id="btnResendVerificationCode"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="modal fade" id="RejectedModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+               </h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="form-group bmd-form-group" style="padding-top:0">
+                  <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+                  <input type="text" class="form-control" id="txtRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason" />
+                  <div class="pull-left">
+                     <span class="bmd-help text-danger" id="txtRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="button" value="" id="btnConfirmReject">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm
+               </button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+}
+<div class="">
+   <div class="col-12 "> 
+      @if (Model.TenderUnitStatusId == (int)Enums.TenderUnitStatus.WaitingManagerApprove)
+      {
+         <button type="button" class="btn btn-primary pull-left" id="btnReview" name="button" data-toggle="modal" data-target="#ConfirmReviewModel">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReviewData</button>
+      }
+      @if (Model.TenderUnitStatusId == (int)Enums.TenderUnitStatus.UnderManagerReviewing)
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnApprove" data-toggle="modal" data-target="#ApproveModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve</button>
+         <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" data-toggle="modal" data-target="#RejectedModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+      }
+   </div>
+</div>
+
+<script>
+   $("#btnReject").click(function () {
+      $("#txtRejectionReason").val('');
+   });
+   $("#btnConfirmApprove").on("click", function () {
+      var verificationCodeValue = $("#txtActivationNo").val();
+      if (verificationCodeValue.trim() == '') {
+         $("#txtActivationNoValidation").show();
+         return false;
+      }
+      $('#LoadingSite').fadeIn();
+      $.post(getApproveTenderByUnitManagerUrl(),
+         {
+            tenderIdString: getTenderStringId(),
+            verificationCode: verificationCodeValue,
+            __RequestVerificationToken: token
+         }).done(function () {
+            $('#LoadingSite').fadeOut();
+            $("#ApproveModal").modal("hide");
+            $("#btnApprove").attr("disabled", true);
+            $("#btnReject").attr("disabled", true);
+            AlertFun(getSuccessfulyDoneResourceValue(), alertMessageType.Success);
+            //$('#ApproveModal').modal('hide');
+            setTimeout(function () {
+               window.location = '/Tender/TenderIndexUnitStage';
+            }, 3000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            $("#ApproveModal").modal("hide"); 
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         });
+   });
+   $("#btnConfirmReject").on("click", function () {
+      if ($("#txtRejectionReason").val().trim().length == 0) {
+         AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.RejectReasonMustHaveValue)', alertMessageType.Danger);
+         return;
+      }
+      $('#LoadingSite').fadeIn();
+      $.post(getRejectTenderFromUnitManagerUrl(),
+         {
+            tenderIdString: getTenderStringId(),
+            comment: $("#txtRejectionReason").val(),
+            __RequestVerificationToken: token
+         }).done(function () {
+            $('#LoadingSite').fadeOut();
+            $("#RejectedModal").modal("hide");
+            $("#btnApprove").attr("disabled", true);
+            $("#btnReject").attr("disabled", true); 
+            AlertFun(getSuccessfulyDoneResourceValue(), alertMessageType.Success); 
+            setTimeout(function () {
+               window.location = '/Tender/TenderIndexUnitStage';
+            }, 3000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            $("#RejectedModal").modal("hide");
+            $("#btnApprove").attr("disabled", true);
+            $("#btnReject").attr("disabled", true); 
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         });
+   });
+
+   
+   $("#btnConfirmReviewData").on("click", function () {
+      $('#LoadingSite').fadeIn();
+      $.post(getReviewTenderByUnitManagerAsyncUrl(),
+         {
+            tenderIdString: getTenderStringId(),
+            __RequestVerificationToken: token
+         }).done(function () {
+            $('#LoadingSite').fadeOut();
+            $("#btnReview").attr("disabled", true); 
+            $("#ConfirmReviewModel").modal("hide");
+            AlertFun(getSuccessfulyDoneResourceValue(), alertMessageType.Success); 
+            setTimeout(function () {
+               window.location = '/Tender/TenderDetailsForUnitSecretary?tenderIdString=' + getTenderStringId();
+            }, 3000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            $("#btnReview").attr("disabled", true); 
+            $("#ConfirmReviewModel").modal("hide");
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         });
+   });
+   function getReviewTenderByUnitManagerAsyncUrl() { return '@Url.Action("ReviewTenderByUnitManagerAsync", "Tender")'; }
+   function getApproveTenderByUnitManagerUrl() { return '@Url.Action("ApproveTenderByUnitManagerAsync", "Tender")'; }
+   function getRejectTenderFromUnitManagerUrl() { return '@Url.Action("RejectTenderByUnitManagerAsync", "Tender")'; }
+   function getTenderStringId() { return '@Model.TenderIdString'; }
+</script>

@@ -1,0 +1,124 @@
+@model MOF.Etimad.Monafasat.ViewModel.BlockCommitteeModel
+@{
+   ViewBag.Title = @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.ListPreventionCommittee;
+}
+<div class="tab-content  tab-space col-12 " style="padding:0">
+   <div class="animated bounceInLeft  delay-1s show" id="SupplierCommitteeGrid">
+      <form id="supplierSearch">
+         <div class="card">
+            <div class="card-body">
+               <h4 class="text-primary">
+                  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.ListPreventionCommittee
+                  <a data-toggle="collapse" href="#SearchInUnblocked" role="button" aria-expanded="false" aria-controls="SearchInUnblocked" class="btn p-2 btn-outline-primary pull-right"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search </a>
+               </h4>
+               <div class="clearfix"></div>
+               <div class="collapse" id="SearchInUnblocked">
+                  <div class="row">
+                     <div class="col-6">
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialRegistrationNo </label>
+                              <input type="text" id="txtCommercialRegistrationNo" name="CommercialRegistrationNo" maxlength="50" autocomplete="off" class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName </label>
+                              <input type="text" id="txtTenderName" name="CommericalRegisterName" maxlength="50" autocomplete="off" class="form-control">
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-6">
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Email </label>
+                              <input type="text" id="txtEmail" name="Email" maxlength="50" autocomplete="off" class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Phone </label>
+                              <input type="text" id="txtPhoneNumber" name="PhoneNumber" maxlength="50" autocomplete="off" class="form-control">
+                           </div>
+                        </div>
+                     </div>
+                     <input type="hidden" id="hdnto" />
+                     <input type="hidden" id="hdnfrom" />
+                     <div class="col-12">
+                        <button class="btn btn-sm btn-primary" @@click="searchSup" type="button"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Search</button>
+                        <button class="btn btn-sm "><i class="material-icons">close</i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Clear </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="table-responsive ">
+               <table class="table table-striped text-center" summary="desc">
+                  <thead>
+                     <tr>
+                        <th scope="col"># </th>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialRegistrationNo</th>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName</th>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Details</th>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Role</th>
+                     </tr>
+                  </thead>
+                  <tbody v-if="Suppliers && Suppliers.length > 0">
+                     <tr v-for="(sup, $index) in Suppliers">
+                        <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+                        <td>  {{sup.commercialRegistrationNo}} </td>
+                        <td> {{sup.commercialSupplierName}}  </td>
+                        <td>  {{sup.details}} </td>
+                        <td> {{sup.role}}  </td>
+                     </tr>
+                  </tbody>
+                  <tbody v-else>
+                     <tr>
+                        <td colspan="5" align="center" style="text-align:center !important">
+                           <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                           <br />
+                           @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.NoRecordsFound
+                           <br />
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+               <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+            </div>
+         </div>
+      </form>
+   </div>
+</div>
+
+@section scripts{
+   <script>
+      var supplierGrid = new Vue({
+         el: '#SupplierCommitteeGrid',
+         data: {
+            Suppliers: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            // Here you define the url of your paginated API
+            resource_url: '/Block/GetBlockCommitteePagingAsync',
+            queryString: ''
+         },
+         methods: {
+            updateResource: function (data) {
+              
+               this.Suppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            searchSup: function () {
+            
+               this.queryString = $('#supplierSearch').serialize();
+               this.resource_url = '/Block/GetBlockCommitteePagingAsync' + '?' + this.queryString;
+            }
+         }
+      });
+      $('.add-new-vendor').click(function () {
+         $('#add-new').click();
+      });
+   </script>
+}

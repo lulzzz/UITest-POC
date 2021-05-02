@@ -1,0 +1,151 @@
+<div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="CommitteeTable">
+   <div class="row" v-if="Users && Users.length > 0">
+      <div class="col-xl-4 col-lg-4 col-md-6  col-sm-12 col-xs-12" v-for="(usr, $index) in Users">
+         <div class="card">
+            <div class="card-body">
+               @Html.Partial("_UserListActions.cshtml")
+               <h5 class="card-category card-category-social text-primary">
+                  <i class="material-icons  text-dark-green" style="border: 1px solid #ccc;display: inline;border-radius: 100%;padding: 5px;">people</i> <span class="d-inline-block" style="padding: 0 5px;"> {{usr.fullName}} </span>
+</h5>
+               <div class="clearfix"></div>
+               <div class="row">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              #
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>{{(currentPage -1) * (pageSize) +  $index + 1}}</span>
+                           </div>
+                        </div>
+                     </li>
+                     @*<li class="list-group-item">
+                           <div class="row">
+                              <div class="col etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.UserName
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>{{usr.fullName}}</span>
+                              </div>
+                           </div>
+                        </li>*@
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.MobileNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{usr.mobileNumber}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Email
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{usr.email}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.NationalId
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{usr.nationalId}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+
+                     @*<li class="list-group-item"  v-if="usr.roles && usr.roles.length > 0">
+                           <div class="row">
+                              <div class="col etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Roles
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span v-for="(role, $index) in usr.roles">
+                                    {{ role }}
+                                 </span>
+                              </div>
+                           </div>
+                        </li>*@
+
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-12" v-else>
+      <div class="row text-center">
+         <div class="card">
+            <div class="card-body text-center">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i>
+               <br />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-12 m-5 m-auto">
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<!--<div class="table-responsive ">
+      <table class="table table-striped text-center" role="none">
+         <thead>
+            <tr>
+               <th scope="col"># </th>
+               <th scope="col">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.BranchName</th>
+               <th scope="col">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.EditBranch</th>
+               <th scope="col">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Delete</th>
+            </tr>
+         </thead>
+         <tbody v-if="Branches && Branches.length > 0">
+            <tr v-for="(sup, $index) in Branches">
+               <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+               <td>  {{sup.branchName}} </td>
+               <td>
+                  <a :href="editUrl(sup.branchIdString)" class="btn btn-sm btn-danger"><i class="material-icons">Edit</i>  @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Edit</a>
+               </td>
+               <td>
+                  <a :href="deleteUrl(sup.branchIdString)" class="btn btn-sm btn-danger"><i class="material-icons">Delete</i>  @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Delete</a>
+               </td>
+            </tr>
+         </tbody>
+         <tbody v-else>
+            <tr>
+               <td colspan="4" align="center" style="text-align:center !important">
+                  <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                  <usr />
+                  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.NoRecordsFound
+                  <usr />
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>-->*@

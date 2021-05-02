@@ -1,0 +1,59 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+@model MOF.Etimad.Monafasat.ViewModel.InvitationStepModel
+
+@{
+   var showDatesTab = Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects && Model.TenderCreatedByTypeId != (int)Enums.TenderCreatedByType.AgenciesRelatedByVRO;
+}
+<li>
+   @if (Model.TenderTypeId == (int)Enums.TenderType.SecondStageTender)
+   {
+      <h4><a id="hBasicStep" href="@Url.Action("BasicSecondStageData", "Tender", new { id = Model.TenderIdString })"><span class="step-num">1</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</a></h4>
+   }
+   else
+   {
+      <h4><a id="hBasicStep" href="@Url.Action("BasicTenderData", "Tender", new { id = Model.TenderIdString })"><span class="step-num">1</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</a></h4>
+   }
+   <div class="clearfix"></div>
+</li>
+@if (showDatesTab == true || User.UserIsVRO())
+{
+   <li class="">
+      <div>
+         <h4><a id="hDetailsStep" href="@Url.Action("TenderDates", "Tender", new { tenderId = Model.TenderIdString })"><span class="step-num">2</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DetailsStep</a></h4>
+      </div>
+      <div class="clearfix"></div>
+   </li>
+}
+<li class="">
+   <div>
+      <h4><a id="hRealtionStep" href="@Url.Action("RelationsStep", "Tender",new {tenderId = Model.TenderIdString})"><span class="step-num">3</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep</a></h4>
+   </div>
+   <div class="clearfix"></div>
+</li>
+@if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender)
+{
+   <li class="">
+      <div>
+         <h4 id="hQuantatysStep"><a href="@Url.Action("QuantitiesTableStep", "Tender",new {id = Model.TenderIdString})"><span class="step-num">4</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables</a></h4>
+      </div>
+      <div class="clearfix"></div>
+   </li>
+}
+@if (Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects || Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase)
+{
+   <li class="">
+      <div>
+         <h4><a id="hAttachmentStep" href="@Url.Action("AttachmentsStep", "Tender", new { id = Model.TenderIdString })"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles</a></h4>
+      </div>
+      <div class="clearfix"></div>
+   </li>
+}
+else
+{
+   <li class="">
+      <div>
+         <h4><a id="hdnTemplatesStep" href="@Url.Action("UpdateConditionsTemplate", "Tender", new { tenderIdString = Model.TenderIdString })"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles</a></h4>
+      </div>
+      <div class="clearfix"></div>
+   </li>
+}

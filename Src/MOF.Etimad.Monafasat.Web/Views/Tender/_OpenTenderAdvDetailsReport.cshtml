@@ -1,0 +1,120 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderDetialsReportModel
+<link rel="icon" href="~/Etimad-UI/assets/imgs/favicon.ico">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script>
+   document.title = "تقرير إعلان المنافسة";
+   (function () {
+      var link = document.createElement('link');
+      oldLink = document.getElementById('dynamic-favicon');
+      link.id = 'dynamic-favicon';
+      link.rel = 'shortcut icon';
+      link.href = '~/Etimad-UI/assets/imgs/favicon.ico';
+      document.getElementsByTagName('head')[0].appendChild(link);
+   })();
+   function printData() {
+      window.print();
+      window.close();
+   }
+   function saveData() {
+      var sourceHTML = document.getElementById("printDiv").innerHTML;
+      var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      var fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = 'document.doc';
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+   }
+</script>
+<style type="text/css">
+   .table tr td {
+      width: 50% !important;
+   }
+</style>
+<button id="printButton" onclick="printData();" class="btn btn-success d-print-none" style="margin:20px;">طباعة / حفظ</button>
+<div id="printDiv" class="row" dir="rtl" style="margin:20px;">
+   <div class="col-sm-12 text-center d-print-none">
+      <img alt="" class="rounded mx-auto" src="~/Etimad-UI/assets/imgs/favicon.ico" />
+      <hr />
+   </div>
+   <h2 class="col-sm-12 text-center">تقرير إعلان المنافسة</h2>
+   <table class="table table-bordered col-sm-12">
+      <caption></caption>
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency</th>
+         <td class="text-center">@Model?.AgnecyName</td>
+      </tr>
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</th>
+         <td class="text-center">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName: @Model?.TenderName
+            <br />
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber: @Model?.ReferenceNumber
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderPurpose</th>
+         <td class="text-center">@Model?.TenderPurpose</td>
+      </tr>
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate</th>
+         <td class="text-center">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date: @Model?.LastSupplierActionDateHijri
+            <br />
+            الموافق: @Model?.LastSupplierActionDate
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate</th>
+         <td class="text-center">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date: @Model?.LastOfferApplyingDateHijri
+            <br />
+            الموافق: @Model?.LastOfferApplyingDate
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate</th>
+         <td class="text-center">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date: @Model?.LastOpenOfferDateHijri
+            <br />
+            الموافق: @Model?.LastOpenOfferDate
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersCheckingDate</th>
+         <td class="text-center">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date: @Model?.OffersCheckingDateHijriString
+            <br />
+            الموافق: @Model?.OffersCheckingDateString
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SamplesDeliveryAddress</th>
+         <td class="text-center">@Model?.SamplesDeliveryAddress</td>
+      </tr>
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OpenOfferLocation</th>
+         <td class="text-center">@Model?.OpenOffersLocation</td>
+      </tr>
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExecutionPlace</th>
+         <td class="text-center">@Model?.ExcuationLocation</td>
+      </tr>
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CategoryField</th>
+         <td class="text-center">
+            <ul>
+               @for (int i = 0; i < Model?.TenderMaintenanceRunnigWorks.Count; i++)
+               {
+                  <li>@Model?.TenderMaintenanceRunnigWorks[i]</li>
+               }
+               @for (int i = 0; i < Model?.TenderConstructionWorks.Count; i++)
+               {
+                  <li>@Model?.TenderConstructionWorks[i]</li>
+               }
+            </ul>
+         </td>
+      </tr>
+   </table>
+</div>

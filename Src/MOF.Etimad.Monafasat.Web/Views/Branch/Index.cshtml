@@ -1,0 +1,169 @@
+@model MOF.Etimad.Monafasat.ViewModel.BranchModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Branches;
+}
+@{
+   @section breadcrumb
+      {
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Branches</li>
+         </ol>
+      </nav>
+   }
+   @section pagecontrols{
+      <div class="dropdown">
+         <button type="button" id="toglGrid" onclick="toggleViewGrid('BrachGrid')" class="btn p-2 btn-outline-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsMenu"><i class="material-icons">view_column</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsMenu</button>
+         <button type="button" id="toglCards" onclick="toggleViewCards('BrachGrid')" class="btn p-2 btn-outline-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsCards"><i class="material-icons">view_quilt</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsCards</button>
+         <button class="btn p-2 btn-outline-primary" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search" aria-controls="Search"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search<div class="ripple-container"></div></button>
+         <button class="btn p-2 btn-outline-primary" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AddBranch" onclick="window.location = '/Branch/create'"><i class="material-icons">add</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Add<div class="ripple-container"></div></button>
+      </div>
+   }
+
+   <form id="cSearchForm" class="form">
+      @Html.AntiForgeryToken()
+      <div id="BrachGrid" v-cloak>
+
+         <div class="modal fade" id="DeleteBranchConfirmationModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title">
+                        @MOF.Etimad.Monafasat.Resources.BranchResources.Messages.ConfirmDeletion
+                     </h5>
+                     <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons">clear</i>
+                     </button>
+                  </div>
+                  <div class="modal-body">
+                     <p>
+                        @MOF.Etimad.Monafasat.Resources.BranchResources.Messages.ConfirmSupplierDeletion
+                        <input type="hidden" name="hiddenValue" id="hiddenValue" value="" />
+                     </p>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-link btn-success" id="SaveModel" @@click="confirmDelete">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+                     <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Cancel</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="collapse form-newsletter col-12" id="Search">
+            <div class="card card-body">
+               <div class="row">
+                  <div class="col-lg-4 col-sm-6 col-xs-12 form form-newsletter">
+                     <div class="form-group bmd-form-group pull-left" dir="rtl">
+                        <input type="text" class="form-control" id="txtCommitteeName" name="BranchName" maxlength="500" placeholder="@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.BranchName">
+                        <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.EnterBranchName</span>
+                     </div>
+                     <div class="input-group-prepend">
+                        <button type="button" class="btn btn-primary btn-just-icon" name="button" @@click="search" style="margin-right:10px;">
+                           <i class="material-icons">search</i>
+                           <div class="ripple-container"></div>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-just-icon" name="reset" @@click="reset" style="margin-right:10px;">
+                           <i class="material-icons">clear</i>
+                           <div class="ripple-container"></div>
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="clearfix"></div>
+         <div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="cardsresult">
+            @Html.Partial("_BranchCards.cshtml")
+         </div>
+         <div class="tableDiv col-md-12 col-sm-12 col-xs-12 animated  delay-2s" id="gridresult">
+            <div class="card">
+               @Html.Partial("_BranchGrid")
+            </div>
+         </div>
+      </div>
+</form>
+   @section scripts{
+      <script>
+         $(function () {
+            toggleViewGrid('BrachGrid');
+         });
+         var grid = new Vue({
+            el: '#BrachGrid',
+            data: {
+               Branches: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '/Branch/IndexPagingAsync',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.Branches = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+               },
+               detailsUrl: function (params) {
+                  return '/Branch/DetailsAsync?id=' + params;
+               },
+               editUrl: function (params) {
+                  return '/Branch/Create?BranchId=' + params;
+               },
+               deleteUrl: function (branchId) {
+
+                  return '/Branch/DeleteAsync?branchIdString=' + branchId;
+               },
+               assignUserUrl: function (committeeId) {
+                  return '/Branch/AssignUsersToBranch?branchIdString=' + committeeId;
+               },
+               assignCommitteeUrl: function (committeeId) {
+                  return '/Branch/AssignCommitteesToBranch?branchIdString=' + committeeId;
+               },
+               search: function () {
+                  this.queryString = $('form').serialize();
+                  this.resource_url = '/Branch/IndexPagingAsync' + '?' + this.queryString;
+               },
+               reset: function () {
+                  $("#txtCommitteeName").val("");
+                  this.resource_url = '/Branch/IndexPagingAsync?CommitteeTypeIdString=@(ViewData["CommitteeTypeId"])';
+               },
+               showDialog: function (id) {
+                  if (typeof (id) !== "undefined" && id !== "") {
+                     $("#DeleteBranchConfirmationModal #hiddenValue").val(id);
+                     $("#DeleteBranchConfirmationModal").modal("show");
+                  }
+               },
+               confirmDelete: function () {
+                  $('#DeleteBranchConfirmationModal').modal('hide');
+                  var branchId = $("#hiddenValue").val();
+                  $(".modal-body #hiddenValue").val("");
+                  var token = $('input[name=__RequestVerificationToken]').val();
+                  $.ajax({
+                     type: "POST",
+                     url: '@Url.Action("DeleteAsync", "Branch")',
+                     data: { branchIdString: branchId, __RequestVerificationToken: token },
+                     success: function (data) {
+                        if (data.status.trim() == "success") {
+                           AlertFun(data.message, alertMessageType.Success)
+                           setTimeout(function () {
+                              grid.$refs.vpaginator.fetchData(grid.resource_url);
+                           }, 2000);
+                        } else {
+                           AlertFun(data.message, alertMessageType.Danger);
+                        }
+                     },
+                     error: function () {
+                        $('#LoadingSite').fadeOut();
+                        AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ExpiredActivationCode)', alertMessageType.Danger);
+                     }
+                  });
+               }
+            }
+         });
+      </script>
+   }
+}

@@ -1,0 +1,218 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+
+<button type="button" @@click="detailsUrl(tender.tenderIdString, tender.tenderStatusIdString)" class="dropdown-item">
+   <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details
+</button>
+
+@if (User.IsInRole(RoleNames.DataEntry))
+{
+   <template v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PreQualification))">
+      <button type="button" @@click="editUrl(tender.tenderIdString)" class="dropdown-item" v-if="((tender.tenderStatusId ==  @((int)Enums.TenderStatus.UnderEstablishing)) || (tender.tenderStatusId ==  @((int)Enums.TenderStatus.Established)))"><i class="material-icons">edit</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</button>
+      <button type="button" :id="tender.tenderId" @@click="fillHiddenIdForDelete(tender.tenderIdString)" class="dropdown-item" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.UnderEstablishing)) || (tender.tenderStatusId == @((int)Enums.TenderStatus.Established)))" data-toggle="modal" data-placement="top" data-target="#myModal"><i class="material-icons">clear</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</button>
+      <button type="button" @@click="cancelLink(tender.tenderIdString)" v-if="((tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Pending) && tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Rejected) && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved))
+      ||
+       (tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending) && tender.cancelRequestRoleName != dataEntry  &&  ( tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentChecking)))
+      )" class="dropdown-item">
+         <i class="material-icons">delete</i> 
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CancelQualification
+      </button>
+
+      <template v-if="tender.lstOfChangeRequest != null && tender.lstOfChangeRequest.length > 0 ">
+
+         <template v-for="changeRequestObj in tender.lstOfChangeRequest">
+            <a :href="'/Qualification/CancelQualification?reOpen=true&STenderId=' + tender.tenderIdString" v-if="changeRequestObj.changeRequestTypeId == @((int)Enums.ChangeRequestType.Canceling)  &&   changeRequestObj.requestedByRoleName == dataEntry && changeRequestObj.changeRequestStatusId == @((int)Enums.ChangeStatusType.Rejected) " class="dropdown-item">
+               اعادة فتح الغاء التأهيل
+            </a>
+            <a :href="'/Qualification/QualificationExtendDateApprovement?tenderIdString=' + tender.tenderIdString" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) &&  tender.changeRequestStatuesId == @((int)Enums.ChangeStatusType.Rejected) &&  changeRequestObj.requestedByRoleName == dataEntry   && changeRequestObj.changeRequestTypeId == @((int)Enums.ChangeRequestType.ExtendDates) " class="dropdown-item">
+               <i class="material-icons">undo</i>   اعادة فتح تمديد التواريخ
+            </a>
+            <a :href="'/Qualification/QualificationAttachmentsChangesApprovement?tenderIdString=' + tender.tenderIdString" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)  && tender.changeRequestStatuesId == @((int)Enums.ChangeStatusType.Rejected) &&  changeRequestObj.requestedByRoleName == dataEntry  && changeRequestObj.changeRequestTypeId == @((int)Enums.ChangeRequestType.Attachments) " class="dropdown-item">
+               <i class="material-icons">undo</i>  اعادة فتح الملحقات
+            </a>
+         </template>
+      </template>
+   </template>
+}
+@if (User.IsInRole(RoleNames.Auditer))
+{
+   <template v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PreQualification))">
+
+      <button type="button" @@click="cancelLink(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && tender.cancelRequestRoleName ==  dataEntry && tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending))" class="dropdown-item">
+         <i class="material-icons">delete_forever</i>  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ReviewCancelQualification
+      </button>
+
+
+   </template>
+}
+
+@if (User.IsInRole(RoleNames.PreQualificationCommitteeSecretary))
+{
+   <button type="button" :id="tender.tenderId" @@click="fillHiddenIdForDelete(tender.tenderIdString)" class="dropdown-item" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.QualificationUnderEstablishingFromCommittee))" data-toggle="modal" data-placement="top" data-target="#myModal"><i class="material-icons">clear</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</button>
+      <button type="button" @@click="cancelLink(tender.tenderIdString)" v-if="tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Pending) && tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Rejected) && (tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentChecking) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckPending) || tender.tenderStatusId == @((int)Enums.TenderStatus.Approved))
+      " class="dropdown-item">
+         <i class="material-icons">delete</i> 
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CancelQualification
+      </button>
+      <template v-if="tender.lstOfChangeRequest != null && tender.lstOfChangeRequest.length > 0 ">
+         <template v-for="changeRequestObj in tender.lstOfChangeRequest">
+            <a :href="'/Qualification/CancelQualification?reOpen=true&STenderId='  + tender.tenderIdString" v-if="changeRequestObj.changeRequestTypeId == @((int)Enums.ChangeRequestType.Canceling) && changeRequestObj.requestedByRoleName == checkSecretry && changeRequestObj.changeRequestStatusId == @((int)Enums.ChangeStatusType.Rejected) " class="dropdown-item">
+               اعادة فتح الغاء التأهيل
+            </a>
+         </template>
+      </template>
+
+   <a target="_blank"
+      :href="QualificationOffersRegistryReport(tender.tenderIdString)"
+      v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentChecking) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckPending)
+      || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckConfirmed) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckRejected)"
+      class="dropdown-item">
+      <i class="material-icons">library_books</i> محضرالتأهيل
+   </a>
+
+   // ChangeReuests
+   <a :href="UpdateCommittees(tender.tenderIdString)" :id="tender.tenderId" class="dropdown-item" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Approved))">
+      <i class="material-icons">edit</i> 
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditCommittee
+   </a>
+   <a :href="UpdateAreas(tender.tenderIdString)" :id="tender.tenderId" class="dropdown-item" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) )">
+      <i class="material-icons">edit</i> 
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditAreas
+   </a>
+   <a :href="UpdateDate(tender.tenderIdString)" :id="tender.tenderId" class="dropdown-item" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && (tender.extendDatesStatus != @((int)Enums.ChangeStatusType.Pending) && tender.extendDatesStatus != @((int)Enums.ChangeStatusType.Rejected)))">
+      <i class="material-icons">edit</i> 
+      @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ExtendDates
+   </a>
+   <a :href="UpdateAttachments(tender.tenderIdString)" :id="tender.tenderId" class="dropdown-item"
+      v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && (tender.attachmentsStatus != @((int)Enums.ChangeStatusType.Pending) && tender.attachmentsStatus != @((int)Enums.ChangeStatusType.Rejected)))">
+      <i class="material-icons">edit</i> 
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditeAttachments
+   </a>
+   <a :href="AttachmentsApproval(tender.tenderIdString)" class="dropdown-item"
+      v-if="(tender.attachmentsStatus == @((int)Enums.ChangeStatusType.New)) && tender.tenderChangeRequestIdsForQualificationSecretary.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+      <i class="material-icons">send</i>  إرسال تحديث الملفات للإعتماد
+   </a>
+   <a :href="ExtendDateApproval(tender.tenderIdString)" class="dropdown-item"
+      v-if="tender.extendDatesStatus == @((int)Enums.ChangeStatusType.New) && tender.tenderChangeRequestIdsForQualificationSecretary.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+      <i class="material-icons">send</i>  إرسال تحديث التواريخ للإعتماد
+   </a>
+   <a v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && tender.extendDatesStatus == @((int)Enums.ChangeStatusType.Rejected)" :href="`/Qualification/QualificationExtendDateApprovement?tenderIdString=${tender.tenderIdString}`" class="dropdown-item">
+      <i class="material-icons">undo</i>  إعادة فتح تعديل التواريخ
+   </a>
+   <a v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && tender.attachmentsStatus == @((int)Enums.ChangeStatusType.Rejected)" :href="`/Qualification/QualificationAttachmentsChangesApprovement?tenderIdString=${tender.tenderIdString}`" class="dropdown-item">
+      <i class="material-icons">undo</i>  إعادة فتح تعديل الملفات
+   </a>
+}
+
+@if (User.IsInRole(RoleNames.PreQualificationCommitteeManager))
+{
+      <button type="button" @@click="cancelLink(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentChecking) || tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckPending) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckConfirmed) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckRejected))
+   && tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending)) &&  tender.cancelRequestRoleName == 'NewMonafasat_PreQualificationCommitteeSecretary' " class="dropdown-item">
+         <i class="material-icons">delete_forever</i>  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ReviewCancelQualification
+      </button>
+   // ChangeReuests
+   <a :href="AttachmentsApproval(tender.tenderIdString)" class="dropdown-item"
+      v-if="(tender.attachmentsStatus == @((int)Enums.ChangeStatusType.Pending)) && tender.tenderChangeRequestIdsForQualificationManager.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+      <i class="material-icons">edit</i>  إعتماد تحديث الملفات
+   </a>
+
+   <a :href="ExtendDateApproval(tender.tenderIdString)" class="dropdown-item"
+      v-if="(tender.extendDatesStatus == @((int)Enums.ChangeStatusType.Pending)) && tender.tenderChangeRequestIdsForQualificationManager.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)">
+      <i class="material-icons">send</i>   إعتماد تحديث التواريخ
+   </a>
+
+}
+@if (User.IsInRole(RoleNames.OffersCheckSecretary))
+{
+
+   <template v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification) &&   tender.userCheckCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_OffersCheckSecretary))">
+
+
+      <button type="button" @@click="EditPostQualification(tender.tenderIdString)" class="dropdown-item" v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification) && (tender.tenderStatusId ==  @((int)Enums.TenderStatus.UnderEstablishing) || tender.tenderStatusId ==  @((int)Enums.TenderStatus.Established))  )"><i class="material-icons">edit</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</button>
+
+      <button type="button" :id="tender.tenderId" @@click="fillHiddenIdForDelete(tender.tenderIdString)" class="dropdown-item" v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification) && (tender.tenderStatusId == @((int)Enums.TenderStatus.UnderEstablishing)|| tender.tenderStatusId == @((int)Enums.TenderStatus.Established)) )" data-toggle="modal" data-placement="top" data-target="#myModal"><i class="material-icons">clear</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</button>
+
+
+      <button type="button" @@click="cancelLink(tender.tenderIdString)" v-if="(tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Pending) && tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Rejected) && (tender.tenderStatusId == @((int)Enums.TenderStatus.Pending) || tender.tenderStatusId == @((int)Enums.TenderStatus.QualificationCommitteeApproval)))" class="dropdown-item">
+         <i class="material-icons">delete</i> 
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CancelQualification
+      </button>
+
+
+      <template v-if="tender.lstOfChangeRequest != null && tender.lstOfChangeRequest.length > 0 ">
+
+         <template v-for="changeRequestObj in tender.lstOfChangeRequest">
+
+            <a v-if="changeRequestObj.changeRequestTypeId == @((int)Enums.ChangeRequestType.Canceling) &&     changeRequestObj.requestedByRoleName == offercheckSecretry && changeRequestObj.changeRequestStatusId == @((int)Enums.ChangeStatusType.Rejected) " :href="'/Qualification/CancelQualification?reOpen=true&STenderId='  + tender.tenderIdString" class="dropdown-item">
+               اعادة فتح الغاء التأهيل
+            </a>
+
+         </template>
+
+      </template>
+
+   </template>
+}
+
+@if (User.IsInRole(RoleNames.OffersPurchaseSecretary))
+{
+
+   <template v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification) && tender.userDirectPurchaseCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_SecretaryDirtectPurshasingCommittee))">
+
+      <button type="button" @@click="EditPostQualification(tender.tenderIdString)" class="dropdown-item" v-if="((tender.tenderStatusId ==  @((int)Enums.TenderStatus.UnderEstablishing) || tender.tenderStatusId ==  @((int)Enums.TenderStatus.Established)) )"><i class="material-icons">edit</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</button>
+
+      <button type="button" :id="tender.tenderId" @@click="fillHiddenIdForDelete(tender.tenderIdString)" class="dropdown-item" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.UnderEstablishing)|| tender.tenderStatusId == @((int)Enums.TenderStatus.Established)))" data-toggle="modal" data-placement="top" data-target="#myModal"><i class="material-icons">clear</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</button>
+
+
+      <button type="button" @@click="cancelLink(tender.tenderIdString)" v-if="(((tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Pending) && tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Rejected) && !tender.isLowBudgetTender)  || tender.isUserHasAccessToLowBudgetTender)&& (tender.tenderStatusId == @((int)Enums.TenderStatus.Pending) || tender.tenderStatusId == @((int)Enums.TenderStatus.QualificationCommitteeApproval)))" class="dropdown-item">
+         <i class="material-icons">delete</i> 
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CancelQualification
+      </button>
+
+      <template v-if="tender.lstOfChangeRequest != null && tender.lstOfChangeRequest.length > 0 ">
+
+         <template v-for="changeRequestObj in tender.lstOfChangeRequest">
+
+            <a v-if="changeRequestObj.changeRequestTypeId == @((int)Enums.ChangeRequestType.Canceling) &&     changeRequestObj.requestedByRoleName == directPurchaseSecretry && changeRequestObj.changeRequestStatusId == @((int)Enums.ChangeStatusType.Rejected) " :href="`/Qualification/CancelQualification?reOpen=true&STenderId=${tender.tenderIdString}`" class="dropdown-item">
+               اعادة فتح الغاء التأهيل
+            </a>
+         </template>
+
+      </template>
+
+
+   </template>
+}
+
+@if (User.IsInRole(RoleNames.OffersCheckManager))
+{
+
+   <template v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification))">
+
+      <button type="button" @@click="cancelLink(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.Pending) || tender.tenderStatusId == @((int)Enums.TenderStatus.QualificationCommitteeApproval))
+   && tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending))" class="dropdown-item">
+         <i class="material-icons">delete_forever</i>  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ReviewCancelQualification
+      </button>
+
+   </template>
+
+}
+
+@if (User.IsInRole(RoleNames.OffersPurchaseManager))
+{
+
+<template v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification))">
+
+   <button type="button" @@click="cancelLink(tender.tenderIdString)" v-if="(((tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Pending) && tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Rejected) && !tender.isLowBudgetTender)  || tender.isUserHasAccessToLowBudgetTender)&& (tender.tenderStatusId == @((int)Enums.TenderStatus.Pending) || tender.tenderStatusId == @((int)Enums.TenderStatus.QualificationCommitteeApproval)))" class="dropdown-item">
+      <i class="material-icons">delete</i>
+      @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CancelQualification
+   </button>
+
+   <button type="button" @@click="cancelLink(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.Pending) || tender.tenderStatusId == @((int)Enums.TenderStatus.QualificationCommitteeApproval))
+   && tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending) && !tender.isLowBudgetTender)" class="dropdown-item">
+      <i class="material-icons">delete_forever</i>  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ReviewCancelQualification
+   </button>
+
+</template>
+
+
+}

@@ -1,0 +1,366 @@
+@model MOF.Etimad.Monafasat.ViewModel.BlockSearchCriteriaModel
+@{
+   ViewBag.Title = @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockedList;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb"> 
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li> 
+         <li class="breadcrumb-item active" aria-current="page"> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockedList </li>
+      </ol>
+   </nav>
+}
+<ul class="nav nav-pills nav-pills-icons" role="tablist">
+   <li class="nav-item">
+      <a class="nav-link text-center active show" href="#BlockGrid" role="tab" data-toggle="tab" aria-selected="true">
+         <i class="fa fa-user-times" aria-hidden="true"></i>
+         @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockedSuppliers
+      </a>
+   </li>
+   <li class="nav-item">
+      <a class="nav-link text-center" id="add-new" href="#SupplierGrid" role="tab" data-toggle="tab" aria-selected="true">
+         <i class="fa fa-user-plus" aria-hidden="true"></i>
+         @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.AddBlockedSupplier
+      </a>
+   </li>
+</ul>
+<div class="tab-content  tab-space col-12 " style="padding:0">
+   <div class="tab-pane active animated bounceInLeft  delay-1s hidden" id="BlockGrid">
+      <div class="modal fade" id="DeleteConfirmationModal" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">
+                     @MOF.Etimad.Monafasat.Resources.BlockResources.Messages.ConfirmDeletion
+                  </h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <p>
+                     @MOF.Etimad.Monafasat.Resources.BlockResources.Messages.ConfirmSupplierDeletion
+                     <input type="hidden" name="hiddenValue" id="hiddenValue" value="" />
+                  </p>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-link btn-success" id="SaveModel" @@click="confirmDelete">    @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Delete    </button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Cancel</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <form id="blockSupplierSearch" class="form">
+         <div class="card">
+            <div class="card-body">
+               <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockedList <a class="btn p-2 btn-outline-primary pull-right" data-toggle="collapse" href="#SearchInBlocked" role="button" aria-expanded="false" aria-controls="SearchInBlocked"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</a></h4>
+               <div class="clearfix"></div>
+               <div class=" collapse" id="SearchInBlocked">
+                  <div class="row">
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialRegistrationNo </label>
+                           <input type="text" id="CommercialRegistrationNo" name="CommercialRegistrationNo" maxlength="50" autocomplete="off" class="form-control" asp-for="CommercialRegistrationNo">
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName</label>
+                           <input type="text" id="CommercialSupplierName" name="CommercialSupplierName" maxlength="50" autocomplete="off" class="form-control" asp-for="CommercialSupplierName">
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.ResolutionNumber</label>
+                           <input type="text" id="ResolutionNumber" name="ResolutionNumber" maxlength="50" autocomplete="off" class="form-control" asp-for="ResolutionNumber">
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockTypeId</label>
+                           <select data-live-search="false" class="selectpicker" data-style="select-with-transition" title=@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.All data-size="7" asp-for="BlockTypeId">
+                              <option value=""> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.All</option>
+                              <option value="1"> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Permanent</option>
+                              <option value="2"> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Temporary</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockStatusId </label>
+                           <select data-live-search="false" class="selectpicker" data-style="select-with-transition" title=@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.All data-size="7" asp-for="BlockStatusId">
+                              <option value=""> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.All</option>
+                              <option value="1">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockActive</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.IsDeleted</label>
+                           <select data-live-search="false" class="selectpicker" data-style="select-with-transition" title=@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.All data-size="7" asp-for="IsDeletedId">
+                              <option value=""> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.All</option>
+                              <option value="1"> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Deleted </option>
+                              <option value="2"> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Active</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group form-check etd-calendar-group">
+                           <label for="datepick" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockStartDate </label>
+                           <div class="input-group-prepend">
+                              <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="FromDateString" id="FromDateString" placeholder=@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockStartDate asp-for="FromDateString">
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group form-check etd-calendar-group">
+                           <label for="datepick" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockEndDate</label>
+                           <div class="input-group-prepend">
+                              <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="ToDateString" id="ToDateString" placeholder=@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockEndDate asp-for="ToDateString">
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-12">
+                        <button class="btn btn-sm btn-primary" @@click="search" type="button"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Search</button>
+                        <button class="btn btn-sm " type="button" @@click="Emptysearch"><i class="material-icons">close</i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Clear </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            @Html.Partial("_BlockGrid.cshtml")
+         </div>
+      </form>
+   </div>
+   <div class="tab-pane animated bounceInLeft  delay-1s show" id="SupplierGrid">
+      <form id="supplierSearch">
+         <div class="card">
+            <div class="card-body">
+               <h4 class="text-primary">
+                  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.AddNewSupplier
+                  <a data-toggle="collapse" role="button" aria-expanded="false" aria-controls="SearchInUnblocked" class="btn p-2 btn-outline-primary pull-right" onclick="window.location = '/Block/createasync?BlockId=@(ViewData["BlockId"])'"><i class="material-icons">add</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Add</a>
+                  <a data-toggle="collapse" href="#SearchInUnblocked" role="button" aria-expanded="false" aria-controls="SearchInUnblocked" class="btn p-2 btn-outline-primary pull-right"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</a>
+               </h4>
+               <div class="clearfix"></div>
+               <div class="collapse" id="SearchInUnblocked">
+                  <div class="row">
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialRegistrationNo </label>
+                           <input type="text" id="CommericalRegisterNo" name="CommericalRegisterNo" maxlength="50" autocomplete="off" class="form-control">
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName </label>
+                           <input type="text" id="CommericalRegisterName" name="CommericalRegisterName" maxlength="50" autocomplete="off" class="form-control">
+                        </div>
+                     </div>
+                     <input type="hidden" id="hdnto" />
+                     <input type="hidden" id="hdnfrom" />
+                     <div class="col-12">
+                        <button class="btn btn-sm btn-primary" @@click="searchSup" type="button"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Search</button>
+                        <button class="btn btn-sm " type="button" @@click="EmptysearchSup"><i class="material-icons">close</i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Clear </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            @Html.Partial("_SupplierGrid.cshtml")
+         </div>
+      </form>
+   </div>
+</div>
+<!--endtBody-->
+@section scripts{
+   <script>
+      $(document).ready(function () {
+         GetData();
+
+      });
+
+      function GetData() {
+         var GregorianStart;
+         var GregorianEnd;
+         var startDate = "";
+         var endDate = "";
+
+         if ($("#FromDateString").val() !== "") {
+            var i = $("#FromDateString").val().split('/');
+            if ($('input[name="cb_from"]:checked').length > 0) {
+               $("#hdnfrom").val(i[0] + ',' + i[1] + ',' + i[2] + ',' + 'G');
+               startDate = $("#FromDateString").val();
+            }
+            else {
+               $("#hdnfrom").val(i[0] + ',' + i[1] + ',' + i[2] + ',' + 'H');
+               startDate = convertUmmalquraToGregorian($("#FromDateString").val());
+            }
+            GregorianStart = new Date(startDate);
+         }
+
+         if ($("#ToDateString").val() !== "") {
+            var x = $("#ToDateString").val().split('/');
+            if ($('input[name="cb_to"]:checked').length > 0) {
+               $("#hdnto").val(x[0] + ',' + x[1] + ',' + x[2] + ',' + 'G');
+               endDate = $("#ToDateString").val();
+            }
+            else {
+               $("#hdnto").val(x[0] + ',' + x[1] + ',' + x[2] + ',' + 'H');
+               endDate = convertUmmalquraToGregorian($("#ToDateString").val());
+            }
+            GregorianEnd = new Date(endDate);
+         }
+
+         if (startDate !== "" && endDate !== "") {
+            if (GregorianStart > GregorianEnd) {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.BlockResources.ErrorMessages.EndDateBiggerStart)', 'danger');
+               return false;
+            }
+         }
+
+         var queryString = '';
+         queryString = 'CommercialRegistrationNo=' + $("#CommercialRegistrationNo").val() + '&CommercialSupplierName=' + $("#CommercialSupplierName").val() + '&ResolutionNumber=' + $("#ResolutionNumber").val() + '&BlockTypeId=' + $("#BlockTypeId").val() + '&BlockStatusId=' + $("#BlockStatusId").val() + '&IsDeletedId=' + $("#IsDeletedId").val() + '&FromDateString=' + $("#FromDateString").val() + '&ToDateString=' + $("#ToDateString").val();
+         $.ajax({
+            type: "Get",
+            url: "/Block/IndexPagingAsync?" + queryString,
+         }).done(function (data) {
+
+            $("#publicTenderValue").text(data.publicTendersCount);
+            $("#directPurchaseValue").text(data.directPurchaseTendersCount);
+         }).fail(function (e) {
+            alert("fail");
+            });
+
+      }
+         var blocks = new Vue({
+            el: '#BlockGrid',
+            data: {
+               Blocks: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '/Block/IndexPagingAsync?CommercialRegistrationNumber=@(ViewData["CommercialRegistrationNo"])',
+               queryString: ''
+            },
+            methods: {
+
+              showDialog: function(id) {
+                 if (typeof (id) !== "undefined"&& id!== "") {
+                    $("#DeleteConfirmationModal #hiddenValue").val(id);
+                    $("#DeleteConfirmationModal").modal("show");
+                 }
+               },
+
+               confirmDelete: function () {
+
+                  $('#DeleteConfirmationModal').modal('hide');
+
+                  var data_id = $(".modal-body #hiddenValue").val();
+                  $(".modal-body #hiddenValue").val("");
+                  window.location = '/Block/DeleteAsync?Id=' + data_id;
+                  AlertFun("@MOF.Etimad.Monafasat.Resources.BlockResources.Messages.DataRemoved", 'success');
+               },
+               updateResource: function (data) {
+                  this.Blocks = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+               },
+               detailsUrl: function (params) {
+                  return '/Block/DetailsAsync?id=' + params;
+               },
+               deleteUrl: function (Id) {
+                  return '/Block/DeleteAsync?Id=' + Id;
+               },
+               search: function () {
+                  var GregorianStart;
+                  var GregorianEnd;
+                  var startDate = "";
+                  var endDate = "";
+                  if ($("#FromDateString").val() !== "") {
+                     var i = $("#FromDateString").val().split('/');
+                     if ($('input[name="cb_from"]:checked').length > 0) {
+                        $("#hdnfrom").val(i[0] + ',' + i[1] + ',' + i[2] + ',' + 'G');
+                        startDate = $("#FromDateString").val();
+                     }
+                     else {
+                        $("#hdnfrom").val(i[0] + ',' + i[1] + ',' + i[2] + ',' + 'H');
+                        startDate = convertUmmalquraToGregorian($("#FromDateString").val());
+                     }
+                     GregorianStart = new Date(startDate);
+                  }
+                  if ($("#ToDateString").val() !== "") {
+                     var x = $("#ToDateString").val().split('/');
+                     if ($('input[name="cb_to"]:checked').length > 0) {
+                        $("#hdnto").val(x[0] + ',' + x[1] + ',' + x[2] + ',' + 'G');
+                        endDate = $("#ToDateString").val();
+                     }
+                     else {
+                        $("#hdnto").val(x[0] + ',' + x[1] + ',' + x[2] + ',' + 'H');
+                        endDate = convertUmmalquraToGregorian($("#ToDateString").val());
+                     }
+                     GregorianEnd = new Date(endDate);
+                  }
+                  if (startDate !== "" && endDate !== "") {
+
+                     if (GregorianStart > GregorianEnd) {
+                        AlertFun("@MOF.Etimad.Monafasat.Resources.BlockResources.ErrorMessages.EndDateBiggerStart", 'danger');
+                        return false;
+                     }
+                  }
+                  var queryString = '';
+                  queryString = 'CommercialRegistrationNo=' + $("#CommercialRegistrationNo").val() + '&CommercialSupplierName=' + $("#CommercialSupplierName").val() + '&ResolutionNumber=' + $("#ResolutionNumber").val() + '&BlockTypeId=' + $("#BlockTypeId").val() + '&BlockStatusId=' + $("#BlockStatusId").val() + '&IsDeletedId=' + $("#IsDeletedId").val() + '&FromDateString=' + $("#FromDateString").val() + '&ToDateString=' + $("#ToDateString").val();
+                  this.resource_url = '/Block/IndexPagingAsync?' + queryString;
+               },
+               Emptysearch: function () {
+                  var queryString = '';
+                  $("#CommercialRegistrationNo").val('');
+                  $("#CommercialSupplierName").val('');
+                  $("#ResolutionNumber").val('');
+                  $("#FromDateString").val('');
+                  $("#ToDateString").val('');
+
+                  $("#BlockTypeId").selectpicker('val', '');
+                  $("#BlockStatusId").selectpicker('val', '');
+                  $("#IsDeletedId").selectpicker('val', '');
+                  this.resource_url = '/Block/IndexPagingAsync?' + queryString;
+               }
+            }
+         });
+
+         var supplierGrid = new Vue({
+            el: '#SupplierGrid',
+            data: {
+               Suppliers: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '/Block/GetSupplier',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.Suppliers = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+               },
+               addUrl: function (Id,name) {
+                  return '/Block/CreateAsync?Id=' + encodeURIComponent(Id) + '&name=' + encodeURIComponent(name);
+               },
+               searchSup: function () {
+                  this.queryString = $('#supplierSearch').serialize();
+                  this.resource_url = '/Block/GetSupplier' + '?' + this.queryString;
+               },
+               EmptysearchSup: function () {
+                  this.queryString = '';
+                  $('#CommericalRegisterName').val('');
+                  $('#CommericalRegisterNo').val('');
+                  this.resource_url = '/Block/GetSupplier' + '?' + this.queryString;
+               }
+            }
+         });
+         $('.add-new-vendor').click(function () {
+            $('#add-new').click();
+         });
+   </script>
+}

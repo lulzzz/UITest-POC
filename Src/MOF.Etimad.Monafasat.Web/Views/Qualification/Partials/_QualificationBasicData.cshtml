@@ -1,0 +1,69 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationSavingModel
+@using res = MOF.Etimad.Monafasat.Resources;
+
+<div class="col-12">
+   <input type="hidden" asp-for="TenderName" />
+   @*<input type="hidden"asp-for="TechnicalOrganizationId" />*@
+   <input type="hidden" asp-for="OffersCheckingCommitteeId" />
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-12">
+                  <span class="badge badge-primary pull-right">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy
+                     : <i class="material-icons" style="font-size: 11px;padding: 2px;display: inline;">person</i> 
+                     @{
+                        if (string.IsNullOrEmpty(Model.TenderIdString) || MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(0) == Model.TenderIdString)
+                        {
+                           @(User.FullName()) }
+                        else
+                        {
+                           @Model.CreatedBy
+                        } }
+                  </span>
+
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="TenderName" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                     <input asp-for="TenderName" class="form-control" disabled name="TenderName" id="TenderName" maxlength="500" />
+                     <span asp-validation-for="TenderName" class="text-danger" id="speueqwe"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="TechnicalOrganizationId" class="label bmd-label-static"></label>
+                     @if (Model.IsAgancyHasTechnicalCommittee)
+                     {
+                        <span class="text-danger">*</span>
+                     }
+                     <select data-live-search="true" asp-for="TechnicalOrganizationId" name="TechnicalOrganizationId"
+                             asp-items="@(new SelectList(Model.TechnicalCommittees, "CommitteeId", "CommitteeName"))" id="dD_TechnicalOrganizationId" :disabled="disableItemsIfSecrtary" class="selectpicker" data-style="select-with-transition" data-size="7">
+                        <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseTechnicalCommittee </option>
+                     </select>
+                     @if (Model.IsAgancyHasTechnicalCommittee)
+                     {
+                        <span asp-validation-for="TechnicalOrganizationId" class="text-danger"></span>
+                     }
+                  </div>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="PreQualificationCommitteeId" class="label bmd-label-static"></label>
+                     <select data-live-search="true" asp-for="PreQualificationCommitteeId" class="selectpicker" :disabled="disableItemsIfSecrtary" id="dD_PreQualificationCommitteeId" data-style="select-with-transition"
+                             asp-items="@(new SelectList(Model.PreQualificationCommittees, "CommitteeId", "CommitteeName"))" data-size="7">
+                        <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChoosePreQualificationCommittee</option>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div>
+   <button type="button" class="btn btn-primary  next-tab" onclick="nextTab()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+</div>

@@ -1,0 +1,135 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+<div class="table-responsive tenderGridHight">
+   <table class="table table-striped" id="TenderTable">
+      <caption></caption>
+      <thead>
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType</th>
+            @if (User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.FinancialSupervisor))
+            {
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName</th>
+            }
+            @if (User.IsInRole(RoleNames.MonafasatAdmin))
+            {
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyBranch</th>
+            }
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderReferenceNumber</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletPrice</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SubmtionDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersCheckingDate</th>
+            <th scope="col" style="" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+            <th scope="col" style="width:130px" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Actions</th>
+         </tr>
+      </thead>
+      <tbody v-if="Tenders && Tenders.length > 0">
+         <tr v-for="(tender, $index) in Tenders">
+            <td data-label="#" class="text-center"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td class="text-center" v-if="tender.tenderName.length > 100" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName"> <a :href="detailsUrl(tender.tenderIdString)">{{tender.tenderName.substring(0, 100) + ' ...'}}</a></td>
+            <td class="text-center" v-else data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName"> <a :href="detailsUrl(tender.tenderIdString)">{{tender.tenderName}}</a></td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType"> {{tender.tenderTypeName}}</td>
+            @if (User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.FinancialSupervisor))
+            {
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.GoveAgency"> {{tender.agencyName}} - {{tender.branchName}} </td>
+            }
+            @if (User.IsInRole(RoleNames.MonafasatAdmin))
+            {
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName"> {{tender.branchName}} </td>
+
+            }
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus">
+               @await Html.PartialAsync("_TenderStatuses.cshtml")
+               @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PurshaseSpecialist))
+               {
+                  <button v-if="tender.tenderChangeRequestIdsForDataEntry.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)" type="button" class="btn btn-sm btn-info btn-link btn-just-icon popover-status m-0" data-container="body" data-toggle="popover" data-placement="left">
+                     <i class="material-icons">info</i> 
+                     <div class="popover-content d-none">
+                        @await Html.PartialAsync("_TenderChangeRequestStatus.cshtml")
+                     </div>
+                  </button>
+               }
+               @if (User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.EtimadOfficer))
+               {
+                  <button v-if="tender.tenderChangeRequestIdsForAuditor.length > 0  && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)" type="button" class="btn btn-sm btn-info btn-link btn-just-icon popover-status m-0" data-container="body" data-toggle="popover" data-placement="left">
+                     <i class="material-icons">info</i> 
+                     <div class="popover-content d-none">
+                        @await Html.PartialAsync("_TenderChangeRequestStatus.cshtml")
+                     </div>
+                  </button>
+               }
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber"> {{tender.tenderNumber}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber"> {{tender.tenderReferenceNumber}} </td>
+            <td class="text-center text-primary h5" v-if="tender.conditionsBookletPrice > 0">{{tender.conditionsBookletPrice}} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Riyal</td>
+            <td class="text-center text-primary h5" v-else>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Free</td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SubmtionDate">
+               <div style="width: 75px;">
+                  <span v-if="tender.submitionDate"> {{tender.submitionDate.split('T')[0]}}<br /> </span>
+                  <span v-if="tender.submitionDateHijri && tender.submitionDate"> {{tender.submitionDateHijri}} </span>
+               </div>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate">
+               <div class="text-center" style="width: 75px;">
+                  <span v-if="tender.lastEnqueriesDate"> {{tender.lastEnqueriesDate.split('T')[0]}} <br /> </span>
+                  <span v-if="tender.lastEnqueriesDateHijri && tender.lastEnqueriesDate"> {{tender.lastEnqueriesDateHijri}} </span>
+               </div>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate">
+               <div class="text-center" style="width: 75px;">
+                  <span v-if="tender.lastOfferPresentationDate"> {{tender.lastOfferPresentationDate.split('T')[0]}}<br /></span>
+                  <span v-if="tender.lastOfferPresentationDateHijri && tender.lastOfferPresentationDate"> {{tender.lastOfferPresentationDateHijri}} <br /> {{tender.lastOfferPresentationDate.split('T')[1].substring(0,5)}} </span>
+               </div>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferOpenDateTime">
+               <div class="text-center" style="width: 75px;">
+                  <span> {{tender.offersOpeningDate != null ? tender.offersOpeningDate.split('T')[0] : "لا يوجد"}} <br /></span>
+                  <span v-if="tender.offersOpeningDateHijri && tender.offersOpeningDate"> {{tender.offersOpeningDateHijri}} <br /> {{tender.offersOpeningDate.split('T')[1].substring(0,5)}}  </span>
+               </div>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersCheckingDate">
+               <div class="text-center" style="width: 75px;">
+                  <span> {{tender.offersCheckingDate != null ? tender.offersCheckingDate.split('T')[0] : "لا يوجد"}} <br /></span>
+                  <span v-if="tender.offersCheckingDateHijri && tender.offersCheckingDate"> {{tender.offersCheckingDateHijri}} <br /> {{tender.offersCheckingDate.split('T')[1].substring(0,5)}}  </span>
+               </div>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               <div class="dropdown pull-right">
+                  <button class="btn btn-primary btn-link btn-just-icon" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options" data-toggle="dropdown" aria-expanded="false">
+                     <i class="material-icons">more_vert</i> 
+                     <div class="ripple-container"></div>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                     @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.EtimadOfficer))
+                     {
+                        @await Html.PartialAsync("_TenderIndexUnderOperationsStageActions.cshtml")
+                     }
+                     else
+                     {
+                        @await Html.PartialAsync("_TenderIndexMangersActions.cshtml")
+                     }
+                  </div>
+               </div>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Actions">
+               @await Html.PartialAsync("~/Views/Tender/Partials/_UnderOperationStageFooterActions.cshtml")
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="14" class="text-center">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+               <br />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+

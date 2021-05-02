@@ -1,0 +1,61 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderOffersModel
+
+@if (Model.CanInsertAwardingData)
+{
+   if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersAwarding)
+   {
+      <div class="row" v-if="ActualOffersAwarding && ActualOffersAwarding.length > 0">
+         <div class="col-12 form-group">
+            <button type="button" id="btnSave" class="btn btn-warning" name="button" @@click="saveOfferAwardingValues">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+               <div class="ripple-container"></div>
+            </button>
+            <button type="button" class="btn btn-primary pull-left d-none" id="btnSendToInitialApprove" @@click="btnSendToInitialApprove">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendAwardingToApprove
+            </button>
+            <button type="button" class="btn btn-primary pull-left d-none" name="button" id="btnInitialApproveLowValue" @@click="initialApproveLowBudget">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InitiallyApproval
+            </button>
+         </div>
+      </div>
+   }
+   @if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersInitialAwardedRejected)
+   {
+      <div class="col-12 form-group">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnInitialReopen" @@click="btnInitialReopen" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestartAwarding</button>
+      </div>
+   }
+   @if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersAwardedRejected || Model.TenderStatusId == (int)Enums.TenderStatus.BackForAwardingFromPlaint)
+   {
+      <div class="col-12 form-group">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnReopen" @@click="btnReopen" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestartAwarding</button>
+      </div>
+   }
+}
+
+@if (User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersOpeningAndCheckManager))
+{
+   if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersInitialAwardedPending || Model.TenderStatusId == (int)Enums.TenderStatus.OffersAwardedPending)
+   {
+      <div class="row" id="approvalSection">
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnInitialApprove" @@click="initialApprove" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve</button>
+            <button type="button" class="btn btn-danger pull-left" name="button" id="btnInitialReject" @@click="btnInitialReject" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+         </div>
+      </div>
+   }
+}
+
+@if (User.IsInRole(RoleNames.ApproveTenderAward) && Model.CanAuthorityHolderDoAction)
+{
+   if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersInitialAwardedConfirmed && Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects)
+   {
+      <div class="row" id="approvalSection">
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnApprove" @@click="btnApprove" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve</button>
+            <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" @@click="btnReject" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+         </div>
+      </div>
+   }
+}
+

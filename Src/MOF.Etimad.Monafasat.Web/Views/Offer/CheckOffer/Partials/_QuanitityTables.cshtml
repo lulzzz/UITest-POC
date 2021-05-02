@@ -1,0 +1,64 @@
+@model MOF.Etimad.Monafasat.ViewModel.CheckOfferModel
+@if (!Model.IsReadOnly)
+{
+   <form asp-controller="Offer" asp-action="AddQuantityTable" data-ajax-begin="$('#LoadingSite').fadeIn();" data-ajax-complete="$('#LoadingSite').fadeOut();" data-ajax="true" data-ajax-method="POST" enctype="multipart/form-data" data-ajax-mode="replace" data-ajax-loading="#loadingsite" data-ajax-success="AjaxSuccess()" data-ajax-failure="onFailure" data-ajax-update="#QuantityTablecontent">
+      @Html.AntiForgeryToken()
+      <input asp-for="QuantityTableforInsertModel.offerIdString" name="offerIdString" type="hidden" />
+      <input asp-for="QuantityTableforInsertModel.tenderIdString" name="tenderIdString" type="hidden" />
+      <div class="modal fade" id="myModal3" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">
+                     @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AddQuantityTable  
+                  </h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="QuantityTableforInsertModel.QuantityName" class="label bmd-label-static">إسم البيان@*@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.QuantityTableName*@<span class="text-danger">*</span></label>
+                     <input name="QuantityName" type="text" class="form-control" asp-for="QuantityTableforInsertModel.QuantityName" autocomplete="off">
+                     <span class="text-danger" asp-validation-for="QuantityTableforInsertModel.QuantityName"></span>
+                  </div>
+                  <div class="form-group bmd-form-group">
+                     <label for="publisher" asp-for="QuantityTableforInsertModel.Price" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TotalPrice<span class="text-danger">*</span></label>
+                     <input name="Price" type="number" class="form-control" id="publisher" asp-for="QuantityTableforInsertModel.Price" autocomplete="off">
+                     <span class="text-danger" asp-validation-for="QuantityTableforInsertModel.Price"></span>
+                  </div>
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="QuantityTableforInsertModel.Discount" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AmountAfterDiscountReport<span class="text-danger">*</span></label>
+                     <input name="Discount" type="number" class="form-control" id="publisher" asp-for="QuantityTableforInsertModel.Discount" autocomplete="off">
+                     <span class="text-danger" asp-validation-for="QuantityTableforInsertModel.Discount"></span>
+                  </div>
+
+               </div>
+               <div class="modal-footer">
+                  <input class="btn btn-primary btn-sm" type="submit" value="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Save">
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Cancel</button>
+
+               </div>
+            </div>
+         </div>
+      </div>
+   </form>
+}
+
+<div class="tab-pane" id="quantity-tables">
+   <div class="col-12">
+      <div class="row">
+         <div class="card">
+            @if (!Model.IsReadOnly)
+            {
+               <div class="card-body">
+                  <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal3">إضافة بيان@*@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AddStatement*@ <i class="material-icons">add</i></button>
+               </div>
+            }
+            <div class="" id="QuantityTablecontent">
+               @{await Html.RenderPartialAsync("~/Views/Offer/CheckOffer/Partials/_QuantityTable.cshtml", Model.QuantityTableModels);}
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

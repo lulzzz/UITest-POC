@@ -1,0 +1,100 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@section breadcrumb
+   {
+   <ol class="breadcrumb">
+      <li class="active"><a href="#">@res.TenderResources.DisplayInputs.Tenders</a></li>
+   </ol>
+   <h2>@res.TenderResources.DisplayInputs.AvailableTenderForOffers </h2>
+}
+
+<form>
+   <div id="TenderGrid" v-cloak>
+      <div class="panel collapdedFillter">
+         <div class="panel-heading">
+            <span class="clickable panel-collapsed">
+               <i class="glyphicon glyphicon-chevron-down"></i>
+               <label>@res.SharedResources.DisplayInputs.Search</label>
+            </span>
+         </div>
+         <div class="panel-body" style="">
+            <div class="tableDiv">
+               <div class="form-group col-md-4 col-sm-12 col-xs-12">
+                  <div class="formGrop">
+                     <label>@res.TenderResources.DisplayInputs.TenderName</label>
+                     <input type="text" id="txtTenderName" name="TenderName" class="form-control" maxlength="50" />
+
+                     <label>@res.TenderResources.DisplayInputs.AgencyName</label>
+                     <input type="text" id="txtInitiatorName" name="InitiatorName" class="form-control" maxlength="50" />
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="name" class="label bmd-label-static">@res.TenderResources.DisplayInputs.TenderType    <span class="text-danger">*</span></label>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input name="TenderTypeId" requierd="true" type="radio" class="form-check-input" value="0">
+                           @res.SharedResources.DisplayInputs.All
+                           <span class="circle"><span class="check"></span></span> <!---->
+                        </label>
+                        <label class="form-check-label">
+                           <input name="TenderTypeId" requierd="true" type="radio" class="form-check-input" value="1">
+                           @res.TenderResources.DisplayInputs.GeneralTender
+                           <span class="circle"><span class="check"></span></span> <!---->
+                        </label>
+                        <label class="form-check-label">
+                           <input name="TenderTypeId" requierd="true" type="radio" class="form-check-input" value="2">
+                           @res.TenderResources.DisplayInputs.DirectPurshase 
+                           <span class="circle"><span class="check"></span></span> <!---->
+                        </label>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-md-12 col-sm-12 col-xs-12">
+                  <span class="sperator"></span>
+                  <button type="button" class="searchBtn" @@click="search"><i class="glyphicon glyphicon-search"></i> @res.SharedResources.DisplayInputs.Search</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="tableDiv">
+         @Html.Partial("_OffersTendersGrid")
+      </div>
+
+   </div>
+</form>
+
+
+
+<!--endtBody-->
+@section scripts{
+   <script>
+      new Vue({
+         el: '#OffersTendersGrid',
+         data: {
+            Tenders: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            // Here you define the url of your paginated API
+            resource_url: '/Tender/IndexPagingAsync',
+            queryString: ''
+         },
+         methods: {
+            updateResource: function (data) {
+               this.Tenders = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            detailsUrl: function (params) {
+
+               //return '/Tender/Details?' + params;
+            },
+            search: function () {
+               this.queryString = $('form').serialize();
+               this.resource_url = '/Tender/IndexPagingAsync' + '?' + this.queryString;
+            }
+         }
+      });
+   </script>
+}

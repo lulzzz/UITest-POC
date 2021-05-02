@@ -1,0 +1,381 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderInformationModel
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+    ViewData["Title"] = @res.EnquiryResources.DisplayInputs.EnquiryList;
+    string tenderIdString = Model.TenderIdString;
+    int tenderType = Model.TenderTypeId;
+    int tenderStatusId = MOF.Etimad.Monafasat.SharedKernal.Util.Decrypt(Model.TenderStatusIdString);
+    string communicationTabUrl = Model.TenderIdString + "#d-9";
+    var canAddEnquiry = (Model.LastEnqueriesDate >= Model.CurrentDate.Date && Model.TechnicalOrganizationId != null) ? true : false;
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb" class="d-print-none">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@res.EnquiryResources.DisplayInputs.Enquiries</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@res.EnquiryResources.DisplayInputs.EnquiryList </li>
+      </ol>
+   </nav>
+}
+<style>
+   .blockquote .blockquote {
+      background-color: #fff;
+      border-color: #999999;
+   }
+
+   @@media print {
+      .blockquote {
+         background-color: #f5f5f5;
+         border:none;
+      }
+      span.badge {
+         color:#000 !important;
+      }
+      
+   }
+   @@page{
+      margin:0.7mm;
+   }
+</style>
+<div class="card">
+   <div class="card-body">
+      <div class="row">
+         <div class="col-md-6 col-sm-12 col-xs-12">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+
+                     <div class="col etd-item-title">
+                        @(Model.TenderTypeId == (int)Enums.TenderType.PreQualification ? res.QualificationResources.DisplayInputs.QualificationName : res.TenderResources.DisplayInputs.TenderName)
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.TenderName)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col etd-item-title">
+                        @(Model.TenderTypeId == (int)Enums.TenderType.PreQualification ? res.QualificationResources.DisplayInputs.QualificationNumber : res.TenderResources.DisplayInputs.TenderRefrenceNumber)
+
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.ReferenceNumber)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               @if (Model.TenderTypeId != (int)Enums.TenderType.PreQualification)
+               {
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @res.TenderResources.DisplayInputs.TenderNumber
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @(Model.TenderNumber != null ? Model.TenderNumber : res.SharedResources.DisplayInputs.NotExist)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+               }
+            </ul>
+         </div>
+         <div class="col-md-6 col-sm-12 col-xs-12">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col etd-item-title">
+                        @(Model.TenderTypeId == (int)Enums.TenderType.PreQualification ? res.QualificationResources.DisplayInputs.QualificationType : res.TenderResources.DisplayInputs.TenderType)
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.TenderTypeName)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col etd-item-title">
+                        @res.TenderResources.DisplayInputs.LastEnqueriesDate
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.LastEnqueriesDate.HasValue ? @Model.LastEnqueriesDate.Value.ToString("dd-MM-yyyy", new System.Globalization.CultureInfo("en-US")) : "")
+                        </span>
+                     </div>
+                  </div>
+               </li>
+
+            </ul>
+         </div>
+      </div>
+   </div>
+</div>
+@section pagecontrols{
+
+<div class="dropdown d-print-none">
+   @if (User.IsInRole(RoleNames.supplier) && canAddEnquiry == true)
+   {
+      if (Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects || (Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects && tenderStatusId == (int)Enums.TenderStatus.Approved))
+      {
+
+         <button class="btn p-2 btn-outline-primary" id="addEnquiry" data-toggle="tooltip" data-placement="top" title="@res.EnquiryResources.DisplayInputs.AddEnquiry" data-container="body" data-original-title=" @res.EnquiryResources.DisplayInputs.AddEnquiry"><i class="material-icons">add</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Add<div class="ripple-container"></div></button>
+      }
+   }
+</div>
+}
+<form class="form" id="searchCriteriaForm">
+   <div class="card">
+      <div id="enquiriesGrid" class="card-body">
+         <h4 class="text-primary d-print-none">الاستفسارات ({{ enquiries.length }})</h4>
+         <div id="enquiriesGrids" class="etd-cards" v-cloak>
+            <div class="clearfix"></div>
+            <div v-if="enquiries && enquiries.length > 0">
+               <template v-for="(enquiry, $index) in enquiries">
+                  <a class="animated fadeInLeft  delay-1s btn btn-link btn-outline-secondary enquiryItem d-block"  :data-target="enquiry.enquiryId" @@click="openEnquiry($event)" aria-expanded="false" style="white-space: normal;" :aria-controls="enquiry.enquiryId">
+                     <span class="badge badge-primary m-1 pull-right">  @res.EnquiryResources.DisplayInputs.ApprovedReplyCount ( {{enquiry.approvedEnquiryReplyCount }} ) </span>
+                     @if (User.IsInRole(RoleNames.TechnicalCommitteeUser))
+                     {
+                        <span class="badge badge-warning m-1 pull-right">  @res.EnquiryResources.DisplayInputs.PendingReplyCount ( {{enquiry.pendingEnquiryReplyCount }} )</span>
+                     }
+                     <span v-if="enquiry.enquirySendingDate" class="badge badge-info pull-right m-1"> @res.EnquiryResources.DisplayInputs.SendingDate : {{enquiry.enquirySendingDate.split('T')[0]}}</span>
+                     <span class="h5">
+                        {{enquiry.enquiryName.substr(0, 130)}}
+                        <button type="button" class="readMore btn btn-link btn-sm btn-primary p-1" v-if="enquiry.enquiryName.length > 130" onclick="readMore(event)" style="font-weight:700">عرض المزيد<i class="fa fa-ellipsis-h p-1"></i> </button>
+                     </span>
+                     <span hidden="hidden" class="h5">
+                        {{enquiry.enquiryName}}
+                        <button type="button" class="readLess btn btn-link btn-sm btn-warning p-1 font-weight-bold" onclick="readLess(event)" style="font-weight:700">إخفاء المزيد<i class="fa fa-ellipsis-h p-1"></i> </button>
+                     </span>
+                  </a>
+                  <div class="enquiryDetails animated fadeInLeft  delay-1s d-none" :id="enquiry.enquiryId">
+                     <div class="mb-0">
+                        <div class="row">
+                           <div class="col-12">
+                              <span class="badge badge-primary m-1 pull-right">  @res.EnquiryResources.DisplayInputs.ApprovedReplyCount ( {{enquiry.approvedEnquiryReplyCount }} ) </span>
+                              @if (User.IsInRole(RoleNames.TechnicalCommitteeUser))
+                              {
+                                 <span class="badge badge-warning m-1 pull-right">  @res.EnquiryResources.DisplayInputs.PendingReplyCount ( {{enquiry.pendingEnquiryReplyCount }} )</span>
+                              }
+                              <span v-if="enquiry.enquirySendingDate" class="badge badge-info pull-right m-1"> @res.EnquiryResources.DisplayInputs.SendingDate : {{enquiry.enquirySendingDate.split('T')[0]}}</span>
+                           </div>
+                           <div class="col-12 h5">
+                              {{enquiry.enquiryName}}
+                           </div>
+                        </div>
+                     </div>
+
+                     <div :id="enquiry.enquiryId" class="">
+                        <blockquote class="blockquote"> 
+                           <template v-if="userCR == enquiry.commericalRegisterNo">
+                              <small style="font-size:0.8rem" @@click="getSupplierInfo(enquiry.commericalRegisterNo)" class="btn btn-link btn-primary btn-sm d-inline-block"><i class="fa fa-building p-1"></i> {{enquiry.supplierName}} </small>
+                           </template>
+                           <template v-else>
+                              <small style="font-size:0.8rem"><i class="fa fa-building p-1"></i> {{enquiry.supplierName}} </small>
+                           </template>
+                           <template v-if="enquiry.enquiryReplies.length > 0">
+                              <template v-for="reply in enquiry.enquiryReplies">
+                                 <blockquote class="blockquote">
+
+                                    <span class="h5">
+                                       {{reply.enquiryReplyMessage.substr(0, 180)}}
+                                       <button type="button" class="readMore btn btn-link btn-sm btn-primary p-1" v-if="reply.enquiryReplyMessage.length > 180" onclick="readMore(event)" style="font-weight:700">عرض المزيد<i class="fa fa-ellipsis-h p-1"></i> </button>
+                                    </span>
+                                    <span hidden="hidden" class="h5">
+                                       {{reply.enquiryReplyMessage}}
+                                       <button type="button" class="readLess btn btn-link btn-sm btn-warning p-1 font-weight-bold" onclick="readLess(event)" style="font-weight:700">إخفاء المزيد<i class="fa fa-ellipsis-h p-1"></i> </button>
+                                    </span>
+                                    <small class="text-dark-green">
+                                       {{reply.committeeName}}
+                                       <template v-if="reply.enquiryReplyStatusId != @((int)Enums.EnquiryReplyStatus.Approved)">
+                                          <span class="badge badge-warning  m-3">@res.EnquiryResources.DisplayInputs.PendingToApprove</span>
+                                       </template>
+                                       <template v-else>
+                                          <span class="badge badge-primary  m-3">@res.SharedResources.DisplayInputs.Approved </span>
+
+                                          <template v-if="reply.enquiryReplyDate">
+                                             <span class="badge badge-info  m-3">@res.EnquiryResources.DisplayInputs.ReplyDate :  {{reply.enquiryReplyDate.split('T')[0]}} </span>
+                                          </template>
+                                          <template v-else>
+                                          </template>
+                                       </template>
+
+                                    </small>
+                                 </blockquote>
+                              </template>
+                           </template>
+                        </blockquote>
+                     </div>
+                     @if (User.IsInRole(RoleNames.TechnicalCommitteeUser))
+                     {
+                        <a :href="enquiryDetails(enquiry.enquiryIdString)" class="btn d-print-none btn-primary btn-sm text-white d-inline-block">@res.EnquiryResources.DisplayInputs.EnquiryReview</a>
+                     }
+                     <button class="btn  btn-primary  btn-sm d-print-none" type="button" @@click="printEnquiry($event)" title="@res.EnquiryResources.DisplayInputs.Print"><i class="material-icons">print</i>  طباعة</button>
+                     <button class="btn  btn-primary  btn-sm d-print-none" type="button" @@click="backToEnguiry($event)">الرجوع للإستفسارات</button>
+                  </div>
+
+               </template>
+
+            </div>
+            <div v-else>
+               <div class="row text-center">
+                  <div class="text-center col-12">
+                     <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                     <br />
+                     @if (User.IsInRole(RoleNames.supplier))
+                     {
+                        if (canAddEnquiry == true)
+                        {
+                           if (Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects || (Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects && tenderStatusId == (int)Enums.TenderStatus.Approved))
+                           {
+                              @res.EnquiryResources.DisplayInputs.NoData
+                              <br />
+                              <a class=" btn btn-primary addEnquiry-body" :href="addEnquiry" data-toggle="tooltip" data-placement="top" title="@res.EnquiryResources.DisplayInputs.AddEnquiry" data-container="body" data-original-title=" @res.EnquiryResources.DisplayInputs.AddEnquiry">@res.EnquiryResources.DisplayInputs.AddEnquiry</a>
+                           }
+                           else
+                           {
+                              <span class="badge badge-warning h6">@res.EnquiryResources.Messages.CannotAddEnquiryAfterDeadLine</span> 
+                           }
+                        }
+                        else
+                        {
+
+                           <span class="badge badge-warning h6">@res.EnquiryResources.Messages.CannotAddEnquiryAfterDeadLine</span>
+                        }
+
+                     }
+                  </div>
+               </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="m-3">
+               <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+            </div>
+         </div>
+
+      </div>
+   </div>
+
+   <div class="">
+      @if (User.IsInRole(RoleNames.supplier))
+      {
+         <button type="button" class="btn btn-outline-primary pull-right d-print-none" id="backToDetaisl">@res.EnquiryResources.DisplayInputs.Back</button>
+      }
+      else
+      {
+         <button type="button" class="btn btn-outline-primary pull-right d-print-none" onclick=" window.location = '@Url.Action("SupplierEnquiryList", "Enquiry")'">
+            @res.SharedResources.DisplayInputs.GoToInquieries
+         </button>
+      }
+      <div class="clearfix"></div>
+   </div>
+</form>
+
+@section scripts{
+   <script>
+
+      function readMore(e) {
+         var _target = e.target;
+         if (e.target.localName == 'i')
+            _target = e.target.parentNode;
+         $(_target).parent().prop("hidden", true);
+         $(_target).parent().next().prop("hidden", false);
+      }
+      function readLess(e) {
+         var _target = e.target;
+         if (e.target.localName == 'i')
+            _target = e.target.parentNode;
+         $(_target).parent().prev().prop("hidden", false);
+         $(_target).parent().prop("hidden", true);
+      }
+      $("#addEnquiry").on("click", function () {
+         window.location = '/Enquiry/AddEnquiry/' + '@tenderIdString';
+      });
+
+      $("#backToDetaisl").on("click", function () {
+         
+         if (@tenderType == @((int)Enums.TenderType.PreQualification)) {
+            window.location = '/Qualification/PreQualificationDetails?QualificationId=' + '@tenderIdString' + '#d-9';
+
+         } else {
+            window.location = '/Tender/DetailsForSupplier?STenderId=' + '@tenderIdString' + '#d-9';
+         }
+      });
+
+      //backToDetaisl()
+
+      var Tender = new Vue({
+         el: '#enquiriesGrid',
+         data: {
+            enquiries: [],
+            currentDate: new Date(),
+            totalCount: 0,
+            replyCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            userCR: '@Model.UserCR',
+            subEnquiryName:'',
+            queryString: '@tenderIdString',
+            resource_url: "/Enquiry/GetAllEnquiryRepliesByTenderIdSerach?tenderIdString=@tenderIdString"
+         },
+         computed: {
+            addEnquiry: function () {
+               return  '/Enquiry/AddEnquiry/' + this.queryString;
+            }
+         },
+         methods: {
+            getSupplierInfo: function (CR) {
+               getSupplierInfo(CR);
+            },
+            backToEnguiry: function (event) {
+               var eParent = event.target.parentNode;
+               $(eParent).addClass('d-none');
+               $('.enquiryItem').removeClass('d-none');
+               $('.enquiryItem').addClass('d-block');
+            },
+            openEnquiry: function (event) {
+               event.stopPropagation();
+               var eTarget = event.target;
+               if (!(eTarget.tagName.toLowerCase() === 'a')) {
+                  eTarget = $(eTarget).closest("a");
+               }             
+               var targetID = $(eTarget).attr('data-target');
+               $('#' + targetID).removeClass('d-none')
+               $('.enquiryItem').addClass('d-none');
+               $('.enquiryItem').removeClass('d-block'); 
+            },
+            printEnquiry: function (event) {
+
+               window.print();
+              
+            },
+            updateResource: function (data) {
+               this.enquiries = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            enquiryDetails: function (enquiryId, committeeId) {
+               return '/Enquiry/EnquiryDetails?enquiryIdString=' + enquiryId;
+            },
+            error: function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            }
+         }
+      });
+   </script>
+}

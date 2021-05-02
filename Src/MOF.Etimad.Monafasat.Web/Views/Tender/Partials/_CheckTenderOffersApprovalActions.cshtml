@@ -1,0 +1,218 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderDetailsCheckingStageModel
+@if (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersCheckManager))
+{
+   <button class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("TenderIndexCheckingStage", "Tender")'">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+      <div class="ripple-container"></div>
+   </button>
+}
+else if (User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.OffersOppeningManager))
+{
+   <button class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("TenderIndexOpeningStage", "Tender")'">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+      <div class="ripple-container"></div>
+   </button>
+}
+@if (User.IsInRole(RoleNames.OffersCheckSecretary))
+{
+   if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding
+      && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase &&
+      (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.Approved || Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalOppeningConfirmed) &&
+      !Model.CheckingDateSet)
+   {
+      if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalOppeningConfirmed)
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnEnterCheckingDates" data-toggle="modal" data-target="#myModal">تحديد تاريخ الفحص الفني</button>
+         </div>
+      }
+      else
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnEnterCheckingDates" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseCheckingDate</button>
+         </div>
+      }
+   }
+   @*//One FIles Tender*@
+   if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+   {
+      if ((
+      ((Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedConfirmed)
+      && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition
+      && Model.IsTenderTechnicalChecked == true && Model.IsTenderFinancialChecked == true)
+      || ((Model.TenderStatusId == (int)Enums.TenderStatus.Approved || Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking)
+      && (Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender || Model.TenderTypeId == (int)Enums.TenderType.Competition) && Model.IsTenderTechnicalChecked == true)
+      ))
+      {
+         if (Model.isApplyOfferPreference)
+         {
+            if (Model.isOffersPreferenceChecked)
+            {
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApprove" data-toggle="modal" data-target="#myModal">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+               </button> }
+            else
+            {
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnCalculatePreference">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CalculatePreference
+               </button> }
+         }
+         else
+         {
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApprove" data-toggle="modal" data-target="#myModal">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+            </button> }
+
+
+      }
+      if ((Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedConfirmed)
+        && Model.IsValidToCheck == true && Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding
+        )
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApproveBiddingReverse" data-toggle="modal" data-target="#myModal">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+         </button>
+      }
+
+      if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersCheckedRejected || Model.TenderStatusId == (int)Enums.TenderStatus.BiddingOffersCheckedRejected || Model.TenderStatusId == (int)Enums.TenderStatus.BackForCheckingFromPlaint)
+      {
+         <div class="row" id="approval">
+            <div class="col-12">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnReopenCheckOffers" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestartCheckOffers</button>
+            </div>
+         </div>
+      }
+   }
+   //Two FIles Tender
+   if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles)
+   {
+      if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding
+         && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase &&
+         (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStageApproved) &&
+         !Model.FinancialCheckingDateSet)
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnEnterFinancialCheckingDates" data-toggle="modal" data-target="#myModal">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseFinancialCheckingDate
+            </button>
+         </div>
+      }
+      if ((Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking || Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalChecking || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedConfirmed || (Model.TenderStatusId == (int)Enums.TenderStatus.Approved && Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender))
+      && Model.IsTenderTechnicalChecked && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding)
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToTechnicalApprove" data-toggle="modal" data-target="#myModal">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+         </button>
+      }
+      if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStage && Model.IsValidToGoToFinancailCheck)
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnEndOpenFinantialOffersStage" data-toggle="modal" data-target="#myModal">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndOpenFinantialOffersStage
+         </button>
+      }
+      if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingRejected || Model.TenderStatusId == (int)Enums.TenderStatus.BackForCheckingFromPlaint)
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnReOpenTechnicalCheck" data-toggle="modal" data-target="#myModal">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+         </button>
+      }
+      @*if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStage && Model.IsValidToGoToFinancailCheck)
+         {
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnMoveTenderToFinancialCheck" data-toggle="modal" data-target="#myModal">
+               الانتقال لفحص العرض المالى
+            </button>
+         }*@
+      if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialChecking && Model.IsTenderFinancialChecked)
+      {
+         if (Model.isApplyOfferPreference)
+         {
+            if (Model.isOffersPreferenceChecked)
+            {
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToFinancialApprove" data-toggle="modal" data-target="#myModal">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+               </button>}
+            else
+            {
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnCalculatePreference">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CalculatePreference
+               </button> }
+         }
+         else
+         {
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToFinancialApprove" data-toggle="modal" data-target="#myModal">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+            </button> }
+
+      }
+
+      if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected)
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnReOpenFinancialCheck" data-toggle="modal" data-target="#myModal">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+         </button>
+      }
+   }
+}
+@if (User.IsInRole(RoleNames.OffersCheckManager))
+{
+   <div class="row" id="approval">
+
+      @*//One FIles Tender*@
+      @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+      {
+         if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersCheckedPending || Model.TenderStatusId == (int)Enums.TenderStatus.BiddingOffersCheckedPending)
+         {
+            <div class="col-12">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnApprove" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Accept</button>
+               <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reject</button>
+            </div>
+         }
+      }
+      @*//Two FIles Tender*@
+      @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles)
+      {
+         if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingPending && Model.IsTenderTechnicalChecked)
+         {
+            <div class="col-12">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveTechnicalCheck" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Accept</button>
+               <button type="button" class="btn btn-danger pull-left" name="button" id="btnRejectTechnicalCheck" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reject</button>
+            </div>
+         }
+         if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingPending)
+         {
+            <div class="col-12">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveFinancialCheck" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Accept</button>
+               <button type="button" class="btn btn-danger pull-left" name="button" id="btnRejectFinancialCheck" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reject</button>
+            </div>
+         }
+      }
+   </div>
+}
+@if (!Model.isOldFlow)
+{
+   if (User.IsInRole(RoleNames.OffersOppeningSecretary))
+   {
+      if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStage && Model.IsValidToGoToFinancailCheck)
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnEndOpenFinantialOffersStage" data-toggle="modal" data-target="#myModal">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndOpenFinantialOffersStage
+         </button>
+      }
+      if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStageRejected)
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnReOpenFinancialOpening" data-toggle="modal" data-target="#myModal">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+         </button>
+      }
+   }
+   @if (User.IsInRole(RoleNames.OffersOppeningManager))
+   {
+      if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStagePending)
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveFinancialOpening" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Accept</button>
+            <button type="button" class="btn btn-danger pull-left" name="button" id="btnRejectFinancialOpening" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reject</button>
+         </div>
+      }
+   }
+}

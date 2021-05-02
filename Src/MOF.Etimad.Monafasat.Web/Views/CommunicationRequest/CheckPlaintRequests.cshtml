@@ -1,0 +1,611 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderPLaintCommunicationModel
+@using res = MOF.Etimad.Monafasat.Resources;
+@{
+   ViewData["Title"] = res.CommunicationRequest.DisplayInputs.PlaintRequestrReview;
+}
+@section modalTitle{
+   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.TenderDetails</li>
+         <li class="breadcrumb-item active" aria-current="page">@res.CommunicationRequest.DisplayInputs.PlaintRequestrReview</li>
+      </ol>
+   </nav>
+}
+@section modalContent{
+   <div class="col-12">
+      <div class="form-group bmd-form-group" style="padding-top:0" id="divRejectReason">
+         <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+         <input type="text" class="form-control" id="txtRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason" />
+         <div class="pull-left">
+            <span class="bmd-help text-danger" id="txtRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+         </div>
+      </div>
+      <div class="form-group bmd-form-group" id="divVerficationCode">
+         <input type="number" class="form-control col-md-12" id="txtActivationNo" name="ActivationCode" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+         <span class="bmd-help text-danger position-relative" id="txtActivationNoValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+         <br />
+         <p class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainigTimeToApprove<span class=" text-danger" id="timer"></span></p>
+
+      </div>
+
+   </div>
+}
+@section modalButtons{
+   <button type="button" class="btn  btn-primary btn-sm m-1" name="button" onclick="ResendCode()" id="btnResendVerificationCode"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+   <button type="button" class="btn  btn-primary btn-sm m-1" name="button" id="btnRejectConfirmation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionConfirm</button>
+   <button type="button" class="btn  btn-primary btn-sm m-1" name="button" id="btnApproveConfirmation">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</button>
+   <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+}
+
+
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="col-12">
+               <div class="form-group bmd-form-group" style="padding-top:0" id="divSecretaryRejectReason">
+                  <label for="txtSecretaryRejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+                  <input type="text" class="form-control" id="txtSecretaryRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason" />
+                  <div class="pull-left">
+                     <span class="bmd-help text-danger" id="txtSecretaryRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+                  </div>
+               </div>
+               <div class="form-group bmd-form-group" id="divProcedure">
+                  <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.DecidedProcedure</label>
+                  <select id="procedureId" asp-for="procedureId" required name="procedureId" class="selectpicker" data-style="select-with-transition" data-size="7">
+                     <option value="@((int)Enums.TenderPlaintRequestProcedure.ReOpenTenderChecking)"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestartCheckOffers</option>
+                     <option value="@((int)Enums.TenderPlaintRequestProcedure.ReOpenTenderAwarding)"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestartAwarding</option>
+                     <option value="@((int)Enums.TenderPlaintRequestProcedure.Other)"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Other</option>
+                  </select>
+                  <span class="bmd-help text-danger" id="txtRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.PleaseSelectTakenProcedure</span>
+               </div>
+
+               <div class="form-group bmd-form-group" id="detailsDiv">
+                  <label asp-for="Details" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input type="text" asp-for="Details" class="form-control" id="tb_Details" step="any" />
+                  <span id="OtheValidation" class="bmd-help text-danger">@res.CommunicationRequest.Messages.EnterDetails</span>
+               </div>
+
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn  btn-primary btn-sm m-1" name="button" id="btnSecretaryRejectConfirmation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionConfirm</button>
+            <button type="button" class="btn  btn-primary btn-sm m-1" name="button" id="btnSecretaryApproveConfirmation">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+
+
+<form method="POST" asp-controller="CommunicationRequest" id="approval" asp-action="CheckPlaintRequests" autocomplete="off">
+   <input type="hidden" asp-for="EncryptedCommunicationRequestId" />
+   <input type="hidden" asp-for="CanManagerTakeAction" />
+   <input type="hidden" asp-for="CanSecretaryTakeAction" />
+   <input type="hidden" asp-for="EncryptedTenderId" />
+   @Html.AntiForgeryToken()
+   <div class="col-12">
+      <div class="row">
+         <div class="card">
+            <div class="card-body" id="paintDetails">
+               @*@await Component.InvokeAsync("TenderDetailsForPlaint", new { tenderIdString = Model.EncryptedTenderId })*@
+
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="card">
+            <div class="card-body">
+               <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <ul class="list-group form-details-list">
+                     @if (Model.procedureId != 0 && Model.procedureId != null)
+                     {
+
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 <label asp-for="procedureName" class="label bmd-label-static" style="color:rgba(0,0,0,.87);"></label>
+
+                              </div> <div class="col-8 etd-item-info"><span>  @(Model.procedureName)</span></div>
+                           </div>
+                        </li>
+
+
+                        @if (Model.procedureId == 3)
+                        {
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-4 etd-item-title">
+                                    <label asp-for="Details" class="label bmd-label-static" style="color:rgba(0,0,0,.87);"></label>
+
+                                 </div> <div class="col-8 etd-item-info">
+                                    <span>
+                                       @(Model.Details)
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                        }
+
+                     }
+
+                     @if (!string.IsNullOrEmpty(Model.RejectionReason))
+                     {
+
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 <label asp-for="RejectionReason" class="label bmd-label-static" style="color:rgba(0,0,0,.87);"></label>
+
+                              </div> <div class="col-8 etd-item-info">
+                                 <span>
+                                    @(Model.RejectionReason)
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+
+                     }
+                  </ul>
+               </div>
+
+            </div>
+         </div>
+      </div>
+      <div class="row" id="app">
+         <div class="card">
+            <div class="">
+               <div class="row">
+                  <div class="col-12">
+
+                     @Html.Partial("~/Views/CommunicationRequest/Partials/_TenderPlaintsGrid.cshtml")
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+
+      @if ((Model.StatusId == (int)Enums.AgencyCommunicationRequestStatus.RequestSent || Model.StatusId == (int)Enums.AgencyCommunicationRequestStatus.Rejected) && (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseSecretary)) && Model.CanSecretaryTakeAction)
+      {
+         <div class="card">
+            <div class="card-body">
+               <div class="row">
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 ">
+                     <div class="form-group has-success bmd-form-group p-0">
+                        <label class="label bmd-label-static">@res.TenderResources.DisplayInputs.CommitteeDecision </label><span class="text-danger">*</span>
+                        <select asp-for="plaintStatusId" data-live-search="false" id="drpEscalationStatusId" class="selectpicker" data-style="select-with-transition">
+                           <option value="@((int)(int)Enums.AgencyPlaintStatus.Accepted)" selected>  @res.SharedResources.DisplayInputs.Accepted</option>
+                           <option value="@((int)Enums.AgencyPlaintStatus.Rejected)">  @res.OfferResources.DisplayInputs.RejectRequest</option>
+                        </select>
+                     </div>
+                     <span class="bmd-help text-danger position-relative" id="spanTechnicalResult">@res.OfferResources.ErrorMessages.SelectTechnicalEvaluation </span>
+                  </div>
+               </div>
+
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-12">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnSecretaryApprove" data-toggle="modal" data-target="#myModal2">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.SendToApprove</button>
+               <button type="button" class="btn btn-danger pull-left" name="button" id="btnSecretaryReject" data-toggle="modal" data-target="#myModal2">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.SendToApprove</button>
+            </div>
+         </div>
+      }
+      @*@if (Model.CanSecretaryTakeAction && Model.HasPlaints && (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseSecretary)))
+         {
+            <button id="btnSave" type="submit" class="btn btn-primary">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+            </button>
+         }*@
+
+      @if (Model.StatusId == (int)Enums.AgencyCommunicationRequestStatus.Pending && (User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersPurchaseManager)) && Model.CanManagerTakeAction)
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnApprove" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Accept</button>
+         <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Reject</button>
+      }
+      <a class="btn btn-outline-primary btn-link pull-right" id="btnBack">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+   </div>
+</form>
+
+
+@section scripts{
+   <script>
+      $(document).ready(function () {
+         $.get('/cOMMUNICATIONrEQUEST/GetTenderDetailsForPlaintViewComponenet?tenderIdString=' +  '@Model.EncryptedTenderId', function (data) {
+            $("#paintDetails").html(data);
+         });
+
+         procedureChange();
+         $("#procedureId").change(function () {
+            procedureChange();
+         })
+         DecissionChange();
+         $("#drpEscalationStatusId").change(function () {
+            DecissionChange();
+         })
+         $("#btnSecretaryApprove").on("click", function () {
+            $("#divSecretaryRejectReason").hide();
+            $("#btnSecretaryRejectConfirmation").hide();
+            $("#btnSecretaryApproveConfirmation").show();
+            $("#divProcedure").show();
+            //$("#detailsDiv").show();
+         });
+
+         $("#btnSecretaryApproveConfirmation").on("click", function () {
+            
+            if ($("#procedureId").val() == 3) {
+               if ($('#tb_Details').val() == '') {
+                  $("#OtheValidation").show()
+                  return false;
+               }
+            }
+      $('#LoadingSite').fadeIn();
+            var token = $('#approval input[name=__RequestVerificationToken]').val();
+      $.post('@Url.Action("AcceptPlaintAsync", "CommunicationRequest")',
+         {
+            communicationRequestId: '@Model.EncryptedCommunicationRequestId',
+            procedureId: $("#procedureId").val(),
+            details: $('#tb_Details').val() != ""? $('#tb_Details').val(): " ",
+            __RequestVerificationToken: token
+         }).done(function () {
+            $("#myModal").modal("hide");
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+               window.location = '@Url.Action("CheckPlaintRequests", "CommunicationRequest", new { tenderIdString = @Model.TenderId })';
+               @*window.location = "CheckPlaintRequests/" + '@Model.TenderId';*@
+            }, 2000);
+         }).fail(function (error) {
+            $('#myModal').modal('hide');
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                setTimeout(function () {
+                     @*window.location ='@Url.Action("CheckPlaintRequests", "CommunicationRequest", new { tenderIdString =  @Model.PlainRequestId })';*@
+                   window.location = '@Url.Action("CheckPlaintRequests", "CommunicationRequest", new { tenderIdString = @Model.TenderId })';
+                }, 3000);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '@Url.Action("Logout", "Account")'; return;
+            }
+         });
+         });
+
+         $("#btnSecretaryReject").on("click", function () {
+            $("#divSecretaryRejectReason").show();
+            $("#divProcedure").hide();
+            $("#detailsDiv").hide();
+            $("#btnSecretaryRejectConfirmation").show();
+            $("#btnSecretaryApproveConfirmation").hide();
+   });
+
+         $("#btnSecretaryRejectConfirmation").on("click", function () {
+            var rejectionReason = $("#txtSecretaryRejectionReason").val();
+            $("#txtSecretaryRejectionReasonValidation").hide()
+
+            if (rejectionReason == '') {
+               $("#txtSecretaryRejectionReasonValidation").show()
+               return false;
+            }
+            $('#LoadingSite').fadeIn();
+            var token = $('#approval input[name=__RequestVerificationToken]').val();
+      // update tender status to (Rejected) and set the reason of Rejection
+      $.post('@Url.Action("RejectPlaintAsync", "CommunicationRequest")',
+         {
+            CommunicationRequestId: '@Model.EncryptedCommunicationRequestId',
+            rejectionReason: rejectionReason,
+
+            __RequestVerificationToken: token
+         }).done(function () {
+            $("#myModal").modal("hide");
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+             @*window.location ='@Url.Action("CheckPlaintRequests", "CommunicationRequest", new { tenderIdString = @Model.PlainRequestId })';*@
+               window.location = '@Url.Action("CheckPlaintRequests", "CommunicationRequest", new { tenderIdString = @Model.TenderId })';
+            }, 2000);
+         }).fail(function (error) {
+            
+             $('#myModal').modal('hide');
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '@Url.Action("Logout", "Account")'; return;
+            }
+         });
+   });
+
+         $("#btnSave").on("click", function () {
+
+            if ($("#procedureId").val() == 3) {
+               if ($("#tb_Details").val() == "") {
+                  $("#OtheValidation").show();
+                  return false;
+               }
+               else {
+                  $("#OtheValidation").hide();
+               }
+            }
+         });
+
+         $("#btnApprove").on("click", function () {
+            $("#divRejectReason").hide();
+            $("#divVerficationCode").show();
+            $("#divVerficationCodeChangeRequest").show();
+            $("#btnRejectConfirmation").hide();
+            
+            $("#btnResendVerificationCode").show();
+            $("#btnApproveConfirmation").show();
+            document.getElementById('timer').innerHTML = 05 + ":" + 00;
+            startTimer();
+            $("#btnResendVerificationCode").prop("disabled", true);
+
+            createVerificationCode();
+
+         });
+
+      });
+      function checkTime(min, sec, myVar) {
+         if (min <= 0 && sec <= 0) {
+            $("#btnResendVerificationCode").prop("disabled", false);
+            clearTimeout(myVar)
+         };
+         return sec;
+      }
+      function checkSecond(sec) {
+         if (sec < 10 && sec >= 0) { sec = "0" + sec };
+         if (sec < 0) { sec = "59" };
+         return sec;
+      }
+      function DecissionChange() {
+      
+         if ($("#drpEscalationStatusId").val() == @((int)Enums.AgencyPlaintStatus.Accepted)) {
+            $("#btnSecretaryApprove").show();
+            $("#btnSecretaryReject").hide();
+         }
+         else {
+            $("#btnSecretaryApprove").hide();
+            $("#btnSecretaryReject").show();
+         }
+      }
+      function procedureChange() {
+         if ($("#procedureId").val() == 3) {
+            $("#detailsDiv").show();
+         }
+         else {
+            $("#detailsDiv").hide();
+         }
+      }
+      var token = $('#detailsForm input[name=__RequestVerificationToken]').val();
+      var myVar;
+   var app = new Vue({
+      el: "#app",
+   data: {
+         plaints: [],
+      totalCount: 0,
+      currentPage: 1,
+      pageSize: @((int)Enums.PageSize.Twelve),
+       pageNumber:1,
+      resource_url: '/CommunicationRequest/CheckPlaintRequestsGrid?agencyRequestId='+'@Model.EncryptedCommunicationRequestId',
+   queryString: '',
+   },
+      methods: {
+         getSupplierInfo: function (CR) {
+            getSupplierInfo(CR);
+         },
+         updateResource: function (data) {
+
+            this.plaints = data;
+            this.totalCount = this.$refs.vpaginator.totalCount;
+            this.currentPage = this.$refs.vpaginator.currentPage;
+            this.pageSize = this.$refs.vpaginator.pageSize;
+         },
+      CheckPlaintRequestData: function (id) {
+            return '/CommunicationRequest/CheckPlaintRequestData/' + id;
+         },
+      RedirectURL: function (fileNetReferenceId, fileName) {
+
+            window.open("/Upload/getfile/" + fileNetReferenceId + ":" + fileName, '_blank');
+         }
+      }
+   });
+
+
+   function success(result) {
+   $("#confirmModal").modal("hide");
+   $("#confirmApproveModal").modal("hide");
+      if (result.success == true)
+      {
+         location.reload();
+         AlertFun(result.message, alertMessageType.Success);
+      }
+      else if (result.success == false)
+      {
+         AlertFun(result.message, alertMessageType.Danger);
+         location.reload();
+      }
+      else {
+   $('#divPreview').html(result);
+      }
+   }
+
+      function createVerificationCode() {
+         var token = $('#approval input[name=__RequestVerificationToken]').val();
+         $.post('/CommunicationRequest/CreateVerificationCode', { tenderIdString: '@Model.EncryptedCommunicationRequestId', __RequestVerificationToken: token }).fail(function (error) {
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+            $("#changeRequestModal").modal('hide');
+            $("#myModal").modal('hide');
+         });
+      }
+      function ResendCode() {
+         document.getElementById('timer').innerHTML = 05 + ":" + 00;
+         startTimer();
+         $("#btnResendVerificationCode").prop("disabled", true);
+         createVerificationCode();
+      }
+      function startTimer() {
+         clearTimeout(myVar);
+         var presentTime = document.getElementById('timer').innerHTML;
+         var timeArray = presentTime.split(/[:]+/);
+         var m = timeArray[0];
+         var s = checkSecond((timeArray[1] - 1));
+         if (s == 59) { m = m - 1 }
+         document.getElementById('timer').innerHTML = m + ":" + s;
+         myVar = setTimeout(startTimer, 1000);
+         checkTime(m, s, myVar);
+         if (m < 0 && s > 0) {
+            document.getElementById('timerChangeRequest').innerHTML = "0:00";
+            return false;
+         }
+      }
+
+   function successManagerAction(result) {
+   $("#rejectModal").modal("hide");
+   $("#confirmApproveModal").modal("hide");
+      if (result.success == true) {
+         location.reload();
+         AlertFun(result.message, alertMessageType.Success);
+      } else if (result.success == false)
+      {
+         AlertFun(result.message, alertMessageType.Danger);
+      }
+      else {
+   $('#divPreview').html(result);
+      }
+      location.reload();
+
+   }
+
+   function GetProjectBudjetFromNIS(_sender) {
+      var _rejectioReason = $(_sender).attr('Id');
+      if (_rejectioReason==@((int)MOF.Etimad.Monafasat.SharedKernel.Enums.enNegotiationFirstStageRejectionReasons.HighPriceThanBudget)) {
+   $.getJSON("", null
+   ,
+   function (data) {
+            alert("NTIS Data")
+   }, "");
+      }
+   }
+
+
+  $("#btnBack").on("click", function () {
+      window.location = '@Url.Action("DetailsForAll", "Tender", new { STenderId = @Model.TenderId })';
+   });
+
+
+      $("#btnApproveConfirmation").on("click", function () {
+         var verificationCodeValue = $("#txtActivationNo").val();
+         if (verificationCodeValue == '') {
+            $("#txtActivationNoValidation").show();
+            return false;
+         }
+      $("#txtApproveTenderValidation").hide();
+      $("#txtBudgetValidation").hide();
+         $('#LoadingSite').fadeIn();
+      var token = $('#approval input[name=__RequestVerificationToken]').val();
+
+         @*var procedureValue = 0;
+         if (@Model.HasAcceptedPlaints) {
+            procedureValue = $('#procedureId').val();
+         }*@
+      $.post('@Url.Action("ApprovePlaintCommunicationRequest", "CommunicationRequest")',
+         {
+
+            requestId: '@Model.EncryptedCommunicationRequestId',
+            verficationCode: verificationCodeValue,
+            __RequestVerificationToken: token
+         }).done(function () {
+            $("#myModal").modal("hide");
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+               window.location = '@Url.Action("Index", "Tender", new { tenderIdString = @Model.TenderId })';
+            }, 2000);
+         }).fail(function (error) {
+            //$('#LoadingSite').fadeOut();
+            //$('#myModal').modal('hide');
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                @*setTimeout(function () {
+                   window.location = '@Url.Action("Index", "Tender")';
+                }, 3000);*@
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '@Url.Action("Logout", "Account")'; return;
+            }
+         });
+   });
+
+
+
+      $("#btnReject").on("click", function () {
+         $("#divVerficationCodeChangeRequest").hide();
+         $("#divRejectReason").show();
+         $("#btnRejectConfirmation").show();
+         $("#btnApproveConfirmation").hide();
+         $("#divVerficationCode").hide();
+
+         $("#btnResendVerificationCode").hide();
+   });
+
+      $("#btnRejectConfirmation").on("click", function () {
+         
+      var RejectionReason = $("#txtRejectionReason").val();
+      $("#txtRejectionReasonValidation").hide()
+      if (RejectionReason == '') {
+         $("#txtRejectionReasonValidation").show()
+         return false;
+      }
+      $('#LoadingSite').fadeIn();
+      var token = $('#approval input[name=__RequestVerificationToken]').val();
+      $.post('@Url.Action("RejectPlaintCommunicationRequest", "CommunicationRequest")',
+         {
+            requestId: '@Model.EncryptedCommunicationRequestId',
+            rejectionReason: RejectionReason,
+            __RequestVerificationToken: token
+         }).done(function () {
+            $("#myModal").modal("hide");
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+               window.location = '@Url.Action("Index", "Tender")';
+            }, 2000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+             $('#myModal').modal('hide');
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '@Url.Action("Logout", "Account")'; return;
+            }
+         });
+   });
+
+
+   </script>
+
+}

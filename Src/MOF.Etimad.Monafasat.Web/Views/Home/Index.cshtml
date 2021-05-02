@@ -1,0 +1,444 @@
+
+@{
+    ViewBag.Title = "الرئيسية";
+}
+
+
+<form method="POST" action="">
+   @Html.AntiForgeryToken()
+   <div id="app">
+
+      <ul class="wizSteps">
+         <li :class="{active:step === 1}">
+            <div>
+               <h4><span class="step-num">1</span>المعلومات الأساسية</h4>
+            </div>
+
+            <div class="col col-11 pull-right" v-if="step === 1">
+               <div class="row">
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="exampleInput1" class="label">نوع المنافسة</label>
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                              منافسة عامة
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <label class="form-check-label">
+                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                              شراء مباشر
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="exampleInput1" class="label">نوع الدعوة</label>
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                              جميع الموردين
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <label class="form-check-label">
+                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                              شراء مباشر
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static"> نشرت من خلال  <span class="text-danger">*</span></label>
+                           <input type="text" class="form-control" id="publisher" value="">
+                           <span class="bmd-help">We'll never share your email with anyone else.</span>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">اسم الجهة الفنية<span class="text-danger">*</span></label>
+                        <select data-live-search="true" class="selectpicker" data-style="select-with-transition" multiple title="Multi Select with Search" data-size="7">
+                           <option value="1" data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
+                           <option data-tokens="mustard">Burger, Shake and a Smile</option>
+                           <option data-tokens="frosting">Sugar, Spice and all things nice</option>
+                        </select>
+
+                     </div>
+
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+
+
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+
+
+
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">اسم المنافسة <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="publisher" value="">
+                        <span class="bmd-help">We'll never share your email with anyone else.</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">رقم المنافسة <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="publisher" value="">
+                        <span class="bmd-help">We'll never share your email with anyone else.</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">               الغرض من المنافسة <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="publisher" value="">
+                        <span class="bmd-help">We'll never share your email with anyone else.</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static"> قيمة الكراسة  <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="publisher" value="">
+                        <span class="bmd-help">We'll never share your email with anyone else.</span>
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col">
+                     <button class="btn btn-primary" @@click.prevent="next()" v-bind:disabled="stepSaved">
+                        حفظ ومتابعة
+
+                        <i v-if="stepSaved" class="material-icons fa-spin">
+                           cached
+                        </i> 
+                     </button>
+                  </div>
+               </div>
+            </div>
+
+            <div class="clearfix"></div>
+         </li>
+         <li :class="{active:step === 2}">
+            <div>
+               <h4><span class="step-num">2</span>التواريخ</h4>
+            </div>
+
+            <div class="col col-11 pull-right" v-if="step === 2">
+               <div class="row">
+                  <div class="col-lg-3 col-sm-4">
+                     <div class="form-group bmd-form-group">
+                        <label for="exampleInput1" class="label">نوع المنافسة</label>
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                              منافسة عامة
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <label class="form-check-label">
+                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                              شراء مباشر
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-lg-3 col-sm-4">
+
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col">
+                     <button class="btn btn-default" @@click.prevent="prev()">السابق</button>
+                     <button class="btn btn-primary" @@click.prevent="next()" v-bind:disabled="stepSaved">
+                        حفظ ومتابعة
+                        <i v-if="stepSaved" class="material-icons fa-spin">
+                           cached
+                        </i> 
+                     </button>
+                  </div>
+               </div>
+            </div>
+
+            <div class="clearfix"></div>
+         </li>
+         <li :class="{active:step === 3}">
+            <div>
+               <h4><span class="step-num">2</span>التواريخ</h4>
+            </div>
+
+            <div class="col col-11 pull-right" v-if="step === 3">
+               <div class="row">
+                  <div class="col-lg-3 col-sm-4">
+                     <div class="form-group bmd-form-group">
+                        <label for="exampleInput1" class="label">نوع المنافسة</label>
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                              منافسة عامة
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <label class="form-check-label">
+                              <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                              شراء مباشر
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-lg-3 col-sm-4">
+
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col">
+                     <button class="btn btn-default" @@click.prevent="prev()">السابق</button>
+                     <button class="btn btn-primary" @@click.prevent="submit()">
+                        إرسال
+                        <i v-if="stepSaved" class="material-icons fa-spin">
+                           cached
+                        </i>
+                     </button>
+                  </div>
+               </div>
+            </div>
+
+            <div class="clearfix"></div>
+         </li>
+      </ul>
+   </div>
+   test
+
+
+</form>
+<style>
+
+</style>
+
+@Html.Partial("~/Views/Shared/Components/formControls/_inputs.cshtml")
+
+@section scripts{
+   <!-- script -->
+
+   <script src="//cdnjs.cloudflare.com/ajax/libs/vue-resource/0.1.16/vue-resource.min.js"></script>
+   <script src="~/Etimad-UI/components/inputs.js"></script>
+   <script>
+      $(function () {
+         var notifySuccess = $.notify('<strong>Saving</strong> Do not close this page...', {
+            type: 'success',
+            allow_dismiss: true,
+            delay: 5000,
+            mouse_over:'pause',
+            placement: { from: 'top', align: 'center' },
+            template: '<div data-notify="container" class="col-xs-12 alert alert-{0}" role="alert"><div class="container"><div class="alert-icon"><i class="material-icons" > check</i></div><button type="button" aria-hidden="true" class="close" data-notify="dismiss"><span aria-hidden="true"><i class="material-icons">clear</i></span></button><span data-notify="icon"></span> <span data-notify="title">{1}</span> <span data-notify="message">{2}</span><div class="progress" data-notify="progressbar"><div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div></div><a href="{3}" target="{4}" data-notify="url"></a></div></div>'
+           
+         });
+         var notifyError = $.notify('<strong>Saving</strong> Do not close this page...', {
+            type: 'danger',
+            allow_dismiss: true,
+            delay: 5000,
+            mouse_over: 'pause',
+            placement: { from: 'top', align: 'center' },
+            animate: {
+               enter: 'animated bounceIn',
+               exit: 'animated bounceOut'
+            },
+            template: '<div data-notify="container" class="col-xs-12 alert alert-{0}" role="alert"><div class="container"><div class="alert-icon"><i class="material-icons" > error_outline</i></div><button type="button" aria-hidden="true" class="close" data-notify="dismiss"><span aria-hidden="true"><i class="material-icons">clear</i></span></button><span data-notify="icon"></span> <span data-notify="title">{1}</span> <span data-notify="message">{2}</span><div class="progress" data-notify="progressbar"><div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div></div><a href="{3}" target="{4}" data-notify="url"></a></div></div>'
+
+
+         });
+         var notifyWarning = $.notify('<strong>Saving</strong> Do not close this page...', {
+            type: 'warning',
+            allow_dismiss: true,
+            delay: 5000,
+            mouse_over: 'pause',
+            placement: { from: 'top', align: 'center' },
+            animate: {
+               enter: 'animated bounceIn',
+               exit: 'animated bounceOut'
+            },
+            template: '<div data-notify="container" class="col-xs-12 alert alert-{0}" role="alert"><div class="container"><div class="alert-icon"><i class="material-icons" > warning</i></div><button type="button" aria-hidden="true" class="close" data-notify="dismiss"><span aria-hidden="true"><i class="material-icons">clear</i></span></button><span data-notify="icon"></span> <span data-notify="title">{1}</span> <span data-notify="message">{2}</span><div class="progress" data-notify="progressbar"><div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div></div><a href="{3}" target="{4}" data-notify="url"></a></div></div>'
+
+
+         });
+
+         //setTimeout(function () {
+         //   notify.update('message', '<strong>Saving</strong> Page Data.');
+         //}, 1000);
+
+         //setTimeout(function () {
+         //   notify.update('message', '<strong>Saving</strong> User Data.');
+         //}, 2000);
+
+         //setTimeout(function () {
+         //   notify.update('message', '<strong>Saving</strong> Profile Data.');
+         //}, 3000);
+
+         //setTimeout(function () {
+         //   notify.update('message', '<strong>Checking</strong> for errors.');
+         //}, 4000);
+
+      });
+
+
+
+
+      var stepper = new Vue({
+         el: "#app",
+         component: ['input-text'],
+         data() {
+            return {
+               step: 1,
+               stepSaved: false,
+               registration: {
+                  //fill with variables of form
+               },
+               publisher: {
+                  title: 'نشرت من خلال',
+                  value: 'الجهة الناشرة',
+                  requierd: true,
+                  disabled: false,
+                  inputType: 'text'
+               },
+               monafasaType: {
+                  title: 'نوع المنافسة',
+                  name: 'MonafasaType',
+                  inputType: 'radio', //radio, checkbox
+                  requierd: true,
+                  disabled: false,
+                  options: [
+                     { value: 1, title: 'منافسة عامة', checked: false },
+                     { value: 2, title: 'شراء مباشر', checked: true }
+
+                  ]
+               },
+               inviteType: {
+                  title: 'نوع الدعوة',
+                  name: 'inviteType',
+                  inputType: 'radio', //radio, checkbox
+                  requierd: true,
+                  disabled: false,
+                  options: [
+                     { value: 1, title: 'جميع الموردين', checked: true },
+                     { value: 2, title: 'دعوة خاصة', checked: false }
+                  ]
+               },
+               committiName: {
+                  title: 'اسم الجهة الفنية',
+                  name: 'inviteType',
+                  requierd: true,
+                  disabled: false,
+                  options: [
+                     { value: 1, title: 'جميع الموردين', selected: false },
+                     { value: 2, title: 'دعوة خاصة', selected: true}
+                  ]
+               },
+              
+
+
+            }
+
+            },
+         //computed: {
+         //   selectedcommittiName: {
+         //      set: function () {
+         //         return this.monafasaType.options[1].value
+
+         //      }
+         //   }
+
+         //},
+
+         methods: {
+
+            prev() {
+               this.step--;
+            },
+            next() {
+               Step(this.step);
+               //this.stepSaved = true;
+                  // this.step++;
+               //   stepper.stepSaved = false
+               //   console.log(response.data)
+              
+            },
+            step1() {
+               //ajax request
+               stepper.step++;
+               stepper.stepSaved = false            },
+            step2() {
+               stepper.step++;
+               stepper.stepSaved = false            },
+            submit() {
+               alert('Submit to blah and show blah and etc.');
+            },
+            exportObj() {
+
+               console.log(this.publisher.value)
+
+            },
+            setMonafasaType(value) {
+               //this.inviteType.options[index].value.checked = true;
+               console.log(value)
+
+            },
+            setInviteType(value, index) {
+               this.inviteType.options[index].value.checked = true;
+               console.log(value, index)
+            },
+            setCommitteeName(value) {
+               this.selectedcommittiName = value;
+               console.log(this.selectedcommittiName)
+            }
+
+         }
+      })
+      function Step(step) {
+         alert(step);
+         if (step == 1) {
+            stepper.step++;
+            stepper.stepSaved = false
+         } else if (step == 2) {
+            stepper.step++;
+            stepper.stepSaved = false
+         } else if (step == 3) {
+            alert("Done");
+
+         }
+         this.stepSaved = true;
+         this.$http.post('/Tender/TestPagingAsync', this.committiName).then(function (response) {
+            stepper.step++;
+            stepper.stepSaved = false
+            console.log(response.data)
+         }, function (response) {
+            // Error
+            console.log(response.data)
+         });
+      
+      }
+   </script>
+
+}

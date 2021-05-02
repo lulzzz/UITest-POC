@@ -1,0 +1,49 @@
+<div class="table-responsive card ">
+   <table class="table  table-striped text-center" id="TenderTable" _SupplierInvitationTendersGrid  summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow">
+      <thead>
+         <tr>
+            <th scope="col"class="text-center">#</th>
+            <th scope="col"class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber</th>
+            <th scope="col"class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</th>
+            <th scope="col"class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName</th>
+            <th scope="col"class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate</th>
+            <th scope="col"class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate</th>
+            <th scope="col"class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate</th>
+            <th scope="col"class="text-center" style="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+         </tr>
+      </thead>
+      <tbody v-if="Tenders && Tenders.length > 0">
+         <tr v-for="(tender, $index) in Tenders">
+            <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber"> {{tender.referenceNumber}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName"> {{tender.tenderName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName"> {{tender.agencyName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate"> {{tender.lastEnqueriesDate.split('T')[0]}} - {{tender.lastEnqueriesDateHijri.split('T')[0]}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate"> {{tender.lastOfferPresentationDate.split('T')[0]}} -{{ tender.lastOfferPresentationDateHijri.split('T')[0]}} </td>
+          @*  <td v-if="tender.offersOpeningDate != null" class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate"> {{tender.offersOpeningDate.split('T')[0] }}- {{tender.offersOpeningDateHijri.split('T')[0] }} </td>*@
+                       <template v-if="tender.offersOpeningDate">
+               <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate"> {{tender.offersOpeningDate.split('T')[0]}} - {{tender.offersOpeningDateHijri.split('T')[0] }}</td>
+
+            </template>
+            <template v-else>
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotFound
+               </td>
+            </template>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               <a :href="detailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary">  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AcceptOrRejectTheInvetation</a>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="9" class="text-center">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+               <br />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>

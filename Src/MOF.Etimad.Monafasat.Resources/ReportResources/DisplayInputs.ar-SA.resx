@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Email" xml:space="preserve">
+    <value>بريد الكتروني</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>وقت الانتهاء</value>
+  </data>
+  <data name="MessageName" xml:space="preserve">
+    <value>اسم التنبيه</value>
+  </data>
+  <data name="MessagesStatusReport" xml:space="preserve">
+    <value>تقرير حالة الإرساليات</value>
+  </data>
+  <data name="MessageStatues" xml:space="preserve">
+    <value>حاله التنبيه</value>
+  </data>
+  <data name="MessageType" xml:space="preserve">
+    <value>نوع الارسال</value>
+  </data>
+  <data name="SMS" xml:space="preserve">
+    <value>رساله للجوال</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>وقت البدء</value>
+  </data>
+  <data name="AgencyFileReport" xml:space="preserve">
+    <value>تقرير ملف الجهة الحكومية</value>
+  </data>
+  <data name="FirstTenderDate" xml:space="preserve">
+    <value>تاريخ اول منافسة</value>
+  </data>
+  <data name="LastTenderDate" xml:space="preserve">
+    <value>تاريخ اخر منافسه</value>
+  </data>
+  <data name="TotalPurchasedValue" xml:space="preserve">
+    <value>إجمالي قيمة المبيعات</value>
+  </data>
+  <data name="DirectPurchase" xml:space="preserve">
+    <value>الشراء المباشير</value>
+  </data>
+  <data name="TheWinnerOfthePromotion" xml:space="preserve">
+    <value>الفائز بالترسة</value>
+  </data>
+  <data name="AmountOfSavings" xml:space="preserve">
+    <value>مقدار الوفورات</value>
+  </data>
+  <data name="AmountOfSavingsPercentage" xml:space="preserve">
+    <value>نسبة الوفورات</value>
+  </data>
+  <data name="EstimatedValueAfterReview" xml:space="preserve">
+    <value>القيمة القديريةبعد المراجعة</value>
+  </data>
+  <data name="EstimatedValueBeforeReview" xml:space="preserve">
+    <value>القيمة التقديرية قبل المراجعة</value>
+  </data>
+  <data name="TheValueOfTheAward" xml:space="preserve">
+    <value>قيمةالترسية</value>
+  </data>
+  <data name="TotalAmountOfSavings" xml:space="preserve">
+    <value>مقدار الوفورات الإجمالي</value>
+  </data>
+  <data name="PerformanceReport" xml:space="preserve">
+    <value>تقرير الاداء</value>
+  </data>
+  <data name="AverageDurationReviewOfoneTender" xml:space="preserve">
+    <value>متوسط المدة الزمنية لمراجعة منافسة واحدة</value>
+  </data>
+  <data name="TotalCountTheTendersApproved" xml:space="preserve">
+    <value>مجموع المنافسات التي تمت الموافقة على طرحها</value>
+  </data>
+  <data name="TotalCountTheTendersRejected" xml:space="preserve">
+    <value>مجموع المنافسات التي تم رفض على الطرح</value>
+  </data>
+  <data name="TotalCountTheTendersReturned" xml:space="preserve">
+    <value>مجموع المنافسات التي تم إعادتها للتعديل</value>
+  </data>
+  <data name="TotalCountTheTendersReviewed" xml:space="preserve">
+    <value>مجموع المنافسات التي تمت مراجعتها</value>
+  </data>
+  <data name="TotalCountTheTendersTransferredToUnitSpecialistLevel2" xml:space="preserve">
+    <value>عدد المنافسات التي تمت تحويلها للمختص المستوى الثاني</value>
+  </data>
+  <data name="TotalEstimatedValue" xml:space="preserve">
+    <value>مجموع القيمه التقديرية</value>
+  </data>
+  <data name="QualificationCount" xml:space="preserve">
+    <value>عدد دعوات التأهيل</value>
+  </data>
+  <data name="ReportSpendingBySpendAgency" xml:space="preserve">
+    <value>تقرير حجم الانفاق بحسب الجهة</value>
+  </data>
+  <data name="AverageExpenditureOfContracts" xml:space="preserve">
+    <value>متوسط الانفاق للعقود</value>
+  </data>
+  <data name="AverageSpending" xml:space="preserve">
+    <value>معدل الانفاق</value>
+  </data>
+  <data name="DateFrom" xml:space="preserve">
+    <value>التاريخ من</value>
+  </data>
+  <data name="DateTo" xml:space="preserve">
+    <value>التاريخ الى </value>
+  </data>
+  <data name="DetailsOfSpend" xml:space="preserve">
+    <value>تفاصيل الانفاق</value>
+  </data>
+  <data name="SizeOfSpending" xml:space="preserve">
+    <value>حجم الانفاق</value>
+  </data>
+  <data name="TopItemSpend" xml:space="preserve">
+    <value>البند الأعلى انفاق</value>
+  </data>
+  <data name="Spendingitem" xml:space="preserve">
+    <value>بند الانفاق</value>
+  </data>
+  <data name="Spendingitems" xml:space="preserve">
+    <value>بنود الانفاق</value>
+  </data>
+  <data name="ReportSpendingBySpendCategory" xml:space="preserve">
+    <value>تقرير حجم الانفاق بحسب فئات الانفاق</value>
+  </data>
+  <data name="TenderReport" xml:space="preserve">
+    <value>تقرير المنافسات</value>
+  </data>
+  <data name="QualificationCountList" xml:space="preserve">
+    <value>عدد دعوات التأهيل (قائمة)</value>
+  </data>
+</root>

@@ -1,0 +1,81 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+   <div class="card card-body">
+      <div class="text-right">
+         <button id="closeSearch" type="button" class="btn btn-sm btn-link btn-default pull-right p-1">
+            <i class="material-icons">close</i> 
+
+         </button>
+      </div>
+      <div class="row">
+         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group bmd-form-group">
+               <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationName </label>
+               <input type="text" id="TenderName" name="TenderName" maxlength="50" autocomplete="off" class="form-control">
+            </div>
+         </div>
+         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group bmd-form-group">
+               <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationNumber </label>
+               <input type="text" id="ReferenceNumber" name="ReferenceNumber" maxlength="50" autocomplete="off" class="form-control">
+            </div>
+         </div>
+         <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="form-group has-success bmd-form-group">
+               <label for="financialYear" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FinancialYear</label>
+               <select data-live-search="false" id="financialYear" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseYear" data-style="select-with-transition" v-model="selectedFinancialYear">
+                  <option :value="item" v-for="item in financialYearList">{{item}}</option>
+               </select>
+            </div>
+         </div>
+         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group bmd-form-group">
+               <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationType</label>
+               <select data-live-search="false" class="selectpicker" data-style="select-with-transition" id="TenderTypeId" title=@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Choose data-size="7">
+                  <option value="@((int)Enums.TenderType.PreQualification)"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualification</option>
+                  <option value="@((int)Enums.TenderType.PreQualification)"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PostQualification</option>
+               </select>
+            </div>
+         </div>
+         @if (User.IsInRole(RoleNames.MonafasatAccountManager))  //   الجهة الحكومية تظهر فقط لمدير الحساب فى اعتماد
+         {
+            <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+               <div class="form-group has-success bmd-form-group">
+                  <label for="agencyId" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency</label>
+                  <select data-live-search="true" id="agencyId" name="AgencyId" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All" data-style="select-with-transition" v-model="selectedAgency">
+                     <option :value="item.id" v-for="item in agencyList">{{item.name}}</option>
+                  </select>
+               </div>
+            </div>
+         }
+         <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="form-group has-success bmd-form-group">
+               <label for="statusList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationStatus</label>
+               <select data-live-search="false" id="statusList" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseStatus" data-style="select-with-transition" v-model="selectedStatus">
+                  <option :value="item.id" v-for="item in qualificationStatusList">{{item.name}}</option>
+               </select>
+            </div>
+         </div>
+         <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="form-group has-success bmd-form-group">
+               <label for="CreatedBy" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy</label>
+               <select data-live-search="true" id="createdBy" name="createdBy" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All" data-style="select-with-transition" v-model="selectedCreatedByUser">
+                  <option :value="item.name" v-for="item in createdByList">{{item.name}}</option>
+               </select>
+            </div>
+         </div>
+         <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="form-group has-success bmd-form-group">
+               <label for="ApprovedBy" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ApprovedBy</label>
+               <select data-live-search="true" id="approvedBy" name="approvedBy" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All" data-style="select-with-transition" v-model="selectedApprovedByUser">
+                  <option :value="item.name" v-for="item in approvedByList">{{item.name}}</option>
+               </select>
+            </div>
+         </div>
+      </div>
+      <div class="input-group-prepend pull-left etd-search-btn">
+         <button class="btn btn-sm btn-primary btn-block text-center" id="searchBtn" @@click="search" type="button"><i class="material-icons">search</i>   @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Search</button>
+         <button type="reset" class="btn btn-block text-center btn-sm" name="button" @@click="clear($event)">
+            <i class="material-icons">close</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+         </button>
+      </div>
+   </div>

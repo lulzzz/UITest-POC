@@ -1,0 +1,717 @@
+@model MOF.Etimad.Monafasat.ViewModel.BranchModel
+
+@{
+   ViewData["Title"] = (MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.CreateBranch);
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Branch")">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Branches</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.CreateBranch</li>
+      </ol>
+   </nav>
+}
+
+@*fix text wrapping in tables below by muhammad shaabai*@
+<style>
+   table {
+      border-collapse: collapse;
+      table-layout: fixed;
+      width: 500px;
+   }
+
+      table td {
+         width: 300px;
+         white-space: pre-wrap; /* CSS3 */
+         white-space: -moz-pre-wrap; /* Firefox */
+         white-space: -pre-wrap; /* Opera <7 */
+         white-space: -o-pre-wrap; /* Opera 7 */
+         word-wrap: break-word; /* IE */
+      }
+</style>
+<form id="BranchForm" method="POST" asp-controller="Branch" asp-action="SaveBranchList" autocomplete="off">
+   <div id="app">
+      <div class="card">
+         @Html.AntiForgeryToken()
+         <div class="card-body">
+            <div class="row">
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AgencyName</label>
+                     <input type="text" class="form-control" readonly value="@User.UserAgencyName()">
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="BranchName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.BranchName</label><span class="text-danger">*</span>
+                     <input type="text" class="form-control" id="BranchName" v-model="branchFullData.branchName" asp-for="BranchName">
+                     <input type="hidden" id="BranchIdString" v-model="branchFullData.mainBranchAddress.branchIdString" value="@(ViewData["BranchId"])">
+                     <input type="hidden" id="BranchIdString" v-model="branchFullData.mainBranchAddress.agencyId" value="@(User.UserAgency())">
+                     <span class="bmd-help"></span><span asp-validation-for="BranchName" class="text-danger"></span>
+                  </div>
+               </div>
+
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.TechnicalAgencyName</label>
+                     <select id="slcTechAgency" data-live-search="true" class="selectpicker" data-style="select-with-transition" multiple v-model="branchFullData.techcommitteeIds">
+                        <option v-for="op in Committiees.technicalCommittees" v-bind:value="op.id">
+                           {{ op.name }}
+                        </option>
+                     </select>
+                  </div>
+               </div>
+               @if (!User.UserIsVRO())
+               {
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.OpenAgencyName</label>
+                        <select id="slcOpenAgency" data-live-search="true" class="selectpicker" data-style="select-with-transition" multiple v-model="branchFullData.opencommitteeIds">
+                           <option v-for="op in Committiees.openCommittees" v-bind:value="op.id">
+                              {{ op.name }}
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.CheckAgencyName</label>
+                        <select id="slcCheckAgency" data-live-search="true" class="selectpicker" data-style="select-with-transition" multiple v-model="branchFullData.checkcommitteeIds">
+                           <option v-for="op in Committiees.checkCommittees" v-bind:value="op.id">
+                              {{ op.name }}
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.PurchaseCommittee</label>
+                        <select id="slcPurchaseCommittee" data-live-search="true" class="selectpicker" data-style="select-with-transition" multiple v-model="branchFullData.purchaseCommitteeIds">
+                           <option v-for="op in Committiees.purchaseCommittees" v-bind:value="op.id">
+                              {{ op.name }}
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+
+
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.PreQualificationCommitee</label>
+                        <select id="slcPreQualificationCommittee" data-live-search="true" class="selectpicker" data-style="select-with-transition" multiple v-model="branchFullData.preQualificationCommitteeIds">
+                           <option v-for="op in Committiees.preQualificationCommittees" v-bind:value="op.id">
+                              {{ op.name }}
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+               }
+               else
+               {
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.VROCommitteeLbl</label>
+                        <select id="slcVROCommittee" data-live-search="true" class="selectpicker" data-style="select-with-transition" multiple v-model="branchFullData.vrocommitteeIds">
+                           <option v-for="op in Committiees.vroCommittee" v-bind:value="op.id">
+                              {{ op.name }}
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+               }
+            </div>
+         </div>
+      </div>
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-lg-12 col-sm-6 col-xs-12">
+                  <h5>@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.MainBranchAddress</h5>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="MainBranchAddress.Position" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <input type="text" class="form-control" id="Position" v-model="branchFullData.mainBranchAddress.position" asp-for="MainBranchAddress.Position">
+                     <span class="bmd-help"></span><span asp-validation-for="MainBranchAddress.Position" class="text-danger"></span>
+                     <input type="hidden" v-model="branchFullData.mainBranchAddress.branchAddressTypeId" value="@(Enums.BranchAddressType.MainBranchAddress)" />
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="MainBranchAddress.Address" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <input type="tel" class="form-control" id="Address" v-model="branchFullData.mainBranchAddress.address" asp-for="MainBranchAddress.Address">
+                     <span class="bmd-help"></span><span asp-validation-for="MainBranchAddress.Address" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="MainBranchAddress.Phone" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <input type="text" class="form-control allownumeric" id="Phone" v-model="branchFullData.mainBranchAddress.phone" asp-for="MainBranchAddress.Phone" />
+                     <span class="bmd-help"></span><span asp-validation-for="MainBranchAddress.Phone" class="text-danger"></span>
+                     @* <span class="text-danger" v-if="checkPhoneValidation()">@MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.PhoneNumberNotValid</span>*@
+                     <span id="validatePhone" style="display:none;" class="text-danger">@MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.ValidatePhone</span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="MainBranchAddress.Fax" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <input type="text" class="form-control allownumeric" id="Fax" v-model="branchFullData.mainBranchAddress.fax" asp-for="MainBranchAddress.Fax">
+                     <span class="bmd-help"></span><span asp-validation-for="MainBranchAddress.Fax" class="text-danger"></span>
+                     @*<span class="text-danger" v-if="checkFaxValidation()">@MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.FaxNumberNotValid</span>*@
+                     <span id="validateFax" style="display:none;" class="text-danger"> @MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.ValidateFax</span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="MainBranchAddress.Phone2" class="label bmd-label-static"></label>
+                     <input type="text" class="form-control allownumeric" id="Phone2" v-model="branchFullData.mainBranchAddress.phone2">
+                     @* <span class="text-danger" v-if="checkPhone2Validation()">@MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.PhoneNumberNotValidNotRequired</span>*@
+                     <span id="validatePhone2" style="display:none;" class="text-danger">@MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.ValidatePhone</span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="MainBranchAddress.Fax2" class="label bmd-label-static"></label>
+                     <input type="text" class="form-control allownumeric" id="Fax2" v-model="branchFullData.mainBranchAddress.fax2">
+                     <span asp-validation-for="MainBranchAddress.Fax2" class="text-danger"></span>
+                     @* <span class="text-danger" v-if="checkFax2Validation()">@MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.FaxNumberNotValidNotRequired</span>*@
+                     <span id="validateFax2" style="display:none;" class="text-danger"> @MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.ValidateFax</span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="MainBranchAddress.Email" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <input class="form-control" id="Email" v-model="branchFullData.mainBranchAddress.email" asp-for="MainBranchAddress.Email" placeholder="example@etimad.com">
+                     <span asp-validation-for="MainBranchAddress.Email" class="text-danger" v-if="ValidateEmail()">@MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.EnterEmail</span>
+                     <span class="bmd-help"></span><span asp-validation-for="MainBranchAddress.Email" class="text-danger"></span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="card">
+         <div class="card-body">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" @@click="reset">
+               @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AddAddress
+            </button>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <div class="modal-dialog  modal-lg" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AddAddress</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                           <span aria-hidden="true">&times;</span>
+                        </button>
+                     </div>
+                     <div class="modal-body row">
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AddressType</label><span class="text-danger">*</span>
+                              <select class="form-control selectpicker" id="addressType_add" data-style="select-with-transition" v-model="NewAddress.branchAddressTypeId">
+                                 <option value="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All </option>
+                                 <option v-for="opt in BranchAddressTypes" v-bind:value="opt.id">
+                                    {{ opt.name }}
+                                 </option>
+                              </select>
+                              <span class="text-danger" v-if="IsAddOtherAddressValidate && ( NewAddress.branchAddressTypeId == 0 || !NewAddress.branchAddressTypeId || NewAddress.branchAddressTypeId == '')"> @MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.EnterAddressName</span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Address</label><span class="text-danger">*</span>
+                              <input type="text" class="form-control" id="PostalCode" v-model="NewAddress.address" maxlength="100">
+                              <span class="text-danger" v-if="IsAddOtherAddressValidate && !NewAddress.address">@MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.EnterAddressName</span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Phone</label>
+                              <input type="text" class="form-control allownumeric" id="PostalCode" v-model="NewAddress.phone" maxlength="50">
+                              <span class="text-danger" id="spanPhoneadd" hidden>@MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.ValidatePhone</span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.CityCode</label>
+                              <input type="tel" class="form-control" id="CityCode" v-model="NewAddress.cityCode" maxlength="50">
+                              <span class="text-danger"> </span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.ZipCode</label>
+                              <input type="tel" class="form-control" id="ZipCode" v-model="NewAddress.zipCode" maxlength="50">
+                              <span class="text-danger"> </span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.PostalCode</label>
+                              <input type="text" class="form-control" id="Phone" v-model="NewAddress.postalCode" maxlength="50">
+                              <span class="text-danger"></span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Description</label><span class="text-danger">*</span>
+                              <input class="form-control" id="Description" v-model="NewAddress.description" maxlength="300">
+                              <span class="text-danger" v-if="IsAddOtherAddressValidate && !NewAddress.description">@MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.DescriptionRequired</span>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="modal-footer">
+
+                        <button type="button" class="btn btn-sm btn-primary" @@click="AddToAddressList()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+                        <button type="button" class="btn btn-danger btn-link " data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+               <div class="modal-dialog  modal-lg" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AddAddress</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                           <span aria-hidden="true">&times;</span>
+                        </button>
+                     </div>
+                     <div class="modal-body row">
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AddressType</label><span class="text-danger">*</span>
+                              <select id="addressType" data-style="select-with-transition" class="selectpicker" v-model="EditAddress.branchAddressTypeId">
+                                 <option value="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All </option>
+                                 <option v-for="opt in BranchAddressTypes" v-bind:value="opt.id">
+                                    {{ opt.name }}
+                                 </option>
+                              </select>
+                              <span class="text-danger" v-if=" IsEditOtherAddressValidate && (EditAddress.branchAddressTypeId == 0 || !EditAddress.branchAddressTypeId || EditAddress.branchAddressTypeId == '')"> @MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.EnterAddressName</span>
+                           </div>
+                        </div>
+
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Address</label><span class="text-danger">*</span>
+                              <input type="text" class="form-control" v-model="EditAddress.address">
+                              <span class="text-danger" v-if="IsEditOtherAddressValidate && !EditAddress.address">@MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.EnterAddressName</span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Phone</label>
+                              <input type="text" class="form-control allownumeric" id="PostalCode22" v-model="EditAddress.phone">
+                              <span class="text-danger" id="spanPhoneEdit" hidden>@MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.ValidatePhone</span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.CityCode</label>
+                              <input type="tel" class="form-control" id="CityCode" v-model="EditAddress.cityCode">
+                              <span class="text-danger"> </span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.ZipCode</label>
+                              <input type="tel" class="form-control" id="ZipCode" v-model="EditAddress.zipCode">
+                              <span class="text-danger"> </span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.PostalCode</label>
+                              <input type="text" class="form-control" id="Phone" v-model="EditAddress.postalCode">
+                              <span class="text-danger"></span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Description</label>
+                              <input class="form-control" id="Description" v-model="EditAddress.description">
+                              <span class="text-danger" v-if="IsEditOtherAddressValidate && !EditAddress.description">@MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.DescriptionRequired</span>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @@click="rollBack()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+                        <button type="button" class="btn btn-primary" @@click="UpdateAddress()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <h4 class="text-primary">
+               @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AddressList
+            </h4>
+            <table class="table table-condensed table-striped">
+               <thead>
+                  <tr>
+                     <th>
+                        @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AddressType
+                     </th>
+                     <th>
+                        @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Address
+                     </th>
+                     <th>
+                        @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.CityCode
+                     </th>
+                     <th>
+                        @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.ZipCode
+                     </th>
+                     <th>
+                        @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.PostalCode
+                     </th>
+                     <th>
+                        @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Description
+                     </th>
+                     <th>
+                     </th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr v-for="(add, index) in branchFullData.addressesList">
+                     <td>{{add.branchAddressTypeName}}</td>
+                     <td>{{add.address}}</td>
+                     <td>{{add.cityCode}}</td>
+                     <td>{{add.zipCode}}</td>
+                     <td>{{add.postalCode}}</td>
+                     <td>{{add.description}}</td>
+                     <td>
+                        <button type="button" class="btn btn-danger btn-sm" @@click="RemoveAddress(index)">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</button>
+                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal" @@click="EditAddressFunc(index)">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</button>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+      <div class="col-12 ">
+         <button class="btn btn-primary" type="submit">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+         <button class="btn btn-outline-primary btn-link pull-right" type="button" onclick="window.location = '@Url.Action("Index", "Branch")'">
+            @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BackButton
+            <div class="ripple-container"></div>
+         </button>
+      </div>
+   </div>
+</form>
+
+@section Scripts {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+
+      var editaddress = {};
+      var Branch = new Vue({
+         el: "#BranchForm",
+         data: {
+            warnning: '',
+            IsValidate: false,
+            op: {},
+            IsAddOtherAddressValidate: false,
+            IsEditOtherAddressValidate: false,
+            BranchAddressTypes:@(Html.Raw(Json.Serialize(Model.BranchAddressTypes))),
+            Committiees:@(Html.Raw(Json.Serialize(Model.Committiees))),
+            branchFullData: {
+               branchName: '',
+               techcommitteeIds: [],
+               opencommitteeIds: [],
+               checkcommitteeIds: [],
+               purchaseCommitteeIds: [],
+               preQualificationCommitteeIds: [],
+               vrocommitteeIds: [],
+               branchIdString: '',
+               committieeIds: [],
+               agencyId: '',
+               address: '',
+               mainBranchAddress: {},
+               addressesList: [],
+               Faxfilter: "^0[1?5]\d{3}\d{3}\d{2}$",
+               _beforeEditingCache: {}
+            },
+            EditAddress: {
+               name: ''
+            },
+            NewAddress: {
+               name: ''
+            },
+            editindex: 0,
+            EditMainAddress: {}
+         },
+         methods: {
+            reset: function () {
+               this.IsAddOtherAddressValidate = false;
+               $('#addressType_add').val("");
+               $('.selectpicker').selectpicker('refresh');
+            },
+            checkAddressPhoneValidation: function (phone) {
+               if (phone) {
+                  return true;
+               }
+               if (phone) {
+                  return (phone.length != 10 || phone[0] != 0 || (phone.phone[1] != 5 && phone[1] != 1));
+               }
+            },
+            ValidateEmail: function mailValidation() {
+               var expr = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+               if (this.IsValidate && !expr.test(this.branchFullData.mainBranchAddress.email)) {
+                  return true;
+               }
+               else {
+                  return false;
+               }
+            },
+            populateData: function (data) {
+               this.branchFullData = data;
+            },
+            AddToAddressList: function () {
+
+               this.IsAddOtherAddressValidate = true;
+               if (this.NewAddress.phone.length > 0 && (this.NewAddress.phone.length != 10 || this.NewAddress.phone[0] != 0 || (this.NewAddress.phone[1] != 5 && this.NewAddress.phone[1] != 1))) {
+                 $("#spanPhoneadd").removeAttr("hidden");
+                 return false;
+               }
+               ////
+               if (!this.IsValidAddress(this.NewAddress)) {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.ModelDataError', alertMessageType.Danger);
+                  return false;
+               }
+               $('#exampleModal').modal('hide');
+               for (var i = 0; i < this.BranchAddressTypes.length; i++) {
+                  if (this.NewAddress.branchAddressTypeId == this.BranchAddressTypes[i].id) {
+                     this.NewAddress.branchAddressTypeName = this.BranchAddressTypes[i].name;
+                  }
+               }
+               this.branchFullData.addressesList.push(this.NewAddress);
+               this.NewAddress = {};
+            },
+            UpdateMainAddress: function () {
+               this.branchFullData.mainBranchAddress = EditMainAddress;
+            },
+            UpdateAddress: function () {
+               if (this.EditAddress.phone.length > 0) {
+                  if (this.EditAddress.phone.length != 10 || this.EditAddress.phone[0] != 0 || (this.EditAddress.phone[1] != 5 && this.EditAddress.phone[1] != 1)) {
+                     $("#spanPhoneEdit").removeAttr("hidden");
+                     return false;
+                  }
+               }
+
+               this.IsEditOtherAddressValidate = true;
+               if (!this.IsValidAddress(this.EditAddress)) {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.ModelDataError', alertMessageType.Danger);
+                  return false;
+               }
+               $('#editModal').modal('hide');
+               //
+               for (var i = 0; i < this.BranchAddressTypes.length; i++) {
+                  if (this.EditAddress.branchAddressTypeId == this.BranchAddressTypes[i].id) {
+                     this.EditAddress.branchAddressTypeName = this.BranchAddressTypes[i].name;
+                  }
+               }
+               this.branchFullData.addressesList[this.editindex] = this.EditAddress;
+               this.EditAddress = {};
+            },
+            rollBack: function () {
+               Object.assign(this.branchFullData.addressesList[this.editindex], this._beforeEditingCache);
+            },
+            EditAddressFunc: function (index) {
+               this.IsEditOtherAddressValidate = false;
+               this._beforeEditingCache = Object.assign({}, this.branchFullData.addressesList[index]);
+               this.editindex = index;
+               editaddress = this.branchFullData.addressesList[index];
+
+               $('#addressType').val(this.branchFullData.addressesList[index].branchAddressTypeId);
+               $('.selectpicker').selectpicker('refresh');
+               this.EditAddress = this.branchFullData.addressesList[index];
+            },
+            RemoveAddress: function (index) {
+               this.branchFullData.addressesList.splice(index, 1);
+            },
+            IsValidAddress: function (_address) {
+               let isValid = true;
+               if (!_address.description || _address.description.trim() == '') {
+                  isValid = false;
+                 // return (isValid && false);
+               }
+               if (!_address.branchAddressTypeId || _address.branchAddressTypeId == 0) {
+                  isValid = false;
+                 // return (isValid && false);
+               } if (!_address.address) {
+                  isValid = false;
+
+               } if (!this.IsValidFax(_address.fax)) {
+                  return (isValid && false);
+               }
+
+               return isValid;
+            },
+            IsValidFax: function (fax) {
+               if (fax == '' || fax == undefined)
+                  return true;
+               else if (fax && (fax[0] != 1 && fax[0] != 5)) {
+                  return false
+               }
+               return true;
+            }
+         },
+         created: function () {
+
+            if ('@Model.BranchIdString' != '') {
+               var id = '@Model.BranchIdString';
+               var url = '/Branch/GetBranchDetails?BranchId=' + id;
+               $.get(url).done(function (res) {
+                  Branch.branchFullData = res
+                  $('#slcTechAgency').selectpicker('val', Branch.branchFullData.techcommitteeIds);
+                  $('#slcOpenAgency').selectpicker('val', Branch.branchFullData.opencommitteeIds);
+                  $('#slcCheckAgency').selectpicker('val', Branch.branchFullData.checkcommitteeIds);
+                  $('#slcPurchaseCommittee').selectpicker('val', Branch.branchFullData.purchaseCommitteeIds);
+                  $('#slcPreQualificationCommittee').selectpicker('val', Branch.branchFullData.preQualificationCommitteeIds);
+                  $('#slcVROCommittee').selectpicker('val', Branch.branchFullData.vrocommitteeIds);
+                  $('.selectpicker').selectpicker('refresh');
+               });
+            }
+         }
+      });
+         var token = $('input[name=__RequestVerificationToken]').val()
+      $("#BranchForm").submit(function (event) {
+
+               var isvalidPhone = true;
+         var isvalidFax = true;
+         var isvalidPhone2 = true;
+         var isvalidFax2 = true;
+         var phone = $("#Phone").val();
+         var fax = $("#Fax").val();
+         var phone2 = $("#Phone2").val();
+         var fax2 = $("#Fax2").val();
+         if (phone != "") {
+            if (phone.length != 10 || phone[0] != 0 || (phone[1] != 5 && phone[1] != 1)) {
+               isvalidPhone = false;
+               $("#validatePhone").show();
+            }
+            else {
+               $("#validatePhone").hide();
+            }
+         }
+         if (phone2 != "") {
+            if (phone2.length != 10 || phone2[0] != 0 || (phone2[1] != 5 && phone2[1] != 1)) {
+               isvalidPhone2 = false;
+               $("#validatePhone2").show();
+            }
+            else {
+               $("#validatePhone2").hide();
+            }
+         } else {
+                 $("#validatePhone2").hide();
+         }
+         if (fax != "") {
+            debugger;
+            if (fax.length != 10 || fax[0] != 0 || (fax[1] != 5 && fax[1] != 1)) {
+               isvalidFax = false;
+               $("#validateFax").show();
+            } else {
+               $("#validateFax").hide();
+            }
+         }
+         if (fax2 != "") {
+            debugger;
+            if (fax2.length != 10 || fax2[0] != 0 || (fax2[1] != 5 && fax2[1] != 1)) {
+               isvalidFax2 = false;
+               $("#validateFax2").show();
+            } else {
+               $("#validateFax2").hide();
+            }
+         } else {
+                  $("#validateFax2").hide();
+         }
+         if (!(isvalidPhone && isvalidFax && isvalidPhone2 && isvalidFax2)) {
+            debugger;
+            return false;
+         }
+
+
+
+            if ($("#BranchForm").valid()) {
+               event.preventDefault();
+               $.ajax({
+                  type: "Post",
+                  url: '@Url.Action("SaveBranchList", "Branch")',
+                  data: { Model: Branch.branchFullData, __RequestVerificationToken: token },
+                  success: function (res) {
+                     if (res.isSuccess) {
+                        warnning = res.warnning;
+                        AlertFun(res.message, alertMessageType.Success)
+                        window.location = "/Branch/Index"
+                     }
+                     else {
+                        AlertFun(res.message, alertMessageType.Danger);
+                        return false;
+                     }
+                     $(this).unbind('submit').submit();
+                  },
+                  error: function () {
+                     $('#LoadingSite').fadeOut();
+                     AlertFun(res.message, alertMessageType.Danger);
+                  }
+               });
+            }
+         });
+   </script>
+
+
+   <script>
+      $("#BranchForm").submit(function (event) {
+         var isvalidPhone = true;
+         var isvalidFax = true;
+         var isvalidPhone2 = true;
+         var isvalidFax2 = true;
+         var phone = $("#Phone").val();
+         var fax = $("#Fax").val();
+         var phone2 = $("#Phone2").val();
+         var fax2 = $("#Fax2").val();
+         if (phone != "") {
+            if (phone.length != 10 || phone[0] != 0 || (phone[1] != 5 && phone[1] != 1)) {
+               isvalidPhone = false;
+               $("#validatePhone").show();
+            }
+            else {
+               $("#validatePhone").hide();
+            }
+         }
+         if (phone2 != "") {
+            if (phone2.length != 10 || phone2[0] != 0 || (phone2[1] != 5 && phone2[1] != 1)) {
+               isvalidPhone2 = false;
+               $("#validatePhone2").show();
+            }
+            else {
+               $("#validatePhone2").hide();
+            }
+         } else {
+                 $("#validatePhone2").hide();
+         }
+         if (fax != "") {
+            debugger;
+            if (fax.length != 10 || fax[0] != 0 || (fax[1] != 5 && fax[1] != 1)) {
+               isvalidFax = false;
+               $("#validateFax").show();
+            } else {
+               $("#validateFax").hide();
+            }
+         }
+         if (fax2 != "") {
+            debugger;
+            if (fax2.length != 10 || fax2[0] != 0 || (fax2[1] != 5 && fax2[1] != 1)) {
+               isvalidFax2 = false;
+               $("#validateFax2").show();
+            } else {
+               $("#validateFax2").hide();
+            }
+         } else {
+                  $("#validateFax2").hide();
+         }
+         if (!(isvalidPhone && isvalidFax && isvalidPhone2 && isvalidFax2)) {
+            debugger;
+            return false;
+         }
+      });
+   </script>
+}

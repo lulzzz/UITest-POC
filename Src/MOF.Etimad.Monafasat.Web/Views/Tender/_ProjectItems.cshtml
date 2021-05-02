@@ -1,0 +1,78 @@
+<div >
+   <div class="modal fade" id="addProject"  tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">إضافة بند\ مشروع </h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="form-group bmd-form-group p-0" id="divProjectNumber">
+                  <div class="form-check">
+                     <label class="form-check-label">
+                        <input class="form-check-input" v-model="newType" type="radio" value="true">
+                        البند
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                     <label class="form-check-label">
+                        <input class="form-check-input" v-model="newType" checked="checked" type="radio"  value="false">
+                        المشروع
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+
+                  </div>
+                  <input name="TenderNumber" v-on:keydown.13="addTask" v-model="newTask" placeholder="البند \ رقم المشروع" id="projectNumber" type="text" data-val="true" class="form-control allownumeric">
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="button" id="" value="" v-on:click="addTask">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Add
+               </button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+               </button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+
+   <div class="col-12">
+      <div class="row">
+         <div class="col-12 from-group bmd-form-group">
+            <div class="">
+               <label for="EstimatedValue" class="label bmd-label-static">البنود \ المشاريع</label><span class="text-danger">*</span>
+               <button class="btn btn-primary   btn-sm pull-left" type="button" data-toggle="modal" data-target="#addProject"><i class="material-icons">add</i> إضافة </button>
+            </div>
+            <table class="table" aria-describedby="project roles">
+               <thead>
+                  <tr>
+                     <th scope="col">رقم</th>
+                     <th scope="col">اسم المشروع</th>
+                     <th scope="col">النوع</th>
+                     <th scope="col"></th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr v-for="(projectItem, $index) in projectItems">
+                     <td data-label="رقم"> {{projectItem.ProjectNumber}} </td>
+                     <td data-label="اسم المشروع"> {{projectItem.ProjectName}} </td>
+                     <td data-label="اسم المشروع" style="display:none;"> {{projectItem.Cache}} </td>
+                     <td data-label="اسم المشروع" style="display:none;"> {{projectItem.Cost}} </td>
+                     <td data-label="رقم" style="display:none;"> {{projectItem.IsProject}} </td>
+                     <td data-label="النوع"><span v-if="projectItem.IsGSF == true">بند</span> <span v-else-if="projectItem.IsGSF == 'true'">بند</span> <span v-else>برنامج أو مشروع</span></td>
+                     <td data-label="حذف"><button type="button" class='btn btn-danger btn-sm pull-right' v-on:click="removeTask(projectItem)"><i class='material-icons'>delete</i> حذف</button></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+

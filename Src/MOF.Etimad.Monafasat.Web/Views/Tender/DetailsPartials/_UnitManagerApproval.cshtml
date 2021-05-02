@@ -1,0 +1,111 @@
+<div class="modal fade" id="ApproveModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+            </h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="modal-body">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AreYouSure
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button" value="" id="btnConfirmApprove">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm
+            </button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="RejectedModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+            </h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="form-group bmd-form-group" style="padding-top:0">
+               <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+               <input type="text" class="form-control" id="txtRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason" />
+               <div class="pull-left">
+                  <span class="bmd-help text-danger" id="txtRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button" value="" id="btnConfirmReject">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm
+            </button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-12 ">
+      <button type="button" class="btn btn-primary pull-left" name="button" id="btnApprove" data-toggle="modal" data-target="#ApproveModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve</button>
+      <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" data-toggle="modal" data-target="#RejectedModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+   </div>
+</div>
+
+<script>
+   $("#btnReject").click(function () {
+      $("#txtRejectionReason").val('');
+   });
+   $("#btnConfirmApprove").on("click", function () {
+      $('#LoadingSite').fadeIn();
+      $.post(getApproveTenderByUnitManagerUrl(),
+         {
+            tenderIdString: getTenderStringId(),
+            __RequestVerificationToken: token
+         }).done(function () {
+            $('#LoadingSite').fadeOut();
+            $("#ApproveModal").modal("hide");
+            AlertFun(getSuccessfulyDoneResourceValue(), alertMessageType.Success);
+            //$('#ApproveModal').modal('hide');
+            setTimeout(function () {
+               window.location = '/Tender/TenderIndexUnitStage';
+            }, 3000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            $("#ApproveModal").modal("hide");
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         });
+   });
+   $("#btnConfirmReject").on("click", function () {
+      if ($("#txtRejectionReason").val().length == 0) {
+         AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.RejectReasonMustHaveValue)', alertMessageType.Danger);
+      }
+      $('#LoadingSite').fadeIn();
+      $.post(getRejectTenderFromUnitManagerUrl(),
+         {
+            tenderIdString: getTenderStringId(),
+            comment: $("#txtRejectionReason").val(),
+            __RequestVerificationToken: token
+         }).done(function () {
+            $('#LoadingSite').fadeOut();
+            $("#RejectedModal").modal("hide");
+            AlertFun(getSuccessfulyDoneResourceValue(), alertMessageType.Success);
+            //$('#RejectedModal').modal('hide');
+            setTimeout(function () {
+               window.location = '/Tender/TenderIndexUnitStage';
+            }, 3000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            $("#RejectedModal").modal("hide");
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         });
+   });
+   function getApproveTenderByUnitManagerUrl() { return '@Url.Action("ApproveTenderByUnitManagerAsync", "Tender")'; }
+   function getRejectTenderFromUnitManagerUrl() { return '@Url.Action("RejectTenderByUnitManagerAsync", "Tender")'; }
+   function getTenderStringId() { return '@Model.TenderIdString'; }
+</script>

@@ -1,0 +1,140 @@
+<div class="monafasa-content col-12">
+   
+   <div class="row">
+      <div class="col-12">
+         <ul class="list-group form-details-list">
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-6 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+                  </div>
+                  <div class="col-6 etd-item-info">
+                     <span>{{tender.tenderNumber}}</span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-6 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType
+                  </div>
+                  <div class="col-6 etd-item-info">
+                     <span>
+                        {{tender.tenderTypeName}}
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-6 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy
+                  </div>
+                  <div class="col-6 etd-item-info">
+                     <span>
+                        {{tender.createdBy}}
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-6 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ApprovedBy
+                  </div>
+                  <div class="col-6 etd-item-info">
+                     <span>
+                        {{tender.approvedBy}}
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <template v-if="tender.offersOpeningDate">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-6 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferOpenDateTime
+                     </div>
+                     <div class="col-6 etd-item-info">
+
+                        {{tender.offersOpeningDate.split('T')[0]}}
+                        <br />
+                        {{tender.offersOpeningDateHijri}}
+                        <br />
+                        {{tender.offersOpeningTime}}
+
+                     </div>
+                  </div>
+               </li>
+            </template>
+            <template v-else>
+            </template>
+            <template v-if="tender.lastEnqueriesDate">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-6 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate
+                     </div>
+                     <div class="col-6 etd-item-info">
+
+                        {{tender.lastEnqueriesDate.split('T')[0]}}
+                        <br />
+                        {{tender.lastEnqueriesDateHijri}}
+                     </div>
+                  </div>
+               </li>
+            </template>
+            <template v-else>
+            </template>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-6 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferOpenDateTime
+                  </div>
+                  <div class="col-6 etd-item-info">
+                     <template v-if="tender.offersOpeningDate">
+                        {{tender.offersOpeningDate.split('T')[0]}}
+                        <br />
+                        {{tender.offersOpeningDateHijri}}
+                        <br />
+                        {{tender.offersOpeningDate.split('T')[1].substring(0,5)}}
+                     </template>
+                     <template v-else>
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist
+                     </template>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-6 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersCheckingDate
+                  </div>
+                  <div class="col-6 etd-item-info">
+                     <template v-if="tender.offersCheckingDate">
+                        {{tender.offersCheckingDate.split('T')[0]}}
+                        <br /> {{tender.offersCheckingDateHijri}}
+                        <br /> {{tender.offersCheckingDate.split('T')[1].substring(0,5)}}
+                     </template>
+                     <template v-else>
+                        <span> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist </span>
+                     </template>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-6 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletPrice
+                  </div>
+                  <div class="col-6 etd-item-info">
+                     <span class=" text-primary h5" v-if="tender.conditionsBookletPrice > 0">{{tender.conditionsBookletPrice}} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Riyal</span>
+                     <span class=" text-primary h5" v-else>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Free</span>
+                  </div>
+               </div>
+            </li>
+         </ul>
+      </div>
+     
+   </div>
+</div>

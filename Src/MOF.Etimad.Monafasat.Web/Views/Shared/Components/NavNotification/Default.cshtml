@@ -1,0 +1,27 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model IEnumerable<MOF.Etimad.Monafasat.NotificationPanelModel>
+@{
+   // we need date in Georian formate to pass it to moment library
+   var enCultureInfo = new System.Globalization.CultureInfo("en-US");
+}
+@if (Model != null)
+{
+   foreach (var item in Model)
+   {
+
+      var parms = new Dictionary<string, string>
+      {
+         { "notificationId", item.Id.ToString() },
+         { "Link", $"/{item.Link}" }
+      };
+      <a asp-action="SetReadStateToNotification" asp-controller="account" asp-all-route-data="parms" data-read="@item.NotifacationStatusId" class="@if (item.NotifacationStatusId != (int)Enums.NotifacationStatus.Read) { @("new") } notfication-item btn btn-link btn-block btn-sm">
+         <span class="not-title"> @item.Title</span>
+         <span>
+            <i class="material-icons">schedule</i> 
+            <span class="dateMomentFormat">
+               @item.CreatedAt.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffffff", enCultureInfo);
+            </span>
+         </span>
+      </a>
+   }
+}

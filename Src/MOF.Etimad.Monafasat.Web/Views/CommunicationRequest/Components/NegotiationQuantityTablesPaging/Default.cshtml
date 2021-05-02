@@ -1,0 +1,175 @@
+<div id="tableContainer" class="card-body p-2">
+ 
+   <div v-if="QuantityTableItems && QuantityTableItems.length > 0" v-for="(table, $index) in QuantityTableItems">
+      <div class="TableNameSection" v-show="table.isReadOnly == true">
+         <div class="d-block">
+            <h5 class="title text-primary p-1 m-0">
+               <span class="tableName col">{{table.tableName}}</span>
+            </h5>
+         </div>
+      </div>
+      @{
+         if (Model.IsReadOnly)
+         {
+            <div class="row" v-html="QuantityTableItems[0].editFormHtml">
+            </div>
+         }
+         else
+         {
+
+   <div :id="'divcontent_'+table.tableId">
+       
+      @*@if (((User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersCheckSecretary)) && (Model.statusId == (int)Enums.enNegotiationStatus.New || Model.statusId == (int)Enums.enNegotiationStatus.UnderUpdate)))
+      {*@
+      <div class="row">
+         <div class="offset-10"></div>
+         <input type="button" :id="'btn_'+table.tableId" :data-tableid="table.tableId" data-toggle="modal" data-target="#deleteConfirmation" @@click="setTableId(table.tableId)" class="btn btn-sm pull-left btn-danger" value="مسح الجدول">
+      </div>
+
+       @* }*@
+      <form asp-controller="CommunicationRequest" asp-action="SaveNegotiationQitems_NEW" :data-ajax-terget="'Results'+table.tableId"
+            data-ajax-begin="onBegin" data-ajax-complete="onComplete"
+            data-ajax-failure="onFailed" data-ajax-success="onSuccess"
+            data-ajax="true" data-ajax-method="POST">
+         <div class="row" v-html="QuantityTableItems[0].editFormHtml" :id="'Results'+table.tableId">
+
+            @*<div id="divSubmit" class="text-right" style="background-color: #f3f3f3;padding: 8px 11px; margin-bottom:1rem">
+               <button class="btn btn-primary btn-sm " onclick="emptyValidationDiv();" type="submit">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save<span class="material-icons">save</span></button>
+            </div>*@
+         </div>
+      </form>
+      <form asp-controller="CommunicationRequest" asp-action="DeleteNegotiationQitems_NEW"
+            data-ajax-loading="#LoadingSite"
+            data-ajax-begin="onBegin"
+            data-ajax="true" data-ajax-method="POST">
+         <div class="row" v-html="QuantityTableItems[0].deleteFormHtml">
+         </div>
+      </form>
+   </div>
+         }
+      }
+   </div>
+
+   <pagination :visible_pages="3" ref="vpaginator" :submit_form="true" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>
+<div id="javaScript"></div>
+<script>
+
+      function emptyValidationDiv() {
+         debugger;
+         $("#form0").find('.validation-error').html('');
+      }
+   function DeleteNegotiationhtmlRow(tableidentifier) {
+      debugger;
+      $('#LoadingSite').fadeIn();
+      var tableselector = "table[name=" + tableidentifier.tableId + "] tbody";
+      var EffectedRow = $(tableselector + " .EffectedRow_" + tableidentifier.tableId);
+     var itemnumber = $($(EffectedRow).find('#ItemNumber')).val();
+      var quantityTableId = tableidentifier.quantityTableId;
+      $.get('/CommunicationRequest/DeleteNegotiationQitems_NEW?tenderId=' + @Model.TenderId + '&negotiationId=@Model.negotiationId' + '&tableId=' + quantityTableId + '&rowNumber=' + itemnumber , {
+         __RequestVerificationToken: token,
+      }).done(function (data) {
+
+         isSaveButtonClicked = true;
+         $('#LoadingSite').fadeOut();
+         debugger;
+         $('#LoadingSite').fadeOut();
+         $('#app2').hide();
+         Negotiation.Response = data;
+         console.log(data);
+         debugger;
+        
+         if (data.data.isSaved) {
+            //window.location.reload();
+            $('#divbeforNegotiation').removeClass('d-none');
+
+            $('#divafterNegotiation').addClass('d-none');
+            $('#btnSendToApprove').removeClass('d-none');
+            AlertFun(data.message, alertMessageType.Success);
+            if (EffectedRow.length > 0) {
+               var rowId = $(EffectedRow).attr('id');
+               rowId = rowId.replace("tr_1_", "tr_");
+               $(tableselector + " #" + rowId).find('#btnAlternative').show();
+               $(EffectedRow).replaceWith("");
+            }
+            var trLength = $($("#" + tableidentifier.tableId + ' tbody')).find('tr').length;
+            if (trLength <= 1) {
+               $($("#" + tableidentifier.tableId).closest('form')[0]).parent().parent().remove();
+            }
+            else {
+               Tender.resource_url = '/CommunicationRequest/GetNegotiationTableQuantityItemsAsync?tenderId=' +@Model.TenderId +'&OfferId= @Model.OfferId' + '&quantityTableId=0&formId=' + tableidentifier.formId + '&isReadOnly=@Model.IsReadOnly&negotiationId=@Model.negotiationId&d=' + new Date();
+            }
+         }
+
+         else {
+            AlertFun(data.message, alertMessageType.Danger);
+            $('#divbeforNegotiation').removeClass('d-none');
+            $('#divafterNegotiation').removeClass('d-none');
+            $('#btnSendToApprove').addClass('d-none');
+            //location.reload();
+            DeletehtmlRow(tableidentifier);
+         }
+         $('.modal').modal('hide');
+       
+      }
+         ).fail(function (error) {
+            debugger;
+                $('#LoadingSite').fadeOut();
+
+               // $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            $('.modal').modal('hide');
+      });
+
+
+
+   }
+   $(document).ready(function () {
+
+      Tender = new Vue({
+         el: '#tableContainer',
+         data: {
+            totalCount: 0,
+            currentPage: 1,
+            QuantityTableItems: [],
+            pageSize: @((int)Enums.PageSize.Six),
+            resource_url: '/CommunicationRequest/GetNegotiationTableQuantityItemsAsync?tenderId=@Model.TenderId&OfferId=@Model.OfferId&quantityTableId=@Model.TableId&formId=@Model.FormId&isReadOnly=@Model.IsReadOnly&negotiationId=@Model.negotiationId'
+         },
+         created: function () {
+            this.resource_url = '/CommunicationRequest/GetNegotiationTableQuantityItemsAsync?tenderId=@Model.TenderId&OfferId=@Model.OfferId&quantityTableId=@Model.TableId&formId=@Model.FormId&isReadOnly=@Model.IsReadOnly&negotiationId=@Model.negotiationId';
+         },
+         methods: {
+            setTableId(tableId) {
+               $('#hdntableId').val(tableId);
+            },
+            updateResource: function (data) {
+             //  debugger;
+               console.log(data);
+               this.QuantityTableItems = data;
+               if (@Model.TableId == 0 && $('#tableHeaderContainer_' + @Model.FormId + ' li').length == 0)
+                  $('#tableHeaderContainer_' + @Model.FormId).append('<li class="nav-item"><a class="nav-link text-center" href="#tableIndex_' + data[0].tableId + '" href="#tableIndex_' + data[0].tableId + '" onclick="changeTable(' + data[0].tenderId + ', ' + data[0].tableId + ', ' + data[0].formId + ')" data-toggle="tab">اسم الجدول</a></li>');
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+               $('#javaScript').html(data[0].javascript);
+             //  $('.qtableselectpicker').selectpicker('refresh');
+           console.log(data[0].isTableHasAlternative);
+            }
+         }
+         , watch: {
+            currentPage: function (newVal, old) {
+               debugger;
+               //this.currentPage = old;
+            }
+
+
+         }
+      });
+
+   });
+</script>

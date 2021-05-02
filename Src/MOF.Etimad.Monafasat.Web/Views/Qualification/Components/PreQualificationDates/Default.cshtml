@@ -1,0 +1,188 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderDatesModel
+@using MOF.Etimad.Monafasat.ViewModel;
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails;
+
+   var hasTenderRevisionDate = Model.TenderRevisionDate != null ? true : false;
+   TenderRevisionDateModel tenderRevisionDate = Model.TenderRevisionDate;  
+}
+
+<div class="row" id="offerDetials">
+   <div class="col-12">
+      <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DetailsStep</h4>
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <div class="">
+         <ul class="list-group form-details-list">
+
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     @if (Model.LastEnqueriesDate.HasValue)
+                     {
+                        <span>
+                           @(Model.LastEnqueriesDateString)
+                        </span>
+                        <span>
+                           @(Model.LastEnqueriesDateHijriString)
+                        </span>
+                     }
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.LastQualificationPresentationDate
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     @if (Model.LastOfferPresentationDate.HasValue)
+                     {
+                        <span>
+                           @(Model.LastOfferPresentationDateString)
+                        </span>
+                        <span>
+                           @(Model.LastOfferPresentationDateHijriString)
+                        </span>
+                     }
+                     <span style="padding:0 5px;">
+                        @(Model.LastOfferPresentationTime)
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationEvaluationDate
+                  </div>
+                  <div class="col-8 etd-item-info">
+
+                     <span>
+                        @(Model.OffersCheckingDateString)
+                     </span>
+                     <span>
+                        @(Model.OffersCheckingDateHijriString)
+                     </span>
+                     <span style="padding:0 5px;">
+                        @(Model.OffersCheckingTime)
+                     </span>
+                  </div>
+               </div>
+            </li>
+         </ul>
+         <input type="hidden" id="lastOfferPresentationDate" value="@(Model.LastOfferPresentationDate.HasValue ? @Model.LastOfferPresentationDate.Value.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-US")) : "")" />
+      </div>
+   </div>
+   @if (Model != null && Model.TenderRevisionDate != null)
+   {
+      <div class="col-12">
+         <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtendDates</h4>
+      </div>
+      <div class="col-md-6 col-sm-12 col-xs-12">
+         <ul class="list-group form-details-list">
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     @if (tenderRevisionDate.LastEnqueriesDate.HasValue)
+                     {
+                        <span>
+                           @(tenderRevisionDate.LastEnqueriesDateString)
+                        </span>
+                        <span>
+                           @(tenderRevisionDate.LastEnqueriesDateHijriString)
+                        </span>
+                     }
+                     <span style="padding:0 5px;">
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.LastQualificationPresentationDate
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     @if (tenderRevisionDate.LastOfferPresentationDate.HasValue)
+                     {
+                        <span>
+                           @(tenderRevisionDate.LastOfferPresentationDateString)
+                        </span>
+                        <span>
+                           @(tenderRevisionDate.LastOfferPresentationDateHijriString)
+                        </span>
+                     }
+                     <span style="padding:0 5px;">
+                        @(tenderRevisionDate.LastOfferPresentationTime)
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationEvaluationDate
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     @if (tenderRevisionDate.OffersCheckingDate.HasValue)
+                     {
+                        <span>
+                           @(tenderRevisionDate.OffersCheckingDateString)
+                        </span>
+                        <span>
+                           @(tenderRevisionDate.OffersCheckingDateHijriString)
+                        </span>
+                     }
+                     <span style="padding:0 5px;">
+                        @(tenderRevisionDate.OffersCheckingTime)
+                     </span>
+                  </div>
+               </div>
+            </li>
+         </ul>
+      </div>
+   }
+</div>
+
+<div class="row" id="datesApproval">
+   @if (Model.ChangeRequestTypeId == (int)Enums.ChangeRequestType.ExtendDates && Model.ChangeRequestStatusId == (int)Enums.ChangeStatusType.New && User.IsInRole(RoleNames.DataEntry))
+    
+      {
+         <div class="col-12 ">
+            <div class="form-group bmd-form-group">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendExtendDatesToApprove">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendChangeForApprovement</button>
+            </div>
+         </div>
+      }
+      @if (Model.ChangeRequestTypeId == (int)Enums.ChangeRequestType.ExtendDates && Model.ChangeRequestStatusId == (int)Enums.ChangeStatusType.Pending && User.IsInRole(RoleNames.Auditer))
+      {
+         <div class="col-12 ">
+            <div class="form-group bmd-form-group">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnExtendDateApprrove" data-toggle="modal" data-target="#changeRequestModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ApproveChange</button>
+               <button type="button" class="btn btn-danger pull-left" name="button" id="btnExtendDateReject" data-toggle="modal" data-target="#changeRequestModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectChange</button>
+            </div>
+         </div>
+      }
+      @if (Model.ChangeRequestTypeId ==(int)Enums.ChangeRequestType.ExtendDates && Model.ChangeRequestStatusId == (int)Enums.ChangeStatusType.Rejected && User.IsInRole(RoleNames.DataEntry))
+      {
+         <div class="col-12 ">
+            <h3>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</h3>
+            <p>@(Model.TenderRevisionDate.RejectionReason)</p>
+            <div class="form-group bmd-form-group">
+               <button type="button" id="btnCancelExtendDate" class="btn btn-danger" style="margin-top:30px">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CloseChange
+               </button>
+            </div>
+         </div>
+      }
+   </div>

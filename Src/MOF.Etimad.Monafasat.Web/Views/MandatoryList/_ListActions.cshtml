@@ -1,0 +1,70 @@
+
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+<div class="dropdown  text-center">
+   <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i><div class="ripple-container"></div></button>
+   <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+
+      <a policy="@PolicyNames.ViewMandatoryListPolicy" :href="`/MandatoryList/Details?id=${mandatoryList.encryptedId}`" class="dropdown-item">
+         <i class="material-icons">format_list_bulleted</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details
+      </a>
+
+      <a policy="@PolicyNames.EditMandatoryListPolicy" :href="`/MandatoryList/edit?id=${mandatoryList.encryptedId}`"
+         v-if="mandatoryList.statusId == @((int)Enums.MandatoryListStatus.UnderEstablishing)
+         || (mandatoryList.statusId == @((int)Enums.MandatoryListStatus.Approved) && !mandatoryList.isThereActiveChangeRequest && !mandatoryList.isThereRejectedChangeRequest)" class="dropdown-item">
+         <i class="material-icons">edit</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit
+      </a>
+
+      <a policy="@PolicyNames.EditMandatoryListPolicy" :href="`/MandatoryList/SendToApproval?encryptedMandatoryListId=${mandatoryList.encryptedId}`"
+         v-if="mandatoryList.statusId == @((int)Enums.MandatoryListStatus.UnderEstablishing)" class="dropdown-item">
+         <i class="material-icons">send</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+      </a>
+
+      <a policy="@PolicyNames.EditMandatoryListPolicy" :href="`/MandatoryList/SendToApproval?encryptedMandatoryListId=${mandatoryList.encryptedId}`"
+         v-if="mandatoryList.statusId == @((int)Enums.MandatoryListStatus.Rejected)" class="dropdown-item">
+         <i class="material-icons">send</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+      </a>
+
+      <a policy="@PolicyNames.MandatoryListApprovalPolicy" :href="`/MandatoryList/Approval?encryptedMandatoryListId=${mandatoryList.encryptedId}`"
+         v-if="mandatoryList.statusId == @((int)Enums.MandatoryListStatus.WaitingApproval)" class="dropdown-item">
+         <i class="material-icons">edit</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Accept
+      </a>
+
+      @* Delete Workflow *@
+
+      <a policy="@PolicyNames.EditMandatoryListPolicy" :href="`/MandatoryList/delete?id=${mandatoryList.encryptedId}`"
+         v-if="mandatoryList.statusId == @((int)Enums.MandatoryListStatus.UnderEstablishing)" class="dropdown-item">
+         <i class="material-icons">delete</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete
+      </a>
+
+      <a policy="@PolicyNames.EditMandatoryListPolicy" :href="`/MandatoryList/details?id=${mandatoryList.encryptedId}`"
+         v-if="mandatoryList.statusId == @((int)Enums.MandatoryListStatus.Approved)  && !mandatoryList.isThereActiveChangeRequest && !mandatoryList.isThereRejectedChangeRequest" class="dropdown-item">
+         <i class="material-icons">delete</i> @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.RequestDelete
+      </a>
+
+      <a policy="@PolicyNames.MandatoryListApprovalPolicy" :href="`/MandatoryList/details?id=${mandatoryList.encryptedId}`"
+         v-if="mandatoryList.statusId == @((int)Enums.MandatoryListStatus.WaitingCancelApproval)" class="dropdown-item">
+         <i class="material-icons">send</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Accept
+      </a>
+
+      <a policy="@PolicyNames.EditMandatoryListPolicy" :href="`/MandatoryList/details?id=${mandatoryList.encryptedId}`"
+         v-if="mandatoryList.statusId == @((int)Enums.MandatoryListStatus.CancelRejected)" class="dropdown-item">
+         <i class="material-icons">send</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+      </a>
+
+      @* End of Delete workflow *@
+
+      @* Approval after approved mandatory list *@
+      <a policy="@PolicyNames.MandatoryListApprovalPolicy" :href="`/MandatoryList/details?id=${mandatoryList.encryptedId}`"
+         v-if="mandatoryList.statusId == @((int)Enums.MandatoryListStatus.Approved) && mandatoryList.isThereActiveChangeRequest" class="dropdown-item">
+         <i class="material-icons">send</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ApproveEdit
+      </a>
+  
+      <a policy="@PolicyNames.EditMandatoryListPolicy" :href="`/MandatoryList/details?id=${mandatoryList.encryptedId}`"
+         v-if="mandatoryList.statusId == @((int)Enums.MandatoryListStatus.Approved) && mandatoryList.isThereRejectedChangeRequest" class="dropdown-item">
+         <i class="material-icons">send</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CloseChange
+      </a>
+      @* end of approval after approved mandatory list *@
+   </div>
+</div>
+

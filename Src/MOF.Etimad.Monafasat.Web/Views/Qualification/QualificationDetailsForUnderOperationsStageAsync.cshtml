@@ -1,0 +1,94 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationDetailsModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PreQualificationDetails;
+   var tableIndex = 0;
+}
+@{
+
+}
+
+@Html.Partial("~/Views/Qualification/DetailsPartials/_DetailsForUnderOperationsStageHead.cshtml")
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("PreQualificationIndexUnderOperationsStage", "Qualification")">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.UnderstablishedStageQualifications</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualificationDetails</li>
+      </ol>
+   </nav>
+}
+@using (Html.BeginForm())
+{
+   @Html.AntiForgeryToken()
+   <div class="col-12">
+      <div class="clearfix"></div>
+      <div class="row">
+         <ul class="nav nav-pills nav-pills-icons" role="tablist">
+            <li class="nav-item">
+               <a class="nav-link active text-center show" href="#d-1" role="tab" data-toggle="tab" aria-selected="true">
+                  <i class="material-icons">dashboard</i> 
+                  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.BasicData
+               </a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link text-center" href="#d-2" role="tab" data-toggle="tab" aria-selected="false">
+                  <i class="material-icons">schedule</i> 
+                  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationDates
+               </a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link text-center" href="#d-3" role="tab" data-toggle="tab" aria-selected="false">
+                  <i class="material-icons">list</i> 
+                  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Addresses
+               </a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link text-center" href="#d-4" role="tab" data-toggle="tab" aria-selected="false">
+                  <i class="material-icons">attach_file</i> 
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentsAttachments
+               </a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link text-center" href="#d-5" role="tab" data-toggle="tab" aria-selected="false">
+                  <i class="material-icons">book</i> 
+                  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualificationNews
+               </a>
+            </li>
+         </ul>
+         <div class="tab-content  tab-space col-12 " style="padding:0">
+            @Html.Partial("~/Views/Qualification/DetailsPartials/_DetailsBasicStepContent.cshtml", Model)
+            @Html.Partial("~/Views/Qualification/DetailsPartials/_DetailsDatesStepContent.cshtml", Model)
+            @Html.Partial("~/Views/Qualification/DetailsPartials/_DetailsAddressesStepContent.cshtml", Model)
+            @Html.Partial("~/Views/Qualification/DetailsPartials/_DetailsAttachmentsStepContent.cshtml", Model)
+            @Html.Partial("~/Views/Qualification/DetailsPartials/_DetailsInvitationInfoStepContent.cshtml", Model)
+         </div>
+      </div>
+   </div>
+}
+<button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("Index","Tender")'">
+   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+   <div class="ripple-container"></div>
+</button>
+<div class="clearfix"></div>
+<script src="~/ViewsScripts/Qualification/TenderDetailsForUnderOperationsStage.js"></script>
+<script>
+      function getTenderSentResourceValue() { return '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.TenderSent)'; }
+      function getTenderStringId() { return '@Model.TenderIdString'; }
+      function getProgressDoneResourceValue() { return '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)'; }
+      function getSendUpdateDatesToApprove() { return '@Url.Action("SendUpdateDatesToApproveAsync", "Qualification")'; }
+      function getChangeRequestSentToApprovalResourceValue() { return '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ChangeRequestSentToApproval)'; }
+      function getRejectTenderExtendDateUrl() { return '@Url.Action("RejectTenderExtendDateAsync", "Qualification")'; }
+      function getChangeRequestRejectedResourceValue() { return '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ChangeRequestRejected)'; }
+      function getChangeRequestApprovedResourceValue() { return '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ChangeRequestApproved)'; }
+      function getApproveTenderAttachmentsChangeUrl() { return '@Url.Action("ApproveTenderAttachmentsChangeRequestAsync", "Qualification")'; }
+      function getRejectTenderUpdateAttachmentUrl() { return '@Url.Action("RejectTenderUpdateAttachmentAsync", "Qualification")'; }
+      function getApproveTenderExtendDatesChangeUrl() { return '@Url.Action("ApproveTenderExtendDatesChangeRequestAsync", "Qualification")'; }
+      function getApproveTenderUpdateWithVerificationUrl() { return '@Url.Action("ApproveTenderUpdateWithVerificationAsync", "Qualification")'; }
+      function getSuccessfulyDoneResourceValue() { return '@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SuccessfulyDone)'; }
+      function getCancelTenderExtendDatesUrl() { return '@Url.Action("CancelTenderExtendDatesAsync", "Qualification")'; }
+      function getChangeRequestCanceledResourceValue() { return '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ChangeRequestCanceled)'; }
+      function getCancelAttachmentsUpdateUrl() { return '@Url.Action("CancelAttachmentsUpdateAsync", "Qualification")'; }
+</script>

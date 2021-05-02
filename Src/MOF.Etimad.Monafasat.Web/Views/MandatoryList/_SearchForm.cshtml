@@ -1,0 +1,40 @@
+<div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+   <div class="form-group bmd-form-group p-0">
+      <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonCode</label>
+      <input type="number" maxlength="4" class="form-control" v-model="divisionCode">
+   </div>
+
+   <div class="form-group bmd-form-group p-0">
+      <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonNameAr</label>
+      <input type="text" class="form-control" v-model="divisionName">
+   </div>
+
+   <div class="form-group bmd-form-group p-0">
+      <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.CSICode</label>
+      <input type="number" class="form-control" v-model="csiCode" maxlength="8">
+   </div>
+
+   <div class="form-group bmd-form-group p-0">
+      <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.NameAr</label>
+      <input type="text" class="form-control" v-model="productName" maxlength="8">
+   </div>
+
+   <div class="form-group bmd-form-group p-0">
+      <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.PriceCelling</label>
+      <input type="number" class="form-control" v-model="priceCelling">
+   </div>
+
+   <div class="form-group bmd-form-group p-0">
+
+      <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.Status</label>
+      <select class="selectpicker" data-style="select-with-transition" v-model="statusId" id="statusList">
+         <option value=" ">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+         @foreach (Enums.MandatoryListStatus item in Enum.GetValues(typeof(Enums.MandatoryListStatus)))
+         {
+            <option :value="'@((int)item)'">
+               @item.ToDisplayName()
+            </option>
+         }
+      </select>
+   </div>
+</div>

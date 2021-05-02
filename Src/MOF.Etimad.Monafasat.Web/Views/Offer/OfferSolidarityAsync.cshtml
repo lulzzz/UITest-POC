@@ -1,0 +1,1032 @@
+@using MOF.Etimad.Monafasat.ViewModel
+@model OfferSolidarityModel
+
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendingInvitations;
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage)</a></li>
+         <li class="breadcrumb-item"><a href="">@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders)</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.TenderDetails)</li>
+      </ol>
+   </nav>
+}
+<style>
+   .alert-warning {
+      z-index: 1 !important;
+   }
+</style>
+<link href="~/Etimad-UI/assets/vendor/countryPhoneCodes/style.css" rel="stylesheet" />
+<div class="" id="TenderDetials" v-cloak>
+   @Html.AntiForgeryToken()
+
+   <div class="alert alert-warning p-1">
+      <i class="material-icons pull-left p-2">
+         warning
+      </i>
+      <span class="d-inline-block p-2">
+         سيكون مقدم العرض هو قائد التضامن ويجب ان تتطابق مع معلومات الخطاب
+      </span>
+
+   </div>
+
+</div>
+<form class="form" id="searchCriteriaForm">
+   @Html.AntiForgeryToken()
+   @section pagecontrols{
+   }
+   <div class=""></div>
+   <div class="" id="SuppliersGrid" v-cloak>
+      <div class="row">
+         <ul class="nav nav-pills nav-pills-icons col-12" role="tablist">
+            <li class="nav-item">
+               <a class="nav-link active show" href="#regSuppliertab" role="tab" data-toggle="tab" aria-selected="true">
+                  <i class="material-icons">group</i>
+                  @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.RegisteredSuppliers)
+               </a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link" href="#divUnregestered" role="tab" data-toggle="tab" aria-selected="false">
+                  <i class="material-icons">group_add</i>
+                  @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.UnRegisteredSuppliersIn)
+               </a>
+            </li>
+         </ul>
+         <div class="tab-content tab-space col-12">
+            <div class="tab-pane active show" id="regSuppliertab">
+               <div class="card card-body">
+                  <div id="regSupplier">
+                     <div class="row">
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <input type="text" class="form-control" name="CommericalRegisterNo" id="commericalRegisterNo" value="" v-model="searchModel.commericalRegisterNo" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)">
+                              <input type="hidden" name="offerIdString" value="@(Model.offerIdString)" />
+                              <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)</span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <input type="text" class="form-control" name="CommericalRegisterName" id="commericalRegisterName" v-model="searchModel.commericalRegisterName" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)">
+                              <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)</span>
+                           </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <select data-live-search="false" id="mainActivityList" name="MainActivitiesId" class="selectpicker" v-model="searchModel.MainActivitiesId" @@change="GetSecondryActitvitiesByParentId()" title="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.MainActivity" data-style="select-with-transition">
+                                 <option value="-1">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                                 <option :value="ac.id" v-for="ac in MainActitvities">{{ac.name}}</option>
+                              </select> <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.MainActivity</span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <select data-live-search="false" id="secondryActivityList" name="SubActivitesId" class="selectpicker" v-model="searchModel.SubActivitesId" title="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.SecondaryActivity" data-style="select-with-transition">
+                                 <option value="-1">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                                 <option :value="ac.id" v-for="ac in SecondaryActivities">{{ac.name}}</option>
+                              </select> <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.SecondaryActivity</span>
+                           </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <input type="text" class="form-control" name="ActivityDescription" id="activityDescription" v-model="searchModel.ActivityDescription" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ActivityDescription) ">
+                              <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ActivityDescription)</span>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group has-success bmd-form-group">
+                              <select id="cityNameList" data-live-search="true" name="CityName" class="selectpicker" v-model="searchModel.CityName" data-style="select-with-transition" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.City)" data-size="7">
+                                 <option value="" title="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.City)">
+                                    @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose)
+                                 </option>
+                                 <option v-for="city in cities" v-bind:value="city.name">
+                                    {{city.name}}
+                                 </option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <input type="text" class="form-control" name="EMail" id="eMail" value="" v-model="searchModel.EMail" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Email) ">
+                              <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Email)</span>
+                           </div>
+                        </div>
+                        <div hidden="hidden" class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <input type="text" class="form-control" name="CivilRegisterNo" v-model="searchModel.CivilRegisterNo" id="civilRegisterNo" value="" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.CivilRegisterNo) ">
+                              <span class="bmd-help">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.CivilRegisterNo)</span>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <span class="bmd-help text-danger" style="position:relative" id="vdSearch">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.EnterSearchFields)</span>
+                     </div>
+                     <div class="row">
+                        <div class="col-12 form-group etd-search-btn">
+                           <button type="button" class="btn btn-primary" name="button" @@click="search">
+                              <i class="material-icons">search</i> @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search)
+
+                           </button>
+                           <button type="reset" class="btn text-center" name="button" @@click="clear($event)">
+                              <i class="material-icons">close</i> @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear)
+
+                           </button>
+                        </div>
+                     </div>
+                     <div class="row">
+
+                        <h5>@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.SuppliersList)</h5>
+                        @Html.Partial("~/Views/Offer/_SuppliersGrid.cshtml")
+
+
+
+
+                     </div>
+                  </div>
+                  <div id="registeredGrid">
+
+                     <h5>@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.InvitedSupplierList)</h5>
+                     @Html.Partial("~/Views/Offer/_InvitedSuppliersGrid.cshtml", Model)
+                  </div>
+               </div>
+
+            </div>
+
+            <div class="tab-pane" id="divUnregestered">
+               @Html.Partial("~/Views/Offer/_UnRegisteredSuppliersInvitation.cshtml")
+               <div class="card card-body">
+                  <div class="row">
+                     <h5>@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.InvitedSupplierList)</h5>
+
+                     @Html.Partial("~/Views/Offer/_InvitedUnregisteredSuppliersGrid.cshtml", Model)
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</form>
+
+<div class="row">
+   @{
+
+      if (Model.statusId != (int)Enums.OfferStatus.Received)
+      {
+
+
+
+
+         <div class="col-12">
+            @{
+
+               if (Model.TenderTypeId == (int)Enums.TenderType.Competition || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender)
+               {
+                  <a asp-action="OfferFilesAsync" class="btn btn-default pull-left" asp-controller="Offer" asp-route-OfferIdString="@(Model.offerIdString)"> السابق</a>
+
+               }
+               else
+               {
+                  @*<a asp-action="ApplyOfferQuantityTablesAsync" class="btn btn-default pull-left" asp-controller="Offer" asp-route-OfferIdString="@(Model.offerIdString)"> السابق</a>*@
+                  <a asp-action="ApplyOfferQuantityTablesStep" class="btn btn-default pull-left" asp-controller="Offer" asp-route-OfferIdString="@(Model.offerIdString)"> السابق</a>
+               }
+            }
+
+            <a asp-action="OfferSummary" class="btn btn-primary pull-left" asp-controller="Offer" asp-route-OfferIdString="@(Model.offerIdString)"> التالى</a>
+            <a asp-action="SupplierTenders" asp-controller="Tender" class="btn btn-outline-primary pull-right">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToMyTenders</a>
+
+         </div>
+      }
+      else
+      { <a asp-action="SupplierTenders" asp-controller="Tender" class="btn btn-outline-primary pull-right">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToMyTenders</a>
+
+
+   }
+
+   }
+</div>
+
+
+@section scripts{
+   <script src="~/Etimad-UI/assets/vendor/countryPhoneCodes/intlTelInput.min.js"></script>
+   <script src="~/Etimad-UI/assets/vendor/countryPhoneCodes/utils.js"></script>
+   <script>
+
+
+      var registeredGrid = new Vue({
+         el: '#registeredGrid',
+         data: {
+            resource_url: '/Offer/GetInvitedSuppliers?offerIdString=@Model.offerIdString&pageSize=5&currentPage=1',
+            InvitedSuppliers  : [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 5
+         },
+         methods: {
+            updateResource: function (data) {
+            //   
+               this.InvitedSuppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            RemoveInvitationGrid: function (Supplier) {
+               $('#LoadingSite').fadeIn();
+
+               var token = $('input[name=__RequestVerificationToken]').val();
+
+               $.post('/Offer/RemoveSolidaritySupplier', { offerIdEncrypted: '@Model.offerIdString', CrNumber: Supplier.crNumber, solidarityIdString: Supplier.solidarityIdString, __RequestVerificationToken: token })
+                  .done(function (data) {
+                     $('#LoadingSite').fadeOut();
+                     registeredGrid.resource_url = registeredGrid.resource_url + '&d=' + new Date();
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.RemovedSuccefuly)', alertMessageType.Success)
+                  })
+                  .fail(function (err) {
+                     $('#LoadingSite').fadeOut();
+                     AlertFun(err.responseJSON.message, alertMessageType.Danger)
+                     
+
+                  })
+                  .always(function () {
+                     
+                     $('#LoadingSite').fadeOut();
+
+                  });
+                            }
+         }
+      });
+
+
+      var UnregisteredGrid = new Vue({
+         el: '#divUnregestered',
+         data: {
+            InvitedUnregisteredSuppliers: [],
+            totalCount: 0,
+            currentPage: 2,
+            pageSize: 5,
+            mobile: null,
+            crNumber: '',
+            crNameLength:'',
+                  crName:'',
+            crNumberForeign:'',
+            descriptionOther: '',
+            isEmailContact:'true',
+            showRegistred : false,
+            showForiegn : false,
+            showOther: false,
+            showComunication: false,
+               Liciense:'',
+            email: '',
+            checkName: false,
+            invitationType: 0,
+            vailMobile: false,
+           invitedUnregisteredResource_url: '/Offer/GetInvitedUnregisteredSuppliers?offerIdString=@Model.offerIdString',
+         }
+         ,
+         methods: {
+            updateResource: function (data) {
+               this.InvitedUnregisteredSuppliers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            onInvitationTypeChange: function (event) {
+                               
+               this.showComunication = true;
+                               type = event.target.value
+               if (type == @((int)Enums.UnRegisteredSuppliersInvitationType.HasCR)) {
+                                  this.showRegistred = true;
+                                  this.showForiegn = false;
+                                  this.showOther = false;
+                                  this.invitationType = @((int)Enums.UnRegisteredSuppliersInvitationType.HasCR);
+                                  this.clearUnRegisteredData();
+                               }
+                               if (type ==  @((int)Enums.UnRegisteredSuppliersInvitationType.Foriegn)) {
+                  $("#hForienTitle").text( "مستثمر اجنبى");
+                  $("#labForienTitle").text("رقم السجل التجاري في بلد المنشأ");
+                                  this.showForiegn = true;
+                                  this.showRegistred = false;
+                                  this.showOther = false;
+                                  this.invitationType =  @((int)Enums.UnRegisteredSuppliersInvitationType.Foriegn);
+                                  this.clearUnRegisteredData();
+                               }
+                               if (type == @((int)Enums.UnRegisteredSuppliersInvitationType.HasLicience)) {
+                  $("#hForienTitle").text("كيان يملك رخصة مزاولة المهنه");
+                  $("#labForienTitle").text("رقم الرخصه");
+                                  this.showForiegn = true;
+                                  this.showRegistred = false;
+                                  this.showOther = false;
+                                  this.invitationType =  @((int)Enums.UnRegisteredSuppliersInvitationType.HasLicience);
+                                  this.clearUnRegisteredData();
+                               }
+
+            },
+              clearUnRegisteredData() {
+               //$($(".selected-flag > div:first")[0]).addClass("iti-flag sa");
+               //$(".selected-dial-code")[0].innerHTML = "+966";
+               $($(".iti-arrow")[0]).prop("hidden", "hidden")
+               this.email = null;
+                               this.mobile = '';
+                               this.crNumber = '';
+                               this.crName = '';
+                               this.descriptionOther = '';
+                               this.crNumberForeign = '';
+                            },
+              RemoveInvitationUnRegisteredGrid: function (Supplier) {
+               $('#LoadingSite').fadeIn();
+
+
+               var token = $('input[name=__RequestVerificationToken]').val();
+
+               $.post('/Offer/RemoveSolidaritySupplier', { offerIdEncrypted: '@Model.offerIdString', CrNumber: Supplier.crNumber, solidarityIdString: Supplier.solidarityIdString, __RequestVerificationToken: token })
+                  .done(function (data) {
+                     $('#LoadingSite').fadeOut();
+                     
+                     UnregisteredGrid.invitedUnregisteredResource_url =UnregisteredGrid.invitedUnregisteredResource_url   + '&d=' + new Date();
+                        AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.RemovedSuccefuly)', alertMessageType.Success)
+
+               })
+                  .fail(function (err) {
+                     $('#LoadingSite').fadeOut();
+
+                     AlertFun(err.responseJSON.message, alertMessageType.Danger)
+                     
+
+                  })
+                  .always(function () {
+                     
+                     $('#LoadingSite').fadeOut();
+
+                  });
+            },
+              SendInvitationsForUnRegisteredSupplierAsync: function (cr, name, email, mobile, invitationType) {
+         
+         var validSend = true;
+         var mobileNo = $(".selected-dial-code")[0].innerHTML + this.mobile;
+         if (this.invitationType == @((int)Enums.UnRegisteredSuppliersInvitationType.HasCR) && !this.crNumber) {
+            $("#spanvalidCr").removeClass("hide");
+            validSend = false;
+         }
+         if (this.invitationType == @((int)Enums.UnRegisteredSuppliersInvitationType.Foriegn) && !this.crNumberForeign) {
+            $("#spanvalidForiegn").removeClass("hide");
+            $("#spanvalidForiegn").text('الرجاء إدخال رقم السجل التجارى');
+            validSend = false;
+         }
+         if (this.invitationType == @((int)Enums.UnRegisteredSuppliersInvitationType.HasLicience) && !this.crNumberForeign) {
+            $("#spanvalidForiegn").removeClass("hide");
+            $("#spanvalidForiegn").text('الرجاء إدخال رقم رخصة مزاولة المهنه');
+            validSend = false;
+         }
+         //if (this.invitationType == 3 && !this.descriptionOther) {
+         //   $("#spanvalidDesc").removeClass("hide");
+         //   validSend = false;
+         //}
+         if (!this.email && !this.mobile) {
+            $("#spanvalidSend").text('الرجاء إدخال البريد الالكترونى او رقم الجوال');
+            validSend = false;
+         }
+                 if (this.isEmailContact == 'true') {
+                    this.mobile = '';
+                    mobileNo = '';
+            if (!this.validEmail(this.email)) {
+               $("#spanvalidSend").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.WrongEmail)');
+               validSend = false;
+            }
+         }
+         else {
+                    this.email = '';
+            if (!this.vailMobile) {
+               $("#error-msg").removeClass("hide");
+               validSend = false;
+            }
+            // Check For Email Number
+         }
+         if (this.crNumberForeign) {
+            this.crNumber = this.crNumberForeign;
+         }
+
+         if (this.invitationType == 5 && this.Liciense) {
+            this.crNumber = this.Liciense;
+         }
+
+         if (!validSend) {
+            return false;
+         }
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $('#LoadingSite').fadeIn();
+
+
+
+                 UnregisteredGrid.AddSolidaritySupplier(
+            { offerIdEncrypted: '@Model.offerIdString', crNumber: this.crNumber, solidarityInvitationType: this.invitationType, emailAddress: this.email, mobileNumber: mobileNo, description: this.descriptionOther }
+            , function (err) {
+               AlertFun(err.responseJSON.message, alertMessageType.Danger)
+            },
+
+            function (data) {
+               UnregisteredGrid.invitedUnregisteredResource_url =  UnregisteredGrid.invitedUnregisteredResource_url   + '&d=' + new Date();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved)', alertMessageType.Success)
+
+            }
+         )
+            },
+            CheckForCrNumber: function (cr) {
+               if (cr == '' || cr == undefined || cr.length != 10) {
+                  return false;
+               }
+                               
+               $('#LoadingSite').fadeIn();
+               $.get('/Tender/CheckForCrNumberExistAsync', { crNumber: cr }).done(function (e) {
+                  if (e!=null) {
+                     UnregisteredGrid.crName = e;
+                     UnregisteredGrid.checkName = true;
+                     $('#LoadingSite').fadeOut();
+                  } else {
+                     AlertFun("رقم السجل التجاري المدخل غير صحيح", alertMessageType.Danger);
+                     $('#LoadingSite').fadeOut();
+                  }
+
+                               }).fail(function (error) {
+                                  UnregisteredGrid.checkName = false;
+                  $('#LoadingSite').fadeOut();
+                                  if (error.responseText != "Logout") {
+                                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                                  }
+                                  else if (error.responseText == "Logout") {
+                                     window.location = '/account/logout'; return;
+                                  }
+                               });
+                            },
+            AddSolidaritySupplier: function (invitationModel, ErrorCallBack, Successcallback) {
+
+               
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Offer/AddSolidaritySupplier', { solidarity: invitationModel, __RequestVerificationToken: token })
+                  .done(function (data) {
+               
+                  Successcallback(data );
+               })
+                  .fail(function (err) {
+
+                     
+                     ErrorCallBack(err)
+                  })
+                  .always(function () {
+                     
+                     $('#LoadingSite').fadeOut();
+
+                  });
+            },
+
+           // Check If Email Is Valid
+            validEmail: function (email) {
+                               var re = /^(([^<>()\[\]\\.,;:\s"]+(\.[^<>()\[\]\\.,;:\s"]+)*)|(".+"))((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+               return re.test(email);
+            }
+         }
+         , watch: {
+            crNumber: function (val) {
+               if (val.length > 10) {
+                  UnregisteredGrid.crNameLength = "السجل التجارى لا يزيد عن 10 ارقام";
+                  return;
+               }
+               else {
+                   UnregisteredGrid.crNameLength = '';
+               }
+
+
+            }
+         },
+      });
+
+
+      var NebObj = new Vue({
+                      el: '#regSupplier',
+         data: {
+                         rows: [
+               //initial data
+               { email: "Email", mobileNo: "Phone" },
+            ],
+            searchModel: {},
+            Suppliers: [],
+            InvitedSuppliers: [],
+            InvitedUnregisteredSuppliers: [],
+            removedSuppliers:[],
+            SuppliersDD: [],
+            subSuppliers: [],
+            cities: [],
+            inputs: [],
+            //addedsuppliers=[],
+            selected: 0,
+            totalCount: 0,
+            currentPage: 2,
+            pageSize: 10,
+            descriptionOther: '',
+            tb_Email: '',
+            emails: [],
+            mobilNoList: [],
+            // Here you define the url of your paginated API
+            resource_url:'', //'/Tender/GetAllSuppliersBySearchCretriaForInvitationAsync?invitationTenderId=@Model.TenderId',
+            invitedResource_url: '/Offer/GetInvitedSuppliers',
+            invitedUnregistered: '/Offer/GetInvitedUnregisteredSuppliers',
+            queryString: '',
+            showTable: true,
+           // selectedMainActivity: 0,
+           // selectedSecondryActivity: 0,
+            isAjaxMethodsCalled: false,
+            MainActitvities: [],
+            SecondaryActivities: [],
+            ac: {},
+            MainActivitiesId: 0,
+            IsChange: false,
+            crNumber: '',
+
+
+         },
+         updated: function () {
+            $('select').selectpicker('refresh')
+         },
+         methods: {
+                         updateResource: function (data) {
+               this.Suppliers = data;
+                               this.totalCount = this.$refs.vpaginator.totalCount;
+                               this.currentPage = this.$refs.vpaginator.currentPage;
+                               this.pageSize = this.$refs.vpaginator.pageSize;
+            }
+            //,            updateInvitedResource: function (data) {
+            //   this.InvitedSuppliers = data;
+            //   //this.totalCount = this.$refs.vpaginator.totalCount;
+            //   //   this.currentPage = this.$refs.vpaginator.currentPage;
+            //   //    this.pageSize = this.$refs.vpaginator.pageSize;
+            //}
+            ,
+            ResetPager: function () { 
+               this.resource_url = '/Offer/GetAllSuppliersBySearchCretriaForSolidarityAsync?d=' + Date();
+             //  $('#SuppliersTable').next('nav.navigation').hide();
+
+            },
+
+              AddSolidaritySupplier: function (invitationModel, ErrorCallBack, Successcallback) {
+
+               
+               var token = $('input[name=__RequestVerificationToken]').val();
+
+               $.post('/Offer/AddSolidaritySupplier', { solidarity: invitationModel, __RequestVerificationToken: token })
+                  .done(function (data) {
+                     
+                  Successcallback(data );
+               })
+                  .fail(function (err) {
+
+                     
+                     ErrorCallBack(err)
+                  })
+                  .always(function () {
+                     
+                     $('#LoadingSite').fadeOut();
+
+                  });
+            },
+            GetUnregisterdSupplierList: function () {
+
+               $('#loadingsite').fadeIn();
+               $.get(this.invitedUnregistered, { offerIdString: '@Model.offerIdString' }).done(function (res) {
+                  NebObj.InvitedUnregisteredSuppliers = res.data;
+
+                  $('#loadingsite').fadeOut();
+               }).fail(function (err) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.UnexpectedError)', alertMessageType.Danger)
+
+                  $('#loadingsite').fadeOut();
+               });
+
+
+            },
+            GetregisterdSupplierList: function () {
+               $('#loadingsite').fadeIn();
+               $.get(this.invitedResource_url, { offerIdString: '@Model.offerIdString' }).done(function (res) {
+                  NebObj.InvitedSuppliers = res.data;
+                  $('#loadingsite').fadeOut();
+               }).fail(function (err) {
+
+                  $('#loadingsite').fadeOut();
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.UnexpectedError)', alertMessageType.Danger)
+
+               });
+
+
+            },
+
+            //updateInvitedUNResource: function (data) {
+            //   this.InvitedUnregisteredSuppliers = data;
+               //this.totalCount = this.$refs.vpaginator.totalCount;
+               //this.currentPage = this.$refs.vpaginator.currentPage;
+               //this.pageSize = this.$refs.vpaginator.pageSize;
+          //  },
+            detailsUrl: function (params) {
+                            },
+            updateData: function (data) {
+                               this.MainActitvities = data;
+                            },
+            onInvitationTypeChange: function (event) {
+                               
+               this.showComunication = true;
+                               type = event.target.value
+               if (type == @((int)Enums.UnRegisteredSuppliersInvitationType.HasCR)) {
+                                  this.showRegistred = true;
+                                  this.showForiegn = false;
+                                  this.showOther = false;
+                                  this.invitationType = @((int)Enums.UnRegisteredSuppliersInvitationType.HasCR);
+                                  this.clearUnRegisteredData();
+                               }
+                               if (type ==  @((int)Enums.UnRegisteredSuppliersInvitationType.Foriegn)) {
+                  $("#hForienTitle").text( "مستثمر اجنبى");
+                  $("#labForienTitle").text("رقم السجل التجاري في بلد المنشأ");
+                                  this.showForiegn = true;
+                                  this.showRegistred = false;
+                                  this.showOther = false;
+                                  this.invitationType =  @((int)Enums.UnRegisteredSuppliersInvitationType.Foriegn);
+                                  this.clearUnRegisteredData();
+                               }
+                               if (type == @((int)Enums.UnRegisteredSuppliersInvitationType.HasLicience)) {
+                  $("#hForienTitle").text("كيان يملك رخصة مزاولة المهنه");
+                  $("#labForienTitle").text("رقم الرخصه");
+                                  this.showForiegn = true;
+                                  this.showRegistred = false;
+                                  this.showOther = false;
+                                  this.invitationType =  @((int)Enums.UnRegisteredSuppliersInvitationType.HasLicience);
+                                  this.clearUnRegisteredData();
+                               }
+
+                            },
+
+            GetSecondryActitvitiesByParentId: function () {
+               NebObj.searchModel.SubActivitesId = -1;
+                               NebObj.SecondaryActivities = [];
+                               NebObj.UpdatebyActivitiesId();
+               $.get("/ManageVendors/GetMainActivitiesByParentId?ParentId=" + NebObj.searchModel.MainActivitiesId).done(function (res) {
+                  NebObj.SecondaryActivities = res;
+                  $("#secondryActivityList").selectpicker('refresh');
+                  //$("#secondryActivityList").selectpicker();
+
+                               }).fail(function (err) {
+                                  console.log("Error" + err);
+                               });
+                            },
+            UpdatebyActivitiesId: function () {
+               if (NebObj.searchModel.SubActivitesId == -1) {
+                                  NebObj.MainActivitiesId = (NebObj.searchModel.MainActivitiesId == -1 ? 0 : NebObj.searchModel.MainActivitiesId);
+                               } else {
+                  NebObj.MainActivitiesId = NebObj.searchModel.SubActivitesId;
+                               }
+                            },
+
+            // Search Method To get Suppliers with Search Cretria
+            search: function () {
+               
+                              this.queryString = $('#searchCriteriaForm').serialize();
+               this.resource_url = '/Offer/GetAllSuppliersBySearchCretriaForSolidarityAsync' + '?' + this.queryString + '&d=' + Date();
+                                //this.invitedResource_url = '/Tender/GetInvitedSuppliers' + '?' + '&d=' + Date();
+                            //   this.showTable = true;
+                               Vue.templateCache = false
+            },
+
+            clear: function () {
+               $("#cityNameList").val('');
+               $("#mainActivityList").val('');
+               $("#secondryActivityList").val('');
+               //var selects = $('form').find('select');
+               //$.each(selects,function () {
+               //   $(this).val('');
+               //})
+               //this.searchModel.MainActivitiesId = '';
+               this.searchModel.MainActivitiesId = '';
+              // this.searchModel.SubActivitesId = '';
+               this.searchModel.SubActivitesId = '';
+             //  this.searchModel.CityName = '';
+               this.searchModel.CityName = '';
+              // this.searchModel.selected = -1;
+
+
+               this.searchModel.commericalRegisterNo = '';
+               this.searchModel.commericalRegisterName = '';
+               this.searchModel.ActivityDescription = '';
+               this.searchModel.EMail = '';
+
+               $("#cityNameList,#mainActivityList,#secondryActivityList").selectpicker("refresh");
+             //  $("#cityNameList,#mainActivityList,#secondryActivityList").selectpicker();
+
+            //   this.resource_url = '/Offer/GetAllSuppliersBySearchCretriaForSolidarityAsync';
+
+               this.ResetPager();
+               // this.showTable = false;
+                            },
+
+            AddToInvitationGrid: function (Supplier) {
+               $('#LoadingSite').fadeIn();
+               this.AddSolidaritySupplier(
+                  { offerIdEncrypted: '@Model.offerIdString', crNumber: Supplier.crNumber, crName: Supplier.crName, solidarityInvitationType: @((int)Enums.UnRegisteredSuppliersInvitationType.Existed) }
+                  , function (error) {
+                     $('#LoadingSite').fadeOut();
+                     if (error.responseText != "Logout") {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                  },
+                  function (data) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved)', alertMessageType.Success)
+                     registeredGrid.resource_url = registeredGrid.resource_url + '&d=' + Date();
+                  })
+            },
+            RemoveInvitationGrid: function (Supplier) {
+               $('#LoadingSite').fadeIn(); var token = $('input[name=__RequestVerificationToken]').val();
+                 $.post('/Offer/RemoveSolidaritySupplier', { offerIdEncrypted: '@Model.offerIdString', CrNumber: Supplier.crNumber, solidarityIdString: Supplier.solidarityIdString, __RequestVerificationToken: token })
+                  .done(function (data) {
+                     $('#LoadingSite').fadeOut();
+                     
+                     registeredGrid.resource_url = registeredGrid.resource_url + '&d=' + Date();
+
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.RemovedSuccefuly)', alertMessageType.Success)
+                  })
+                  .fail(function (err) {
+                     $('#LoadingSite').fadeOut();
+
+                     AlertFun(err.responseJSON.message, alertMessageType.Danger)
+                     
+
+                  })
+                  .always(function () {
+                     
+                     $('#LoadingSite').fadeOut();
+
+                  });
+                            },
+            RemoveInvitationUnRegisteredGrid: function (Supplier) {
+               $('#LoadingSite').fadeIn();
+
+                               this.IsChange = true;
+                               //if (Supplier.statusId == 0) {
+                               //}
+                               //this.Suppliers.push(Supplier);
+                               Supplier.isChecked = false;
+                               this.removedSuppliers.push(Supplier);
+                               var i = this.InvitedSuppliers.indexOf(Supplier);
+
+               var token = $('input[name=__RequestVerificationToken]').val();
+
+               $.post('/Offer/RemoveSolidaritySupplier', { offerIdEncrypted: '@Model.offerIdString', CrNumber: Supplier.crNumber, solidarityIdString: Supplier.solidarityIdString, __RequestVerificationToken: token })
+                  .done(function (data) {
+                     $('#LoadingSite').fadeOut();
+                     
+                    // NebObj.GetUnregisterdSupplierList();
+                        AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.RemovedSuccefuly)', alertMessageType.Success)
+
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved)', alertMessageType.Success)
+                  })
+                  .fail(function (err) {
+                     $('#LoadingSite').fadeOut();
+
+                     AlertFun(err.responseJSON.message, alertMessageType.Danger)
+                     
+
+                  })
+                  .always(function () {
+                     
+                     $('#LoadingSite').fadeOut();
+
+                  });
+                            },
+            // Send invitations For Selected Registered Suppliers
+            sendInvitation: function () {
+
+                               if (this.IsChange == true) {
+                  $('#LoadingSite').fadeIn();
+                                  var suppliersLst = [];
+                  $(this.removedSuppliers).each(function (i, e) {
+                                     suppliersLst.push(e);
+                                  })
+                  $(this.InvitedSuppliers).each(function (i, e) {
+                                     e.isChecked = true;
+                                     suppliersLst.push(e);
+                                  })
+                  var token = $('input[name=__RequestVerificationToken]').val();
+                     $.post('/Offer/SendInvitationsAsync', { suppliers: suppliersLst, __RequestVerificationToken: token }).done(function (e) {
+
+                        $('#LoadingSite').fadeOut();
+                                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SendInvitations)', 'success')
+                        NebObj.IsChange = false;
+                                     NebObj.$refs.vpaginator.$parent.search()
+                        //NebObj.queryString = $('#searchCriteriaForm').serialize();
+                        NebObj.invitedResource_url = '/Offer/GetInvitedSuppliers' + '?' + NebObj.queryString + '&d=' + Date();
+                                     //setTimeout(function () {
+                                     //   window.location = "/Offer/SupplierTenders";
+                                     //}, 1000);
+                                  }).fail(function (error) {
+                        $('#LoadingSite').fadeOut();
+                                     //AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.TenderSentFailed)', 'danger')
+                                  });
+                               }
+                               else {
+                  $('#LoadingSite').fadeOut();
+                                  AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseAddSupplier', 'danger')
+                               }
+                            },
+            getCities: function () {
+               $.get("/Offer/GetAllCities").done(function (response) {
+                                  NebObj.cities = response;
+                                  setTimeout(function () {
+                     $('#cityNameList').selectpicker('refresh');
+                                  }, 1000);
+                               }).fail(function (error) {
+                                  console.log(error.statusText);
+                               });
+                            },
+
+
+      SendInvitationsForUnRegisteredSupplierAsync: function (cr, name, email, mobile, invitationType) {
+         
+         var validSend = true;
+         var mobileNo = $(".selected-dial-code")[0].innerHTML + this.mobile;
+         if (this.invitationType == 2 && !this.crNumberForeign) {
+            $("#spanvalidCr").removeClass("hide");
+            validSend = false;
+         }
+         if (this.invitationType == 4 && !this.crNumber) {
+            $("#spanvalidForiegn").removeClass("hide");
+            $("#spanvalidForiegn").text('الرجاء إدخال رقم السجل التجارى');
+            validSend = false;
+         }
+         if (this.invitationType == 5 && !this.crNumberForeign) {
+            $("#spanvalidForiegn").removeClass("hide");
+            $("#spanvalidForiegn").text('الرجاء إدخال رقم رخصة مزاولة المهنه');
+            validSend = false;
+         }
+         if (this.invitationType == 3 && !this.descriptionOther) {
+            $("#spanvalidDesc").removeClass("hide");
+            validSend = false;
+         }
+         if (!this.email && !this.mobile) {
+            $("#spanvalidSend").text('الرجاء إدخال البريد الالكترونى او رقم الجوال');
+            validSend = false;
+         }
+         if (this.email) {
+            if (!this.validEmail(this.email)) {
+               $("#spanvalidSend").text('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.WrongEmail)');
+               validSend = false;
+            }
+         }
+         else {
+
+            if (!NebObj.vailMobile) {
+               $("#error-msg").removeClass("hide");
+               validSend = false;
+            }
+            // Check For Email Number
+         }
+         if (this.crNumberForeign) {
+            this.crNumber = this.crNumberForeign;
+         }
+
+         if (this.invitationType == 5 && this.Liciense) {
+            this.crNumber = this.Liciense;
+         }
+
+         if (!validSend) {
+            return false;
+         }
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $('#LoadingSite').fadeIn();
+
+
+
+         this.AddSolidaritySupplier(
+            { offerIdEncrypted: '@Model.offerIdString', crNumber: this.crNumber, solidarityInvitatiotnType: this.invitationType, emailAddress: this.email, mobileNumber: mobileNo, description: this.descriptionOther }
+            , function (err) {
+               AlertFun(err.responseJSON.message, alertMessageType.Danger)
+            },
+
+            function (data) {
+            //   NebObj. GetUnregisterdSupplierList();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved)', alertMessageType.Success)
+
+            }
+         )
+      }
+     ,
+             // Check If Email Is Valid
+            validEmail: function (email) {
+                               var re = /^(([^<>()\[\]\\.,;:\s"]+(\.[^<>()\[\]\\.,;:\s"]+)*)|(".+"))((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+               return re.test(email);
+            },
+            getDropDownData: function () {
+                         var self = this;
+                         this.isAjaxMethodsCalled = true;
+                      },
+         },
+         mounted() {
+                         this.getDropDownData();
+                      },
+
+         created: function () {
+            //this.GetregisterdSupplierList();
+            //this.GetUnregisterdSupplierList();
+            this.queryString = $('#searchCriteriaForm').serialize();
+            this.invitedResource_url = '/Offer/GetInvitedSuppliers' + '?' + this.queryString + '&d=' + Date();
+            this.invitedUnregisteredResource_url = this.invitedUnregisteredResource_url  + ' ? ' + this.queryString + ' & d=' + Date();
+                         this.getCities();
+            $.get("/ManageVendors/GetMainActivitiesByParentId").done(function (res) {
+                            NebObj.updateData(res);
+                         }).fail(function (err) {
+                            console.log("Error" + err);
+                         });
+                      },
+      })
+
+
+
+
+      var DetialsObj = new Vue({
+         el: '#TenderDetials',
+         data: {
+            Suppliers: [],
+            inKSA: '@Model.InsideKSA'
+         },
+         // Check If InsidKsa Is True Return داخل السعوديه Else return خارج السعوديه
+         computed: {
+            insideKSA: function () {
+                         return (this.inKSA == 'False') ? false : true;
+                      }
+         },
+      })
+
+
+      var telInput = $("#txtCrMobile"),
+         errorMsg = $("#error-msg"),
+         validMsg = $("#valid-msg");
+
+      // initialise plugin
+      telInput.intlTelInput({
+
+        // allowExtensions: true,
+         formatOnDisplay: true,
+         autoFormat: true,
+         autoHideDialCode: true,
+         autoPlaceholder: true,
+         nationalMode: true,
+         initialCountry: 'SA',
+        // nationalMode: false,
+         numberType: "MOBILE",
+         //onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
+         preferredCountries: ['sa', 'ae', 'qa', 'om', 'bh', 'kw', 'ma'],
+         preventInvalidNumbers: true,
+         separateDialCode: true,
+         //initialCountry: "auto",
+         geoIpLookup: function (callback) {
+            //$.get("http://ipinfo.io", function () { }, "jsonp").always(function (resp) {
+            //                var countryCode = (resp && resp.country) ? resp.country : "";
+            //                callback(countryCode);
+            //             });
+                      },
+         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.9/js/utils.js"
+      });
+
+      var reset = function () {
+         telInput.removeClass("error");
+         errorMsg.addClass("hide");
+         validMsg.addClass("hide");
+      };
+
+      // on blur: validate
+      telInput.blur(function () {
+         
+        //var numberType = intlTelInputUtils.getNumber();
+        //var number = intlTelInputUtils.getNumber(intlTelInputUtils.numberFormat.E164);
+        // reset();
+         if ($.trim(telInput.val())) {
+            if (telInput.intlTelInput("isValidNumber") && telInput.val() != undefined && !telInput.val().startsWith('0')) {
+             //  validMsg.removeClass("hide");
+               UnregisteredGrid.vailMobile = true;
+            } else {
+               telInput.addClass("error");
+               errorMsg.removeClass("hide");
+               UnregisteredGrid.vailMobile = false;
+            }
+         }
+      });
+
+      // on keyup / change flag: reset
+      telInput.on("keyup change", reset);
+
+
+
+   </script>
+}
+

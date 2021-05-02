@@ -1,0 +1,49 @@
+<div class="table-responsive">
+   <table id="OffersExtendValidityTable"class="table table-striped text-center" summary="desc">
+      <thead class="text-center">
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.RequestApplyDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.PlaintReason </th>
+            @*<th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Attachments</th>*@
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Notes</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+         </tr>
+      </thead>
+      <tbody class="text-center" v-if="plaints && plaints.length > 0">
+         <tr v-for="(plaint, $index) in plaints">
+            <td class="text-center" data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td class="text-center" @@click="getSupplierInfo(plaint.commericalRegisterNo)" style="cursor:pointer" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName"> {{plaint.selectedCrName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{plaint.creationDate}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{plaint.plaintReason}} </td>
+            @*<td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber">
+               <span>
+                  <a href="#" v-if='plaint.attachments' @@click="RedirectURL(plaint.attachments.fileNetReferenceId,plaint.attachments.name);return false;"> {{plaint.attachments.name}} </a>
+               </span>
+            </td>*@
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status"> {{plaint.plaintStatusName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status"> {{plaint.notes}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               <div class="dropdown">
+                  <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i> <div class="ripple-container"></div></button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                     <a v-if="plaint.plaintReason" :href="CheckPlaintRequestData(plaint.plainRequestId)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.PlaintDetails</a>
+                  </div>
+               </div>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-if="plaints.length == 0">
+         <tr>
+            <td colspan="9">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>
+
+

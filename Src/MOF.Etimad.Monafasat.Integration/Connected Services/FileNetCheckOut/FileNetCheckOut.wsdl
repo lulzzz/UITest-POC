@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.ejada.com" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns="http://www.ejada.com" targetNamespace="http://www.ejada.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation>
+    <wsdl:appinfo source="WMQI_APPINFO">
+      <MRWSDLAppInfo imported="true">
+        <generatedXSD location="FileNetCheckOut_InlineSchema1.xsd" />
+        <binding hasEncoding="false" imported="true" name="FileNetCheckOutSOAP11" originalBindingStyle="document" />
+        <binding hasEncoding="false" imported="true" name="FileNetCheckOutSOAP12" originalBindingStyle="document" />
+      </MRWSDLAppInfo>
+    </wsdl:appinfo>
+  </wsdl:documentation>
+  <wsdl:types>
+    <xsd:schema xmlns="http://www.ejada.com" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.ejada.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:include schemaLocation="https://ry1drvesbiib01.mof.gov.sa:7931/FileNetCheckOut?xsd=xsd0" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="FileNetCheckOutRequest">
+    <wsdl:part name="FileNetCheckOutRq" element="ns:FileNetCheckOutRq" />
+  </wsdl:message>
+  <wsdl:message name="FileNetCheckOutResponse">
+    <wsdl:part name="FileNetCheckOutRs" element="ns:FileNetCheckOutRs" />
+  </wsdl:message>
+  <wsdl:portType name="FileNetCheckOut">
+    <wsdl:operation name="FileNetCheckOut">
+      <wsdl:input message="ns:FileNetCheckOutRequest" />
+      <wsdl:output message="ns:FileNetCheckOutResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FileNetCheckOutSOAP12" type="ns:FileNetCheckOut">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="FileNetCheckOut">
+      <soap12:operation soapAction="FileNetCheckOut" style="document" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="FileNetCheckOutSOAP11" type="ns:FileNetCheckOut">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="FileNetCheckOut">
+      <soap:operation soapAction="FileNetCheckOut" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FileNetCheckOut">
+    <wsdl:port name="FileNetCheckOutSOAP12" binding="ns:FileNetCheckOutSOAP12">
+      <soap12:address location="https://ry1drvesbiib01.mof.gov.sa:7931/FileNetCheckOut" />
+    </wsdl:port>
+    <wsdl:port name="FileNetCheckOutSOAP11" binding="ns:FileNetCheckOutSOAP11">
+      <soap:address location="http://localhost:7800/FileNetCheckOut11" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

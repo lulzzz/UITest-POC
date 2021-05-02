@@ -1,0 +1,10 @@
+<div class="dropdown text-center">
+   <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i><div class="ripple-container"></div></button>
+   <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+      <a :href="editUrl(br.branchIdString)" class="dropdown-item"><i class="material-icons">edit</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit </a>
+      <a :href="assignCommitteeUrl(br.branchIdString)" class="dropdown-item"><i class="material-icons">add</i> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AssignCommittees</a>
+      <a :href="assignUserUrl(br.branchIdString)" class="dropdown-item"><i class="material-icons">person_add</i> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AssignUsers /  @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.UserRoles  </a>
+      <a @@click="showDialog(br.branchIdString)" class="dropdown-item"><i class="material-icons">clear</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</a>
+      @*<a :href="deleteUrl(br.branchIdString)" class="dropdown-item"><i class="material-icons">clear</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</a>*@
+   </div>
+</div>

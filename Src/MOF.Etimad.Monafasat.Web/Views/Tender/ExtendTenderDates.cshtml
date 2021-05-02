@@ -1,0 +1,298 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderDatesModel
+@using res = MOF.Etimad.Monafasat.Resources;
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtendDates;
+   var isOldTender = (Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects);
+   var isTenderHasOpenDate = (Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender);
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtendDates</li>
+      </ol>
+   </nav>
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+</style>
+<form method="POST" id="detailsStepForm" asp-controller="Tender" asp-action="ExtendTenderDates" autocomplete="off">
+   @Html.AntiForgeryToken()
+   <input asp-for="TenderIdString" value="@Model.TenderIdString" id="hdnTenderIdString" type="hidden" />
+   <input asp-for="TenderTypeId" value="@Model.TenderTypeId" id="hdnTenderTypeId" type="hidden" />
+
+   <div id="app" v-cloak>
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+               <input asp-for="VersionId" id="hdnVersionId" type="hidden" />
+               @Html.Partial("_TenderDatesExtention.cshtml", Model)
+
+            </div>
+         </div>
+      </div>
+      <div class="">
+         <button class="btn btn-primary etd-search-btn" id="btnSave">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+         </button>
+         <a asp-action="Index" asp-controller="Tender" class="btn btn-outline-primary btn-link pull-right">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+         </a>
+      </div>
+   </div>
+</form>
+
+@section scripts{
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}
+
+<script type="text/javascript">
+   var validator;
+   var vacations = [];
+      $(document).ready(function () {
+         setTimeout(function () {
+
+            $("#lastOfferPresentationTime").on("dp.hide", function (e) {
+               if ('@isOldTender' == 'False' && '@isTenderHasOpenDate' == 'True') {  
+                  var lastOfferPresentationTime = e.date._d.setHours(e.date._d.getHours());
+                  var newOffersOpeningTime = e.date._d.setHours(e.date._d.getHours() + 1); 
+                  newOffersOpeningTime = new Date(newOffersOpeningTime).toLocaleTimeString(); 
+                  $("#offersOpeningTime").val(newOffersOpeningTime);
+                  //if lastOfferPresentationTime >= 11:00 PM And < 12:00 AM then we add one day to offers open Data
+                  if (lastOfferPresentationTime >= 1588881600000 && lastOfferPresentationTime < 1588885200000 ) {
+                     changeOfferOpeningDate();
+                  }
+               }
+            });
+
+         $("#lastEnquiesDate").calendarsPicker('option', 'onClose', function () {
+            validateEnquiriesDateVacation();
+         });
+         $("#lastOfferPressentationDate").calendarsPicker('option', 'onClose', function () {
+            validateOfferPressentationDateVacation();
+            changeDatesValues();
+         });
+         $("#offersOpeningDate").calendarsPicker('option', 'onClose', function () {
+            validateOpeningDateVacation();
+         });
+
+         validateEnquiriesDateVacation();
+         validateOfferPressentationDateVacation();
+         validateOpeningDateVacation();
+      }, 1000);
+
+    @if (Model != null && Model.Vacations != null)
+    {
+       @:vacations = @Html.Raw(Json.Serialize(Model.Vacations))
+    }
+
+      $('#detailsStepForm').bind('submit', function () {
+       if ($('#detailsStepForm').valid())
+          $('#LoadingSite').fadeIn();
+      })
+   });
+
+   function validateEnquiriesDateVacation() {
+      var lastEnqueriesDate = $("#lastEnquiesDate").val();
+      var lastEnqueriesDateGregorian
+      if ($('#cb_lastEnquiesDate').is(':checked')) {
+         var i = lastEnqueriesDate.split('/');
+         lastEnqueriesDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         lastEnqueriesDateGregorian = convertUmmalquraToGregorian(lastEnqueriesDate);
+      }
+      if (lastEnqueriesDate != "") {
+         var Gregorian = lastEnqueriesDateGregorian;
+         Gregorian = new Date(Gregorian);
+         var currentDate = new Date();
+         var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+         var day = Gregorian.getUTCDate() + 1;
+         var year = Gregorian.getUTCFullYear();
+         var newdate = day + "/" + month + "/" + year;
+         var flag = 1;
+         for (var i = 0; i < vacations.length; i++) {
+            if (newdate == vacations[i].vacationDateString) {
+               flag = flag * 0;
+            }
+         }
+         if (flag == 1) {
+            $('#lastEnquiesDateVac').hide();
+         }
+         else {
+            $('#lastEnquiesDateVac').show();
+         }
+         if (Gregorian.getDay() == 5 || Gregorian.getDay() == 6) {
+            $('#lastEnquiesDateVac').show();
+         }
+         else {
+            $('#lastEnquiesDateVac').hide();
+         }
+      }
+   }
+   function validateOfferPressentationDateVacation() {
+      var offerPressentationDate = $("#lastOfferPressentationDate").val();
+      var offerPressentationDateGregorian;
+      if ($('#cb_lastOfferPressentationDate').is(':checked')) {
+         var i = offerPressentationDate.split('/');
+         offerPressentationDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         offerPressentationDateGregorian = convertUmmalquraToGregorian(offerPressentationDate);
+      }
+      offerPressentationDateGregorian = new Date(offerPressentationDateGregorian);
+
+      //validate vacations
+      if (offerPressentationDateGregorian != "") {
+         Gregorian = new Date(offerPressentationDateGregorian);
+         var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+         var day = Gregorian.getUTCDate() + 1;
+         var year = Gregorian.getUTCFullYear();
+         var newdate = day + "/" + month + "/" + year;
+
+         var flag = 1;
+         for (var i = 0; i < vacations.length; i++) {
+            if (newdate == vacations[i].vacationDateString) {
+               flag = flag * 0;
+            }
+         }
+         if (flag == 1) {
+            $('#lastOfferPressentationDateVac').hide();
+         }
+         else {
+            $('#lastOfferPressentationDateVac').show();
+         }
+         if (Gregorian.getDay() == 5 || Gregorian.getDay() == 6) {
+            $('#lastOfferPressentationDateVac').show();
+         }
+         else {
+            $('#lastOfferPressentationDateVac').hide();
+         }
+      }
+   }
+
+   function changeOfferOpeningDate() {
+      debugger;
+      var offerPressentationDate = $("#lastOfferPressentationDate").val();
+      var offerPressentationDateGregorian;
+      if ($('#cb_lastOfferPressentationDate').is(':checked')) {
+         var i = offerPressentationDate.split('/');
+         offerPressentationDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         offerPressentationDateGregorian = convertUmmalquraToGregorian(offerPressentationDate);
+      }
+      offerPressentationDateGregorian = new Date(offerPressentationDateGregorian);
+      //change values
+      offerPressentationDateGregorian = addDays(offerPressentationDateGregorian, 1);
+
+      var offersOpeningDate;
+      if ($('#cb_offersOpeningDate').is(':checked')) {
+         offersOpeningDate = offerPressentationDateGregorian;
+         var copiedDate = new Date(Number(offersOpeningDate));
+
+         if ($('#cb_offersOpeningDate').is(':checked')) {
+            newdate = dateToString(copiedDate);
+         }
+         else {
+            newdate = convertGregorianToUmmalqura(dateToString(copiedDate));
+         }
+      } else {
+         offersOpeningDate = convertGregorianToUmmalqura(dateToString(offerPressentationDateGregorian));
+         copy = new Date(Number(offerPressentationDateGregorian))
+         copy.setDate(offerPressentationDateGregorian.getDate());
+         if ($('#cb_offersOpeningDate').is(':checked')) {
+            newdate = dateToString(copy);
+         }
+         else {
+            newdate = convertGregorianToUmmalqura(dateToString(copy));
+         }
+      }
+      $("#offersOpeningDate").val(newdate);
+      $("#lastOfferPressentationDate").blur();
+   }
+   function changeDatesValues() {
+      var offerPressentationDate = $("#lastOfferPressentationDate").val();
+      var offerPressentationDateGregorian;
+      if ($('#cb_lastOfferPressentationDate').is(':checked')) {
+         var i = offerPressentationDate.split('/');
+         offerPressentationDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         offerPressentationDateGregorian = convertUmmalquraToGregorian(offerPressentationDate);
+      }
+      offerPressentationDateGregorian = new Date(offerPressentationDateGregorian);
+      //change values
+      debugger;
+       if ('@isOldTender' == 'True')
+      {
+         offerPressentationDateGregorian = addDays(offerPressentationDateGregorian, 1);
+      }
+      var offersOpeningDate;
+      if ($('#cb_offersOpeningDate').is(':checked')) {
+         offersOpeningDate = offerPressentationDateGregorian;
+         var copiedDate = new Date(offersOpeningDate);
+         var month = copiedDate.getUTCMonth() + 1; //months from 1-12
+         var day = copiedDate.getUTCDate() + 1;
+         var year = copiedDate.getUTCFullYear();
+         newdate = day + "/" + month + "/" + year;
+      } else {
+         offersOpeningDate = convertGregorianToUmmalqura(dateToString(offerPressentationDateGregorian));
+         newdate = offersOpeningDate;
+      }
+      $("#offersOpeningDate").val(newdate);
+      $("#lastOfferPressentationDate").blur();
+   }
+   function validateOpeningDateVacation() {
+      var offersOpeningDate = $("#offersOpeningDate").val();
+      var offersOpeningDateGregorian;
+      if ($('#cb_offersOpeningDate').is(':checked')) {
+         var i = offersOpeningDate.split('/');
+         offersOpeningDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         offersOpeningDateGregorian = convertUmmalquraToGregorian(offersOpeningDate);
+      }
+      if (offersOpeningDate != "") {
+
+         Gregorian = new Date(offersOpeningDateGregorian);
+         var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+         var day = Gregorian.getUTCDate() + 1;
+         var year = Gregorian.getUTCFullYear();
+         var newdate = day + "/" + month + "/" + year;
+         var currentDate = new Date();
+         var flag = 1;
+         for (var i = 0; i < vacations.length; i++) {
+            if (newdate == vacations[i].vacationDateString) {
+               flag = flag * 0;
+            }
+         }
+         if (flag == 1) {
+            $('#offersOpeningDateVac').hide();
+         }
+         else {
+            $('#offersOpeningDateVac').show();
+         }
+         if (Gregorian.getDay() == 5 || Gregorian.getDay() == 6) {
+            $('#offersOpeningDateVac').show();
+         }
+         else {
+            $('#offersOpeningDateVac').hide();
+         }
+      }
+   }
+
+   function CheckWeekEnds(date) {
+      var day = date.getDay();
+      var isWeekend = (day === 4) || (day === 5);    // 4 = firiday, 5 = Sunday
+   }
+</script>

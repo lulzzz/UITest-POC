@@ -1,0 +1,112 @@
+@using resDisplayInputs = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+
+<a :href="detailsUrl(tender.tenderIdString)" class="dropdown-item">
+   <i class="material-icons">format_list_bulleted</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details
+</a>
+@if (User.IsInRole(RoleNames.MonafasatAdmin))
+{
+   <a data-toggle="modal" href="#" data-target="#exampleModal" @@click="FillMovments(tender.tenderId, tender.tenderNumber)" :id="tender.tenderId" class="dropdown-item">
+      <i class="material-icons">library_books</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.TenderMovements
+   </a>
+   <a href="#" @@click="notificationStatusReport(tender)" class="dropdown-item">
+      <i class="material-icons">library_books</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendMovements
+   </a>
+}
+@if (!User.IsInRole(RoleNames.CustomerService))
+{
+   if (User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager))
+   {
+      <a :href="suppliersReport(tender.tenderIdString)" v-if="((tender.tenderTypeId == @((int)Enums.TenderType.NewDirectPurchase) || tender.tenderTypeId == @((int)Enums.TenderType.CurrentDirectPurchase))
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.Established)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.Pending)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.Canceled)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.Rejected)
+     && tender.tenderStatusId != @((int)Enums.TenderStatus.PendingVROAuditerApprove))" class="dropdown-item"><i class="material-icons">library_books</i>@resDisplayInputs.AppliedSuppliersReport</a>
+   }
+   else
+   {
+      <a :href="suppliersReport(tender.tenderIdString)" v-if="(tender.tenderStatusId != @((int)Enums.TenderStatus.UnderEstablishing) && tender.tenderTypeId != @((int)Enums.TenderType.NewDirectPurchase) && tender.tenderTypeId != @((int)Enums.TenderType.CurrentDirectPurchase)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.Established)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.Pending)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.Canceled)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.Rejected)
+      && tender.tenderStatusId != @((int)Enums.TenderStatus.PendingVROAuditerApprove))" class="dropdown-item"><i class="material-icons">library_books</i>@resDisplayInputs.AppliedSuppliersReport</a>
+   }
+
+}
+@if (User.IsInRole(RoleNames.MonafasatAdmin))
+{
+   <a :href="openCountAndCloseOffersReports(tender.tenderIdString)"
+      target="_blank"
+      v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppening)"
+      class="dropdown-item">
+      <i class="material-icons">assignment</i> @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CountCloseReportName
+   </a>
+}
+@if (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersCheckManager))
+{
+   <a :href="openAwardOffersReport(tender.tenderIdString)"
+      target="_blank"
+      v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwardedConfirmed))"
+      class="dropdown-item">
+      <i class="material-icons">library_books</i> @resDisplayInputs.AwardingReport
+   </a>
+}
+
+@if (User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary))
+{
+   <a :href="cancelLink(tender.tenderIdString)"
+      v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalChecking)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersCheckingAndTechnicalEval)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingApproved)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingPending)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingRejected)
+
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialChecking)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROFinancialCheckingOpening)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingPending)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingApproved)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingRejected))
+
+         && (tender.changeRequestedBy != vroSecretry
+         || (tender.changeRequestedBy == vroSecretry && tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Rejected) && tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Pending))))" class="dropdown-item">
+      <i class="material-icons">delete</i> @resDisplayInputs.CancelTender
+   </a>
+   <a :href="cancelLink(tender.tenderIdString)"
+      v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalChecking)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersCheckingAndTechnicalEval)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingApproved)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingPending)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingRejected)
+
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialChecking)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROFinancialCheckingOpening)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingPending)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingApproved)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingRejected))
+         && tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestedBy == vroSecretry)" class="dropdown-item">
+      <i class="material-icons">edit</i> @resDisplayInputs.Reopen
+   </a>
+}
+
+@if (User.IsInRole(RoleNames.OffersOpeningAndCheckManager))
+{
+   <a :href="cancelLink(tender.tenderIdString)"
+      v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalChecking)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersCheckingAndTechnicalEval)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingApproved)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingPending)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingRejected)
+
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialChecking)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROFinancialCheckingOpening)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingPending)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingApproved)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingRejected))
+         && tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending) && tender.changeRequestedBy == vroSecretry)" class="dropdown-item">
+      <i class="material-icons">delete_forever</i> @resDisplayInputs.CancelTenderAudit
+   </a>
+}

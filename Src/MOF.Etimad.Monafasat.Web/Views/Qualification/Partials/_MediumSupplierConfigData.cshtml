@@ -1,0 +1,376 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationApplyDocumentsModel
+
+@{
+
+   bool ExistingContractualObligationsFlag = true;
+   bool HRFlag = true;
+   bool PreviousExperienceYearFlag = true;
+   bool EnviromentAndHealthyFlag = true;
+   bool QualityFlag = true;
+    bool editMode = true;
+}
+
+<div id="dvMediumSupplierConfigData">
+
+   <div class="">
+      <ul class="nav nav-pills">
+         <li class="nav-item "><a class="nav-link text-center active show" href="#section1" data-toggle="tab"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.lbltechnicalCapablities   </a></li>
+         <li class="nav-item"><a class="nav-link text-center " href="#section2" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.lblFinancialcapabilities  </a></li>
+
+      </ul>
+   </div>
+   <div class="tab-content tab-space p-0">
+      <div class="tab-pane active show" id="section1">
+         <div class="row">
+
+
+            @for (int i = 0; i < Model.lstQualificationSupplierTechDataModel.Count; i++)
+            {
+               <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].IsConfigure" />
+               <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId" />
+               <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationConfigurationId" />
+               <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationItemId" />
+               <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationCategoryId" />
+               <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationItemTypeId" />
+               <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].Min" />
+               <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].Max" />
+               <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationTypeId" />
+               <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].Value" />
+               <input type="hidden" asp-for="@Model.lstQualificationSupplierTechDataModel[i].Weight" />
+
+
+               @if (Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId == (Int32)Enums.QualificationSubCategory.PreviousExperienceYear)
+               {
+                  if (PreviousExperienceYearFlag)
+                  {
+                     <div class="col-12">
+                        <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreviousExperience  </h5>
+                     </div>
+                  }
+
+                  @if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.TotalValueProjectsLastThreeYears)
+                  {
+                     <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                           <input required class="form-control"  onkeypress="return allowDecimalWithCustomLength(event,15)" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue"  value="@(editMode? @Model.lstQualificationSupplierTechDataModel[i].SupplierValue : 0 )">
+                           <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" class="text-danger"></span>
+                        </div>
+                     </div>
+                  }
+                  else
+                  {
+                     <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                           <input required class="form-control" onkeypress="return allowNumeric(event);" maxlength="3" type="text" asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" value="@(editMode?Convert.ToInt32(@Model.lstQualificationSupplierTechDataModel[i].SupplierValue) : 0 )">
+                           <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" class="text-danger"></span>
+                        </div>
+                     </div>
+                  }
+                  PreviousExperienceYearFlag = false;
+               }
+
+               else if (Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId == (Int32)Enums.QualificationSubCategory.ExistingContractualObligations)
+               {
+                  if (ExistingContractualObligationsFlag)
+                  {
+                     <div class="col-12">
+                        <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ExistingContractualObligations  </h5>
+                     </div>
+                  }
+
+                  @if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.NumberOfExistingProjects)
+                  {
+                     <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                           <input onkeypress="return allowNumeric(event)" class="form-control" type="text" maxlength="3"   asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" value="@(editMode?Convert.ToInt32(@Model.lstQualificationSupplierTechDataModel[i].SupplierValue) : 0 )">
+                           <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" class="text-danger"></span>
+                        </div>
+                     </div>
+
+                  }
+                  else if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.ValueOfExistingProjects)
+                  {
+                     <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                           <input   class="form-control" type="text"   onkeypress="return allowDecimalWithCustomLength(event,15)"  asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue"  value="@(editMode? @Model.lstQualificationSupplierTechDataModel[i].SupplierValue : 0 )">
+                           <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" class="text-danger"></span>
+                        </div>
+                     </div>
+
+                  }
+
+                  ExistingContractualObligationsFlag = false;
+               }
+
+               else if (Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId == (Int32)Enums.QualificationSubCategory.Quality)
+               {
+                  if (QualityFlag)
+                  {
+                     <div class="col-12">
+                        <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Quality  </h5>
+                     </div>
+                  }
+
+                  if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.QualityAssuranceStandards)
+                  {
+                     <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+
+                           <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                           <select asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" id="dllQualityAssurance" asp-items="Html.GetEnumSelectList<Enums.QualificationQualityGuaranteeLookup>()" onchange="ValidQualityAssuranceFiles(this)" data-live-search="false" class="selectpicker" data-style="select-with-transition" title="Select with Search" data-size="3">
+                              <option selected="selected" value="-99">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose</option>
+                           </select>
+                           <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" class="text-danger"></span>
+
+                        </div>
+                     </div>
+
+                     <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label class="label bmd-label-static">مرفق معاير ضمان الجوده</label><span class="text-danger">*</span>
+                           @Html.FileUploaderFor(m => m.FileReferenceForQualityAssuranceStandards, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                           <span asp-validation-for="@Model.FileReferenceForQualityAssuranceStandards" class="text-danger"></span>
+                        </div>
+                     </div>
+
+                  }
+
+
+                  QualityFlag = false;
+               }
+
+               else if (Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId == (Int32)Enums.QualificationSubCategory.EnviromentAndHealthy)
+               {
+                  if (EnviromentAndHealthyFlag)
+                  {
+                     <div class="col-12">
+                        <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.EnvironmentGuide  </h5>
+                     </div>
+                  }
+
+
+                  if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.EnvironmentalHealthSafetyStandards)
+                  {
+
+                     <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+
+                           <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label><span class="text-danger">*</span>
+                           <select asp-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId"  id="dllEnvironmentalHealth" asp-items="Html.GetEnumSelectList<Enums.QualificationEnvironmentStandardsLookup>()" onchange="ValidEnvironmentalHealthSafetyFiles(this)" data-live-search="false" class="selectpicker" data-style="select-with-transition" title="Select with Search" data-size="3">
+                              <option selected="selected" value="-99">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose</option>
+                           </select>
+                           <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].QualificationLookupId" class="text-danger"></span>
+
+                        </div>
+                     </div>
+
+                     <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+
+                           <label class="label bmd-label-static"> مرفق  معايير ضمان البيئة والصحة والسلامة</label><span class="text-danger">*</span>
+                           @Html.FileUploaderFor(m => m.FileReferenceForEnvironmentalHealthSafetyStandards, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                           <span asp-validation-for="@Model.FileReferenceForEnvironmentalHealthSafetyStandards" class="text-danger"></span>
+
+                        </div>
+                     </div>
+                  }
+
+                  EnviromentAndHealthyFlag = false;
+               }
+
+               else if (Model.lstQualificationSupplierTechDataModel[i].QualificationSubCategoryId == (Int32)Enums.QualificationSubCategory.HumanResource)
+               {
+                  if (HRFlag)
+                  {
+                     <div class="col-12">
+                        <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.HR  </h5>
+                     </div>
+                  }
+
+                  @if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.PercentageOfSaudiEmployees)
+                  {
+                     <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label>
+                           <input class="form-control" readonly type="text" id="txtSaudiaEmployeePercentage" asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue">
+                           <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" class="text-danger"></span>
+                        </div>
+                     </div>
+                  }
+                  else if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.NumberOfEmployees)
+                  {
+                     <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label>
+                           <input class="form-control" onkeypress="return allowNumeric(event)" onkeyup="calculateSaudiEmployeePercentage()" type="text"   maxlength="7" id="txtNumberOfTotalEmployee" asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" value="@(editMode?Convert.ToInt32(@Model.lstQualificationSupplierTechDataModel[i].SupplierValue) : 0 )">
+                           <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" class="text-danger"></span>
+
+                        </div>
+                     </div>
+                  }
+                  else if (Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.NumberOfSaudiEmployees)
+                  {
+                     <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label class="label bmd-label-static">@Model.lstQualificationSupplierTechDataModel[i].QualificationItemName</label>
+                           <input class="form-control" onkeypress="return allowNumeric(event)" onkeyup="calculateSaudiEmployeePercentage()" type="text" maxlength="7"  id="txtSaudiaEmployeeNumber" asp-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" value="@(editMode?Convert.ToInt32(@Model.lstQualificationSupplierTechDataModel[i].SupplierValue) : 0 )">
+                           <span asp-validation-for="@Model.lstQualificationSupplierTechDataModel[i].SupplierValue" class="text-danger"></span>
+                           <span class="text-danger" id="spEmployeeValidation">  </span>
+                        </div>
+                     </div>
+                  }                   
+                  HRFlag = false;
+               }                
+            }
+         </div>
+      </div>
+      <div class="tab-pane col-md-12" id="section2">
+         <h5 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.FinanacialDetails  </h5>
+         <div class="table-responsive">
+            <table class="table  table-bordered table-striped">
+               <caption>البيانات المالية للتأهيل</caption>
+               <thead style="background: #29ad6f38;">
+                  <tr>
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.LastFinancialDetailsForThreeYear
+                     </th>
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CurrentYear
+                     </th>
+
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.previousYear
+                     </th>
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.BeforePreviousYear
+                     </th>
+                  </tr>
+                  <tr>
+                     <th scope="col" colspan="4">
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.BalanceSheet
+                     </th>
+                  </tr>
+               </thead>
+               <tbody id="bdySupplierConfigData">
+                  <tr>
+                     <td>
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Assetslbl
+                     </td>
+                     <td>
+                        <input  onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.CurrentAssets">
+                        <span asp-validation-for="@Model.CurrentAssets" class="text-danger"></span>
+                     </td>
+                     <td>
+                        <input  onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.CurrentAssets1">
+                        <span asp-validation-for="@Model.CurrentAssets1" class="text-danger"></span>
+                     </td>
+                     <td>
+                        <input  onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text" asp-for="@Model.CurrentAssets2">
+                        <span asp-validation-for="@Model.CurrentAssets2" class="text-danger"></span>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td>
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CashEquivalents
+                     </td>
+                     <td>
+                        <input  onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control"  type="text" asp-for="@Model.CashEquivalents">
+                        <span asp-validation-for="@Model.CashEquivalents" class="text-danger"></span>
+                     </td>
+                     <td>
+                        <input  onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control"  type="text" asp-for="@Model.CashEquivalents1">
+                        <span asp-validation-for="@Model.CashEquivalents1" class="text-danger"></span>
+                     </td>
+                     <td>
+                        <input  onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control"   type="text" asp-for="@Model.CashEquivalents2">
+                        <span asp-validation-for="@Model.CashEquivalents2" class="text-danger"></span>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td>
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AccountsReceivable
+                     </td>
+                     <td>
+                        <input  onkeypress="return allowDecimalWithCustomLength(event,15)"class="form-control"   type="text" asp-for="@Model.AccountsReceivable">
+                        <span asp-validation-for="@Model.AccountsReceivable" class="text-danger"></span>
+                     </td>
+                     <td>
+                        <input  onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control"   type="text" asp-for="@Model.AccountsReceivable1">
+                        <span asp-validation-for="@Model.AccountsReceivable1" class="text-danger"></span>
+                     </td>
+                     <td>
+                        <input  onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control"   type="text" asp-for="@Model.AccountsReceivable2">
+                        <span asp-validation-for="@Model.AccountsReceivable2" class="text-danger"></span>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td>
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CurrentLiabilities
+                     </td>
+                     <td>
+                        <input  onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text"   asp-for="@Model.CurrentLiabilities">
+                        <span asp-validation-for="@Model.CurrentLiabilities" class="text-danger"></span>            
+                     </td>                                                                                          
+                     <td>                                                                                           
+                        <input  onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text"   asp-for="@Model.CurrentLiabilities1">
+                        <span asp-validation-for="@Model.CurrentLiabilities1" class="text-danger"></span>           
+                     </td>                                                                                          
+                     <td>                                                                                           
+                        <input  onkeypress="return allowDecimalWithCustomLength(event,15)" class="form-control" type="text"   asp-for="@Model.CurrentLiabilities2">
+                        <span asp-validation-for="@Model.CurrentLiabilities2" class="text-danger"></span>
+                     </td>
+                  </tr>
+               </tbody>
+
+               <tbody hidden>
+                  @for (int i = 0; i < Model.lstQualificationSupplierFinancialDataModel.Count; i++)
+                  {
+                     <tr>
+                        <td>
+                           <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].IsConfigure" />
+                           <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].QualificationSubCategoryId" />
+                           <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].QualificationConfigurationId" />
+                           <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].QualificationItemId" />
+                           <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].QualificationCategoryId" />
+                           <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].QualificationItemTypeId" />
+                           <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].Min" />
+                           <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].Max" />
+                           <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].QualificationTypeId" />
+                           <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].Value" />
+                           <input type="hidden" asp-for="@Model.lstQualificationSupplierFinancialDataModel[i].Weight" />
+                        </td>
+                     </tr>
+                  }
+               </tbody>
+            </table>
+
+         </div>
+      </div>
+   </div>
+</div>
+
+<script>
+    function ValidQualityAssuranceFiles(element) {
+      
+      if (element.value == '@((Int16)Enums.QualificationQualityGuaranteeLookup.GuaranteeNotAvailible )') {
+         $('#FileReferenceForQualityAssuranceStandards').rules("remove", "required");
+      } else {
+         requireInput('FileReferenceForQualityAssuranceStandards', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+      }
+   }
+
+   function ValidEnvironmentalHealthSafetyFiles(element) {
+      
+      if (element.value == '@((Int16)Enums.QualificationEnvironmentStandardsLookup.EnvironmentGuideNotAvailible )') {
+         $('#FileReferenceForEnvironmentalHealthSafetyStandards').rules("remove", "required");
+      } else {
+         requireInput('FileReferenceForEnvironmentalHealthSafetyStandards', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+      }
+   }
+
+</script>

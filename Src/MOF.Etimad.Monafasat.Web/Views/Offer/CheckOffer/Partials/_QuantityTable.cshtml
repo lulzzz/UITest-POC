@@ -1,0 +1,50 @@
+@model List<MOF.Etimad.Monafasat.ViewModel.Offer.OpenOfferStage.QuantityTableModel>
+
+@using res = MOF.Etimad.Monafasat.Resources
+
+@{
+   decimal finalTotalOffer = 0;
+   @foreach (var table in Model)
+   {
+      finalTotalOffer += table.AdjustedFinalPrice;
+   }
+}
+<div class="table-responsive">
+   @{ <table class="table table-striped" aria-describedby="Quantity Table">
+         <thead>
+            <tr>
+               <th scope="col">@res.TenderResources.DisplayInputs.TableName </th>
+               <th scope="col">@res.TenderResources.DisplayInputs.Price</th>
+               <th scope="col">@res.TenderResources.DisplayInputs.DiscountPercent</th>
+               <th scope="col">@res.OfferResources.DisplayInputs.vat</th>
+               <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Total</th>
+               <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Notes</th>
+            </tr>
+         </thead>
+         <tbody>
+            @foreach (var table in Model)
+            {
+               <tr>
+                  <td>@table.QuantityTableName</td>
+                  <td>@table.AdjustedTotalPrice.ToString("#.##")</td>
+                  <td>@table.AdjustedDiscount %</td>
+                  <td>@table.AdjustedVat %</td>
+                  <td>@(table.AdjustedFinalPrice)</td>
+                  <td></td>
+               </tr>
+            }
+
+         </tbody>
+         <tfoot>
+            <tr>
+               <td></td>
+               <td></td>
+               <td></td>
+               <td></td>
+               <td>@finalTotalOffer</td>
+            </tr>
+         </tfoot>
+      </table>
+   }
+</div>
+

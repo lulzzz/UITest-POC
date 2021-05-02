@@ -1,0 +1,46 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierAttachmentPartialVModel
+@using res = MOF.Etimad.Monafasat.Resources
+<table class="table table-striped">
+   <caption>المرفقات</caption>
+   <thead style="background-color: #e0efe8;">
+      <tr>
+         <th scope="col">@res.SharedResources.DisplayInputs.FileName </th>
+         <th scope="col">@res.SharedResources.DisplayInputs.AttachementType </th>
+         <th scope="col">@res.SharedResources.DisplayInputs.Options</th>
+      </tr>
+   </thead>
+   <tbody>
+      @{
+         foreach (var file in Model.supplierAttachmentModels)
+         {
+            <tr>
+               <td>
+                  <a target="_blank" href="/Upload/getfile/@(file.FileNetReferenceId+":"+file.FileName)">@file.FileName</a>
+                     
+
+               </td>
+
+               <td>
+                  @file.AttachmentTypeName
+               </td>
+               <td>
+                  @{
+
+
+                     if (Model.statusModel.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.statusModel.OfferStatusId == (int)Enums.OfferStatus.Established)
+                     {
+                        <button type="button" class="btn btn-danger btn-sm btn-just-icon" onclick="deleteAttach(@file.AttachmentId)"><i class="material-icons">
+   delete
+</i> </button>}
+                  }
+
+               </td>
+
+            </tr>
+         }
+
+
+      }
+   </tbody>
+   <tbody></tbody>
+</table>

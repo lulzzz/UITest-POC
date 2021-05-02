@@ -1,0 +1,206 @@
+@using res = MOF.Etimad.Monafasat.Resources;
+@model MOF.Etimad.Monafasat.ViewModel.Qualification.QualificationMediumEvaluation
+<ul class="nav nav-pills">
+   <li class="nav-item "><a class="nav-link text-center active show" href="#section1" data-toggle="tab">@res.QualificationResources.DisplayInputs.TechnicalAndAdministrativeCapacity</a></li>
+   <li class="nav-item"><a class="nav-link text-center " href="#section2" data-toggle="tab">@res.QualificationResources.DisplayInputs.FinancialCapacity</a></li>
+</ul>
+<div class="row">
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <ul class="list-group form-details-list">
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @res.QualificationResources.DisplayInputs.NumberOfPoints
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span class="badge badge-success h6 d-inline-block" style="margin: 0px 5px;">@Model.TenderPointsToPass</span>
+               </div>
+            </div>
+         </li>
+      </ul>
+   </div>
+</div>
+<div class="tab-content tab-space p-0">
+   <div class="tab-pane active show" id="section1">
+      <div>
+         <div class="row">
+            <div class="col">
+               <table class="table  table-bordered" summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow">
+                  <caption></caption>
+                  <thead class="thead-dark" style="font-size: 17px;">
+                     <tr>
+                        <th id="thTechnicalAndAdministrativeCapacity36" colspan="4">@res.QualificationResources.DisplayInputs.TechnicalAndAdministrativeCapacity</th>
+                        <th id="thTechnicalAdministrativeCapacity37">@Model.TechnicalAdministrativeCapacity</th>
+                     </tr>
+                  </thead>
+                  <thead>
+                     <tr>
+                        <th id="thPreviousExperience42" colspan="4">@res.QualificationResources.DisplayInputs.PreviousExperience</th>
+                        <th scope="col">@Model.PreviousExperienceWeight</th>
+                     </tr>
+                     <tr>
+                        <th id="thEvaluationStandard46" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.EvaluationStandard
+                        </th>
+                        <th id="thSmallerThan48" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.SmallerThan
+                        </th>
+                        <th id="thrange52" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.range
+                        </th>
+                        <th id="thLargeThan55" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.LargeThan
+                        </th>
+                        <th id="thWeight58" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.Weight
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td>@res.QualificationResources.DisplayInputs.NumberOfExperianceYears</td>
+                        <td>@((int)Model.ExperienceYearCountMin)</td>
+                        <td class="text-center">@((int)@Model.ExperienceYearCountMin) <span> - </span> @((int)Model.ExperienceYearCountMax)</td>
+                        <td>@((int)Model.ExperienceYearCountMax)</td>
+                        <td>@Model.ExperienceYearCountWeight</td>
+                     </tr>
+                     <tr>
+                        <td>@res.QualificationResources.DisplayInputs.NumberOfProjects</td>
+                        <td>@((int)Model.LastProjectCountMin)</td>
+                        <td class="text-center"><span>@((int)Model.LastProjectCountMin) - @((int)Model.LastProjectCountMax)</span></td>
+                        <td>@((int)Model.LastProjectCountMax)</td>
+                        <td>@Model.LastProjectCountWeight</td>
+                     </tr>
+                     <tr>
+                        <td>@res.QualificationResources.DisplayInputs.TotalProjectsValueInThreeYears</td>
+                        <td>@Model.LastProjectCostMin</td>
+                        <td class="text-center"><span>@Model.LastProjectCostMin - @Model.LastProjectCostMax</span></td>
+                        <td>@Model.LastProjectCostMax</td>
+                        <td>@Model.LastProjectCostWeight</td>
+                     </tr>
+                  </tbody>
+                  <thead style="background:#ffffff47;">
+                     <tr>
+                        <th id="thQuality88" colspan="4">@res.QualificationResources.DisplayInputs.Quality</th>
+                        <th scope="col">@Model.QualityWeight</th>
+                     </tr>
+                  </thead>
+                  <thead style="background:#ffffff47;">
+                     <tr>
+                        <th id="thEnvironmentHealthSafety94" colspan="4">@res.QualificationResources.DisplayInputs.EnvironmentHealthSafety</th>
+                        <th scope="col">@Model.EnviromentAndHealthyWeight</th>
+                     </tr>
+                  </thead>
+                  <thead style="background:#ffffff47;">
+                     <tr>
+                        <th id="thExistingContractualObligations100" colspan="4">@res.QualificationResources.DisplayInputs.ExistingContractualObligations</th>
+                        <th scope="col">@Model.ExistingContractualObligationsWeight</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td>@res.QualificationResources.DisplayInputs.NumberOfExisitngProjects </td>
+                        <td>@((int)Model.CurrentProjectCountMin)</td>
+                        <td class="text-center"><span>@((int)Model.CurrentProjectCountMin) - @((int)Model.CurrentProjectCountMax)</span></td>
+                        <td>@((int)Model.CurrentProjectCountMax)</td>
+                        <td>@Model.CurrentProjectCountWeight</td>
+                     </tr>
+                     <tr>
+                        <td>@res.QualificationResources.DisplayInputs.ValueExistingProjectsCapacityByClassification </td>
+                        <td>@Model.CurrentProjectCostMin</td>
+                        <td class="text-center"><span>@Model.CurrentProjectCostMin - @Model.CurrentProjectCostMax</span></td>
+                        <td>@Model.CurrentProjectCostMax</td>
+                        <td>@Model.CurrentProjectCostWeight</td>
+                     </tr>
+                  </tbody>
+                  <thead style="background:#ffffff47;">
+                     <tr>
+                        <th id="thHR122" colspan="4">@res.QualificationResources.DisplayInputs.HR</th>
+                        <th scope="col">@Model.HRWeight</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td id="NumberOfEmplyess">@res.QualificationResources.DisplayInputs.NumberOfEmplyess </td>
+                        <td>@((int)Model.TotalEmployeeCountMin)</td>
+                        <td class="text-center"><span>@((int)Model.TotalEmployeeCountMin) - @((int)Model.TotalEmployeeCountMax)</span></td>
+                        <td>@((int)Model.TotalEmployeeCountMax)</td>
+                        <td>@Model.TotalEmployeeCountWeight</td>
+                     </tr>
+                     <tr>
+                        <td id="SudianEmplyeePercentage">@res.QualificationResources.DisplayInputs.SudianEmplyeePercentage </td>
+                        <td>@Model.TotalEmployeePercentageMin</td>
+                        <td class="text-center"><span>@Model.TotalEmployeePercentageMin - @Model.TotalEmployeePercentageMax</span></td>
+                        <td>@Model.TotalEmployeePercentageMax</td>
+                        <td>@Model.TotalEmployeePercentageWeight</td>
+                     </tr>
+                  </tbody>
+                  <tfoot>
+                  </tfoot>
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="tab-pane" id="section2">
+      <div class="">
+         <div class="row">
+            <div class="col">
+               <table class="table  table-bordered table-striped" summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow">
+                  <caption></caption>
+                  <thead class="thead-dark">
+                     <tr>
+                        <th id="thFinancialCapacity174" colspan="4">@res.QualificationResources.DisplayInputs.FinancialCapacity</th>
+                        <th scope="col">@Model.FinancialCapacity</th>
+                     </tr>
+                  </thead>
+                  <thead>
+                     <tr>
+                        <th id="thEvaluationStandard180" style="background:#efefef">
+                           @res.QualificationResources.DisplayInputs.EvaluationStandard
+                        </th>
+                        <th id="thSmallerThan183" style="background:#efefef">
+                           @res.QualificationResources.DisplayInputs.SmallerThan
+                        </th>
+                        <th id="thrange186" style="background:#efefef">
+                           @res.QualificationResources.DisplayInputs.range
+                        </th>
+                        <th id="thLargeThan189" style="background:#efefef">
+                           @res.QualificationResources.DisplayInputs.LargeThan
+                        </th>
+                        <th id="thWeight192" style="background:#efefef">
+                           @res.QualificationResources.DisplayInputs.Weight
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td id="CashRate"> @res.QualificationResources.DisplayInputs.CashRate </td>
+                        <td>@Model.CashRateMin</td>
+                        <td class="text-center">@Model.CashRateMin <span> - </span> @Model.CashRateMax</td>
+                        <td>@Model.CashRateMax</td>
+                        <td>@Model.CashRateWeight</td>
+                     </tr>
+                     <tr>
+                        <td id="LiquidityRatio"> @res.QualificationResources.DisplayInputs.LiquidityRatio  </td>
+                        <td>@Model.LiquidityRatioMin</td>
+                        <td class="text-center">@Model.LiquidityRatioMin <span> - </span> @Model.LiquidityRatioMax</td>
+                        <td>@Model.LiquidityRatioMax</td>
+                        <td>@Model.LiquidityRatioWeight</td>
+                     </tr>
+                     <tr>
+                        <td id="TradeRate"> @res.QualificationResources.DisplayInputs.TradeRate  </td>
+                        <td>@Model.TradeRateMin</td>
+                        <td class="text-center">@Model.TradeRateMin <span> - </span> @Model.TradeRateMax</td>
+                        <td>@Model.TradeRateMax</td>
+                        <td>@Model.TradeRateWeight</td>
+                     </tr>
+                  </tbody>
+                  <tfoot>
+                  </tfoot>
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

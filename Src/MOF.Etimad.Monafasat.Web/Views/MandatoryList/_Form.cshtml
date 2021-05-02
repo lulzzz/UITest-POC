@@ -1,0 +1,23 @@
+@model MandatoryListViewModel
+ @* To be Delteed *@
+<div class="col-sm-6 col-xs-12">
+   <div class="form-group bmd-form-group">
+      <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonNameAr<span class="text-danger">*</span></label>
+      <input type="text" class="form-control" v-model="divisionNameAr">
+      <span asp-validation-for="DivisionNameAr" class="text-danger" />
+   </div>
+</div>
+<div class="col-sm-6 col-xs-12">
+   <div class="form-group bmd-form-group">
+      <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonNameEn<span class="text-danger">*</span></label>
+      <input type="text" class="form-control" v-model="divisionNameEn">
+      <span asp-validation-for="DivisionNameEn" class="text-danger" />
+   </div>
+</div>
+<div class="col-sm-6 col-xs-12">
+   <div class="form-group bmd-form-group">
+      <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonCode<span class="text-danger">*</span></label>
+      <input type="text" class="form-control" v-model="divisionCode">
+      <span asp-validation-for="DivisionCode" class="text-danger" />
+   </div>
+</div>

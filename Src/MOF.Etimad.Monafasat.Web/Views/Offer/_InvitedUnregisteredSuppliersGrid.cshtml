@@ -1,0 +1,57 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.ViewModel
+
+<div class="table-responsive" style="min-height:100px">
+   <table id="InvitedUnregisteredSuppliersTable" class="table table-striped text-center" aria-describedby="Unregister Supplier Invitions grid info">
+      <thead class="text-center">
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@Html.Raw(res.InvitationResources.DisplayInputs.ComericalRegisterName)</th>
+            <th scope="col" class="text-center">@Html.Raw(res.SharedResources.DisplayInputs.Email)</th>
+            <th scope="col" class="text-center">@Html.Raw(res.SharedResources.DisplayInputs.Phone)</th>
+            <th scope="col" class="text-center">@Html.Raw(res.SharedResources.DisplayInputs.Status)</th>
+            @{
+                if (Model.LastOfferPresentationDate >= DateTime.Now)
+                {
+                  <th scope="col" class="text-center"></th>} }
+               </tr>
+      </thead>
+      <tbody class="text-center" v-if="InvitedUnregisteredSuppliers && InvitedUnregisteredSuppliers.length > 0">
+         <tr v-for="(Supplier, $index) in InvitedUnregisteredSuppliers">
+
+            <td class="text-center" data-label="@Html.Raw(res.InvitationResources.DisplayInputs.ComericalRegisterName)">  {{ (currentPage -1) * (pageSize) +  $index + 1}}</td>
+            <td class="text-center" data-label="@Html.Raw(res.InvitationResources.DisplayInputs.ComericalRegisterName)"> {{Supplier.crName}} </td>
+            <td class="text-center" data-label="@Html.Raw(res.SharedResources.DisplayInputs.Email)"> {{Supplier.email}} </td>
+            <td class="text-center" data-label="@Html.Raw(res.SharedResources.DisplayInputs.Phone)"> {{Supplier.mobile}} </td>
+            @*<td class="text-center" data-label="@Html.Raw(res.InvitationResources.DisplayInputs.ComericalRegisterName)"> {{Supplier.cr}} </td>*@
+            <td class="text-center" data-label="@Html.Raw(res.SharedResources.DisplayInputs.ComericalRegisterNo)"> {{Supplier.statusName}} </td>
+            <td class="text-center" data-label="@Html.Raw(res.SharedResources.DisplayInputs.ComericalRegisterNo)">
+               @{
+                    
+                     if (Model.LastOfferPresentationDate >= DateTime.Now)
+                     {
+                        <template>
+                           <template>
+                              <button type="button" class="btn btn-just-icon btn-danger  btn-round btn-sm" id="btnAddToInvitationGrid" @@click="RemoveInvitationUnRegisteredGrid(Supplier)"><i class="material-icons">remove</i></button>
+                           </template>
+                           @*<template v-else>
+                     <button type="button" class="btn btn-just-icon btn-danger  btn-round btn-sm" id="btnAddToInvitationGrid" @@click="RemoveInvitationGrid(Supplier)"><i class="material-icons">remove</i></button>
+                  </template>*@
+                        </template>
+                     } }
+               </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="9" class="text-center">
+               @Html.Raw(res.SharedResources.DisplayInputs.NoData)
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="2" ref="vpaginator" :resource_url="invitedUnregisteredResource_url" @@update="updateResource"></pagination>
+</div>
+
+

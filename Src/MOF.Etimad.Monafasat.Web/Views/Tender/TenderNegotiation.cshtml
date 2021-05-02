@@ -1,0 +1,196 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   ViewBag.Title = "طلبات التفاوض";
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action(" Index", "Tender" )">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</li>
+      </ol>
+   </nav>
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <span class="d-block pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search"><button id="searchBtnColaps" class="btn p-2 btn-outline-primary" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</button></span>
+      @if (User.IsInRole(RoleNames.DataEntry) && User.UserBranch() != 0)
+      {
+         <a class="btn p-2 btn-outline-primary" asp-action="BasicTenderData" asp-controller="Tender" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddTender">
+            <i class="material-icons">add</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Add
+         </a>
+      }
+   </div>
+}
+<input type="hidden" id="hdnLastEnquiryDate" />
+<input type="hidden" id="hdnTenderIdString" />
+<input type="hidden" id="hdnCreationDate" />
+<div id="app" class="" v-cloak>
+
+   <form class="form" id="frmSearch">
+
+      <div class="clearfix">
+
+      </div>
+      <div class="row" style="position:relative">
+         <div class="collapse col-lg-4 col-md-4 col-sm-12 col-xs-12" id="Search">
+
+            @Html.Partial("~/Views/Tender/Search/_TenderNegotiationSearchForm.cshtml")
+
+         </div>
+         <div class="tableDiv col-md-12 col-sm-12 col-xs-12 animated  delay-2s" id="gridresult">
+            <div class="card">
+               @Html.Partial("_TenderNegotiationGrid")
+            </div>
+         </div>
+         <div class="col-12 m-5 m-auto">
+            <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+         </div>
+      </div>
+
+   </form>
+</div>
+<div class="clearfix"></div>
+
+@section scripts{
+   <script>
+      $(function () {
+         $("input").keypress(function (event) {
+            if (event.which == 13) {
+               event.preventDefault();
+               $("#searchBtn").click();
+            }
+          
+         });
+      
+         $('#searchBtnColaps').click(function () {
+        
+            var _grid = $('#gridresult');
+          
+            if (_grid.hasClass('col-md-12')) {
+              
+               _grid.removeClass('col-md-12');
+               _grid.addClass('col-md-8');
+              
+            } else if (_grid.hasClass('col-md-8')) {
+              
+               _grid.addClass('col-md-12');
+               _grid.removeClass('col-md-8');
+              
+            }
+              $('#closeSearch').on("click",function () {
+              
+              $('#searchBtnColaps').click()
+            });
+         });
+      });
+      var grid = new Vue({
+         el: '#app',
+         data: {
+            Tenders: [],
+            typeList: [],
+            selectedTypeList: 0,
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            queryString: '',
+            resource_url: '/Tender/GetAllTenderhasNegotiationbySearchCretriaForUnitUsersAsync',
+            queryString: ''
+         },
+         created: function () {
+            if (window.location.href.split('?')[1] && window.location.href.split('?')[1] != '')
+               this.resource_url = decodeURI(decodeURI(this.resource_url + "?" + window.location.href.split('?')[1]));
+            $.get('/Qualification/GetTenderTypes').done(function (result) {
+               grid.typeList = result;
+               setTimeout(function () {
+                  //if (url.searchParams.get('TenderTypeId')) {
+                  //   $('#tenderType').selectpicker('val', url.searchParams.get('TenderTypeName'));
+                  //}
+                  $('#tenderType').selectpicker('refresh');
+               }, 1000);
+            });
+            //this.getUrlVars();
+         },
+         methods: {
+
+
+            ShowNegotiation: function (id) {
+
+               debugger;
+
+               location.href = "../CommunicationRequest/CreateSecondNegotiationRequest/" + id
+            },
+            gotoDetails: function (_id) {
+                  location.href = "../Tender/Details?STenderId=" + _id
+         
+            }
+            ,
+            getUrlVars: function () {
+               $(document).ready(function () {
+                  var vars = [], hash;
+                  var hashes = decodeURI(decodeURI(window.location.href.slice(window.location.href.indexOf('?') + 1).split('&')));
+                  if (hashes) {
+                     var url_string = decodeURI(window.location.href)
+                     var url = new URL(url_string);
+                     if (url.searchParams.get('PageSize') != null) {
+                        $('#itemsPerPage').val(url.searchParams.get('PageSize'))
+                     }
+                     hashes = hashes.split(',');
+                     for (var i = 0; i < hashes.length; i++) {
+                        hash = hashes[i].split('=');
+                        vars[hash[0]] = hash[1];
+                        if (url.searchParams.get(hash[0])) {
+                           var Tag = $('#Search [data-search=' + hash[0] + ']')[0];
+                           if (Tag) {
+                              var tagName = $('#Search [data-search=' + hash[0] + ']')[0].tagName;
+                              if (tagName == 'SELECT') {
+                              }
+                              else {
+                                 $('#Search  [ data-search=' + hash[0] + ']').val(url.searchParams.get(hash[0]))
+                              }
+                           }
+                        }
+                     }
+                     $('#Search  #tenderType').val(url.searchParams.get('TenderTypeId'))
+                     $('#Search  #tenderType').selectpicker('refresh');
+                  }
+               })
+            },
+            updateResource: function (data) {
+               this.Tenders = data;
+               console.log(this.Tenders);
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+
+            clear: function () { 
+
+               this.selectedTypeList = 0;
+               
+            $('#Search  #tenderType').selectpicker('val',0);
+               $('#txtTenderNumber').val('');
+               $('#txtTenderName').val('');
+               $('#txtReferenceNumber').val('');
+               $('#Search  #tenderType').selectpicker('refresh');
+               this.resource_url = '/Tender/GetAllTenderhasNegotiationbySearchCretriaForUnitUsersAsync';
+            },
+            search: function () {
+               
+               this.queryString = 'TenderTypeId=' + this.selectedTypeList;
+               this.queryString = this.queryString +'&'+ $('#frmSearch').serialize();
+               this.resource_url = '/Tender/GetAllTenderhasNegotiationbySearchCretriaForUnitUsersAsync' + '?' + this.queryString;
+              // this.addToURL();
+            }, addToURL: function () {
+               var _encodedurl = encodeURI(((this.resource_url.split('?')[1]) ? "?" + (this.resource_url.split('?')[1]) : ''));
+               var _requestToken = '&__RequestVerificationToken=' + $('input[name=__RequestVerificationToken]').val();
+               _encodedurl = _encodedurl.replace(_requestToken, '')
+               window.history.pushState({ urlPath: "" }, "Search Results", "/Tender/GetAllTenderhasNegotiationbySearchCretriaForUnitUsersAsync" + _encodedurl)
+            },
+            reset: function () {
+               this.resource_url = '/Tender/GetAllTenderhasNegotiationbySearchCretriaForUnitUsersAsync';
+            }
+         }
+      });
+   </script>
+}

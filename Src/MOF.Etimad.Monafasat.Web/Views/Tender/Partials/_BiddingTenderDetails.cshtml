@@ -1,0 +1,187 @@
+@model MOF.Etimad.Monafasat.ViewModel.BiddingTenderDetailsModel
+<div class="col-12">
+   <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails</h4>
+</div>
+<div class="col-12">
+   <ul class="list-group form-details-list">
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>@Model.TenderName</span>
+               @*<span>{{Tender.tenderName}}</span>*@
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderReferenceNumber
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @*{{Tender.tenderRefrenceNumber}}*@
+                  @Model.TenderRefrenceNumber
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExecutionPlace
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @*{{Tender.exectutionPlace}}*@
+                  @Model.ExectutionPlace
+               </span>
+            </div>
+         </div>
+      </li>
+      @*<li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExecutionPlace
+            </div>
+            <div class="col-8 etd-item-info" v-show="Tender.insideKSA">
+               <span>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InsideKSA
+               </span>
+            </div>
+            <div class="col-8 etd-item-info" v-show="!Tender.insideKSA">
+               <span>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OutsideKSA
+               </span>
+            </div>
+         </div>
+      </li>*@
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TheRound
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @*{{Tender.roundIndexLabel}}*@
+                  @Model.RoundIndexLabel
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DateFromStatrtTheSession
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @*{{Tender.biddingStartDate}}*@
+                  @Model.BiddingStartDate
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TimeFromStatrtTheSession
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @*{{Tender.biddingRoundStartTime}}*@
+                  @Model.BiddingRoundStartTime
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SessionEndTime
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @*{{Tender.biddingRoundEndTime}}*@
+                  @Model.BiddingRoundEndTime
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingDuration
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @*{{Tender.biddingRoundDuration}}*@
+                  @Model.biddingRoundDuration
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TimeToEndTheSession
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  {{Tender.biddingRoundDaysToEnd}} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Day
+                  {{Tender.biddingRoundHoursToEnd}} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Hour
+                  {{Tender.biddingRoundMinutesToEnd}} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Minutes
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ActualActiveParticipate
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @*{{Tender.activeSupplierCount}}*@
+                  @Model.ActiveSupplierCount
+                  @*{{Tender.biddingRoundOffers ? Tender.biddingRoundOffers.length > 0 ? Tender.biddingRoundOffers.length : 0: 0}}*@
+               </span>
+            </div>
+         </div>
+      </li>
+      @if (User.IsInRole(RoleNames.supplier))
+      {
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingOfferPlace
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @*{{Tender.offerPlaceInBidding}}*@
+                     @Model.OfferPlaceInBidding
+                  </span>
+               </div>
+            </div>
+         </li>
+      }
+      @if (User.IsInRole(RoleNames.OffersCheckSecretary))
+      {
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EvaluationValue
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @*{{Tender.estimateValue}}*@
+                     @Model.EstimateValue
+                  </span>
+               </div>
+            </div>
+         </li>
+      }
+   </ul>
+</div>

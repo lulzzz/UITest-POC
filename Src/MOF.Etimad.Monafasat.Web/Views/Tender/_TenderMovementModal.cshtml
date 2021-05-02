@@ -1,0 +1,49 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg" role="document" style="max-width: 1200px;">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderTimeLine للمنافسة رقم ({{tenderNumber}})</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="row ">
+               <div class="col-12">
+                  
+                  <div class=" table-responsive">
+                     <table class="table table-bordered table-striped" summary="desc">
+                        <thead>
+                           <tr>
+                              <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OperationDateTime</th>
+                              <th scope="col">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.UserName</th>
+                              <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Email</th>
+                              <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus</th>
+                              <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Actions</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr v-for="move in TenderMovements" :key="move">
+                              <td>{{getDate(move.movmentDate)}}</td>
+                              <td>{{move.userName }}</td>
+                              <td>{{move.email}}</td>
+                              <td> {{ move.statusName }}</td>
+                              <td> {{move.actionName}}</td>
+                           </tr>
+                        </tbody>
+                     </table>
+                     <div class="col-12 m-5 m-auto">
+                        <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url_tenderMovement" @@update="updateResourceMovement"></pagination>
+                     </div>
+                  </div>
+
+
+
+               </div>
+
+            </div>
+         </div>
+        
+      </div>
+   </div>
+</div>

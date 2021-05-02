@@ -1,0 +1,51 @@
+
+<div class="col-12">
+   <div class="row">
+      <div class="card">
+
+         <div class="table-responsive" id="CombinedSuppliersGrid">
+            <table class="table table-striped text-center" aria-describedby="Combined Suppliers Actions">
+               <thead class="text-center">
+                  <tr>
+                     <th scope="col" class="text-center">#</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CommercialName</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CommercialNumber</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.SupplierRole</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+                  </tr>
+               </thead>
+               <tbody class="text-center" v-if="CombinedSuppliersDetails && CombinedSuppliersDetails.length > 0">
+                  <tr v-for="(combinedSuppliers, $index) in CombinedSuppliersDetails">
+                     <td class="text-center" data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+                     <td class="text-center" style="cursor:pointer" @@click="getSupplierInfo(combinedSuppliers.supplierCr)" data-label="@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CommercialName"> {{combinedSuppliers.supplierName}} </td>
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CommercialNumber"> {{combinedSuppliers.supplierCr}} </td>
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.SupplierRole"> {{combinedSuppliers.roleName}} </td>
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+                        @if (User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersCheckManager))
+                        {
+                           <a :href="SelectSupplier(combinedSuppliers.combinedIdString, combinedSuppliers.isOwner)" value="combinedSuppliers.combinedIdString" class="btn-sm btn btn-primary"> <i class="material-icons">remove_red_eye</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Show</a>
+
+                        }
+                        @if (User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersCheckSecretary))
+                        {
+
+                           <a :href="SelectSupplier(combinedSuppliers.combinedIdString, combinedSuppliers.isOwner)" value="combinedSuppliers.combinedIdString" class="btn-sm btn btn-primary"> <i class="material-icons">edit</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</a>
+                        }
+                     </td>
+                  </tr>
+               </tbody>
+               <tbody v-else>
+                  <tr>
+                     <td colspan="9">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+            <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+         </div>
+      </div>
+   </div>
+</div>
+
+

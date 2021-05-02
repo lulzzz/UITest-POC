@@ -1,0 +1,225 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierBlockModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.AddToBlockList;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.OldBlock</li>
+      </ol>
+   </nav>
+}
+
+@Html.AntiForgeryToken()
+   <form method="Post" action="" class="my-form">
+      <input type="hidden" id="ModuleType" value="4" />
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="CommercialRegistrationNo" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialRegistrationNo<span class="text-danger">*</span></label>
+                     @if (string.IsNullOrEmpty(Model.CommercialRegistrationNo))
+                     {
+                        <input type="text" class="form-control" id="CommercialRegistrationNo" asp-for="CommercialRegistrationNo" value="@(Model.CommercialRegistrationNo)">
+                     }
+                     else
+                     {
+                        <input type="text" class="form-control" id="CommercialRegistrationNo" readonly asp-for="CommercialRegistrationNo" value="@(Model.CommercialRegistrationNo)">
+                     }
+                     <span asp-validation-for="CommercialRegistrationNo" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="CommercialSupplierName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName<span class="text-danger">*</span></label>
+                     <input type="text" class="form-control" id="CommercialSupplierName" readonly asp-for="CommercialSupplierName" value="@(Model.CommercialSupplierName)">
+                     <span asp-validation-for="CommercialSupplierName" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="ResolutionNumber" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.ResolutionNumber<span class="text-danger">*</span></label>
+                     <input type="text" class="form-control" id="ResolutionNumber" asp-for="ResolutionNumber" value="@(Model.ResolutionNumber)">
+                     <span asp-validation-for="ResolutionNumber" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="BlockTypeId" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockTypeId<span class="text-danger">*</span></label>
+                     <select data-live-search="false"  id="dllBlockType" onchange="changeBlockType()" class="selectpicker" data-style="select-with-transition" title=@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Choose data-size="7" asp-for="BlockTypeId">
+                        <option value="2">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Temporary</option>
+                        <option value="1">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Permanent</option>
+
+                     </select>
+                     <span asp-validation-for="BlockTypeId" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="BlockDetails" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockDetails<span class="text-danger">*</span></label>
+                     <input type="text" class="form-control" id="BlockDetails" asp-for="BlockDetails" value="@(Model.BlockDetails)">
+                     <span asp-validation-for="BlockDetails" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label for="datepick" class="label bmd-label-static" id="lblStartDate">تاريخ بداية المنع<span class="text-danger">*</span></label>
+                     <div class="input-group-prepend">
+                        <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" asp-for="BlockStartDate" data-search="BlockStartDate" name="BlockStartDate" id="blockStartDate" placeholder="تاريخ المنع">
+                        <span asp-validation-for="BlockStartDate" class="text-danger"></span>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12" id="enddateDiv">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label for="datepick" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockEndDate</label>
+                     <div class="input-group-prepend">
+                        <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" asp-for="BlockEndDate" data-search="BlockEndDate" name="BlockEndDate" id="blockEndDate" placeholder="@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockEndDate">
+                        <span asp-validation-for="BlockEndDate" class="text-danger"></span>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="Violation" class="label bmd-label-static">
+                        @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Violation<span class="text-danger">*</span>
+                     </label>
+                     <input type="text" class="form-control" id="Violation" asp-for="Violation" value="@(Model.Violation)">
+                     <span asp-validation-for="Violation" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="Punishment" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Punishment<span class="text-danger">*</span></label>
+                     <input type="text" class="form-control" id="Punishment" asp-for="Punishment" value="@(Model.Punishment)">
+                     <span asp-validation-for="Punishment" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+
+                  <div class="form-group bmd-form-group">
+                     <label for="OfficialBasisDefamation" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.OfficialBasisDefamation</label>
+                     <input type="text" class="form-control" id="OfficialBasisDefamation" asp-for="OfficialBasisDefamation" value="@(Model.OfficialBasisDefamation)">
+                     <span asp-validation-for="OfficialBasisDefamation" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="AttachmentId" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.AttachmentRef <span class="text-danger">*</span></label>
+                     <div class="row">
+                        @Html.FileUploaderFor(m => m.AttachmentIdRef, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 4, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                        <span asp-validation-for="AttachmentIdRef" class="text-danger"></span>
+                     </div>
+                     <span asp-validation-for="FileName" class="text-danger"></span>
+                  </div>
+               </div>
+
+            </div>
+         </div>
+      </div>
+      <div class="col-12 ">
+         <button class="btn btn-primary" type="submit" id="createAsync">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Send</button>
+         <button class="btn btn-danger" type="reset" onclick="window.location = '/Block/Index'">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Cancel</button>
+      </div>
+   </form>
+
+@section scripts {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+      $(document).ready(function () {
+         $("#fetchCrName").on("click", function () {
+            $('#LoadingSite').fadeIn();
+            $.ajax({
+               type: "GET",
+               url: "GetCrNameAsync",
+               data: {
+                  Cr: $("#CommercialRegistrationNo").val()
+               },
+               success: function (data) {
+                  $("#CommercialSupplierName").val(data);
+                  $('#LoadingSite').fadeOut();
+               },
+               error: function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+            });
+         });
+
+            $("#dllBlockType").val('@Model.BlockTypeId');
+            if (@Model.BlockTypeId== 1) {
+               $("#lblStartDate").text('تاريخ المنع');
+               $('#enddateDiv').hide();
+            } else {
+               $("#lblStartDate").text('تاريخ بداية المنع');
+               $('#enddateDiv').show();
+            }
+      });
+      function changeBlockType() {
+         
+         var Type = $("#dllBlockType").val();
+         if (Type == 1) {
+            $("#lblStartDate").text('تاريخ المنع');
+            $('#enddateDiv').hide();
+         } else {
+            $("#lblStartDate").text('تاريخ بداية المنع');
+            $('#enddateDiv').show();
+         }
+      }
+
+
+      function convertUmmalquraToGregorianDate(hijriDate, isGregorianDate) {
+         var from = 'ummalqura';
+         var to = 'gregorian';
+         var calendarFrom = $.calendars.instance(from);
+         var calendarTo = $.calendars.instance(to);
+         if (isGregorianDate) {
+            return hijriDate;
+         }
+         else {
+            try { calendarFrom.parseDate("dd/mm/yyyy", hijriDate.trim()) }
+            catch (e) { return null; }
+            var jdDate = calendarFrom.parseDate("dd/mm/yyyy", hijriDate.trim()).toJD();
+            var gregorianDate = calendarTo.formatDate('dd/mm/yyyy', calendarTo.fromJD(jdDate));
+            return gregorianDate;
+         }
+      }
+
+
+      function stringToDate(_date, _format, _delimiter) {
+         
+         var formatLowerCase = _format.toLowerCase();
+         var formatItems = formatLowerCase.split(_delimiter);
+         var dateItems = _date.split(_delimiter);
+         var monthIndex = formatItems.indexOf("mm");
+         var dayIndex = formatItems.indexOf("dd");
+         var yearIndex = formatItems.indexOf("yyyy");
+         var month = parseInt(dateItems[monthIndex]);
+         month -= 1;
+         var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+         return formatedDate;
+      }
+
+      $("form").submit(function (event) {
+         var blockType = $("#dllBlockType").val();
+         if (blockType!=1) {
+            if ($("#blockStartDate").val().trim() != "") {
+               if ($("#blockStartDate").val().trim() != "" && $("#blockEndDate").val().trim() != "") {
+                  if ((stringToDate(convertUmmalquraToGregorianDate($("#blockStartDate").val(), $("#cb_blockStartDate").prop("checked")), "dd/MM/yyyy", "/") >= stringToDate(convertUmmalquraToGregorianDate($("#blockEndDate").val(), $("#cb_blockEndDate").prop("checked")), "dd/MM/yyyy", "/"))) {
+                     AlertFun("لابد أن يكون تاريخ نهاية المنع أكبر من تاريخ بداية المنع", alertMessageType.Danger);
+                     return false;
+                  }
+               }
+            }
+         }
+
+      });
+    
+   </script>
+}

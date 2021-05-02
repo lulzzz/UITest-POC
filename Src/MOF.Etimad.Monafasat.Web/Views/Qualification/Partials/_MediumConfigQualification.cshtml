@@ -1,0 +1,272 @@
+@using res = MOF.Etimad.Monafasat.Resources;
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationSavingModel
+
+<ul class="nav nav-pills">
+   <li class="nav-item "><a class="nav-link text-center active show" href="#section1" data-toggle="tab">@res.QualificationResources.DisplayInputs.TechnicalAndAdministrativeCapacity</a></li>
+   <li class="nav-item"><a class="nav-link text-center " href="#section2" data-toggle="tab">@res.QualificationResources.DisplayInputs.FinancialCapacity</a></li>
+
+</ul>
+<div class="row">
+   <div class="col-md-4 col-sm-6 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <label class="label bmd-label-static">@res.QualificationResources.DisplayInputs.NumberOfPoints</label><span class="text-danger">*</span>
+         <input class="form-control" onkeypress="return allowNumeric(event)" maxlength="1" type="text" id="TenderPointsToPass" asp-for="TenderPointsToPass">
+      </div>
+   </div>
+   <div class="col-md-8 col-sm-6 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <br />
+         <label class="label bmd-label-static" style="font-size: 17px;">
+            مستوى التأهيل (متوسط) :
+            يستخدم في الأعمال والمشتريات متوسطة القيمة والمخاطرة وتتطلب حد معقول من القدرات الفنية والمالية.
+         </label>
+      </div>
+   </div>
+</div>
+<div class="tab-content tab-space p-0" id="medConfig">
+   <div class="tab-pane active show" id="section1">
+      <div class="">
+         <br />
+         <div class="row">
+            <div class="col">
+               <table class="table  table-bordered" id="tblMediumConfig">
+                  <caption>تفاصيل القدرات الفنية والإدارية</caption>
+                  <thead class="thead-dark" style="font-size: 17px;">
+                     <tr>
+                         <th  id="thTechnicalAndAdministrativeCapacity35" colspan="4">@res.QualificationResources.DisplayInputs.TechnicalAndAdministrativeCapacity</th>
+                        <th scope="col"><input class="form-control" id="TechnicalAdministrativeCapacity" type="text" onkeyup=" PercentageCanNotExceed(event);" onkeypress="return allowNumeric(event);" oninput="CalcTechnicalAdministrativeCapacity()" asp-for="TechnicalAdministrativeCapacity" placeholder="@res.QualificationResources.DisplayInputs.Weight"></th>
+                     </tr>
+                  </thead>
+                  <thead>
+                     <tr>
+                         <th  id="thPreviousExperience41" colspan="4">@res.QualificationResources.DisplayInputs.PreviousExperience</th>
+                        <th scope="col"><input class="form-control" onkeyup="return PercentageCanNotExceed(event);" onkeypress="return allowNumeric(event);" type="text" id="PreviousExperienceWeight" placeholder="@res.QualificationResources.DisplayInputs.Weight" asp-for="QualificationMediumEvaluation.PreviousExperienceWeight"></th>
+                     </tr>
+                     <tr>
+                         <th  id="thEvaluationStandard45" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.EvaluationStandard
+                        </th>
+                         <th  id="thSmallerThan48" style="background: #efefef;">
+
+                           @res.QualificationResources.DisplayInputs.SmallerThan
+                        </th>
+                         <th  id="thrange52" style="background: #efefef;width: 192px;text-align: center;">
+                           @res.QualificationResources.DisplayInputs.range
+                        </th>
+                         <th  id="thLargeThan55" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.LargeThan
+                        </th>
+                         <th  id="thWeight58" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.Weight
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td id="NumberOfExperianceYears">@res.QualificationResources.DisplayInputs.NumberOfExperianceYears<span class="text-danger"> *</span></td>
+                        <td><input class="form-control" maxlength="3" oninput="$('#ExperienceYearCountMinRange').text(this.value);" onkeypress="return allowNumeric(event)" id="ExperienceYearCountMin" onkeyup="$('#ExperienceYearCountMinRange').text(this.value);" type="text" asp-for="QualificationMediumEvaluation.ExperienceYearCountMin"></td>
+                        <td class="text-center"><span id="ExperienceYearCountMinRange">@Model.QualificationMediumEvaluation.ExperienceYearCountMin</span> - <span id="ExperienceYearCountMaxRange">@Model.QualificationMediumEvaluation.ExperienceYearCountMax</span></td>
+                        <td><input class="form-control" maxlength="3" oninput="$('#ExperienceYearCountMaxRange').text(this.value);" onkeypress="return allowNumeric(event)" onkeydown="$('#ExperienceYearCountMaxRange').text(this.value);" id="ExperienceYearCountMax" type="text" asp-for="QualificationMediumEvaluation.ExperienceYearCountMax"></td>
+                        <td><input class="form-control" onkeypress="return allowNumeric(event)" onkeydown="return PercentageCanNotExceed(event);" maxlength="3" id="ExperienceYearCountWeight" type="text" asp-for="QualificationMediumEvaluation.ExperienceYearCountWeight"></td>
+                     </tr>
+                     <tr>
+                        <td id="NumberOfProjects">@res.QualificationResources.DisplayInputs.NumberOfProjects<span class="text-danger"> *</span></td>
+                        <td><input class="form-control" maxlength="3" oninput="$('#LastProjectCountMinRange').text(this.value);" onkeypress="return allowNumeric(event)" onkeydown="$('#LastProjectCountMinRange').text(this.value);" id="LastProjectCountMin" type="text" asp-for="QualificationMediumEvaluation.LastProjectCountMin"></td>
+                        <td class="text-center"><span id="LastProjectCountMinRange">@Model.QualificationMediumEvaluation.LastProjectCountMin</span> - <span id="LastProjectCountMaxRange">@Model.QualificationMediumEvaluation.LastProjectCountMax</span></td>
+                        <td><input class="form-control" maxlength="3" oninput="$('#LastProjectCountMaxRange').text(this.value);" onkeypress="return allowNumeric(event)" onkeydown="$('#LastProjectCountMaxRange').text(this.value);" id="LastProjectCountMax" type="text" asp-for="QualificationMediumEvaluation.LastProjectCountMax"></td>
+                        <td><input class="form-control" onkeypress="return allowNumeric(event)" maxlength="3" onkeyup="return PercentageCanNotExceed(event);" id="LastProjectCountWeight" type="text" asp-for="QualificationMediumEvaluation.LastProjectCountWeight"></td>
+                     </tr>
+                     <tr>
+                        <td id="TotalProjectsValueInThreeYears">@res.QualificationResources.DisplayInputs.TotalProjectsValueInThreeYears<span class="text-danger"> *</span></td>
+                        <td><input class="form-control" oninput="$('#LastProjectCostMinRange').text(this.value);" onkeypress="return allowDecimalWithCustomLength(event,15)" onkeydown="$('#LastProjectCostMinRange').text(this.value);" id="LastProjectCostMin" type="text" asp-for="QualificationMediumEvaluation.LastProjectCostMin"></td>
+                        <td class="text-center"><span id="LastProjectCostMinRange">@Model.QualificationMediumEvaluation.LastProjectCostMin</span> - <span id="LastProjectCostMaxRange">@Model.QualificationMediumEvaluation.LastProjectCostMax</span></td>
+                        <td><input class="form-control" oninput="$('#LastProjectCostMaxRange').text(this.value);" onkeypress="return allowDecimalWithCustomLength(event,15)" onkeydown="$('#LastProjectCostMaxRange').text(this.value);" id="LastProjectCostMax" type="text" asp-for="QualificationMediumEvaluation.LastProjectCostMax"></td>
+                        <td><input class="form-control" onkeypress="return allowNumeric(event)" maxlength="3" onkeyup="return PercentageCanNotExceed(event);" id="LastProjectCostWeight" type="text" asp-for="QualificationMediumEvaluation.LastProjectCostWeight"></td>
+                     </tr>
+                  </tbody>
+                  <thead style="background:#ffffff47;">
+                     <tr>
+                         <th  id="thQuality88" colspan="4">@res.QualificationResources.DisplayInputs.Quality</th>
+                        <th scope="col"><input class="form-control" onkeypress="return allowNumeric(event)" onkeyup="return PercentageCanNotExceed(event);" type="text" id="Quality" placeholder="@res.QualificationResources.DisplayInputs.Weight" asp-for="QualificationMediumEvaluation.QualityWeight"></th>
+                     </tr>
+                  </thead>
+                  <thead style="background:#ffffff47;">
+                     <tr>
+                         <th  id="thEnvironmentHealthSafety94" colspan="4">@res.QualificationResources.DisplayInputs.EnvironmentHealthSafety</th>
+                        <th scope="col"><input class="form-control" onkeypress="return allowNumeric(event)" onkeyup="return PercentageCanNotExceed(event);" type="text" id="EnviromentAndHealthyWeight" placeholder="@res.QualificationResources.DisplayInputs.Weight" asp-for="QualificationMediumEvaluation.EnviromentAndHealthyWeight"></th>
+                     </tr>
+                  </thead>
+                  <thead style="background:#ffffff47;">
+                     <tr>
+                         <th  id="thExistingContractualObligations100" colspan="4">@res.QualificationResources.DisplayInputs.ExistingContractualObligations</th>
+                        <th scope="col"><input class="form-control" onkeypress="return allowNumeric(event)" onkeyup="return PercentageCanNotExceed(event);" id="ExistingContractualObligationsWeight" type="text" asp-for="QualificationMediumEvaluation.ExistingContractualObligationsWeight" placeholder="@res.QualificationResources.DisplayInputs.Weight"></th>
+                     </tr>
+                     <tr>
+                         <th  id="thEvaluationStandard104" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.EvaluationStandard
+                        </th>
+                         <th  id="thSmallerThan107" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.SmallerThan
+                        </th>
+                         <th  id="thrange110" style="background: #efefef;width: 192px;text-align: center;">
+
+                           @res.QualificationResources.DisplayInputs.range
+                        </th>
+                         <th  id="thLargeThan114" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.LargeThan
+                        </th>
+                         <th  id="thWeight117" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.Weight
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td id="NumberOfExisitngProjects">@res.QualificationResources.DisplayInputs.NumberOfExisitngProjects<span class="text-danger"> *</span></td>
+                        <td><input class="form-control" maxlength="3" oninput="$('#CurrentProjectCountMinRange').text(this.value);" onkeypress="return allowNumeric(event)" onkeydown="$('#CurrentProjectCountMinRange').text(this.value);" id="CurrentProjectCountMin" type="text" asp-for="QualificationMediumEvaluation.CurrentProjectCountMin"></td>
+                        <td class="text-center"><span id="CurrentProjectCountMinRange">@Model.QualificationMediumEvaluation.CurrentProjectCountMin</span> - <span id="CurrentProjectCountMaxRange">@Model.QualificationMediumEvaluation.CurrentProjectCountMax</span></td>
+                        <td><input class="form-control" maxlength="3" oninput="$('#CurrentProjectCountMaxRange').text(this.value);" onkeypress="return allowNumeric(event)" onkeydown="$('#CurrentProjectCountMaxRange').text(this.value);" id="CurrentProjectCountMax" type="text" asp-for="QualificationMediumEvaluation.CurrentProjectCountMax"></td>
+                        <td><input class="form-control" onkeypress="return allowNumeric(event)" maxlength="3" onkeyup="return PercentageCanNotExceed(event);" id="CurrentProjectCountWeight" type="text" asp-for="QualificationMediumEvaluation.CurrentProjectCountWeight"></td>
+                     </tr>
+                     <tr>
+                        <td id="ValueExistingProjectsCapacityByClassification">@res.QualificationResources.DisplayInputs.ValueExistingProjectsCapacityByClassification<span class="text-danger"> *</span></td>
+                        <td><input class="form-control" oninput="$('#CurrentProjectCostMinRange').text(this.value);" onkeypress="return allowDecimalWithCustomLength(event,15)" onkeydown="$('#CurrentProjectCostMinRange').text(this.value);" id="CurrentProjectCostMin" type="text" asp-for="QualificationMediumEvaluation.CurrentProjectCostMin"></td>
+                        <td class="text-center"><span id="CurrentProjectCostMinRange">@Model.QualificationMediumEvaluation.CurrentProjectCostMin</span> - <span id="CurrentProjectCostMaxRange">@Model.QualificationMediumEvaluation.CurrentProjectCostMax</span></td>
+                        <td><input class="form-control" oninput="$('#CurrentProjectCostMaxRange').text(this.value);" onkeypress="return allowDecimalWithCustomLength(event,15)" onkeydown="$('#CurrentProjectCostMaxRange').text(this.value);" id="CurrentProjectCostMax" type="text" asp-for="QualificationMediumEvaluation.CurrentProjectCostMax"></td>
+                        <td><input class="form-control" onkeypress="return allowNumeric(event)" maxlength="3" onkeyup="return PercentageCanNotExceed(event);" id="CurrentProjectCostWeight" type="text" asp-for="QualificationMediumEvaluation.CurrentProjectCostWeight"></td>
+                     </tr>
+                  </tbody>
+                  <thead style="background:#ffffff47;">
+                     <tr>
+                         <th  id="thHR140" colspan="4">@res.QualificationResources.DisplayInputs.HR</th>
+                        <th scope="col"><input class="form-control" onkeypress="return allowNumeric(event)" maxlength="3" onkeyup="return PercentageCanNotExceed(event);" id="HRWeight" type="text" placeholder="@res.QualificationResources.DisplayInputs.Weight" asp-for="QualificationMediumEvaluation.HRWeight"></th>
+                     </tr>
+                     <tr>
+                         <th  id="thEvaluationStandard144" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.EvaluationStandard
+                        </th>
+                         <th  id="thSmallerThan147" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.SmallerThan
+                        </th>
+                         <th  id="thrange150" style="background: #efefef;width: 192px;text-align: center;">
+
+                           @res.QualificationResources.DisplayInputs.range
+                        </th>
+                         <th  id="thLargeThan154" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.LargeThan
+                        </th>
+                         <th  id="thWeight157" style="background: #efefef;">
+                           @res.QualificationResources.DisplayInputs.Weight
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td id="NumberOfEmplyess">@res.QualificationResources.DisplayInputs.NumberOfEmplyess<span class="text-danger"> *</span></td>
+                        <td><input class="form-control" maxlength="7" oninput="$('#TotalEmployeeCountMinRange').text(this.value);" onkeypress="return allowNumeric(event)" onkeydown="$('#TotalEmployeeCountMinRange').text(this.value);" id="TotalEmployeeCountMin" type="text" asp-for="QualificationMediumEvaluation.TotalEmployeeCountMin"></td>
+                        <td class="text-center"><span id="TotalEmployeeCountMinRange">@Model.QualificationMediumEvaluation.TotalEmployeeCountMin</span> - <span id="TotalEmployeeCountMaxRange">@Model.QualificationMediumEvaluation.TotalEmployeeCountMax</span></td>
+                        <td><input class="form-control" maxlength="7" oninput="$('#TotalEmployeeCountMaxRange').text(this.value);" onkeypress="return allowNumeric(event)" onkeydown="$('#TotalEmployeeCountMaxRange').text(this.value);" id="TotalEmployeeCountMax" type="text" asp-for="QualificationMediumEvaluation.TotalEmployeeCountMax"></td>
+                        <td><input class="form-control" onkeypress="return allowNumeric(event)" maxlength="3" onkeyup="return PercentageCanNotExceed(event);" id="TotalEmployeeCountWeight" type="text" asp-for="QualificationMediumEvaluation.TotalEmployeeCountWeight"></td>
+                     </tr>
+                     <tr>
+                        <td id="SudianEmplyeePercentage">@res.QualificationResources.DisplayInputs.SudianEmplyeePercentage<span class="text-danger"> *</span></td>
+                        <td><input class="form-control" oninput="$('#TotalEmployeePercentageMinRange').text(this.value);" onkeypress="return percentageLimitWithCustomLength(event,4)" onkeydown="$('#TotalEmployeePercentageMinRange').text(this.value)" id="TotalEmployeePercentageMin" type="text" asp-for="QualificationMediumEvaluation.TotalEmployeePercentageMin"></td>
+                        <td class="text-center"><span id="TotalEmployeePercentageMinRange">@Model.QualificationMediumEvaluation.TotalEmployeePercentageMin</span> - <span id="TotalEmployeePercentageMaxRange">@Model.QualificationMediumEvaluation.TotalEmployeePercentageMax</span></td>
+                        <td><input class="form-control" oninput="$('#TotalEmployeePercentageMaxRange').text(this.value);" onkeypress="return percentageLimitWithCustomLength(event,4)" onkeydown="$('#TotalEmployeePercentageMaxRange').text(this.value)" id="TotalEmployeePercentageMax" type="text" asp-for="QualificationMediumEvaluation.TotalEmployeePercentageMax"></td>
+                        <td><input class="form-control" onkeypress="return allowNumeric(event)" maxlength="3" onkeyup="return PercentageCanNotExceed(event);" id="TotalEmployeePercentageWeight" type="text" asp-for="QualificationMediumEvaluation.TotalEmployeePercentageWeight"></td>
+                     </tr>
+                  </tbody>
+
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="tab-pane" id="section2">
+      <div class="">
+         <div class="row">
+            <div class="col">
+               <table class="table  table-bordered" id="tblMediumFinancialConfig">
+                  <caption>تفاصيل القدرات المالية</caption>
+                  <thead class="thead-dark">
+                     <tr>
+                         <th  id="thFinancialCapacity192" colspan="4">@res.QualificationResources.DisplayInputs.FinancialCapacity</th>
+                        <th scope="col"><input id="FinancialCapacity" class="form-control" onkeyup="return PercentageCanNotExceed(event);" onkeypress="return allowNumeric(event)" oninput="CalcFinancialCapacity()" type="text" asp-for="FinancialCapacity" placeholder="@res.QualificationResources.DisplayInputs.Weight"></th>
+                     </tr>
+                  </thead>
+                  <thead>
+                     <tr>
+                         <th  id="thEvaluationStandard198" style="background:#efefef">
+                           @res.QualificationResources.DisplayInputs.EvaluationStandard
+                        </th>
+                         <th  id="thSmallerThan201" style="background:#efefef">
+                           @res.QualificationResources.DisplayInputs.SmallerThan
+                        </th>
+                         <th  id="thrange204" style="background:#efefef">
+                           @res.QualificationResources.DisplayInputs.range
+                        </th>
+                         <th  id="thLargeThan207" style="background:#efefef">
+                           @res.QualificationResources.DisplayInputs.LargeThan
+                        </th>
+                         <th  id="thWeight210" style="background:#efefef">
+                           @res.QualificationResources.DisplayInputs.Weight
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td id="CashRate"> @res.QualificationResources.DisplayInputs.CashRate<span class="text-danger"> *</span></td>
+                        <td><input class="form-control  " oninput="$('#CashRateMinRange').text(this.value);" onkeypress="return percentageLimitWithCustomLength(event,4)" onkeydown="$('#CashRateMinRange').text(this.value);" onkeyup="return PercentageCanNotExceed(event);" id="CashRateMin" type="text" asp-for="QualificationMediumEvaluation.CashRateMin"></td>
+                        <td class="text-center"><span id="CashRateMinRange">@Model.QualificationMediumEvaluation.CashRateMin</span> - <span id="CashRateMaxRange">@Model.QualificationMediumEvaluation.CashRateMax</span></td>
+                        <td><input class="form-control  " oninput="$('#CashRateMaxRange').text(this.value);" onkeypress="return percentageLimitWithCustomLength(event,4)" onkeydown="$('#CashRateMaxRange').text(this.value);" onkeyup="return PercentageCanNotExceed(event);" id="CashRateMax" type="text" asp-for="QualificationMediumEvaluation.CashRateMax"></td>
+                        <td><input class="form-control" onkeypress="return allowNumeric(event)" maxlength="3" onkeyup="return PercentageCanNotExceed(event);" id="CashRateWeight" type="text" asp-for="QualificationMediumEvaluation.CashRateWeight"></td>
+                     </tr>
+                     <tr>
+                        <td id="LiquidityRatio"> @res.QualificationResources.DisplayInputs.LiquidityRatio <span class="text-danger"> *</span></td>
+                        <td><input class="form-control  " oninput="$('#LiquidityRatioMinRange').text(this.value);" onkeypress="return percentageLimitWithCustomLength(event,4)" onkeydown="$('#LiquidityRatioMinRange').text(this.value);" onkeyup="return PercentageCanNotExceed(event);" id="LiquidityRatioMin" type="text" asp-for="QualificationMediumEvaluation.LiquidityRatioMin"></td>
+                        <td class="text-center"><span id="LiquidityRatioMinRange">@Model.QualificationMediumEvaluation.LiquidityRatioMin</span> - <span id="LiquidityRatioMaxRange">@Model.QualificationMediumEvaluation.LiquidityRatioMax</span></td>
+                        <td><input class="form-control  " oninput="$('#LiquidityRatioMaxRange').text(this.value);" onkeypress="return percentageLimitWithCustomLength(event,4)" onkeydown="$('#LiquidityRatioMaxRange').text(this.value);" onkeyup="return PercentageCanNotExceed(event);" id="LiquidityRatioMax" type="text" asp-for="QualificationMediumEvaluation.LiquidityRatioMax"></td>
+                        <td><input class="form-control" onkeypress="return allowNumeric(event)" maxlength="3" onkeyup="return PercentageCanNotExceed(event);" id="LiquidityRatioWeight" type="text" asp-for="QualificationMediumEvaluation.LiquidityRatioWeight"></td>
+                     </tr>
+                     <tr>
+                        <td id="TradeRate"> @res.QualificationResources.DisplayInputs.TradeRate <span class="text-danger"> *</span></td>
+                        <td><input class="form-control" oninput="$('#TradeRateMinRange').text(this.value);" onkeypress="return percentageLimitWithCustomLength(event,4)" onkeydown="$('#TradeRateMinRange').text(this.value);" onkeyup="return PercentageCanNotExceed(event);" id="TradeRateMin" type="text" asp-for="QualificationMediumEvaluation.TradeRateMin"></td>
+                        <td class="text-center"><span id="TradeRateMinRange">@Model.QualificationMediumEvaluation.TradeRateMin</span> - <span id="TradeRateMaxRange">@Model.QualificationMediumEvaluation.TradeRateMax</span></td>
+                        <td><input class="form-control  " oninput="$('#TradeRateMaxRange').text(this.value);" onkeypress="return percentageLimitWithCustomLength(event,4)" onkeydown="$('#TradeRateMaxRange').text(this.value);" onkeyup="return PercentageCanNotExceed(event);" id="TradeRateMax" type="text" asp-for="QualificationMediumEvaluation.TradeRateMax"></td>
+                        <td><input class="form-control" onkeypress="return allowNumeric(event)" maxlength="3" onkeyup="return PercentageCanNotExceed(event);" id="TradeRateWeight" type="text" asp-for="QualificationMediumEvaluation.TradeRateWeight"></td>
+                     </tr>
+                  </tbody>
+
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<script>
+
+
+
+   $(document).ready(function () {
+      
+
+      //$("#divConfigurationQualification input").prop("disabled", true);
+      //$("#TenderPointsToPass").prop("disabled", true);
+      //$("#dllqualificationType").prop("disabled", true);
+
+      $("#tblMediumConfig input:text").bind("paste", function (e) {
+         e.preventDefault();
+      });
+
+      $("#tblMediumFinancialConfig input:text").bind("paste", function (e) {
+         e.preventDefault();
+      });
+
+
+   });
+
+
+</script>

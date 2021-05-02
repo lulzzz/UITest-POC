@@ -1,0 +1,498 @@
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationBasicDetailsModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+   string tenderIdString = Model.TenderIdString;
+   int tenderStatusId = Model.TenderStatusId;
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CheckOfferDetails;
+   if (tenderStatusId == (int)Enums.TenderStatus.OffersCheckedPending)
+   {
+      ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CheckOfferConfirm;
+   }
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+
+         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"].ToString()</li>
+      </ol>
+   </nav>
+}
+
+
+@section modalTitle{
+   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+}
+@section modalContent{
+   <div class="col-12" id="divRejectReason">
+      <div class="form-group bmd-form-group" style="padding-top:0">
+         <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+         <textarea class="form-control" rows="5" id="txtRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason"></textarea>
+         <div class="pull-left">
+            <span class="bmd-help text-danger" id="txtRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divSendToApproveMessage"><div class="form-group bmd-form-group"><lable>@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CheckApproveRequestWillSent</lable></div></div>
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divReopenMessage"><div class="form-group bmd-form-group"><lable>@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.WillReopen</lable></div></div>
+
+   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="divApprovedTender">
+      @*<div class="form-group p-0">
+            <label for="EstimatedValue" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EvaluationValue</label>
+            <input type="number" class="form-control" id="txtEstimatedValue" name="EstimatedValue" value="@estimatedValue" />
+            <span class="bmd-help text-danger" style="display:none" id="EstimatedValueValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRealValue</span>
+         </div>*@
+      @*<div class="form-group bmd-form-group">
+            <div class="blockquote blockquote-success undefined">
+               <small id="StringEstimatedValue">
+                  @estimatedValueString
+               </small>
+            </div>
+         </div>*@
+
+      @*<div class="form-check">
+            <label class="form-check-label text-dark-green" style="margin-bottom:10px">
+               <input class="form-check-input" type="checkbox" id="chCompetitionIsBudgeted">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgreeToApproveTender
+               <span class="form-check-sign">
+                  <span class="check"></span>
+               </span>
+            </label>
+            <span class="h6 text-danger d-block" id="txtApproveTenderValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseAgreeToApproveTender</span>
+            <br>  <br>
+            <label class="form-check-label text-dark-green">
+               <input class="form-check-input" type="checkbox" id="chIAgree">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderApprovedInBudget
+               <span class="form-check-sign">
+                  <span class="check"></span>
+               </span>
+
+            </label>
+            <span class="h6 text-danger d-block" id="txtBudgetValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseConfirmThatTenderInBudget</span>
+         </div>*@
+      <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divAreYouSure">
+         <div class="form-group bmd-form-group">
+            <lable>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AreYouSure</lable>
+         </div>
+      </div>
+      <div class="col-lg-12 col-sm-12 col-xs-12" id="divConfirmApprove">
+         <input type="text" class="form-control" id="txtverificationCode" name="verificationCode" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+         <div class="pull-left">
+            <span class="bmd-help text-danger position-relative" id="txtverificationCodeValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+         </div>
+
+         <br />
+         <p id="divTimer" class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainingTime<span class=" text-danger" id="timer"></span></p>
+         <button type="button" class="btn  btn-primary btn-sm m-1" name="button" id="btnResendVerificationCode"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+
+      </div>
+   </div>
+}
+@section modalButtons{
+   <button type="button" class="btn  btn-primary btn-sm m-1" name="button" id="btnRejectConfirmation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionConfirm</button>
+   <button type="button" class="btn  btn-primary btn-sm m-1" name="button" id="btnApproveConfirmation">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</button>
+   <button type="button" class="btn btn-sm btn-primary ModalElement" name="button" id="btnSendConfirmation"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm </button>
+   <button type="button" class="btn btn-sm btn-primary ModalElement" name="button" id="btnReopenConfirmation">  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm </button>
+   @*<button type="button" class="btn btn-primary btn-sm" name="button" id="btnResendVerificationCode"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>*@
+   <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+}
+@Html.AntiForgeryToken()
+<div class="col-12">
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+            <div class="row" id="basicDetials">
+               <div class="col-12"><h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualificationDetails</h4></div>
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationName</div>
+                           <div class="col-8 etd-item-info"><span>@(Model.QualificationName)</span></div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ExecutionPlace</div>
+                           <div class="col-8 etd-item-info">
+                              <span>@(Model.InsideKSA == true ? @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.InsideKSA : @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.OutsideKSA)</span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.EstablishingActions</div>
+                           <div class="col-8 etd-item-info">
+                              <ol>
+                                 @if (Model.TenderConstructionWorks != null)
+                                 {
+                                    @foreach (var constructionWorkItem in Model.TenderConstructionWorks)
+                                    {
+                                       <li> @constructionWorkItem</li>
+                                    }
+                                 }
+                              </ol>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.MaintenanceOperationActions</div>
+                           <div class="col-8 etd-item-info">
+                              <ol>
+                                 @if (Model.TenderMaintenanceRunnigWorks != null)
+                                 {
+                                    @foreach (var maintenanceWorkItem in Model.TenderMaintenanceRunnigWorks)
+                                    {
+                                       <li> @maintenanceWorkItem</li>
+                                    }
+                                 }
+                              </ol>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationActivity</div>
+                           <div class="col-8 etd-item-info">
+                              <ol>
+                                 @if (Model.TenderActivities != null)
+                                 {
+                                    @foreach (var activityItem in Model.TenderActivities)
+                                    {
+                                       <li>@activityItem</li>
+                                    }
+                                 }
+                              </ol>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy</div>
+                           <div class="col-8 etd-item-info"><span>@(Model.Createby)</span></div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+               <div class="clearfix"></div>
+               @if (!(User.IsInRole(RoleNames.PreQualificationCommitteeManager) && tenderStatusId == (int)Enums.TenderStatus.OffersOppenedConfirmed))
+               {
+                  <div class="col-md-12 col-sm-12 col-xs-12">
+                     <div id="OffersCheckConfirmGrid" class="tableDiv">@Html.Partial("_PreQualificationsOffersCheckConfirmGrid")</div>
+                  </div>
+               }
+            </div>
+         </div>
+         @if (Model.hasPendingCancelRequest == true)
+         {
+            <span> خنالك ظلب معلق تم حذفة</span>
+
+         }
+      </div>
+   </div>
+</div>
+<div class="">
+
+
+   @if (User.IsInRole(RoleNames.PreQualificationCommitteeSecretary) && @tenderStatusId == (int)Enums.TenderStatus.DocumentChecking)
+   {
+      <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApprove" data-toggle="modal" data-target="#myModal">
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.SendToApprove
+      </button>
+   }
+   @if (User.IsInRole(RoleNames.PreQualificationCommitteeManager))
+   {
+      @if (tenderStatusId == (int)Enums.TenderStatus.OffersOppenedConfirmed)
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnCheckOffers" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CheckOfferConfirmStage</button>
+         </div>
+      }
+      @if (tenderStatusId == (int)Enums.TenderStatus.DocumentCheckPending)
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnApprove" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Accepted</button>
+            <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+         </div>
+      }
+   }
+   else if (User.IsInRole(RoleNames.PreQualificationCommitteeSecretary) && tenderStatusId == (int)Enums.TenderStatus.DocumentCheckRejected)
+   {
+      <div class="card">
+         <div class="card-body">
+            <h3 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</h3>
+            <h4>@Model.RejectionReason</h4>
+         </div>
+      </div>
+      <button type="button" class="btn btn-primary pull-left" name="button" id="btnReopenCheckOffers" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.RestartCheckOffers</button>
+   }
+   <button class="btn btn-outline-primary btn-link pull-right" onclick="window.location ='@Url.Action("Index","Qualification")'">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+      <div class="ripple-container"></div>
+   </button>
+   <div class="clearfix"></div>
+</div>
+@section scripts{
+   <script>
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $("#btnSendToApprove").on("click", function () {
+         $("#divConfirmApprove").hide();
+         $(".ModalElement").hide();
+         $("#divRejectReason").hide();
+         $("#divAreYouSure").show();
+         $("#btnSendConfirmation").show();
+         $("#btnRejectConfirmation").hide();
+         $("#btnApproveConfirmation").hide();
+         $("#divReopenMessage").hide();
+         $("#btnReopenConfirmation").hide();
+         $("#divOpenCheckMessage").hide();
+         $("#btnOpenCheckConfirmation").hide();
+       
+         $("#divApprovedTender").hide();
+      });
+      $("#btnApprove").on("click", function () {
+         document.getElementById('timer').innerHTML = 05 + ":" + 00;
+         startTimer();
+         $("#btnResendVerificationCode").prop("disabled", true);
+         createVerificationCode();
+         $("#divRejectReason").hide();
+         $("#divApprovedTender").show();
+         $("#btnRejectConfirmation").hide();
+         $("#btnApproveConfirmation").show();
+         $("#divApproveChange").hide();
+         $("#divRejectChange").hide();
+         $("#btnReopenConfirmation").hide();
+         $("#btnConfirmingApprovingUpdates").hide();
+         $("#btnConfirmRejectUpdate").hide();
+         $("#divAreYouSure").hide();
+         $("#btnSendConfirmation").hide();
+         $("#divReopenMessage").hide();
+         $("#divSendToApproveMessage").hide();
+      });
+      $("#btnReject").on("click", function () {
+         $("#divRejectReason").show();
+         $("#divApprovedTender").hide();
+         $("#btnRejectConfirmation").show();
+         $("#btnApproveConfirmation").hide();
+         $("#divApproveChange").hide();
+         $("#divRejectChange").hide();
+         $("#btnConfirmingApprovingUpdates").hide();
+         $("#btnConfirmRejectUpdate").hide();
+         $("#btnReopenConfirmation").hide();
+         $("#divAreYouSure").hide();
+         $("#btnSendConfirmation").hide();
+
+
+         $("#divSendToApproveMessage").hide();
+         $("#divReopenMessage").hide();
+
+      });
+      $("#btnReopenCheckOffers").on("click", function () {
+         $("#divConfirmApprove").hide();
+         $(".ModalElement").hide();
+         $("#divRejectReason").hide();
+         $("#divSendToApproveMessage").hide();
+         $("#btnRejectConfirmation").hide();
+         $("#btnApproveConfirmation").hide();
+         $("#divAreYouSure").show();
+         $("#btnSendConfirmation").hide();
+         $("#divOpenCheckMessage").hide();
+         $("#btnOpenCheckConfirmation").hide();
+         $("#divReopenMessage").show();
+         $("#btnReopenConfirmation").show();
+        
+      });
+      $("#btnCheckOffers").on("click", function () {
+         $("#divRejectReason").hide();
+         $("#divSendToApproveMessage").hide();
+         $("#btnRejectConfirmation").hide();
+         $("#btnApproveConfirmation").hide();
+         $("#divAreYouSure").hide();
+         $("#btnSendConfirmation").hide();
+         $("#divReopenMessage").hide();
+         $("#btnReopenConfirmation").hide();
+         $("#divOpenCheckMessage").show();
+         $("#btnOpenCheckConfirmation").show();
+      });
+      $(document).ready(function () {
+         $("#btnOpenCheckConfirmation").on("click", function () {
+            $('#LoadingSite').fadeIn();
+            $.post('@Url.Action("StartPreQualificationCheckingOffersAsync", "Qualification")',
+               {
+                  tenderIdString: '@tenderIdString',
+                  __RequestVerificationToken: token
+               }).done(function () {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                  window.location = '@Url.Action("Index", "Qualification")';
+                  $('#LoadingSite').fadeOut();
+               }).fail(function (e) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.TenderSentFailed)', alertMessageType.Danger);
+                  $('#LoadingSite').fadeOut();
+               });
+         });
+      });
+      $("#btnReopenConfirmation").on("click", function () {
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ReopenPreQualificationCheckingAsync", "Qualification")',
+            {
+               tenderIdString: '@tenderIdString',
+
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                  window.location = '@Url.Action("Index", "Qualification")';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.TenderSentFailed)', alertMessageType.Danger);
+            });
+      });
+      $("#btnSendConfirmation").on("click", function () {
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("SendPreQualificationToApproveCheckingAsync", "Qualification")',
+            {
+               tenderIdString: '@tenderIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                 window.location = '@Url.Action("Index", "Qualification")';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.OfferStatusOrTechnicalEvaluationNotExist)', alertMessageType.Danger);
+               $('#LoadingSite').fadeOut();
+            });
+      });
+      $("#btnApproveConfirmation").on("click", function () {
+         $("#txtApproveTenderValidation").hide();
+         $("#txtBudgetValidation").hide();
+         $('#LoadingSite').fadeIn();
+         
+         var verificationCodeValue = $("#txtverificationCode").val();
+         if (verificationCodeValue == '') {
+            $("#txtverificationCodeValidation").show();
+            return false;
+         }
+         $.post('@Url.Action("ApprovePreQualificationCheckingWithVerificationAsync", "Qualification")',
+            {
+               tenderIdString: '@tenderIdString',
+               verficationCode: verificationCodeValue,
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                  window.location = '@Url.Action("Index", "Qualification")';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      });
+         $("#btnResendVerificationCode").on("click", function () {
+            $("#btnResendVerificationCode").prop("disabled", true);
+            document.getElementById('timer').innerHTML = 05 + ":" + 00;
+            startTimer();
+            createVerificationCode();
+      });
+      $("#btnRejectConfirmation").on("click", function () {
+         $("#divRejectReason").show();
+         $("#btnRejectConfirmation").show();
+         $("#btnApproveConfirmation").hide();
+         var rejectionReason = $("#txtRejectionReason").val();
+         $("#txtRejectionReasonValidation").hide();
+         if (rejectionReason == '')
+         {
+            $("#txtRejectionReasonValidation").show();
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            type: "GET",
+            url: '@Url.Action("RejectCheckPreQualificationOffersReportAsync", "Qualification")',
+            data: { tenderIdString: '@tenderIdString', rejectionReason: rejectionReason  },
+            success: function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                  window.location = '@Url.Action("Index", "Qualification")';
+               $('#LoadingSite').fadeOut();
+            },
+            error: function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.TenderSentFailed)', alertMessageType.Danger);
+            }
+         });
+      });
+
+       function checkSecond(sec) {
+      if (sec < 10 && sec >= 0) { sec = "0" + sec };
+      if (sec < 0) { sec = "59" };
+      return sec;
+   }
+   function checkTime(min, sec, myVar) {
+      if (min <= 0 && sec <= 0) {
+         $("#btnResendVerificationCode").prop("disabled", false);
+         clearTimeout(myVar)
+      };
+      return sec;
+   }
+   var myVar;
+   function startTimer() {
+      clearTimeout(myVar);
+      var presentTime = document.getElementById('timer').innerHTML;
+      var timeArray = presentTime.split(/[:]+/);
+      var m = timeArray[0];
+      var s = checkSecond((timeArray[1] - 1));
+      if (s == 59) { m = m - 1 }
+      document.getElementById('timer').innerHTML = m + ":" + s;
+      myVar = setTimeout(startTimer, 1000);
+      checkTime(m, s, myVar);
+      if (m < 0 && s > 0) {
+         document.getElementById('timerChangeRequest').innerHTML = "0:00";
+         return false;
+      }
+   }
+      function createVerificationCode() {
+         
+         $.post('/Qualification/CreateVerificationCode', { tenderIdString: '@Model.TenderIdString', __RequestVerificationToken: token }).fail(function (error) {
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+            $("#changeRequestModal").modal('hide');
+            $("#myModal").modal('hide');
+         });
+      }
+
+   var OffersCheck = new Vue({
+         el: '#OffersCheckConfirmGrid',
+         data: {
+            PreQualificationDetails: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/Qualification/GetPreQualificationsRequestsForCheckingAsync?tenderIdString=' + '@tenderIdString',
+            queryString: ''
+         },
+      methods: {
+         updateResource: function (data) {
+            this.PreQualificationDetails = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            viewAttachments: function (id) {
+               //TODO: Add Attachment function
+            },
+         viewCheckQalification: function (id, supplierId) { 
+            return '/Qualification/PreQualificationChecking?SupplierId=' + supplierId + '&PreQualificationIdString=' + id;
+         },
+         getSupplierInfo: function (CR) {
+            getSupplierInfo(CR);
+         },
+         }
+   });
+
+   </script>
+}
+

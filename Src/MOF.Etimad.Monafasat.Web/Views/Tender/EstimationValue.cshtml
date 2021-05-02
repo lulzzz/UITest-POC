@@ -1,0 +1,131 @@
+@model MOF.Etimad.Monafasat.ViewModel.BasicTenderModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@{
+    var tenderIdString = Model.TenderIdString;
+    var tenderId = Model.TenderId;
+
+    var estimatedValue = Model.EstimatedValue != null ? Model.EstimatedValue : 0;
+    var estimatedValueString = string.IsNullOrEmpty( Model.EstimatedValueString)?  "" : Model.EstimatedValueString ;
+    // var estimatedValueString = Model.EstimatedValue != null ? Util.Encrypt((int)Model.EstimatedValue) : "";
+
+    var executionPlace = Model.InsideKSA != null ? (Model.InsideKSA == true ? "داخل المملكة" : "خارج المملكة") : "داخل المملكة";
+
+}
+     <div class="card">
+        <div class="card-body">
+           <div class="row" id="basicDetials">
+              <div class="col-12">
+                 <h4 class="text-primary">القيمة التقديرية</h4>
+              </div>
+              <div class="col-md-6 col-sm-12 col-xs-12">
+
+                 <ul class="list-group form-details-list">
+                    <li class="list-group-item">
+                       <div class="row">
+                          <div class="col-4 etd-item-title">
+
+                             إسم المنافسة
+                          </div>
+                          <div class="col-8 etd-item-info">
+                             <span>@(Model.TenderName)</span>
+                          </div>
+                       </div>
+                    </li>
+                    <li class="list-group-item">
+                       <div class="row">
+                          <div class="col-4 etd-item-title">
+
+                             رقم المنافسة
+                          </div>
+                          <div class="col-8 etd-item-info">
+                             <span>
+                                @(Model.TenderNumber)
+                             </span>
+                          </div>
+                       </div>
+                    </li>
+                    <li class="list-group-item">
+                       <div class="row">
+                          <div class="col-4 etd-item-title">
+
+                             مكان التنفيذ
+                          </div>
+                          <div class="col-8 etd-item-info">
+                             <span>
+                                @executionPlace
+                             </span>
+                          </div>
+                       </div>
+                    </li>
+
+
+                 </ul>
+
+                 <div class="form-group bmd-form-group">
+                    <label for="EstimatedValue" class="label bmd-label-static">القيمة التقديرية</label>
+                    <input type="number" class="form-control" id="txtEstimatedValue" name="EstimatedValue" value="@estimatedValue" />
+
+                    <span class="bmd-help text-danger" style="display:none" id="EstimatedValueValidation">الرجاء إدخال قيمة حقيقية قبل الحفظ</span>
+                 </div>
+                 
+              </div>
+              <input type="text" class="col-12 etd-item-info" disabled="disabled" id="StringEstimatedValue" value="@estimatedValueString" />
+           </div>
+           <div>
+              <button type="button" class="btn btn-primary" name="button" id="btnSave">حفظ</button>
+              <button type="button" class="btn btn-danger" name="button" id="btnCancel">إلغاء</button>
+           </div>
+        </div>
+     </div>
+
+
+
+   @section scripts {
+   <script>
+         $(document).ready(function () {
+            $("#btnSave").on("click", function () {
+               
+               var estimatedValue = document.getElementById("txtEstimatedValue").value;
+               if (estimatedValue == "" || estimatedValue == 0) {
+                  $('#EstimatedValueValidation').show();
+                  $("#txtEstimatedValue").focus();
+                  return false;
+                  
+               }
+               $('#LoadingSite').fadeIn();
+            $.ajax({
+               type: "GET",
+               url: "UpdateTenderEstimatedValueAsync",
+               data: { tenderId: @tenderId , estimatedValue: estimatedValue }, // update tender estimation value
+               success: function () {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.Messages.DataSaved)', alertMessageType.Success);
+                  window.location = '/';
+                  $('#LoadingSite').fadeOut();
+               }
+            });
+            });
+
+            $("#txtEstimatedValue").on("blur", function () {
+               $('#EstimatedValueValidation').hide();
+               var estimatedValue = document.getElementById("txtEstimatedValue").value;
+               $('#LoadingSite').fadeIn();
+            $.ajax({
+               type: "GET",
+               url: "ConvertNumberToText",
+               data: {  estimatedValue: estimatedValue }, // update tender estimation value
+               success: function (result) {
+                  $('#StringEstimatedValue').val(result);
+                  $('#LoadingSite').fadeOut();
+               }
+            });
+            });
+
+            $("#btnCancel").on("click", function () {
+               window.location = '/';
+
+            });
+         });
+   </script>
+   }
+

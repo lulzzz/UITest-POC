@@ -1,0 +1,95 @@
+@model List<MOF.Etimad.Monafasat.ViewModel.OfferDeatilsReportForTenderModel>
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OpenOffersReport;
+}
+<link rel="icon" href="~/Etimad-UI/assets/imgs/favicon.ico">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script>
+   document.title = "تقرير فتح العروض";
+</script>
+<div id="printDiv" class="row" dir="rtl" style="margin:20px;">
+   <div class="col-sm-12 text-center">
+      <img class="rounded mx-auto" src="~/Etimad-UI/assets/imgs/favicon.ico" alt="Etimad"/>
+      <hr />
+   </div>
+   <h2 class="col-sm-12 text-center">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OffersRegisteryReport</h2>
+   <h6 class="col-sm-12 text-center" style="margin-top:20px;">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber : @Model?.FirstOrDefault()?.TenderNumber </h6>
+   <h6 class="col-sm-12 text-center">@Model?.FirstOrDefault()?.TenderName</h6>
+   <h6 class="col-sm-12 text-right" style="margin-top:20px;">
+      @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OpenEnvelopesDate : @Model?.FirstOrDefault()?.OpenOffersDate @if (Model?.FirstOrDefault()?.OpenOffersDate != null)
+      {@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CelenderType}
+   </h6>
+   <table class="col-sm-12 table text-center table-bordered MsoNormalTable" dir="rtl"
+          border="1" cellspacing="3" cellpadding="0" aria-describedby="Offers Report grid">
+      <tr>
+         <th colspan="2" scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.SupplierInformation</th>
+         <th colspan="4" scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.DataOnTheWarranty</th>
+         <th colspan="5" scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferAttachments</th>
+      </tr>
+      <tr>
+         <td rowspan="2">م</td>
+         <td rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.SupplierName</td>
+         <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferNumber</td>
+         <td colspan="3" rowspan="2" style="margin: 0px;padding:0px !important;text-align:center;">
+            <table class="table-borderless text-center" style="margin:0px !important" aria-describedby="warranty">
+               <tr>
+                  <th id="warrantyAmount" style="border-left:1px solid #dee2e6;border-bottom:1px solid #dee2e6">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.WarrantyAmount</th>
+                  <th id="startingDate" style="border-left:1px solid #dee2e6;border-bottom:1px solid #dee2e6">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.StartingDate</th>
+                  <th id="bankName" rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BankName</th>
+               </tr>
+               <tr>
+                  <td style="border-left:1px solid #dee2e6">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.SecurityNumber</td>
+                  <td style="border-left:1px solid #dee2e6">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Percentage</td>
+               </tr>
+            </table>
+         </td>
+         <td rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CRValidityTo</td>
+         <td rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ZakatValidityTo</td>
+         <td rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ChamberJoiningValidity</td>
+         <td rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ConstructionCertificationValidity</td>
+         <td rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferLetter</td>
+      </tr>
+      <tr>
+         <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Date</td>
+      </tr>
+      @if (Model != null)
+      {
+         @for (int i = 0; i < Model.Count; i++)
+         {
+            <tr>
+               <td rowspan="2">@(i + 1)</td>
+               <td rowspan="2">@Model[i].SupplierName</td>
+               <td style="vertical-align: middle; border-bottom: 1px solid white;">@Model[i].OfferId</td>
+               <td colspan="3" rowspan="2" style="margin: 0px;padding:0px !important;text-align:center;">
+                  @if (Model[i].BankGuarantees != null)
+                  {
+                     for (int j = 0; j < Model[i].BankGuarantees.Count; j++)
+                     {
+                        <table class="table-borderless text-center" style="margin:0px !important">
+                           <tr>
+                              <td style="border-left:1px solid #dee2e6;border-bottom:1px solid #dee2e6">@Model[i].BankGuarantees[j]?.Amount</td>
+                              <td style="border-left:1px solid #dee2e6;border-bottom:1px solid #dee2e6">@Model[i].BankGuarantees[j]?.GuaranteeStartDate</td>
+                              <td rowspan="2">@Model[i].BankGuarantees[j]?.BankName</td>
+                           </tr>
+                           <tr>
+                              <td style="border-left:1px solid #dee2e6">@Model[i].BankGuarantees[j]?.GuaranteeNumber</td>
+                              <td style="border-left:1px solid #dee2e6">@Model[i].BankGuarantees[j]?.Percentage</td>
+                           </tr>
+                        </table>
+                     }
+                  }
+               </td>
+               <td rowspan="2">@Model[i].CommercialRegistrationValidity</td>
+               <td rowspan="2">@Model[i].ZekatCertificateValidity</td>
+               <td rowspan="2">@Model[i].ChamberJoiningValidity</td>
+               <td rowspan="2">@Model[i].ConstructionCertificationValidity</td>
+               <td rowspan="2">@Model[i].OfferLetter</td>
+            </tr>
+            <tr>
+               <td style="border-radius:0px">@Model[i].CreateDate</td>
+            </tr>
+         }
+      }
+   </table>
+</div>

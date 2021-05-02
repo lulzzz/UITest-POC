@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="053ffe02-2aee-402b-8af7-38c6a4881a0e" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://ry1drvesbiib01.mof.gov.sa:7931/FileNetCheckOut?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="FileNetCheckOut.wsdl" MetadataType="Wsdl" ID="07f06ee2-5f66-4978-833f-27dd094ba766" SourceId="1" SourceUrl="https://ry1drvesbiib01.mof.gov.sa:7931/FileNetCheckOut?wsdl" />
+    <MetadataFile FileName="FileNetCheckOut.xsd" MetadataType="Schema" ID="59313247-00a0-41b0-bcab-cd86fc280446" SourceId="1" SourceUrl="https://ry1drvesbiib01.mof.gov.sa:7931/FileNetCheckOut?xsd=xsd1" />
+    <MetadataFile FileName="FileNetCheckOut1.xsd" MetadataType="Schema" ID="146a7d2f-67c1-4136-97c0-a68387a3bbec" SourceId="1" SourceUrl="https://ry1drvesbiib01.mof.gov.sa:7931/FileNetCheckOut?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

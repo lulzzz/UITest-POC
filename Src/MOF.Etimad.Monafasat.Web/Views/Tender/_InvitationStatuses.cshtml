@@ -1,0 +1,50 @@
+<span v-if="tender.invitationRequistTypeId=='1'">
+   <span class="badge badge-default d-inline-block" style="margin: 0 5px;">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DirectBuyInginvitation
+   </span>
+</span>
+<span v-else-if=" tender.invitationStatusId == '1' &&  tender.invitationRequistTypeId=='2'">
+   <span class="badge badge-warning d-inline-block" style="margin: 0 5px;">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PendingGovernmentAcceptanceOfTheRequest
+   </span>
+</span>
+<span v-else-if="tender.invitationStatusId == '2' &&  tender.invitationRequistTypeId=='2'">
+   <span class="badge badge-success d-inline-block" style="margin: 0 5px;">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationAccepted
+   </span>
+</span>
+<span v-else-if="tender.invitationStatusId == '3' &&  tender.invitationRequistTypeId=='2'">
+   <span class="badge badge-danger d-inline-block" style="margin: 0 5px;">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationRejected
+   </span>
+</span>
+<span v-else-if="tender.isPurchased == true && tender.paymentStatusId ==  @((int)Enums.BillStatus.New)">
+   <span class="badge badge-info d-inline-block" style="margin: 0 5px;">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WaitingForSaddNumber
+   </span>
+</span>
+<span v-else-if="tender.isPurchased == true && tender.paymentStatusId ==  @((int)Enums.BillStatus.UnderProcess)">
+   <span class="badge badge-info d-inline-block" style="margin: 0 5px;">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WaitingForSaddNumber
+   </span>
+</span>
+<span v-else-if="tender.isPurchased == true && tender.paymentStatusId ==  @((int)Enums.BillStatus.SuccessUploaded)">
+   <span class="badge badge-info d-inline-block" style="margin: 0 5px;">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WaitingPayament
+   </span>
+</span>
+<span v-else-if="tender.isPurchased == true && tender.paymentStatusId ==  @((int)Enums.BillStatus.Paid)">
+   <span class="badge badge-info d-inline-block" style="margin: 0 5px;">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Purchased
+   </span>
+</span>
+<span v-if="tender.offerStatusId == @((int)Enums.OfferStatus.Received)">
+   <span class="badge badge-info d-inline-block" style="margin: 0 5px;">
+      @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Recieved
+   </span>
+</span>
+<span v-if="tender.offerStatusId == @((int)Enums.OfferStatus.Canceled)">
+   <span class="badge badge-danger d-inline-block" style="margin: 0 5px;">
+      @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.NotRecieved
+   </span>
+</span>

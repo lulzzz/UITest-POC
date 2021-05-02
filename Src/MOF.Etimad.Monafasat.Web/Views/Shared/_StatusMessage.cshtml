@@ -1,0 +1,30 @@
+@{
+   string error = null;
+   string message = null;
+   string warnning = null;
+   if (TempData.Peek("Error") != null)
+   {
+      error = TempData["Error"] as string;
+   }
+   if (TempData.Peek("Message") != null)
+   {
+      message = TempData["Message"] as string;
+   }
+   if (TempData.Peek("Warnning") != null)
+   {
+      warnning = TempData["Warnning"] as string;
+   }
+}
+@if (!String.IsNullOrEmpty(error) || !String.IsNullOrEmpty(message) || !String.IsNullOrEmpty(warnning))
+{
+   var statusMessageClass = error != null ? "danger" : (warnning != null ? "warnning" : "success");
+   var text = error ?? message;
+   <div class="alert alert-@statusMessageClass position-fixed col-12 alertHideMessage">
+      <div class="container">
+         @text
+         <button type="button" class="close pull-right" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true"><i class="material-icons">clear</i> </span>
+         </button>
+      </div>
+   </div>
+}

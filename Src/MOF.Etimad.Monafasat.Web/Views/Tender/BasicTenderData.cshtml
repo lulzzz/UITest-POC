@@ -1,0 +1,1412 @@
+@model MOF.Etimad.Monafasat.ViewModel.CreateTenderBasicDataModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using Newtonsoft.Json;
+@using res = MOF.Etimad.Monafasat.Resources;
+@{
+   if (User.UserIsVRO() == true)
+   {
+      Model.TenderTypeId = (int)Enums.TenderType.NationalTransformationProjects;
+   }
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddEditTender;
+   var showInvitationTab = (((Model.PreQualificationId != null || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender || Model.TenderTypeId == (int)Enums.TenderType.SecondStageTender || Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding ||
+               Model.TenderTypeId == (int)Enums.TenderType.LimitedTender || Model.TenderTypeId == (int)Enums.TenderType.FrameworkAgreement || Model.TenderTypeId == (int)Enums.TenderType.Competition)
+               && Model.InvitationTypeId == (int)Enums.InvitationType.Specific) || Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects || (Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles));
+   var showDatesTab = Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects && !User.UserIsRelatedVRO();
+
+   var isPrivateInvitation =
+      (Model.ReasonForPurchaseTenderTypeId == (int)Enums.ReasonForPurchaseTenderType.WorksAndPurchasesOfWeaponsAndMilitaryEquipmentAndSpareParts
+                 || Model.ReasonForPurchaseTenderTypeId == (int)Enums.ReasonForPurchaseTenderType.BusinessAndProcurementAreAvailableToOneContractorCSupplierAndHaveNoAcceptableAlternative
+                 || Model.ReasonForPurchaseTenderTypeId == (int)Enums.ReasonForPurchaseTenderType.UseOfThisMethodNecessaryToProtectNationalSecurityInterests);
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("TenderIndexUnderOperationsStage", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AllTenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddTender</li>
+      </ol>
+   </nav>
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+
+   .modal {
+      overflow-y: auto;
+   }
+</style>
+<form id="basicStepForm" method="POST" asp-controller="Tender" asp-action="BasicTenderData" autocomplete="off" v-cloak>
+   <div id="app">
+      <input id="hdnBranchHasTechnicalCommittees" asp-for="BranchHasTechnicalCommittees" type="hidden" />
+      <input id="hdnIsAgancyHasTechnicalCommittee" asp-for="IsAgancyHasTechnicalCommittee" type="hidden" />
+      <input asp-for="TenderIdString" type="hidden" />
+      <input asp-for="TenderTypeId" id="hdnTenderType" type="hidden" />
+      <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+      <input asp-for="IsAgencyRelatedByVRO" id="hfIsAgencyRelatedByVRO" type="hidden" />
+      <input asp-for="PurchaseMethodString" id="hfPurchaseMethod" type="hidden" />
+      <input asp-for="IsVRO" id="hfIsAgencyRelatedByVRO" type="hidden" />
+      <input asp-for="IsUnitAgency" id="hfIsUnitAgency" type="hidden" />
+      <input asp-for="QuantityTableVersionId" id="hfVersionId" type="hidden" />
+      <ul class="wizSteps">
+         <li class="active">
+            <div>
+               <h4 id="hBasicStep"><span class="step-num">1</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation<strong class="step-count">(1 - 5)</strong></h4>
+            </div>
+            <div class="col col-11 pull-right">
+               <div id="divBasicStep">
+                  <div class="row">
+                     @{
+                        if (string.IsNullOrEmpty(Model.TenderIdString) || MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(0) == Model.TenderIdString)
+                        {
+                        <div class="col-lg-12 col-sm-12 col-xs-12">
+                           <span class="badge badge-primary pull-right">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy
+                              : <i class="material-icons" style="font-size: 11px;padding: 2px;display: inline;">person</i>
+                              @(User.FullName())
+                           </span>
+                        </div>
+                        }
+                     }
+                     <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="TenderName" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                           <input asp-for="TenderName" v-show="isFramWorkRecreation == false" class="form-control" name="TenderName" id="txtTenderName" maxlength="500" />
+                           <input asp-for="TenderName" v-show="isFramWorkRecreation != false" disabled="disabled" class="form-control" name="txtTenderName" id="tb_TenderName" maxlength="500" />
+                           <input asp-for="TenderName" type="hidden" v-show="isFramWorkRecreation != false" />
+                           <span asp-validation-for="TenderName" class="text-danger"></span>
+                        </div>
+                     </div>
+                     @if (!User.UserIsVRO())
+                     {
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divTenderType" v-show="isFramWorkRecreation == false">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="TenderTypeId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <select data-live-search="true" asp-for="TenderTypeId" name="TenderTypeId" id="tenderTypeId" class="selectpicker" v-if="'@(Model.TenderTypeId != (int)Enums.TenderType.SecondStageTender)' == 'True'"
+                                   asp-items="@(new SelectList(Model.TenderTypes, "Id", "Name"))" data-style="select-with-transition" data-size="8">
+                              <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectTenderType </option>
+                           </select>
+                           <input v-else type="text" id="CreatedBy" name="CreatedBy" readonly="readonly" value="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SecondStageTender" autocomplete="off" class="form-control valid" aria-invalid="false">
+                        </div>
+                        <span asp-validation-for="TenderTypeId" class="text-danger"></span>
+                     </div>
+                     }
+                     else
+                     {
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="TenderTypeId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <input class="form-control" readonly type="text" value="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NationalTransformationProjects">
+                           <input asp-for="TenderTypeId" type="hidden" />
+                        </div>
+                     </div>
+                     }
+                     <div class="col-lg-4 col-sm-6 col-xs-12" v-show="'@string.IsNullOrWhiteSpace(Model.ReferenceNumber)' == 'False'">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="ReferenceNumber" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <input class="form-control" readonly type="text" value="@Model.ReferenceNumber">
+                           <input asp-for="ReferenceNumber" type="hidden" />
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="TenderNumber" class="label bmd-label-static"></label>
+                           <input asp-for="TenderNumber" class="form-control noSpecial" name="TenderNumber" id="tb_TenderNo" maxlength="100" />
+                           <span class="bmd-help"></span><span asp-validation-for="TenderNumber" class="text-danger"></span>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="conditionalBookletDiv" v-show="tenderType != '@((int)Enums.TenderType.NewDirectPurchase)' && tenderType != '@((int)Enums.TenderType.CurrentDirectPurchase)' && tenderType != '@((int)Enums.TenderType.Competition)' && tenderType != '@((int)Enums.TenderType.NationalTransformationProjects)'">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="ConditionsBookletPrice" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <input type="number" asp-for="ConditionsBookletPrice" name="ConditionsBookletPrice" class="form-control" min="0" id="tb_ConditionsBookletPrice" step="any" />
+                           <span class="bmd-help"></span><span asp-validation-for="ConditionsBookletPrice" class="text-danger"></span>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divReasonForLimitedTenderTypeId" v-show="tenderType == '@((int)Enums.TenderType.LimitedTender)'">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="ReasonForLimitedTenderTypeId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <select data-live-search="true" asp-for="ReasonForLimitedTenderTypeId" name="ReasonForLimitedTenderTypeId" class="selectpicker"
+                                   asp-items="@(new SelectList(Model.ReasonForLimitedTenderType, "Id", "Name"))" id="reasonForLimitedTenderTypeId" data-style="select-with-transition" data-size="7">
+                              <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectTenderTypeSelectionReason </option>
+                           </select>
+                        </div>
+                        <span asp-validation-for="ReasonForLimitedTenderTypeId" class="text-danger"></span>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divReasonForPurchaseTenderTypeId" v-show="tenderType == '@((int)Enums.TenderType.NewDirectPurchase)'">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="ReasonForPurchaseTenderTypeId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <select data-live-search="true" asp-for="ReasonForPurchaseTenderTypeId" name="ReasonForPurchaseTenderTypeId" class="selectpicker"
+                                   asp-items="@(new SelectList(Model.ReasonForPurchaseTenderType, "Id", "Name"))" id="reasonForPurchaseTenderTypeId" data-style="select-with-transition" data-size="7">
+                              <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectTenderTypeSelectionReason </option>
+                           </select>
+                        </div>
+                        <span asp-validation-for="ReasonForPurchaseTenderTypeId" class="text-danger"></span>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12 d-none" id="divOtherReasonForTenderType">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="TenderTypeOtherSelectionReason" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <input type="text" asp-for="TenderTypeOtherSelectionReason" name="TenderTypeOtherSelectionReason" class="form-control" id="otherReasonForTenderType" />
+                        </div>
+                        <span asp-validation-for="TenderTypeOtherSelectionReason" class="text-danger"></span>
+                     </div>
+
+
+
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divTechnicalCommittee" v-show="!(tenderType == '@((int)Enums.TenderType.NationalTransformationProjects)' && isAgencyRelatedByVRO == true) && showTechnicalDDL">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="TechnicalOrganizationId" class="label bmd-label-static"></label>
+                           <span v-if="isAgancyHasTechnicalCommittee" class="text-danger">*</span>
+                           <select data-live-search="true" id="technicalOrganizationId" name="TechnicalOrganizationId" class="selectpicker" @*title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseTechnicalCommittee"*@ data-style="select-with-transition" v-model="selectedTechnicalCommitteeId">
+                              <option selected value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseTechnicalCommittee </option>
+                              <option :value="committee.committeeId" v-for="committee in technicalCommittees">{{committee.committeeName}}</option>
+                           </select>
+                        </div>
+                        <span asp-validation-for="TechnicalOrganizationId" class="text-danger"></span>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divOfferOpeningCommittee" v-show="showOpenAndCheckDDL && tenderType != '@((int)Enums.TenderType.NewDirectPurchase)' && tenderType != '@((int)Enums.TenderType.FirstStageTender)' && tenderType != '@((int)Enums.TenderType.NationalTransformationProjects)'">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="OffersOpeningCommitteeId" class="label bmd-label-static"></label>
+                           <select data-live-search="true" id="offersOpeningCommitteeId" name="OffersOpeningCommitteeId" class="selectpicker" @*title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseOfferOpenCommitte"*@ data-style="select-with-transition" v-model="selectedOpenCommitteeId">
+                              <option selected value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseOfferOpenCommitte </option>
+                              <option :value="committee.committeeId" v-for="committee in offersOpenCommittees">{{committee.committeeName}}</option>
+                           </select>
+                           <span asp-validation-for="OffersOpeningCommitteeId" class="text-danger"></span>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divOfferCheckingCommittee" v-show="showOpenAndCheckDDL && tenderType != '@((int)Enums.TenderType.NewDirectPurchase)' && tenderType != '@((int)Enums.TenderType.NationalTransformationProjects)'">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="OffersCheckingCommitteeId" class="label bmd-label-static"></label>
+                           <select data-live-search="true" id="offersCheckingCommitteeId" name="OffersCheckingCommitteeId" class="selectpicker"  data-style="select-with-transition" v-model="selectedCheckCommitteeId">
+                               <option  selected  value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseOfferCheckCommittee </option> 
+                              <option :value="committee.committeeId" v-for="committee in offersCheckCommittees">{{committee.committeeName}}</option>
+                           </select>
+                        </div>
+                        <span asp-validation-for="OffersCheckingCommitteeId" class="text-danger"></span>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divVROCommittee" v-show="showVRODDL && tenderType == '@((int)Enums.TenderType.NationalTransformationProjects)' && isAgencyRelatedByVRO == false">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="VROCommitteeId" class="label bmd-label-static"></label>
+                           <select data-live-search="true" id="vroCommitteeId" name="VROCommitteeId" class="selectpicker" @*title="@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.VROCommitteeSelect"*@ data-style="select-with-transition" v-model="selectedVROCommitteeId">
+                              <option selected value="">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.VROCommitteeSelect</option>
+                              <option :value="committee.committeeId" v-for="committee in vroCommittees">{{committee.committeeName}}</option>
+                           </select>
+                        </div>
+                        <span asp-validation-for="VROCommitteeId" class="text-danger"></span>
+                     </div>
+
+                  </div>
+                  <div class="row">
+                     <div class="col-lg-4 col-sm-6 col-xs-12" v-show="tenderType == '@((int)Enums.TenderType.LimitedTender)'">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="IsLinkedToAnnouncement" class="label bmd-label-static"></label>
+                           <div class="form-check">
+                              <label class="form-check-label">
+                                 <input class="form-check-input" asp-for="IsLinkedToAnnouncement" type="checkbox" v-model="showAnnouncementCheckBox" name="IsLinkedToAnnouncement" id="checkIsLinkedToAnnouncement">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.IsLinkedToAnnouncement
+                                 <span class="form-check-sign">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                           </div>
+                        </div>
+                        <span asp-validation-for="IsLinkedToAnnouncement" class="text-danger"></span>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" v-show="showAnnouncementCheckBox || directPurchaseReason == '@((int)Enums.ReasonForPurchaseTenderType.BusinessAndProcurementAreAvailableToOneContractorCSupplierAndHaveNoAcceptableAlternative)'">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="PreAnnouncementId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <select data-live-search="true" id="preAnnouncementId" name="PreAnnouncementId" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectPreAnnouncement" data-style="select-with-transition" v-model="selectedPreAnnouncementId">
+                              <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectPreAnnouncement </option>
+                              <option :value="item.id" v-for="item in preAnnouncementList">{{item.name}}</option>
+                           </select>
+                        </div>
+                        <span asp-validation-for="PreAnnouncementId" class="text-danger"></span>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" v-show="showAnnouncementTemplate && isPublicInvitation != '@((int)Enums.InvitationType.Public)' && directPurchaseReason != '@((int)Enums.ReasonForPurchaseTenderType.BusinessAndProcurementAreAvailableToOneContractorCSupplierAndHaveNoAcceptableAlternative)'">
+                        <div class="form-group bmd-form-group">
+                         
+                           <label asp-for="AnnouncementTemplateId" class="label bmd-label-static"></label><span v-show="tenderType != '@((int)Enums.TenderType.NewDirectPurchase)' && reasonForLimitedTenderTypeId  == '@((int)Enums.ReasonForLimitedTenderType.PurchasesThatAvailableOnlyToLimitedNumberOfContractOrSuppliers)' " class="text-danger">*</span>
+                           <select data-live-search="true" id="announcementTemplateId" name="AnnouncementTemplateId" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.AnnouncementSuppliersTemplate" data-style="select-with-transition" v-model="selectedAnnouncementTamplateId">
+                              <option selected value="">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.SelectAnnouncementTemplate </option>
+                              <option :value="item.id" v-for="item in announcementTamplateList">{{item.name}}</option>
+                           </select>
+                        </div>
+                        <span asp-validation-for="AnnouncementTemplateId" class="text-danger"></span>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-lg-4 col-sm-6 col-xs-12" v-show="tenderType != '@((int)Enums.TenderType.CurrentDirectPurchase)' && tenderType != '@((int)Enums.TenderType.CurrentTender)' && tenderType != '@((int)Enums.TenderType.NationalTransformationProjects)'">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="HasQualification" class="label bmd-label-static"></label>
+                           <div class="form-check">
+                              <label class="form-check-label">
+                                 <input class="form-check-input" asp-for="HasQualification" type="checkbox" v-model="hasPreQualification" name="HasQualification" id="check_HasPreQualificationId">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.HasPrequalification
+                                 <span class="form-check-sign">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                           </div>
+                        </div>
+                        <span asp-validation-for="HasQualification" class="text-danger"></span>
+                     </div>
+
+                     <div class="col-lg-4 col-sm-6 col-xs-12 " id="divPreQualifications" v-show="hasPreQualification && tenderType != '@((int)Enums.TenderType.CurrentDirectPurchase)' && tenderType != '@((int)Enums.TenderType.CurrentTender)' && tenderType != '@((int)Enums.TenderType.NationalTransformationProjects)'">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="PreQualificationId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <select data-live-search="true" id="preQualificationId" name="PreQualificationId" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectPreQualification" data-style="select-with-transition" v-model="selectedPreQualificationId">
+                              <option :value="item.id" v-for="item in preQualifications">{{item.name}}</option>
+                           </select>
+                        </div>
+                        <span asp-validation-for="PreQualificationId" class="text-danger"></span>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divOfferPresentationWay" v-show="tenderType != '@((int)Enums.TenderType.CurrentDirectPurchase)' && tenderType != '@((int)Enums.TenderType.CurrentTender)' && tenderType != '@((int)Enums.TenderType.FirstStageTender)' && tenderType != '@((int)Enums.TenderType.ReverseBidding)' && tenderType != '@((int)Enums.TenderType.NationalTransformationProjects)' && tenderType != '@((int)Enums.TenderType.Competition)'">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="OfferPresentationWayId" class="label bmd-label-static"></label>
+                           <div class="form-check">
+                              <label class="form-check-label">
+                                 <input asp-for="OfferPresentationWayId" name="OfferPresentationWayId" class="form-check-input" checked type="radio" id="OfferPresentationWayId" v-model="offerPresentationWayId" value="@((int)Enums.OfferPresentationWayId.OneFile)">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.File
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                              <label class="form-check-label">
+                                 <input :disabled="disableTwoFiles == 1" asp-for="OfferPresentationWayId" name="OfferPresentationWayId" class="form-check-input" type="radio" id="OfferPresentationWayId" v-model="offerPresentationWayId" value="@((int)Enums.OfferPresentationWayId.TwoSepratedFiles)">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TwoFiles
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                           </div>
+                        </div>
+                        <span asp-validation-for="OfferPresentationWayId" class="text-danger"></span>
+                     </div>
+                    
+                  </div>
+                  <div class="row">
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="InvitationTypeDiv" v-show="((tenderType == '@((int)Enums.TenderType.NewDirectPurchase)'  && !isDirectPurchasePrivateInvitation) || tenderType == '@((int)Enums.TenderType.CurrentDirectPurchase)' || tenderType == '@((int)Enums.TenderType.FrameworkAgreement)' || tenderType == '@((int)Enums.TenderType.ReverseBidding)' || tenderType == '@((int)Enums.TenderType.Competition)') && !hasPreQualification">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="InvitationTypeId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <div class="form-check">
+                              <label class="form-check-label">
+                                 <input asp-for="InvitationTypeId" name="InvitationTypeId" class="form-check-input" type="radio" v-model="isPublicInvitation" id="ceckinvitationTypeIDPublic" value="1" />
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AllSuppliersWithElectronicGate
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                              <label class="form-check-label">
+                                 <input asp-for="InvitationTypeId" name="InvitationTypeId" class="form-check-input" type="radio" checked v-model="isPublicInvitation" id="ceckinvitationTypeIDPrivet" value="2" />
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SpecialInvitation
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                           </div>
+                           <span asp-validation-for="InvitationTypeId" class="text-danger"></span>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row" id="divSamples" v-show="(tenderType == '@((int)Enums.TenderType.NationalTransformationProjects)' && isAgencyRelatedByVRO == true)">
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="SupplierNeedSample" class="label bmd-label-static"></label>
+                           <div class="form-check">
+                              <label class="form-check-label">
+                                 <input asp-for="SupplierNeedSample" name="SupplierNeedSample" class="form-check-input" type="radio" id="SupplierNeedSamplerd" v-model="isSupplierNeedSample" value="true">
+                                 @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Yes
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                              <label class="form-check-label">
+                                 <input asp-for="SupplierNeedSample" name="SupplierNeedSample" class="form-check-input" checked type="radio" id="SupplierNeedSamplerd" v-model="isSupplierNeedSample" value="false">
+                                 @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.No
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                           </div>
+                        </div>
+                        <span asp-validation-for="SupplierNeedSample" class="text-danger"></span>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="SamplesDeliveryAddressDiv" v-show="isSupplierNeedSample == 'true'">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="SamplesDeliveryAddress" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <input type="text" onchange="return blockSpecialChar(event)" asp-for="SamplesDeliveryAddress" name="SamplesDeliveryAddress" class="noSpecial form-control" id="tb_SamplesDeliveryAddress" />
+                           <span asp-validation-for="SamplesDeliveryAddress" class="text-danger"></span>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row" v-show="tenderType == '@((int)Enums.TenderType.FrameworkAgreement)' && isFramWorkRecreation == false">
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="AgreementTypeId" class="label bmd-label-static"></label>
+                           <div class="form-check">
+                              <label class="form-check-label">
+                                 <input asp-for="AgreementTypeId" name="AgreementTypeId" class="form-check-input" checked type="radio" id="AgreementTypeId" v-model="isAgreementType" value="@((int)Enums.AgreementType.Opened)">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Opened
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                              <label class="form-check-label">
+                                 <input asp-for="AgreementTypeId" name="AgreementTypeId" class="form-check-input" type="radio" id="AgreementTypeId" v-model="isAgreementType" value="@((int)Enums.AgreementType.Closed)">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Closed
+                                 <span class="circle">
+                                    <span class="check"></span>
+                                 </span>
+                              </label>
+                           </div>
+                        </div>
+                        <span asp-validation-for="AgreementTypeId" class="text-danger"></span>
+                     </div>
+                     <div class="col-12" id="divAgreementPeriodDate">
+                        <div class="form-group bmd-form-group p-0">
+                           <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgreementPeriod</label>
+                        </div>
+                        <div class="row">
+                           <div class="col-4">
+                              <div class="form-group bmd-form-group p-0">
+                                 <label asp-for="AgreementDays" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <input type="number" asp-for="AgreementDays" name="AgreementDays" class="form-control" min="0" placeholder="يوم" id="tb_AgreementYears" step="any" />
+                                 <span class="bmd-help"></span><span asp-validation-for="AgreementDays" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-4">
+                              <div class="form-group bmd-form-group p-0">
+                                 <label asp-for="AgreementMonthes" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <input type="number" asp-for="AgreementMonthes" name="AgreementMonthes" class="form-control" min="0" placeholder="شهر" id="tb_AgreementMonthes" step="any" />
+                                 <span class="bmd-help"></span><span asp-validation-for="AgreementMonthes" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-4">
+                              <div class="form-group bmd-form-group p-0">
+                                 <label asp-for="AgreementYears" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <input type="number" asp-for="AgreementYears" name="AgreementYears" class="form-control" min="0" placeholder="سنة" id="tb_AgreementYears" step="any" />
+                                 <span class="bmd-help"></span><span asp-validation-for="AgreementYears" class="text-danger"></span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divTenderAgreementAgencies">
+                        @*<div class="form-group bmd-form-group">
+                              <label asp-for="GovAgencies" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                              <select asp-for="TenderAgreementAgencyIDs" name="TenderAgreementAgencyIDs" data-live-search="true" id="dD_TenderAgreementAgencies" class="selectpicker"
+                                      asp-items="@(new SelectList(Model.GovAgencies, "AgencyCode", "NameArabic"))" data-style="select-with-transition" data-size="7"></select>
+                           </div>*@
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="TenderAgreementAgencyIDs" class="label bmd-label-static"></label>
+                           <select data-live-search="true" id="tenderAgreementAgencyIDs" name="TenderAgreementAgencyIDs" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderAgreementAgencies" data-style="select-with-transition" multiple v-model="selectedTenderAgreementAgencyIDs">
+                              <option :value="agency.value" v-for="agency in govAgencies">{{agency.name}}</option>
+                           </select>
+                        </div>
+                        <span asp-validation-for="TenderAgreementAgencyIDs" class="text-danger"></span>
+                     </div>
+                  </div>
+                  <div class="row" v-show="tenderType == '@((int)Enums.TenderType.Competition)'">
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divNumberOfWinners">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="NumberOfWinners" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <input type="number" asp-for="NumberOfWinners" name="NumberOfWinners" class="form-control" min="0" id="tb_NumberOfWinners" step="any" />
+                           <span class="bmd-help"></span><span asp-validation-for="NumberOfWinners" class="text-danger"></span>
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-sm-6 col-xs-12" id="divBonusValue">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="BonusValue" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <input type="number" asp-for="BonusValue" name="BonusValue" class="form-control" min="0" id="tb_BonusValue" step="any" />
+                           <span class="bmd-help"></span><span asp-validation-for="BonusValue" class="text-danger"></span>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="Purpose" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                           <textarea asp-for="Purpose" class="form-control" maxlength="1024"></textarea>
+                           <span asp-validation-for="Purpose" class="text-danger"></span>
+                        </div>
+                     </div>
+                     <div class="col-lg-12 col-sm-12 col-xs-12" v-show="tenderType != '@((int)Enums.TenderType.FirstStageTender)' && !(tenderType == '@((int)Enums.TenderType.NationalTransformationProjects)' && isVRO)">
+                        <div class="row">
+                           <div class=" col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                              <div class="form-group">
+                                 <label asp-for="EstimatedValue" class="label bmd-label-static"></label>
+                                 <span class="text-danger" v-show="tenderType != '@((int)Enums.TenderType.CurrentDirectPurchase)' && tenderType != '@((int)Enums.TenderType.CurrentTender)'">*</span>
+                                 <input type="number" class="form-control" id="txtEstimatedValue" maxlength="15" name="EstimatedValue" asp-for="EstimatedValue" />
+                                 <span asp-validation-for="EstimatedValue" class="text-danger "></span>
+                              </div>
+                              <div class="form-group bmd-form-group " v-show="tenderType != '@((int)Enums.TenderType.FirstStageTender)'">
+                                 <label asp-for="EstimatedValue" class="label bmd-label-static invisible"></label>
+                                 <div class="blockquote blockquote-success undefined">
+                                    <small id="StringEstimatedValue">
+                                    </small>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           @* Direct Purchase Basic Data *@
+                           
+                           <div class="col-lg-4 col-sm-6 col-xs-12" id="directPurchaseCheckingWay" v-show="showDirectPurchaseDDL && tenderType == '@((int)Enums.TenderType.NewDirectPurchase)' && estimatedValue && estimatedValue <= @((int)Enums.TenderBudget.LowBudget)">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="IsLowBudgetDirectPurchase" class="label bmd-label-static"></label>
+                                 <div class="form-check">
+                                    <label class="form-check-label">
+                                       <input asp-for="IsLowBudgetDirectPurchase" name="IsLowBudgetDirectPurchase" class="form-check-input" checked type="radio" id="IsLowBudgetDirectPurchase" v-model="isLowBudgetDirectPurchase" value=false>
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NormalDirectPurchase
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                    <label class="form-check-label">
+                                       <input asp-for="IsLowBudgetDirectPurchase" name="IsLowBudgetDirectPurchase" class="form-check-input" type="radio" id="IsNormalDirectPurchase" v-model="isLowBudgetDirectPurchase" value=true>
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LowBudgetDirectPurchase
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                 </div>
+                              </div>
+                              <span class="h6 text-danger">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LowBudgetWayInfo
+                              </span>
+                              <span asp-validation-for="IsLowBudgetDirectPurchase" class="text-danger"></span>
+                           </div>
+                           <div class="col-lg-4 col-sm-6 col-xs-12" id="divDirectPurchaseCommittee" v-show="(showDirectPurchaseDDL && tenderType == '@((int)Enums.TenderType.NewDirectPurchase)') && (!isLowBudgetDirectPurchase || isLowBudgetDirectPurchase == 'false')">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="DirectPurchaseCommitteeId" class="label bmd-label-static"></label>
+                                 <select data-live-search="true" id="directPurchaseCommitteeId" name="DirectPurchaseCommitteeId" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectDirectPurchaseCommittee" data-style="select-with-transition" v-model="selectedPurchaseCommitteeId">
+                                    <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectDirectPurchaseCommittee</option>
+                                    <option :value="committee.committeeId" v-for="committee in directPurchaseCommittees">{{committee.committeeName}}</option>
+                                 </select>
+
+                              </div>
+                              <span asp-validation-for="DirectPurchaseCommitteeId" class="text-danger"></span>
+                           </div>
+                           <div class="col-lg-4 col-sm-6 col-xs-12" id="divDirectPurchaseMembers" v-show="(showDirectPurchaseDDL && tenderType == '@((int)Enums.TenderType.NewDirectPurchase)') && isLowBudgetDirectPurchase == 'true'">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="DirectPurchaseCommitteeMemberId" class="label bmd-label-static"></label>
+                                 <select data-live-search="true" id="directPurchaseCommitteeMemberId" name="DirectPurchaseCommitteeMemberId" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DirectPurchaseCommitteeMemberId" data-style="select-with-transition" v-model="selectedPurchaseCommitteeMemberId">
+                                    <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DirectPurchaseCommitteeMemberId</option>
+                                    <option :value="member.userId" v-for="member in purchaseCommitteeMembers">{{member.userName}}</option>
+                                 </select>
+
+                              </div>
+                              <span asp-validation-for="DirectPurchaseCommitteeMemberId" class="text-danger"></span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <input type="hidden" name="AgencyBudgetProjectNumber" id="AgencyBudgetProjectNumber" />
+                  @*@if (!(@User.UserIsGovVendor() || @User.UserIsSemiGovAgency()))
+                     {
+                        <div id="ProjectItemsGrid" style="display:none;">
+                           @Html.Partial("_ProjectItems")
+                        </div>
+                     }*@
+               </div>
+               <div class="row">
+                  <div class="col">
+                     <button type="submit" id="btnSave" class="btn btn-primary etd-search-btn pull-right">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveContinue
+                     </button>
+                     <button type="button" id="btnCancel" class="btn btn-danger etd-search-btn" hidden="hidden">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+                     </button>
+                  </div>
+               </div>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+         @if (Model.TenderStatusId == (int)Enums.TenderStatus.Established)
+         {
+         @if (showDatesTab == true || User.UserIsVRO())
+            {
+         <li class="">
+            <div>
+               <h4><a id="hDetailsStep" href="@Url.Action("TenderDates", "Tender", new { tenderId = Model.TenderIdString })"><span class="step-num">2</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DetailsStep</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+            }
+         <li class="">
+            <div>
+               <h4><a id="hRealtionStep" href="@Url.Action("RelationsStep", "Tender", new { tenderId = Model.TenderIdString })"><span class="step-num">3</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+         <li class="" v-show="tenderType != @((int)Enums.TenderType.Competition) && tenderType != @((int)Enums.TenderType.FirstStageTender) && tenderType != @((int)Enums.TenderType.ReverseBidding)">
+            <div>
+               <h4 id="hQuantatysStep"><a href="@Url.Action("QuantitiesTableStep", "Tender", new { id = Model.TenderIdString })"><span class="step-num">4</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+         @if (Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects || Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase)
+            {
+         <li class="" id="liTemplates">
+            <div>
+               <h4><a id="hAttachmentStep" href="@Url.Action("AttachmentsStep", "Tender", new { id = Model.TenderIdString })"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+            }
+            else
+            {
+         <li class="id=liAttachments">
+            <div>
+               <h4><a id="hdnTemplatesStep" href="@Url.Action("UpdateConditionsTemplate", "Tender", new { tenderIdString = Model.TenderIdString })"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+            }
+         @if (showInvitationTab == true)
+            {
+         <li class="">
+            <div>
+               <h4><a id="hInvitationsStep" href="@Url.Action("SendInvitationsStep", "Tender", new { tenderIdString = Model.TenderIdString })"><span class="step-num">6</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Invitations</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+            }
+         }
+         else
+         {
+         <li class="">
+            <div>
+               <h4><a id="hDetailsStep" href="#"><span class="step-num">2</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DetailsStep</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+         <li class="">
+            <div>
+               <h4><a id="hRelationStep" href="#"><span class="step-num">3</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+         <li class="" v-show="tenderType != @((int)Enums.TenderType.Competition) && tenderType != @((int)Enums.TenderType.FirstStageTender) && tenderType != @((int)Enums.TenderType.ReverseBidding)">
+            <div>
+               <h4><a id="hQuantatysStep" href="#"><span class="step-num">4</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+         <li class="">
+            <div>
+               <h4><a id="hAttachmentStep" href="#"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+         @if (showInvitationTab == true)
+            {
+         <li class="">
+            <div>
+               <h4><a id="hInvitationsStep" href="#"><span class="step-num">6</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Invitations</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+            }
+         }
+      </ul>
+      <div class="row">
+         <div class="col">
+            <a asp-controller="Tender" asp-action="Index" class="btn h6 pull-right btn-outline-primary" id="btnBack" style="font-size:0.8em">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButtonToMain
+            </a>
+         </div>
+      </div>
+   </div>
+</form>
+@section scripts{
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script type="text/javascript">
+      function ProgramIndex(number) {
+         var index = -1;
+         $(app.projectItems).each(function (i, e) {
+            if (e.ProjectNumber == number)
+               index = i;
+         })
+         return index;
+      }
+      var totalCash = 0;
+   var app = new Vue({
+      el: '#basicStepForm',
+      data: {
+         isVRO: '@User.UserIsVRO()' == 'True' ? true : false,
+         isAgencyRelatedByVRO: '@User.UserIsRelatedVRO()' == 'True' ? true : false,
+         isSupplierNeedSample: '@Model.SupplierNeedSample' == 'True' ? "true" : "false",
+         hasPreQualification: '@Model.HasQualification' == 'True' ? true : false,
+         isAgreementType: '@Model.AgreementTypeId' == '@((int)Enums.AgreementType.Opened)' ? "@((int)Enums.AgreementType.Opened)" : "@((int)Enums.AgreementType.Closed)",
+         isPublicInvitation: '@Model.InvitationTypeId' == '@((int)Enums.InvitationType.Specific)' ? '@((int)Enums.InvitationType.Specific)' : '@((int)Enums.InvitationType.Public)',
+         allSuppliersInvitation: '@Model.InvitationTypeId' == '@((int)Enums.InvitationType.Public)' ? true : false,
+         tenderType: '@Model.TenderTypeId',
+         tenderStatus: '@Model.TenderStatusId',
+         tenderTypeId: null,
+         offerPresentationWayId: '@Model.OfferPresentationWayId' == '@((int)Enums.OfferPresentationWayId.TwoSepratedFiles)' ? '@((int)Enums.OfferPresentationWayId.TwoSepratedFiles)' : '@((int)Enums.OfferPresentationWayId.OneFile)',
+         showInvitationTab: '@Model.ShowInvitationTab' == 'True' ? true : false,
+         isFramWorkRecreation: '@Model.IsFramWorkRecreation',
+         projectItems: @Html.Raw(JsonConvert.SerializeObject(Model.AgencyBudgetNumbers)),
+         newTask: "",
+         newType: 'true',
+         selectedTechnicalCommitteeId: '@Model.TechnicalOrganizationId',
+         technicalCommittees: '@Model.TechnicalCommittees',
+
+         selectedOpenCommitteeId: '@Model.OffersOpeningCommitteeId',
+         offersOpenCommittees: '@Model.OfferOpenningCommittees',
+
+         selectedCheckCommitteeId: '@Model.OffersCheckingCommitteeId',
+         offersCheckCommittees: '@Model.OfferCheckingCommittees',
+
+         selectedPurchaseCommitteeId: '@Model.DirectPurchaseCommitteeId',
+         directPurchaseCommittees: '@Model.DirectPurchaseCommittees',
+
+         selectedVROCommitteeId: '@Model.VROCommitteeId',
+         vroCommittees: '@Model.VROCommittees',
+
+         selectedPreQualificationId: '@Model.PreQualificationId',
+         preQualifications: '@Model.PreQualifications',
+
+         selectedTenderAgreementAgencyIDs: @(Html.Raw(Model.TenderAgreementAgencyIDs != null ? Newtonsoft.Json.JsonConvert.SerializeObject(Model.TenderAgreementAgencyIDs.ToList()) : "{}")),
+         govAgencies: '@Model.GovAgencies',
+
+         branchHasTechnicalCommittees: '@Model.BranchHasTechnicalCommittees' == 'True' ? true : false,
+         isAgancyHasTechnicalCommittee: '@Model.IsAgancyHasTechnicalCommittee' == 'True' ? true : false,
+         isInEdit: false,
+         isTenderTypeChanged: false,
+         showTechnicalDDL: false,
+         showOpenAndCheckDDL: false,
+         showVRODDL: false,
+         showDirectPurchaseDDL: false,
+         directPurchaseReason: '@string.IsNullOrEmpty(Model.ReasonForPurchaseTenderTypeId.ToString())' == 'True' ? '0' : '@Model.ReasonForPurchaseTenderTypeId',
+         reasonForLimitedTenderTypeId: '@string.IsNullOrEmpty(Model.ReasonForLimitedTenderTypeId.ToString())' == 'True' ? '0' : '@Model.ReasonForLimitedTenderTypeId',
+      isLowBudgetDirectPurchase: '@Model.IsLowBudgetDirectPurchase' != 'null' && '@Model.IsLowBudgetDirectPurchase' != '' ? '@Model.IsLowBudgetDirectPurchase'.toLowerCase() : false,
+         selectedPurchaseCommitteeMemberId: '@string.IsNullOrEmpty(Model.DirectPurchaseCommitteeMemberId.ToString())' == 'True' ? '' : '@Model.DirectPurchaseCommitteeMemberId',
+         purchaseCommitteeMembers: '@Model.PurchaseCommitteeMembers',
+         disableTwoFiles: '@Model.IsLowBudgetDirectPurchase' != 'null' && '@Model.IsLowBudgetDirectPurchase'.toLowerCase() == 'true' ? true : false,
+
+         canChangeTenderType: '@Model.TenderId' != '0' ? false : true,
+         isDirectPurchasePrivateInvitation: '@isPrivateInvitation' == 'True' ? true : false,
+         tenderName: `@Html.Raw(Model.TenderName)`,
+         showAnnouncementCheckBox: '@Model.IsLinkedToAnnouncement' == 'True' ? true : false,
+         showAnnouncementTemplate : '@Model.TenderTypeId' == '@((int)Enums.TenderType.LimitedTender)' || '@Model.TenderTypeId' == '@((int)Enums.TenderType.NewDirectPurchase)' ? true : false,
+         selectedPreAnnouncementId: '@Model.PreAnnouncementId',
+         tenderId: '@Model.TenderId',
+         preAnnouncementList: [],
+         selectedAnnouncementTamplateId:'@Model.AnnouncementTemplateId',
+         announcementTamplateList: [],
+         isCreatedFromAnnouncement: '@string.IsNullOrEmpty(Model.PreAnnouncementId.ToString())' == 'True' ? false : true,
+         isDirectPurchaseFromAnnouncement: false,
+         estimatedValue: 0
+
+      },
+      watch: {
+         directPurchaseReason: function () {
+            debugger;
+            if (this.directPurchaseReason == @((int)Enums.ReasonForPurchaseTenderType.BusinessAndProcurementAreAvailableToOneContractorCSupplierAndHaveNoAcceptableAlternative)) {
+               this.fillPreAnnouncementListForDirectPurchase();
+               this.isInEdit = true;
+            } else {
+               this.selectedPreAnnouncementId = "";
+               this.preAnnouncementList = [];
+            }
+         },
+         tenderType: function () {
+            $("#hdnTenderType").val(this.tenderType);
+            this.isTenderTypeChanged = true;
+
+            if (this.tenderType != @((int)Enums.TenderType.LimitedTender)) {
+               this.showAnnouncementCheckBox = false;
+               this.showAnnouncementTemplate = false;
+               this.selectedPreAnnouncementId = "";
+               this.preAnnouncementList = [];
+            }
+            if (this.tenderType != @((int)Enums.TenderType.NewDirectPurchase)) {
+               this.directPurchaseReason = "";
+               this.selectedPreAnnouncementId = "";
+               this.showAnnouncementTemplate = false;
+               this.preAnnouncementList = [];
+               this.tenderName = "";
+            }
+
+            if (this.tenderType == @((int)Enums.TenderType.NewTender)) {
+               this.fillOldTendersData();
+               this.isPublicInvitation = '@((int)Enums.InvitationType.Public)';
+            }
+            if (this.tenderType == @((int)Enums.TenderType.NewDirectPurchase)) {
+               this.fillNewDirectPurchaseData();
+            }
+            if (this.tenderType == @((int)Enums.TenderType.FrameworkAgreement)) {
+               this.fillTenderAgreementAgencies();
+            }
+            if (this.tenderType == @((int)Enums.TenderType.CurrentTender)) {
+               this.fillOldTendersData();
+               this.isPublicInvitation = '@((int)Enums.InvitationType.Public)';
+            }
+            if (this.tenderType == @((int)Enums.TenderType.CurrentDirectPurchase) || this.tenderType == @((int)Enums.TenderType.LimitedTender) || this.tenderType == @((int)Enums.TenderType.FirstStageTender) || this.tenderType == @((int)Enums.TenderType.FrameworkAgreement) || this.tenderType == @((int)Enums.TenderType.ReverseBidding) || this.tenderType == @((int)Enums.TenderType.Competition)) {
+               this.directPurchaseReason = "";
+               this.fillOldTendersData();
+            }
+            if (this.tenderType == @((int)Enums.TenderType.NewDirectPurchase) || this.tenderType == @((int)Enums.TenderType.LimitedTender)) {
+               this.isPublicInvitation = '@((int)Enums.InvitationType.Specific)';
+               $('#reasonForPurchaseTenderTypeId').val("");
+               $('#reasonForLimitedTenderTypeId').val("");
+               $('#otherReasonForTenderType').val("");
+               this.showInvitationTab = true;
+               this.showAnnouncementTemplate = true;
+            }
+            if (this.tenderType == @((int)Enums.TenderType.FirstStageTender)) {
+               this.showInvitationTab = false;
+               this.hasPreQualification = false;
+               this.offerPresentationWayId = '@((int)Enums.OfferPresentationWayId.OneFile)';
+            }
+            if (this.tenderType != @((int)Enums.TenderType.NewDirectPurchase) && this.tenderType != @((int)Enums.TenderType.LimitedTender)) {
+               addDropDownForOtherReaseons();
+            }
+            if (this.tenderType == @((int)Enums.TenderType.CurrentTender) || this.tenderType == @((int)Enums.TenderType.CurrentDirectPurchase)|| this.tenderType == @((int)Enums.TenderType.NationalTransformationProjects)) {
+               $('#liAttachments').show();
+               $('#liTemplates').hide();
+            }
+            else {
+               $('#liTemplates').show();
+               $('#liAttachments').hide();
+            }
+         },
+         isLowBudgetDirectPurchase: function () {
+            if (this.isLowBudgetDirectPurchase == 'true') {
+               $("#directPurchaseCommitteeMemberId").selectpicker("refresh");
+               $("#directPurchaseCommitteeId").selectpicker("refresh");
+               this.offerPresentationWayId = '@((int)Enums.OfferPresentationWayId.OneFile)';
+               this.disableTwoFiles = true;
+            }
+            else {
+               this.disableTwoFiles = false;
+            }
+         },
+            showAnnouncementCheckBox: function () {
+               if (!this.showAnnouncementCheckBox) {
+                  $("#preAnnouncementId").selectpicker("val", "null");
+                  $("#preAnnouncementId").selectpicker("refresh");
+               }
+               else {
+                  this.isInEdit = false;
+                  this.fillPreAnnouncementListForLimitedTender();
+                  this.fillAnnouncementTamplateListForLimitedTender();
+                  this.showAnnouncementTemplate = true;
+               }
+            },
+            hasPreQualification: function () {
+               if (!this.hasPreQualification) {
+                  $("#preQualificationId").selectpicker("val", "null");
+                  $("#preQualificationId").selectpicker("refresh");
+                  app.selectedPreQualificationId = "";
+                  if (this.tenderType == @((int)Enums.TenderType.NewTender)) {
+                     this.isPublicInvitation = '@((int)Enums.InvitationType.Public)';
+                     this.showInvitationTab = false;
+                  }
+                  if (this.tenderType == @((int)Enums.TenderType.NewDirectPurchase) || this.tenderType == @((int)Enums.TenderType.LimitedTender)) {
+                     this.isPublicInvitation = '@((int)Enums.InvitationType.Specific)';
+                     this.showInvitationTab = true;
+                  }
+               } else {
+                  this.isInEdit = false;
+                  this.fillPreQualificationData();
+
+                  this.isPublicInvitation = '@((int)Enums.InvitationType.Specific)';
+                  this.showInvitationTab = true;
+               }
+            },
+            isSupplierNeedSample: function () {
+               if (this.isSupplierNeedSample == "false") {
+                  $('#tb_SamplesDeliveryAddress').val("");
+               }
+            }
+         },
+      created: function () {
+            if ('@Model.TenderId' == '0') {
+               $.get('/Tender/GetQuantityTableVersion').done(function (result) {
+                  //app.quantityTableVersionId = result;
+                  $("#hfVersionId").val(result);
+               });
+            }
+            this.tenderType = '@Model.TenderTypeId';
+            var tenderId = '@Model.TenderId';
+            if (this.tenderType != 0 && tenderId != 0) {
+               $('#tenderTypeId').attr("disabled", "disabled");
+            } else {
+               $('#tenderTypeId').removeAttr('disabled');
+            }
+            this.tenderStatus = '@Model.TenderStatusId';
+            if (this.tenderType == @((int)Enums.TenderType.NewDirectPurchase)) {
+               this.fillNewDirectPurchaseData();
+               this.isInEdit = true;
+               if (tenderId == 0 && this.directPurchaseReason == @((int)Enums.ReasonForPurchaseTenderType.BusinessAndProcurementAreAvailableToOneContractorCSupplierAndHaveNoAcceptableAlternative)) {
+                  this.isDirectPurchaseFromAnnouncement = true;
+               }
+               this.isPublicInvitation == @((int)Enums.InvitationType.Specific);
+               this.fillAnnouncementTamplateListForDirectPurchase();
+            }
+
+            if (this.tenderType == @((int)Enums.TenderType.FrameworkAgreement)) {
+               this.fillTenderAgreementAgencies();
+               this.isInEdit = true;
+            }
+            if (this.tenderType == @((int)Enums.TenderType.LimitedTender)) {
+               this.isPublicInvitation == @((int)Enums.InvitationType.Specific);
+               this.fillAnnouncementTamplateListForLimitedTender();
+            }
+
+            if (this.tenderType == @((int)Enums.TenderType.NewTender) || this.tenderType == @((int)Enums.TenderType.LimitedTender) || this.tenderType == @((int)Enums.TenderType.FirstStageTender) || this.tenderType == @((int)Enums.TenderType.CurrentTender) || this.tenderType == @((int)Enums.TenderType.CurrentDirectPurchase) || this.tenderType == @((int)Enums.TenderType.FrameworkAgreement) || this.tenderType == @((int)Enums.TenderType.ReverseBidding) || this.tenderType == @((int)Enums.TenderType.Competition))
+            {
+               this.fillOldTendersData();
+               this.isInEdit = true;
+               @*if (this.tenderType == @((int)Enums.TenderType.NewTender) && this.isCreatedFromAnnouncement) {
+                  $('#txtTenderName').val(this.preAnnouncementName);
+
+               } else {
+                  $('#txtTenderName').val("");
+               }*@
+            }
+
+
+             if (this.tenderType == @((int)Enums.TenderType.NationalTransformationProjects)) {
+               this.fillVROData();
+               this.isInEdit = true;
+            }
+            if (this.hasPreQualification) {
+               this.fillPreQualificationData();
+               this.isInEdit = true;
+            }
+            if (this.showAnnouncementCheckBox) {
+               this.fillPreAnnouncementListForLimitedTender();
+               this.fillAnnouncementTamplateListForLimitedTender();
+               this.isInEdit = true;
+            }
+             if (this.directPurchaseReason == @((int)Enums.ReasonForPurchaseTenderType.BusinessAndProcurementAreAvailableToOneContractorCSupplierAndHaveNoAcceptableAlternative)) {
+                this.fillPreAnnouncementListForDirectPurchase();
+                this.isInEdit = true;
+            }
+         },
+         updated: function () {
+            if (this.tenderType == @((int)Enums.TenderType.NewTender) || this.tenderType == @((int)Enums.TenderType.FirstStageTender) || this.tenderType == @((int)Enums.TenderType.CurrentTender) || this.tenderType == @((int)Enums.TenderType.CurrentDirectPurchase) || this.tenderType == @((int)Enums.TenderType.LimitedTender)|| this.tenderType == @((int)Enums.TenderType.FrameworkAgreement) || this.tenderType == @((int)Enums.TenderType.ReverseBidding) || this.tenderType == @((int)Enums.TenderType.Competition)) {
+                  $('#technicalOrganizationId').selectpicker('refresh');
+                  $('#offersOpeningCommitteeId').selectpicker('refresh');
+                  $('#offersCheckingCommitteeId').selectpicker('refresh');
+                  $('#technicalOrganizationId').selectpicker('val', this.selectedTechnicalCommitteeId);
+                  $('#offersOpeningCommitteeId').selectpicker('val', this.selectedOpenCommitteeId);
+                  $('#offersCheckingCommitteeId').selectpicker('val', this.selectedCheckCommitteeId);
+                  this.isLowBudgetDirectPurchase = 'false';
+                  $("#directPurchaseCommitteeMemberId").selectpicker('val', '');
+                  this.selectedPurchaseCommitteeMemberId = '';
+                  $("#directPurchaseCommitteeMemberId").selectpicker("refresh");
+            }
+            if (this.tenderType == @((int)Enums.TenderType.NewDirectPurchase)) {
+                  $('#technicalOrganizationId').selectpicker('refresh');
+                  $('#directPurchaseCommitteeId').selectpicker('refresh');
+                  $('#technicalOrganizationId').selectpicker('val', this.selectedTechnicalCommitteeId);
+               $('#directPurchaseCommitteeId').selectpicker('val', this.selectedPurchaseCommitteeId);
+               //app.fillAnnouncementTamplateListForDirectPurchase();
+            }
+            if (this.tenderType == @((int)Enums.TenderType.FrameworkAgreement)) {
+                  $('#tenderAgreementAgencyIDs').selectpicker('refresh');
+                  $('#tenderAgreementAgencyIDs').selectpicker('val', this.selectedTenderAgreementAgencyIDs);
+            }
+            if (this.tenderType == @((int)Enums.TenderType.NationalTransformationProjects)) {
+                  $('#technicalOrganizationId').selectpicker('refresh');
+                  $('#vroCommitteeId').selectpicker('refresh');
+                  $('#technicalOrganizationId').selectpicker('val', this.selectedTechnicalCommitteeId);
+                  $('#vroCommitteeId').selectpicker('val', this.selectedVROCommitteeId);
+            }
+            if (this.hasPreQualification) {
+                  $('#preQualificationId').selectpicker('refresh');
+                  $('#preQualificationId').selectpicker('val', this.selectedPreQualificationId);
+            }
+            if ((this.tenderId == 0 && this.isCreatedFromAnnouncement) && (this.showAnnouncementCheckBox || this.isDirectPurchaseFromAnnouncement)) {
+               this.selectedPreAnnouncementId = '@Model.PreAnnouncementId';
+
+               $('#preAnnouncementId').selectpicker('refresh');
+               $('#preAnnouncementId').selectpicker('val', this.selectedPreAnnouncementId);
+
+               var sel = document.getElementById('preAnnouncementId');
+               var opt = sel.options[sel.selectedIndex];
+                $('#txtTenderName').val(opt.text);
+               //var selectedText = $("#preAnnouncementId option:selected").text();
+            }
+            if (this.isLowBudgetDirectPurchase) {
+
+               if (this.isLowBudgetDirectPurchase == 'true') {
+                  $("#directPurchaseCommitteeId").selectpicker('val', '');
+                  this.selectedPurchaseCommitteeId = '';
+               }
+               else {
+                  $("#directPurchaseCommitteeMemberId").selectpicker('val', '');
+                  this.selectedPurchaseCommitteeMemberId = '';
+               }
+               $("#directPurchaseCommitteeMemberId").selectpicker("refresh");
+               $("#directPurchaseCommitteeId").selectpicker("refresh");
+
+            }
+         if (this.estimatedValue) {
+            if (this.estimatedValue > parseInt('@((int)Enums.TenderBudget.LowBudget)')) {
+                  this.isLowBudgetDirectPurchase = 'false';
+                  $("#directPurchaseCommitteeMemberId").selectpicker('val', '');
+                  this.selectedPurchaseCommitteeMemberId = '';
+                  $("#directPurchaseCommitteeMemberId").selectpicker("refresh");
+               }
+            }
+         },
+
+         methods: {
+
+            //fillFirstStageCommittees: function () {
+
+            //}
+            fillOldTendersData: function () {
+               this.showVRODDL = false;
+               this.showDirectPurchaseDDL = false;
+               this.showOpenAndCheckDDL = true;
+               this.showTechnicalDDL = true;
+
+               $.get('/Tender/GetTechincalAndOpenAndCheckCommittees').done(function (result) {
+                  app.selectedVROCommitteeId = "";
+                  app.selectedPurchaseCommitteeId = "";
+                  app.technicalCommittees = result.technicalCommittees;
+                  app.offersOpenCommittees = result.offerOpenningCommittees;
+                  app.offersCheckCommittees = result.offerCheckingCommittees;
+                  app.branchHasTechnicalCommittees = result.branchHasTechnicalCommittees;
+                  app.isAgancyHasTechnicalCommittee = result.isAgancyHasTechnicalCommittee;
+                  $("#hdnIsAgancyHasTechnicalCommittee").val(result.isAgancyHasTechnicalCommittee);
+                  $("#hdnBranchHasTechnicalCommittees").val(result.branchHasTechnicalCommittees);
+
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+            },
+            fillNewDirectPurchaseData: function () {
+               this.showVRODDL = false;
+               this.showOpenAndCheckDDL = false;
+               this.showDirectPurchaseDDL = true;
+               this.showTechnicalDDL = true;
+
+               $.get('/Tender/GetTechincalAndDirectPurchaseCommittees').done(function (result) {
+                  app.selectedVROCommitteeId = "";
+                  app.selectedOpenCommitteeId = "";
+                  app.selectedCheckCommitteeId = "";
+                  app.technicalCommittees = result.technicalCommittees;
+                  app.directPurchaseCommittees = result.directPurchaseCommittees;
+                  app.branchHasTechnicalCommittees = result.branchHasTechnicalCommittees;
+                  app.isAgancyHasTechnicalCommittee = result.isAgancyHasTechnicalCommittee;
+                  $("#hdnIsAgancyHasTechnicalCommittee").val(result.isAgancyHasTechnicalCommittee);
+                  $("#hdnBranchHasTechnicalCommittees").val(result.branchHasTechnicalCommittees);
+
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+               $.get('/Tender/GetDirectPurchaseCommitteesMembers').done(function (result) {
+                  app.purchaseCommitteeMembers = result;
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+            },
+            fillVROData: function () {
+              this.showVRODDL = true;
+              this.showOpenAndCheckDDL = false;
+              this.showDirectPurchaseDDL = false;
+              this.showTechnicalDDL = true;
+               $.get('/Tender/GetVROAndTechnicalCommittees').done(function (result) {
+                  app.selectedPurchaseCommitteeId = "";
+                  app.selectedOpenCommitteeId = "";
+                  app.selectedCheckCommitteeId = "";
+                  app.technicalCommittees = result.technicalCommittees;
+                  app.vroCommittees = result.vroCommittees;
+                  app.branchHasTechnicalCommittees = result.branchHasTechnicalCommittees;
+                  app.isAgancyHasTechnicalCommittee = result.isAgancyHasTechnicalCommittee;
+                  $("#hdnIsAgancyHasTechnicalCommittee").val(result.isAgancyHasTechnicalCommittee);
+                  $("#hdnBranchHasTechnicalCommittees").val(result.branchHasTechnicalCommittees);
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+            },
+            fillPreQualificationData: function () {
+               $.get('/Tender/GetSuccededPreQualifications').done(function (result) {
+                  app.preQualifications = result;
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+            },
+            fillPreAnnouncementListForDirectPurchase: function () {
+               $.get('/Tender/GetFinishedAnnouncementHasOneSupplier?tenderId=' + '@Model.TenderIdString').done(function (result) {
+                  setTimeout(function () {
+                     $('#preAnnouncementId').selectpicker('refresh');
+                  }, 1000);
+                  app.preAnnouncementList = result;
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+
+            },
+            fillPreAnnouncementListForLimitedTender: function () {
+               $.get('/Tender/GetFinishedAnnouncementForLimitedTender?tenderId=' + '@Model.TenderIdString').done(function (result) {
+                  setTimeout(function () {
+                     $('#preAnnouncementId').selectpicker('refresh');
+                  }, 1000);
+                  app.preAnnouncementList = result;
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+            },
+                 fillAnnouncementTamplateListForDirectPurchase: function () {
+               $.get('/Tender/GetAnnouncementSupplierTemplateForDirectPurchaseTender').done(function (result) {
+                  setTimeout(function () {
+                     $('#announcementTemplateId').selectpicker('refresh');
+                  }, 1000);
+                  app.announcementTamplateList = result;
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+
+            },
+                 fillAnnouncementTamplateListForLimitedTender: function () {
+               $.get('/Tender/GetAnnouncementSupplierTemplateForLimitedTender?tenderId=' + '@Model.TenderIdString' + '&selectedReasonId=' + $('select[name=ReasonForLimitedTenderTypeId]').val()).done(function (result) {
+                  setTimeout(function () {
+                     $('#announcementTemplateId').selectpicker('refresh');
+                  }, 1000);
+                  app.announcementTamplateList = result;
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+            },
+            fillTenderAgreementAgencies: function () {
+               $.get('/Tender/GetTenderAgreementAgencies').done(function (result) {
+                  app.govAgencies = result;
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+            },
+            addTask: function (event) {
+               var EstimatedValue = $("#txtEstimatedValue").val();
+               event.preventDefault();
+               var task = this.newTask.trim();
+               var itemType = this.newType == "true" ? true : false;
+               var _this = this;
+               if (task) {
+                  var flag = true;
+                  if (task.length > 12) {
+                     flag = false;
+                     AlertFun('الرقم المدخل يجب الا يتجاوز 12 رقم', alertMessageType.Info);
+                  }
+                  if (!_this.projectItems) {
+                     _this.projectItems = [];
+                  }
+                  else {
+                     $.each(_this.projectItems, function (index, value) {
+                        if (value.ProjectNumber == task) {
+                           flag = false;
+                           var validateMessage = itemType == true ? "عفوا لا يمكن إدخال نفس البند مرتين" : "عفوا لا يمكن إدخال نفس المشروع مرتين";
+                           AlertFun(validateMessage, alertMessageType.Info);
+                        }
+                     });
+                     if (flag) {
+                        var projectItemsCopy = [];
+                        $.each(_this.projectItems, function (index, value) {
+                           var index = ProgramIndex(value.ProjectNumber);
+                           projectItemsCopy.push(_this.projectItems[index]);
+                        });
+                        app.projectItems = projectItemsCopy;
+                     }
+                  }
+                  if (flag) {
+                     $('#LoadingSite').fadeIn();
+                     var message = this.newType == "true" ? "رقم البند غير صحيح" : "رقم المشروع غير صحيح";
+                     $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("AgencyProjectBudget", "Tender")',
+                        data: { ProjectNumber: task, IsGfs: itemType },
+                        success: function (data) {
+                           if (data.statusCode == "Error") {
+                              $('#LoadingSite').fadeOut();
+                              AlertFun(message, alertMessageType.Danger);
+                           } else {
+                              if (!_this.projectItems)
+                                 _this.projectItems = [];
+                              _this.projectItems.push({
+                                 ProjectNumber: task,
+                                 ProjectName: data.projectName,
+                                 Cache: data.cash == null ? 0 : data.cash,
+                                 Cost: data.cost == null ? 0 : data.cost,
+                                 IsGSF: itemType,
+                                 IsProject: itemType
+                              });
+                              $('#addProject').modal('hide');
+                              for (var i = 0; i < app.projectItems.length; i++) {
+                                 if (itemType == true) {
+                                    totalCash += app.projectItems[i].Cache;// بند
+                                 } else {
+                                    totalCash += app.projectItems[i].Cost;// مشروع
+                                 }
+                              }
+                              //if (parseFloat(EstimatedValue.toString()) > totalCash) {
+                              //   $("#notApplicableBudget").show();
+                              //   $("#applicableBudget").hide();
+                              //}
+                              //else {
+                              //   $("#applicableBudget").show();
+                              //   $("#notApplicableBudget").hide();
+                              //}
+                              $('#LoadingSite').fadeOut();
+                           }
+                        },
+                        error: function () {
+                           $('#LoadingSite').fadeOut();
+                           AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ExpiredActivationCode)', alertMessageType.Danger);
+                        }
+                     });
+                  }
+                  this.newTask = "";
+               }
+               else {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('يجب إدخال رقم بند أو مشروع', alertMessageType.Info);
+               }
+            },
+            removeTask: function (task) {
+               var itemType = task.IsGSF;
+               var EstimatedValue = $("#txtEstimatedValue").val();
+               if (itemType == true) {
+                  totalCash -= task.Cache;// بند
+               } else {
+                  totalCash -= task.Cost;// مشروع
+               }
+               var index = this.projectItems.indexOf(task);
+               this.projectItems.splice(index, 1);
+            }
+         }
+      });
+      $(document).ready(function () {
+         //var totalCash = 0;
+         //var EstimatedValue = $("#txtEstimatedValue").val();
+         //if (app.projectItems != null) {
+         //   for (var i = 0; i < app.projectItems.length; i++) {
+         //      if (app.projectItems[i].IsGSF == true) {
+         //         totalCash += app.projectItems[i].Cache;// بند
+         //      } else {
+         //         totalCash += app.projectItems[i].Cost;// مشروع
+         //      }
+         //   }
+         //}
+
+         @*if ('@User.UserIsGovVendor()' == 'True' || '@User.UserIsSemiGovAgency()' == 'True' || app.tenderType == 0 || (app.tenderType ==  @((int)Enums.TenderType.CurrentDirectPurchase) || app.tenderType ==  @((int)Enums.TenderType.CurrentTender) || app.tenderType ==  @((int)Enums.TenderType.NationalTransformationProjects) || app.tenderType ==@((int)Enums.TenderType.FirstStageTender))) {
+            $("#ProjectItemsGrid").hide();
+         } else {
+            $("#ProjectItemsGrid").show();
+         }*@
+         OtherLimitedTenderTypeReason();
+         OtherDirectPurchaseTenderTypeReason();
+      });
+      $('#tenderTypeId').on("change", function () {
+         app.tenderType = $('#tenderTypeId').val();
+         if (app.tenderType !=  @((int)Enums.TenderType.NewDirectPurchase) && app.tenderType ==  @((int)Enums.TenderType.LimitedTender)) {
+            addDropDownForOtherReaseons();
+         }
+         if (app.tenderType ==  @((int)Enums.TenderType.NewDirectPurchase)) {
+            app.fillAnnouncementTamplateListForDirectPurchase();
+         }
+         if (app.tenderType ==  @((int)Enums.TenderType.LimitedTender)) {
+            app.fillAnnouncementTamplateListForLimitedTender();
+         }
+         @*if ('@User.UserIsGovVendor()' == 'True' || '@User.UserIsSemiGovAgency()' == 'True' || app.tenderType == 0 || app.tenderType ==  @((int)Enums.TenderType.CurrentDirectPurchase) || app.tenderType ==  @((int)Enums.TenderType.CurrentTender) || app.tenderType ==  @((int)Enums.TenderType.NationalTransformationProjects) || app.tenderType ==@((int)Enums.TenderType.FirstStageTender)) {
+            $("#ProjectItemsGrid").hide();
+         } else {
+            $("#ProjectItemsGrid").show();
+         }*@
+      });
+
+
+   $('#preAnnouncementId').on("change", function () {
+      var sel = document.getElementById('preAnnouncementId');
+      var opt = sel.options[sel.selectedIndex];
+      //app.tenderName = opt.text;
+      if (sel.selectedIndex != 1) {
+         $('#txtTenderName').val(opt.text);
+      }
+   });
+   $('#reasonForPurchaseTenderTypeId').on("change", function () {
+      app.directPurchaseReason = $('#reasonForPurchaseTenderTypeId').val();
+
+      if (app.directPurchaseReason == @((int)Enums.ReasonForPurchaseTenderType.WorksAndPurchasesOfWeaponsAndMilitaryEquipmentAndSpareParts)
+                  || app.directPurchaseReason == @((int)Enums.ReasonForPurchaseTenderType.BusinessAndProcurementAreAvailableToOneContractorCSupplierAndHaveNoAcceptableAlternative)
+                  || app.directPurchaseReason == @((int)Enums.ReasonForPurchaseTenderType.UseOfThisMethodNecessaryToProtectNationalSecurityInterests)) {
+         app.isDirectPurchasePrivateInvitation = true;
+         app.isPublicInvitation = '@((int)Enums.InvitationType.Specific)';
+      } else {
+         app.isDirectPurchasePrivateInvitation = false;
+         if (app.directPurchaseReason == @((int)Enums.ReasonForPurchaseTenderType.Other)) {
+            $('#divOtherReasonForTenderType').removeClass('d-none');
+         } else {
+            addDropDownForOtherReaseons();
+         }
+      }
+      app.fillAnnouncementTamplateListForDirectPurchase();
+   });
+   $('#reasonForLimitedTenderTypeId').on("change", function () {
+
+      app.reasonForLimitedTenderTypeId = $('#reasonForLimitedTenderTypeId').val();
+
+      if ($('select[name=ReasonForLimitedTenderTypeId]').val() == @((int)Enums.ReasonForLimitedTenderType.Other)) {
+         $('#divOtherReasonForTenderType').removeClass('d-none');
+      }
+      else {
+         addDropDownForOtherReaseons();
+      }
+      this.showAnnouncementTemplate = true;
+      app.fillAnnouncementTamplateListForLimitedTender();
+   });
+      function addDropDownForOtherReaseons() {
+         $('#divOtherReasonForTenderType').addClass('d-none');
+         $('#otherReasonForTenderType').val("");
+      }
+      function OtherLimitedTenderTypeReason() {
+         if (@Model.TenderTypeId == @((int)Enums.TenderType.LimitedTender)) {
+            if ($('select[name=ReasonForLimitedTenderTypeId]').val() == @((int)Enums.ReasonForLimitedTenderType.Other)) {
+               $('#divOtherReasonForTenderType').removeClass('d-none');
+            }
+            else {
+               addDropDownForOtherReaseons();
+            }
+         }
+      }
+      function GetNTISValue() {
+         var projNumber = $('#txtProjectNumber').val();
+         if (projNumber == '') {
+            $('#projectValue').html('');
+            $('#spnVProjectNumber').show().removeAttr('hidden');
+         }
+         else {
+            $.ajax({
+               url: '../../../CommunicationRequest/CheckAvilableCashAsync?ProjectItemNumber=' + projNumber,
+               type: "GET",
+               dataType: "html",
+               success: function (data) {
+                  $('#projectValue').text(data + ' ريال');
+               }
+            });
+         }
+      }
+      function OtherDirectPurchaseTenderTypeReason() {
+         if ( @Model.TenderTypeId == @((int)Enums.TenderType.NewDirectPurchase)) {
+            if ($('select[name=ReasonForPurchaseTenderTypeId]').val() == @((int)Enums.ReasonForPurchaseTenderType.Other)) {
+               $('#divOtherReasonForTenderType').removeClass('d-none');
+            }
+            else {
+               addDropDownForOtherReaseons();
+            }
+         }
+      }
+      if ('@string.IsNullOrEmpty(Model.TenderIdString)' == 'False') {
+         displayEstimateString();
+      }
+      jQuery.extend(jQuery.validator.messages, {
+         maxlength: jQuery.validator.format("يرجي إدخال قيمة صحيحة")
+      });
+
+   $("#txtEstimatedValue").on("blur", function () {
+         $('#EstimatedValueValidation').hide();
+         displayEstimateString();
+      });
+
+      function displayEstimateString() {
+         var estimatedValue = document.getElementById("txtEstimatedValue").value;
+         if (estimatedValue && estimatedValue != '0.0') {
+            app.estimatedValue = estimatedValue
+            $.ajax({
+               type: "GET",
+               url: "/tender/ConvertNumberToText",
+               data: { estimatedValue: estimatedValue }, // update tender estimation value
+               success: function (result) {
+                  $('#StringEstimatedValue').text(result);
+               }
+            });
+          }
+       }
+       var fixing = false;
+       function blockSpecialChar(e) {
+          if (fixing)
+             return;
+          fixing = true;
+          var newString = "";
+          var stringValue = $(e.currentTarget).val();
+          for (var i = 0; i < stringValue.length; i++) {
+            var k = stringValue[i];
+            var iChars = "!@@#$%^&*()+=-[]\\\';,./{}|\":<>?_×÷،ٍِِِِِ’َ؟?‘ًَُ~ٍِـ`";
+            if (iChars.indexOf(k) == -1)
+               newString = newString + k;
+         }
+         $(e.currentTarget).val(newString);
+         fixing = false;
+      }
+
+   $("#btnSave").on("mousedown", function () {
+      event.stopPropagation();
+      event.preventDefault();
+         $('#LoadingSite').fadeIn();
+      if ($("#txtEstimatedValue").val().length > 15) {
+         $('#LoadingSite').fadeOut();
+         return false;
+      }
+      else {
+         $("#basicStepForm").submit();
+      }
+      });
+
+      $("#btnApproveConfirmation").on("click", function () {
+         if (!$('form').valid())
+            return false;
+         $('#LoadingSite').fadeIn();
+         $('form')[0].submit();
+      });
+
+      //$('#txtEstimatedValue').on('keyup', function () {
+      //   var totalCash = 0;
+      //   var EstimatedValue = $("#txtEstimatedValue").val();
+      //   if (app.projectItems != null) {
+      //      for (var i = 0; i < app.projectItems.length; i++) {
+      //         if (app.projectItems[i].IsGSF == true) {
+      //            totalCash += app.projectItems[i].Cache;// بند
+      //         } else {
+      //            totalCash += app.projectItems[i].Cost;// مشروع
+      //         }
+      //      }
+      //      //if (parseFloat(EstimatedValue.toString()) > totalCash) {
+      //      //   $("#notApplicableBudget").show();
+      //      //   $("#applicableBudget").hide();
+      //      //}
+      //      //else {
+      //      //   $("#applicableBudget").show();
+      //      //   $("#notApplicableBudget").hide();
+      //      //}
+      //   }
+      //}).on('keydown', function (e) {
+      //   if (e.keyCode == 8)
+      //      $('#txtEstimatedValue').trigger('keypress');
+      //});
+
+      $("#basicStepForm").submit(function (event) {
+         @*var isvalid = true;
+         if (app.tenderType != 0 && !('@User.UserIsGovVendor()' == 'True' || '@User.UserIsSemiGovAgency()' == 'True' || app.tenderType ==  @((int)Enums.TenderType.CurrentDirectPurchase) || app.tenderType ==  @((int)Enums.TenderType.CurrentTender) || app.tenderType ==  @((int)Enums.TenderType.NationalTransformationProjects) || app.tenderType ==@((int)Enums.TenderType.FirstStageTender))) {
+            if (app.projectItems == null || app.projectItems == "") {
+               isvalid = false;
+            } else {
+               $('#AgencyBudgetProjectNumber').val(JSON.stringify(app.projectItems).toString());
+            }
+            event.preventDefault();
+            if (!isvalid) {
+               AlertFun('من فضلك ادخل بند أو مشروع على الأقل', alertMessageType.Danger);
+               $('#LoadingSite').fadeOut();
+               return false;
+            }
+         }*@
+         event.preventDefault()
+         $(this).unbind('submit').submit();
+      });
+</script>
+}

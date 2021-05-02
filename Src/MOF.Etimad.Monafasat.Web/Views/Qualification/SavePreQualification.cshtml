@@ -1,0 +1,1274 @@
+@using res = MOF.Etimad.Monafasat.Resources;
+@using  MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationSavingModel
+@{
+   ViewData["Title"] = res.TenderResources.DisplayInputs.AddEditPreQualification;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AddQualification</li>
+      </ol>
+   </nav>
+}
+<style>
+   .tab-content > .tab-pane {
+      display: block;
+      height: 0;
+      overflow: hidden;
+   }
+
+   .tab-content > .active {
+      display: block;
+      height: auto;
+      overflow: visible;
+   }
+</style>
+<form id="basicStepForm" method="POST" asp-controller="Qualification" asp-action="SavePreQualification" autocomplete="off">
+   @Html.AntiForgeryToken()
+   <input type="hidden" id="ModuleType" value="1" />
+   <div id="app" v-cloak>
+      <input asp-for="TenderIdString" type="hidden" />
+      <input asp-for="IsAgancyHasTechnicalCommittee" type="hidden" />
+      <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+      <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+         <li class="nav-item">
+            <a class="nav-link active" href="#monafasa-info" role="tab" data-toggle="tab">
+               <i class="material-icons">assignment</i> 
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation
+            </a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link " href="#DatesStep" role="tab" data-toggle="tab">
+               <i class="fa fa-calendar" aria-hidden="true"></i> 
+               @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationDates
+            </a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link" href="#RelationStep" role="tab" data-toggle="tab">
+               <i class="material-icons">table_chart</i> 
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep
+            </a>
+         </li>
+         @if (User.UserRole() == RoleNames.PreQualificationCommitteeSecretary || User.UserRole() == RoleNames.PreQualificationCommitteeManager)
+         {
+            <li class="nav-item">
+               <a class="nav-link" href="#attachments" role="tab" data-toggle="tab">
+                  <i class="material-icons">attach_file</i> 
+                  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationEvaluation
+               </a>
+            </li>
+         }
+      </ul>
+      <div class="tab-content tab-space p-0">
+         <div class="tab-pane active" id="monafasa-info">
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-lg-12 col-sm-12 col-xs-12">
+                              <span class="badge badge-primary pull-right">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy
+                                 : <i class="material-icons" style="font-size: 11px;padding: 2px;display: inline;">person</i> 
+                                 @{
+                                    if (string.IsNullOrEmpty(Model.TenderIdString) || MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(0) == Model.TenderIdString)
+                                    {
+                                       @(User.FullName())
+                                    }
+                                    else
+                                    {
+                                       @Model.CreatedBy
+                                    }
+                                 }
+                              </span>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="TenderName" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="TenderName" class="form-control" name="TenderName":disabled="disableItemsIfSecrtary":required="!disableItemsIfSecrtary" id="TenderName" maxlength="500" />
+                                 <span asp-validation-for="TenderName" id="spTenderName" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="TechnicalOrganizationId" class="label bmd-label-static"></label>
+                                 @if (Model.IsAgancyHasTechnicalCommittee)
+                                 {
+                                    <span class="text-danger">*</span>
+                                 }
+                                 <select data-live-search="true" asp-for="TechnicalOrganizationId" name="TechnicalOrganizationId"
+                                         asp-items="@(new SelectList(Model.TechnicalCommittees, "CommitteeId", "CommitteeName"))":disabled="disableItemsIfSecrtary" id="dD_TechnicalOrganizationId" class="selectpicker" data-style="select-with-transition" data-size="7">
+                                    <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseTechnicalCommittee </option>
+                                 </select>
+                                 @if (Model.IsAgancyHasTechnicalCommittee)
+                                 {
+                                    <span asp-validation-for="TechnicalOrganizationId"id="spanTechnicalCommittee" class="text-danger"></span>
+                                 }
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="PreQualificationCommitteeId" class="label bmd-label-static"></label>
+                                 <select data-live-search="true" asp-for="PreQualificationCommitteeId" class="selectpicker" :disabled="disableItemsIfSecrtary" id="dD_PreQualificationCommitteeId" data-style="select-with-transition"
+                                         asp-items="@(new SelectList(Model.PreQualificationCommittees, "CommitteeId", "CommitteeName"))" data-size="7">
+                                    <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChoosePreQualificationCommittee</option>
+                                 </select>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-12">
+                  <button type="button" class="btn btn-primary  next-tab pull-right" onclick="nextTab()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+                  @if (Model.TenderStatusId == 0 || Model.TenderStatusId == (int)Enums.TenderStatus.UnderEstablishing)
+                  {
+                     <button type="button" class="btn btn-primary  next-tab pull-right" name="buttonsend" id="btnSend" onclick="SaveDraft()">
+                        @res.SharedResources.DisplayInputs.SaveDraft
+                     </button>
+                  }
+               </div>
+            </div>
+         </div>
+         <div class="tab-pane" id="DatesStep">
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group form-check etd-calendar-group">
+                                 <label asp-for="LastEnqueriesDate" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <input asp-for="LastEnqueriesDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="lastEnquiesDate" />
+                                 <span class="form-control-feedback">
+                                    <i class="material-icons">calendar_today</i> 
+                                 </span>
+                              </div>
+                              <span id="vdlastEnquiesDate" class="text-danger h6" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+                              <span class="badge badge-warning" id="lastEnquiesDateVac" style="display:none">@res.TenderResources.ErrorMessages.WeekendDate </span>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group form-check etd-calendar-group">
+                                 <label asp-for="LastOfferPresentationDate" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <input type="text" asp-for="LastOfferPresentationDate" class="form-control datepicker-mix inputMask" id="lastOfferPressentationDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+                              </div>
+                              <span id="vdlastOfferPressentationDate" class="badge badge-danger" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+                              <span class="badge badge-warning" id="lastOfferPressentationDateVac" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+
+                              <span asp-validation-for="LastOfferPresentationDate" class="text-danger"></span>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group form-check etd-calendar-group">
+                                 <label asp-for="LastOfferPresentationTime" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <input asp-for="LastOfferPresentationTime" type="text" id="lastOfferPresentationTime" name="LastOfferPresentationTime" class="form-control timepicker" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group form-check etd-calendar-group">
+                                 <label asp-for="OffersCheckingDate" for="datepick" class="label bmd-label-static"></label>
+                                 <input asp-for="OffersCheckingDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="offersCheckingDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+                              </div>
+                              <span id="vdoffersCheckingDate" class="text-danger" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+                              <span class="badge badge-warning" id="offersCheckingDateVac" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+                              <span asp-validation-for="OffersCheckingDate" class="text-danger"></span>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group form-check etd-calendar-group">
+                                 <label asp-for="OffersCheckingTime" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <input asp-for="OffersCheckingTime" type="text" name="OffersCheckingTime" id="offersCheckingTime" class="form-control timepicker" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div>
+               <button type="button" class="btn btn-default  prev-tab" onclick="prevTab()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+               <button type="button" class="btn btn-primary  next-tab pull-right" onclick="nextTab()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+               @if (Model.TenderStatusId == 0 || Model.TenderStatusId == (int)Enums.TenderStatus.UnderEstablishing)
+               {
+                  <button type="button" class="btn btn-primary  next-tab pull-right" name="buttonsend" id="btnSend" onclick="SaveDraft()">
+                     @res.SharedResources.DisplayInputs.SaveDraft
+                  </button>
+               }
+            </div>
+         </div>
+         <div class="tab-pane" id="RelationStep">
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <input type="hidden" asp-for="TenderIdString" />
+                              <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="InsideKSA" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <div class="form-check">
+                                    <label class="form-check-label">
+                                       <input asp-for="InsideKSA" id="InsideKSA1" name="InsideKSA" onclick="showareas(1);" checked="checked" class="form-check-input" type="radio" value="true">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InsideKSA
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                    <label class="form-check-label">
+                                       <input class="form-check-input" type="radio" onclick="showcountries(1);" id="InsideKSA2" asp-for="InsideKSA" name="InsideKSA" value="false">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OutsideKSA
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                 </div>
+                                 <span asp-validation-for="InsideKSA" id="InsideKSASpan" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div id="divTenderAreas" class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="Areas" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <select asp-for="TenderAreaIDs" name="TenderAreaIDs" data-live-search="true" id="dD_TenderAreas" class="selectpicker"
+                                         asp-items="@(new SelectList(Model.Areas, "Id", "Name"))" data-style="select-with-transition" data-size="7"></select>
+                              </div>
+                              <span asp-validation-for="TenderAreaIDs" class="text-danger"></span>
+                           </div>
+                           <div id="divTenderCountries" class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="Countries" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <select asp-for="TenderCountriesIDs" name="TenderCountriesIDs" data-live-search="true" id="dD_TenderCountries" class="selectpicker"
+                                         asp-items="@(new SelectList(Model.Countries, "Id", "Name"))" data-style="select-with-transition" data-size="7"></select>
+                              </div>
+                              <span asp-validation-for="TenderCountriesIDs" class="text-danger"></span>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label label asp-for="ConstructionWorks" class="label bmd-label-static"></label>
+                                 <select asp-for="TenderConstructionWorkIDs" id="TenderConstructionWorkIDs" data-live-search="true" class="selectpicker"
+                                         asp-items="@ViewBag.ListOfConstructioWorks" data-style="select-with-transition" data-size="7"></select>
+                              </div>
+                              <span asp-validation-for="TenderConstructionWorkIDs" class="text-danger"></span>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label label asp-for="MaintenanceWorks" class="label bmd-label-static"></label>
+                                 <select asp-for="TenderMentainanceRunnigWorkIDs" data-live-search="true" class="selectpicker" id="TenderMentainanceRunnigWorkIDs"
+                                         asp-items="@(new SelectList(Model.MaintenanceWorks, "MaintenanceRunningWorkId", "Name"))" data-style="select-with-transition" data-size="7"></select>
+                              </div>
+                              <span asp-validation-for="TenderMentainanceRunnigWorkIDs" class="text-danger"></span>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label label asp-for="TenderActivitieIDs" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <select asp-for="TenderActivitieIDs" name="TenderActivitieIDs" id="tenderActivitieIDs" data-live-search="true" class="selectpicker" data-style="select-with-transition"
+                                         asp-items="@ViewBag.ListOfActivities" multiple data-size="7"></select>
+                              </div>
+                              <span asp-validation-for="TenderActivitieIDs" class="text-danger"></span>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="ActivityDescription" class="label bmd-label-static"></label>
+                                 <input asp-for="ActivityDescription" class="form-control" name="ActivityDescription" data-val="false" id="tb_ActivityDescription" />
+                              </div>
+                           </div>
+                           <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="Details" class="label bmd-label-static"></label>
+                                 <textarea asp-for="Details" id="txtDetails" data-val="false" class="form-control" rows="3"></textarea>
+                              </div>
+                              @*<span asp-validation-for="Details" class="text-danger"></span>*@
+                           </div>
+                           <div class="col-12">
+                              <div class="form-group bmd-form-group p-0">
+                                 <label asp-for="Attachments" class="label bmd-label-static"></label>
+                                  @Html.FileUploaderFor(m => m.AttachmentReference, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div>
+               <button type="button" class="btn btn-default  prev-tab" onclick="prevTab()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+               @if (User.UserRole() == RoleNames.PreQualificationCommitteeSecretary || User.UserRole() == RoleNames.PreQualificationCommitteeManager)
+               {
+                  <button type="button" class="btn btn-primary  next-tab pull-right" onclick="nextTab()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+               }
+               else
+               {
+                  <button id="btnFirstSave" type="submit" class="btn btn-primary pull-right">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveContinue
+                  </button>
+               }
+               @if (Model.TenderStatusId == 0 || Model.TenderStatusId == (int)Enums.TenderStatus.UnderEstablishing)
+               {
+                  <button type="button" class="btn btn-primary  next-tab pull-right" name="buttonsend" id="btnSend" onclick="SaveDraft()">
+                     @res.SharedResources.DisplayInputs.SaveDraft
+                  </button>
+               }
+            </div>
+         </div>
+         @if (User.UserRole() == RoleNames.PreQualificationCommitteeSecretary)
+         {
+            <div class="tab-pane" id="attachments">
+               <div class="col-12">
+                  <div class="row">
+                     <div class="card">
+                        <div class="card-body">
+                           <div class="row">
+                              <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                                 <div class="form-group bmd-form-group">
+                                    <label for="publisher" class="label bmd-label-static">@res.QualificationResources.DisplayInputs.QualificationType</label>
+                                    <select data-live-search="false" class="selectpicker" id="dllqualificationType" asp-for="QualificationTypeId" onchange="qualificationTypeChange()" data-style="select-with-transition" title="@res.QualificationResources.DisplayInputs.QualificationType" data-size="7">
+                                       <option value=""> @res.SharedResources.DisplayInputs.PleaseChoose </option>
+                                       <option value="@((int)Enums.PreQualificationType.Small)"> @res.QualificationResources.DisplayInputs.Small</option>
+                                       <option value="@((int)Enums.PreQualificationType.Medium)"> @res.QualificationResources.DisplayInputs.Medium </option>
+                                       <option value="@((int)Enums.PreQualificationType.Large)"> @res.QualificationResources.DisplayInputs.Large </option>
+                                    </select>
+                                    <span asp-validation-for="QualificationTypeId" class="text-danger"></span>
+                                 </div>
+                              </div>
+                              <br />
+                              <div id="divConfigurationQualification" style="width:100%;margin-top: 1em;">
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div>
+                  <button type="button" class="btn btn-default  prev-tab" onclick="prevTab()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Previous</button>
+                  @{ if (Model.TenderStatusId == (int)Enums.TenderStatus.Approved)
+                     {
+                        <a data-toggle="modal"
+                           data-target="#confirmPopup"
+                           style="color:white"
+                           class="btn btn-primary">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveContinue
+                        </a>
+                     }
+                     else
+                     {
+                        <button id="btnSave" type="submit" class="btn btn-primary pull-right">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveContinue
+                        </button>
+                        @*<button id="btnSendToApprove" type="button" class="btn btn-primary pull-right">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+                        </button>*@
+                        if (Model.TenderStatusId == 0 || Model.TenderStatusId == (int)Enums.TenderStatus.UnderEstablishing)
+                        {
+                           <button type="button" class="btn btn-primary  next-tab pull-right" name="buttonsend" id="btnSend" onclick="SaveDraft()">
+                              @res.SharedResources.DisplayInputs.SaveDraft
+                           </button>
+                        }
+                     }
+                  }
+                  <button type="button" id="btnCancel" class="btn btn-danger" hidden="hidden">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+                  </button>
+               </div>
+            </div>
+         }
+      </div>
+      <div class="clearfix"></div>
+      <div class="row">
+         <div class="col">
+            <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '/Qualification/Index'">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButtonToMain
+            </button>
+         </div>
+      </div>
+   </div>
+
+</form>
+
+@section scripts{
+
+
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/vendor/calendar/javascriptUtils/DateConverterUtil.js"></script>
+   @{
+      /**/
+
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+   <script>
+      var obj = new Vue({
+         el: "#monafasa-info",
+         data: {
+         },
+         methods: {
+
+         },
+         computed: {
+            disableItemsIfSecrtary: function () {
+               return '@User.UserRole()' == '@RoleNames.PreQualificationCommitteeSecretary'
+            }
+         }
+      })
+   </script>
+}
+
+<script type="text/javascript">
+   var validator;
+   var vacations = [];
+   function nextTab() {
+      var divId = $('.etd-wiz-tabs').children().find('a.active').attr('href');
+      var _inputs = $("" + divId + " :input[data-val]");
+      for (var i = 0; i < _inputs.length; i++) {
+         var isValid = true;
+         var inputElm = _inputs[i];
+         var inputElmValue = _inputs[i].value;
+         var inputElmName = _inputs[i].name;
+         var inputTypeName = _inputs[i].type;
+         var inputRequired = inputElm.attributes['data-val'].value;
+         var errElm = $("span[data-valmsg-for='" + inputElmName + "']");
+         if (inputElmName == "TechnicalOrganizationId" && ('@Model.IsAgancyHasTechnicalCommittee' == 'False')) {
+            inputRequired = "false";
+         }
+         if (inputTypeName != 'radio') {
+            if (inputRequired == "true" && inputElmValue == '') {
+               isValid = false;
+               return postValidate(isValid, 'حقل مطلوب', errElm, inputElm);
+            } else {
+               errElm.html('');
+            }
+         }
+      }
+      // check date before next tab
+      if (divId == "#DatesStep") {
+         checkQualificationDate();
+      } else if (divId == "#RelationStep") {
+         checkQualificationExecution();
+      } else {
+         $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+      }
+   }
+   var token = $('input[name=__RequestVerificationToken]').val();
+   function checkQualificationDate() {
+      var lastEnquiesDate = $("#lastEnquiesDate").val();
+      var lastOfferPressentationDate = $("#lastOfferPressentationDate").val();
+      var offersCheckingDate = $("#offersCheckingDate").val();
+      var lastOfferPresentationTime = $("#lastOfferPresentationTime").val();
+      debugger;
+         $.post('@Url.Action("checkQualificationDate", "Qualification")',
+         {
+            LastEnqueriesDate: lastEnquiesDate,
+            LastOfferPresentationDate: lastOfferPressentationDate,
+            OffersCheckingDate: offersCheckingDate,
+            LastOfferPresentationTime:lastOfferPresentationTime,
+            __RequestVerificationToken: token,
+            }).done(function () {
+      //$.post("/Qualification/checkQualificationDate?LastEnqueriesDate=" + lastEnquiesDate + "&LastOfferPresentationDate=" + lastOfferPressentationDate + "&OffersCheckingDate=" + offersCheckingDate + "" + "__RequestVerificationToken="+ token).done(function () {
+
+         $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+      }).fail(function (error) {
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });
+   }
+   function checkQualificationExecution() {
+      var qualificationPalace = $("input[name='InsideKSA']:checked").val();
+      var areas = $("#dD_TenderAreas").val();
+      var countries = $("#dD_TenderCountries").val();
+      if (qualificationPalace == "true" && areas.length == 0) {
+         $("span[data-valmsg-for='TenderAreaIDs']").html('حقل مطلوب')
+         $("span[data-valmsg-for='TenderCountriesIDs']").html('');
+         $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+         return false;
+      } else if (qualificationPalace == "false" && countries.length == 0) {
+         $("span[data-valmsg-for='TenderAreaIDs']").html('')
+         $("span[data-valmsg-for='TenderCountriesIDs']").html('حقل مطلوب')
+         $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+         return false;
+      }
+
+      $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+   }
+
+   function changeExecutionPlace() {
+      if ($('input[type=radio][name=InsideKSA]:checked').val() == "true") {
+         var TenderAreaIDs_isvalid = $("select[name='TenderAreaIDs'] option:selected").length > 0;
+         var TenderAreaIDs_error = $("span[data-valmsg-for='TenderAreaIDs']");
+         TenderAreaIDs_error.text("");
+         if (!TenderAreaIDs_isvalid) {
+            TenderAreaIDs_error.text("@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterTenderAreas)");
+            return false;
+         }
+      }
+      else {
+         var TenderCountryIDs_isvalid = $("select[name='TenderCountriesIDs'] option:selected").length > 0;
+         var TenderCountryIDs_error = $("span[data-valmsg-for='TenderCountriesIDs']");
+         TenderCountryIDs_error.text("");
+         if (!TenderCountryIDs_isvalid)
+            TenderCountryIDs_error.text("@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterTenderCountries)");
+         return false;
+      }
+   }
+
+   function showcountries(freshFlag) {
+
+      if (freshFlag == 1) {
+         $("select[name='TenderAreaIDs']").val('').selectpicker("refresh");
+      }
+      $("#divTenderAreas").hide();
+      $("#divTenderCountries").show();
+   }
+
+   function showareas(freshFlag) {
+
+      if (freshFlag == 1) {
+         $("select[name='TenderCountriesIDs']").val('').selectpicker("refresh");
+      }
+      $("#divTenderCountries").hide();
+      $("#divTenderAreas").show();
+   }
+
+   function postValidate(isValid, errMsg, errElm, inputElm) {
+      if (!isValid) {
+         // Show errMsg on errElm, if provided.
+         if (errElm !== undefined && errElm !== null
+            && errMsg !== undefined && errMsg !== null) {
+            errElm.html(errMsg);
+         }
+         // Set focus on Input Element for correcting error, if provided.
+         if (inputElm !== undefined && inputElm !== null) {
+            inputElm.focus();
+         }
+      }
+      else {
+         // Clear previous error message on errElm, if provided.
+         if (errElm !== undefined && errElm !== null) {
+            errElm.html('');
+         }
+      }
+   }
+   function prevTab() {
+      $('.etd-wiz-tabs').children().find('a.active').parent().prev().children().click();
+   }
+   $(document).ready(function () {
+         if ('@User.UserRole()' == '@RoleNames.PreQualificationCommitteeSecretary') {
+            qualificationTypeChange();
+         }
+      if ($("input[name='InsideKSA']:checked").val() == "true") {
+         showareas(0);
+      }
+      else {
+         showcountries(0);
+      }
+      setTimeout(function () {
+         $("#lastOfferPressentationDate").calendarsPicker('option', 'onClose', function () {
+            var offerPressentationDate = $("#lastOfferPressentationDate").val();
+            var offerPressentationDateGregorian;
+            if ($('#cb_lastOfferPressentationDate').is(':checked')) {
+               var i = offerPressentationDate.split('/');
+               offerPressentationDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+            }
+            else {
+               offerPressentationDateGregorian = convertUmmalquraToGregorian(offerPressentationDate);
+            }
+            offerPressentationDateGregorian = new Date(offerPressentationDateGregorian);
+            offerPressentationDateGregorian = addDays(offerPressentationDateGregorian, 1);
+            var offersCheckingDate;
+            if ($('#cb_offersCheckingDate').is(':checked')) {
+               offersCheckingDate = offerPressentationDateGregorian;
+
+               var copiedDate = new Date(offersCheckingDate);
+               var month = copiedDate.getUTCMonth() + 1; //months from 1-12
+               var day = copiedDate.getUTCDate() + 1;
+               var year = copiedDate.getUTCFullYear();
+               newdate = day + "/" + month + "/" + year;
+            } else {
+               offersCheckingDate = convertGregorianToUmmalqura(dateToString(offerPressentationDateGregorian));
+               newdate = offersCheckingDate;
+            }
+            $("#offersCheckingDate").val(newdate);
+            $("#lastOfferPressentationDate").blur();
+         });
+      }, 100);
+    @if (Model != null && Model.Vacations != null)
+    {
+       @:vacations = @Html.Raw(Json.Serialize(Model.Vacations))
+    }
+         $('#btnPrivious').click(function () {
+            $('#LoadingSite').fadeOut();
+            window.location = "@Url.Action("BasicTenderData", "Tender", new { id =  Model.TenderIdString })";
+            return false;
+         });
+      //Verify that all of the date fields do not accept a date greater than the current date
+   });
+   $("#btnFirstSave").on("click", function (event) {
+      debugger;
+      changeExecutionPlace();
+      CheckFirstStep();
+      CheckDates();
+      CheckRelationStep();
+   });
+
+   $("#btnSave").on("click", function (event) {
+      debugger;
+      if (CheckEvaluationPercentages() == false) {
+         event.preventDefault();
+      }
+      changeExecutionPlace();
+      //CheckFirstStep();
+      CheckDates();
+      CheckRelationStep();
+   })
+   @*var token = $('input[name=__RequestVerificationToken]').val();
+   $("#btnSendToApprove").on("click", function (event) {
+      if (CheckEvaluationPercentages() == false) {
+         event.preventDefault();
+      }
+      changeExecutionPlace();
+      CheckFirstStep();
+      CheckDates();
+      CheckRelationStep();
+
+       $('#LoadingSite').fadeIn();
+      $.post('@Url.Action("SendQualificationToCommitteeApproveAsync", "Qualification")',
+         {
+            tenderIdString: '@Model.TenderIdString',
+            __RequestVerificationToken: token
+         }).done(function () {
+            $('#LoadingSite').fadeOut();
+            $('#btnSendExtendDatesToApprove').attr('disabled', true);
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+               window.location = '@Url.Action("Index", "Qualification")';
+            }, 3000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         });
+   })*@
+   function CheckFirstStep() {
+      if ($('#TenderName').val() == '') {
+         $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+         $('#TenderName').focus();
+      }
+      else if ($('#dD_TechnicalOrganizationId').val() == '' && '@Model.IsAgancyHasTechnicalCommittee' == 'True') {
+         $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+         $('#dD_TechnicalOrganizationId').selectpicker('toggle');
+      }
+      else if ($('#dD_TechnicalOrganizationId').val() == '' && '@Model.IsAgancyHasTechnicalCommittee' == 'False') {
+         $('#dD_TechnicalOrganizationId').removeAttr("required")
+      }
+   }
+   function CheckDates() {
+      if ($("#lastEnquiesDate").val() == "") {
+         $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+         $('#lastEnquiesDate').focus();
+         return false;
+      }
+      else if ($("#lastOfferPressentationDate").val() == "") {
+         $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+         $('#lastOfferPressentationDate').focus();
+         return false;
+      }
+      else if ($("#offersCheckingDate").val() == "") {
+         $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+         $('#offersCheckingDate').focus();
+         return false;
+      }
+      else if ($('#lastOfferPresentationTime').val() == '') {
+         $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+         $('#lastOfferPresentationTime').focus();
+         return false;
+      }
+      else if ($('#offersCheckingTime').val() == '') {
+         $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+         $('#offersCheckingTime').focus();
+      }
+   }
+   function CheckRelationStep() {
+      if ($('#TenderActivitieIDs').selectpicker('val') == null) {
+         $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+         $('#TenderActivitieIDs').selectpicker('toggle');
+         $('#TenderActivitieIDs').focus();
+      }
+      else if ($('input[type=radio][name=InsideKSA]:checked').val() == "true" && $('#dD_TenderAreas').selectpicker('val') == null) {
+         $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+         $('#dD_TenderAreas').selectpicker('toggle');
+         return false;
+      }
+      else if ($('input[type=radio][name=InsideKSA]:checked').val() == "false" && $('#dD_TenderCountries').selectpicker('val') == null) {
+         $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+         $('#dD_TenderCountries').selectpicker('toggle');
+         return false;
+      }
+      //else if ($("#AttachmentReference").val() == '') {
+      //   $('.etd-wiz-tabs').find('a[href="#attachments"]').click();
+      //   $('#AttachmentReference_attachement_div input[type="file"]').trigger('click');
+      //}
+   }
+   function CheckEvaluationPercentages() {
+      var TenderPointsToPass = Number($("#TenderPointsToPass").val());
+      var TechnicalAdministrativeCapacity = Number($("#TechnicalAdministrativeCapacity").val());
+      var PreviousExperienceWeight = Number($("#PreviousExperienceWeight").val());
+
+      var ExperienceYearCountMax = Number($("#ExperienceYearCountMax").val());
+      var ExperienceYearCountMin = Number($("#ExperienceYearCountMin").val());
+      var ExperienceYearCountWeight = Number($("#ExperienceYearCountWeight").val());
+
+      var LastProjectCountMax = Number($("#LastProjectCountMax").val());
+      var LastProjectCountMin = Number($("#LastProjectCountMin").val());
+      var LastProjectCountWeight = Number($("#LastProjectCountWeight").val());
+
+      var LastProjectCostMax = Number($("#LastProjectCostMax").val());
+      var LastProjectCostMin = Number($("#LastProjectCostMin").val());
+      var LastProjectCostWeight = Number($("#LastProjectCostWeight").val());
+
+      var ExistingContractualObligationsWeight = Number($("#ExistingContractualObligationsWeight").val());
+      var CurrentProjectCountMax = Number($("#CurrentProjectCountMax").val());
+      var CurrentProjectCountMin = Number($("#CurrentProjectCountMin").val());
+      var CurrentProjectCountWeight = Number($("#CurrentProjectCountWeight").val());
+
+      var CurrentProjectCostMax = Number($("#CurrentProjectCostMax").val());
+      var CurrentProjectCostMin = Number($("#CurrentProjectCostMin").val());
+      var CurrentProjectCostWeight = Number($("#CurrentProjectCostWeight").val());
+
+      var HRWeight = Number($("#HRWeight").val());
+      var TotalEmployeeCountMax = Number($("#TotalEmployeeCountMax").val());
+      var TotalEmployeeCountMin = Number($("#TotalEmployeeCountMin").val());
+      var TotalEmployeeCountWeight = Number($("#TotalEmployeeCountWeight").val());
+
+      var TotalEmployeePercentageMax = Number($("#TotalEmployeePercentageMax").val());
+      var TotalEmployeePercentageMin = Number($("#TotalEmployeePercentageMin").val());
+      var TotalEmployeePercentageWeight = Number($("#TotalEmployeePercentageWeight").val());
+
+      var FinancialCapacity = Number($("#FinancialCapacity").val());
+
+
+      var CashRateMax = Number($("#CashRateMax").val());
+      var CashRateMin = Number($("#CashRateMin").val());
+      var CashRateWeight = Number($("#CashRateWeight").val());
+
+      var LiquidityRatioMax = Number($("#LiquidityRatioMax").val());
+      var LiquidityRatioMin = Number($("#LiquidityRatioMin").val());
+      var LiquidityRatioWeight = Number($("#LiquidityRatioWeight").val());
+
+      if ($("#dllqualificationType").val() == '') {
+         AlertFun('من فضلك اختر نوع التاهيل', alertMessageType.Danger);
+      }
+
+      // عدد نقاط اجتياز التأهيل
+      if (TenderPointsToPass == '' || TenderPointsToPass == 0 || TenderPointsToPass > @((int)Enums.QualificationConfig.PointToPass)) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TenderPintsMustbeLargerThanZeroAndSmallerThanSeven)', alertMessageType.Danger);
+         return false;
+      }
+      debugger
+      // مجموع القدرات الفنية والمالية
+      if ($("#TechnicalAdministrativeCapacity").val() == '' ||  $("#FinancialCapacity").val() == '') {
+          AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TechnicalAndFinancialTotalMustbe100)', alertMessageType.Danger);
+         return false;
+      }
+      if (TechnicalAdministrativeCapacity + FinancialCapacity != 100) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TechnicalAndFinancialTotalMustbe100)', alertMessageType.Danger);
+         return false;
+      }
+
+      // مجموع وزن عناصر الخبرات السابقة
+      if (ExperienceYearCountWeight + LastProjectCountWeight + LastProjectCostWeight != 100) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TotalWeightForNumberOfExperiancPreviousMustbe100)', alertMessageType.Danger);
+         return false;
+      }
+
+      // مجموع وزن عناصر الالتزامات التعاقدية القائمة
+      if (CurrentProjectCountWeight + CurrentProjectCostWeight != 100) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TotalWeightNumberOfExistingProjectsMustBe100)', alertMessageType.Danger);
+         return false;
+      }
+
+      // مجموع عناصر الموارد البشرية
+      if (TotalEmployeeCountWeight + TotalEmployeePercentageWeight != 100) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TotalWeightForNumberOfEmplyeesAndPercentageMustbe100)', alertMessageType.Danger);
+         return false;
+      }
+
+      if (ExperienceYearCountMin >= ExperienceYearCountMax) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#NumberOfExperianceYears').text() + '', alertMessageType.Danger);
+         return false;
+      }
+
+      if (LastProjectCountMin >= LastProjectCountMax) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin) ' + $('#NumberOfProjects').text() + ' ', alertMessageType.Danger);
+         return false;
+      }
+
+      if (LastProjectCostMin >= LastProjectCostMax) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#TotalProjectsValueInThreeYears').text() + ' ', alertMessageType.Danger);
+         return false;
+      }
+
+      if (CurrentProjectCountMin >= CurrentProjectCountMax) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#NumberOfExisitngProjects').text() + ' ', alertMessageType.Danger);
+         return false;
+      }
+
+      if (CurrentProjectCostMin >= CurrentProjectCostMax) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#ValueExistingProjectsCapacityByClassification').text() + ' ', alertMessageType.Danger);
+         return false;
+      }
+
+      if (TotalEmployeeCountMin >= TotalEmployeeCountMax) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#NumberOfEmplyess').text() + ' ', alertMessageType.Danger);
+         return false;
+      }
+      if (TotalEmployeePercentageMin >= TotalEmployeePercentageMax) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#SudianEmplyeePercentage').text() + ' ', alertMessageType.Danger);
+         return false;
+      }
+
+
+      if (CashRateMin >= CashRateMax) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#CashRate').text() + ' ', alertMessageType.Danger);
+
+         return false;
+      }
+
+
+      if (LiquidityRatioMin >= LiquidityRatioMax) {
+         AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#LiquidityRatio').text() + ' ', alertMessageType.Danger);
+         return false;
+      }
+      if ($("#dllqualificationType").val() == @((int)Enums.PreQualificationType.Small)) {
+
+         if (PreviousExperienceWeight + ExistingContractualObligationsWeight + HRWeight != 100) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TechnicalSmallSubCatgeoryWeight)', alertMessageType.Danger);
+            return false;
+         }
+
+         if (CashRateWeight + LiquidityRatioWeight != 100) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TotalWeightcashandPercentageMustBe100)', alertMessageType.Danger);
+            return false;
+         }
+      }
+
+      if ($("#dllqualificationType").val() == @((int)Enums.PreQualificationType.Medium)) {
+         var Quality = Number($("#Quality").val());
+         var EnviromentAndHealthyWeight = Number($("#EnviromentAndHealthyWeight").val());
+
+         var TradeRateMax = Number($("#TradeRateMax").val());
+         var TradeRateMin = Number($("#TradeRateMin").val());
+         var TradeRateWeight = Number($("#TradeRateWeight").val());
+
+         if (PreviousExperienceWeight + ExistingContractualObligationsWeight + HRWeight + Quality + EnviromentAndHealthyWeight != 100) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TechnicalMediumSubCatgeoryWeight)', alertMessageType.Danger);
+            return false;
+         }
+
+         if (CashRateWeight + LiquidityRatioWeight + TradeRateWeight != 100) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.FinancialMediumSubCategoryWeight)', alertMessageType.Danger);
+            return false;
+         }
+
+         if (TradeRateMin >= TradeRateMax) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#TradeRate').text() + ' ', alertMessageType.Danger);
+            return false;
+         }
+      }
+
+      if ($("#dllqualificationType").val() == @((int)Enums.PreQualificationType.Large)) {
+
+         var Insurance = Number($('#InsuranceWeight').val());
+         var Quality = Number($("#Quality").val());
+         var EnviromentAndHealthyWeight = Number($("#EnviromentAndHealthyWeight").val());
+         //var InsuranceProfessionalCompensationWeight = Number($('#InsuranceProfessionalCompensationWeight').val());
+         //var InsuranceLiabilityWeight = Number($('#InsuranceLiabilityWeight').val());
+         //var InsuranceGeneralCommercialResponsibilityWeight = Number($('#InsuranceGeneralCommercialResponsibilityWeight').val());
+
+         var TradeRateMax = Number($("#TradeRateMax").val());
+         var TradeRateMin = Number($("#TradeRateMin").val());
+         var TradeRateWeight = Number($("#TradeRateWeight").val());
+
+         var ObligationsRationMax = Number($('#ObligationsRationMax').val());
+         var ObligationsRationMin = Number($('#ObligationsRationMin').val());
+         var ObligationsRationWeight = Number($('#ObligationsRationWeight').val());
+
+         var ProfitabilityRateMax = Number($('#ProfitabilityRateMax').val());
+         var ProfitabilityRateMin = Number($('#ProfitabilityRateMin').val());
+         var ProfitabilityRateWeight = Number($('#ProfitabilityRateWeight').val());
+
+
+         if (PreviousExperienceWeight + ExistingContractualObligationsWeight + HRWeight + Quality + EnviromentAndHealthyWeight + Insurance != 100) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TechnicalLargeSubCatgeoryWeight)', alertMessageType.Danger);
+            return false;
+         }
+
+         @*if (InsuranceProfessionalCompensationWeight + InsuranceLiabilityWeight + InsuranceGeneralCommercialResponsibilityWeight != 100) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.InsuranceItemsMustbe100)', alertMessageType.Danger);
+            return false;
+         }*@
+
+         if (CashRateWeight + LiquidityRatioWeight + TradeRateWeight + ObligationsRationWeight + ProfitabilityRateWeight != 100) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.FinancialLargeSubCatgeoryWeight)', alertMessageType.Danger);
+            return false;
+         }
+
+         if (TradeRateMin >= TradeRateMax) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#TradeRate').text() + ' ', alertMessageType.Danger);
+            return false;
+         }
+
+         if (ObligationsRationMin >= ObligationsRationMax) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#ObligationsRation').text() + ' ', alertMessageType.Danger);
+            return false;
+         }
+
+         if (ProfitabilityRateMin >= ProfitabilityRateMax) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin) ' + $('#ProfitabilityRate').text() + ' ', alertMessageType.Danger);
+            return false;
+         }
+      }
+   }
+
+   // Calculte Percentages
+
+   function CalcFinancialCapacity() {
+      if (Number($("#FinancialCapacity").val()) > 100) {
+         $("#FinancialCapacity").val(100)
+      }
+      $("#TechnicalAdministrativeCapacity").val(100 - Number($("#FinancialCapacity").val()))
+   }
+
+   function CalcTechnicalAdministrativeCapacity() {
+      if (Number($("#TechnicalAdministrativeCapacity").val()) > 100) {
+         $("#TechnicalAdministrativeCapacity").val(100)
+      }
+      $("#FinancialCapacity").val(100 - Number($("#TechnicalAdministrativeCapacity").val()))
+   }
+
+   function SaveDraft() {
+      if ($('#TenderName').val() == '') {
+         $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+         $('#TenderName').focus();
+         return false;
+      }
+      var obj = {};
+      obj.TenderName = $("#TenderName").val();
+      obj.ReferenceNumber = $("#offerLetterDate").val();
+      obj.TechnicalOrganizationId = $("#dD_TechnicalOrganizationId").val();
+      obj.PreQualificationCommitteeId = $("#dD_PreQualificationCommitteeId").val();
+      obj.LastEnqueriesDate = $("#lastEnquiesDate").val();
+      obj.LastOfferPresentationTime = $("#lastOfferPresentationTime").val();
+      obj.LastOfferPresentationDate = $("#lastOfferPressentationDate").val();
+      obj.OffersCheckingDate = $("#offersCheckingDate").val();
+      obj.OffersCheckingTime = $("#offersCheckingTime").val();
+      obj.InsideKSA = $("input[name='InsideKSA']:checked").val();
+      obj.TenderAreaIDs = $("#dD_TenderAreas").val();
+      obj.TenderCountriesIDs = $("#dD_TenderCountries").val();
+      obj.Details = $("#txtDetails").val();
+      obj.TenderMentainanceRunnigWorkIDs = $("#TenderMentainanceRunnigWorkIDs").val();
+      obj.TenderConstructionWorkIDs = $("#TenderConstructionWorkIDs").val();
+      obj.TenderActivitieIDs = $("#tenderActivitieIDs").val();
+      obj.ActivityDescription = $("#tb_ActivityDescription").val();
+      obj.AttachmentReference = "";
+      obj.TenderIdString = '@Model.TenderIdString';
+      obj.QualificationTypeId = $('#dllqualificationType').val();
+
+      if (obj.QualificationTypeId ==  @((int)Enums.PreQualificationType.Small)) {
+         obj.TechnicalAdministrativeCapacity = $("#TechnicalAdministrativeCapacity").val();
+         obj.FinancialCapacity = $("#FinancialCapacity").val();
+         obj.TenderPointsToPass = $("#TenderPointsToPass").val();
+         obj.QualificationSmallEvaluation = {};
+         $("#tblSmallConfig input:text").each(function () {
+            obj[this.name] = this.value;
+         });
+         $("#tblSmallFinancialConfig input:text").each(function () {
+            obj[this.name] = this.value;
+         });
+      }
+
+      if (obj.QualificationTypeId ==  @((int)Enums.PreQualificationType.Medium)) {
+         obj.TechnicalAdministrativeCapacity = $("#TechnicalAdministrativeCapacity").val();
+         obj.FinancialCapacity = $("#FinancialCapacity").val();
+         obj.TenderPointsToPass = $("#TenderPointsToPass").val();
+         obj.QualificationMediumEvaluation = {};
+         $("#tblMediumConfig input:text").each(function () {
+            obj[this.name] = this.value;
+         });
+         $("#tblMediumFinancialConfig input:text").each(function () {
+            obj[this.name] = this.value;
+         });
+      }
+
+      if (obj.QualificationTypeId ==  @((int)Enums.PreQualificationType.Large)) {
+         obj.TechnicalAdministrativeCapacity = $("#TechnicalAdministrativeCapacity").val();
+         obj.FinancialCapacity = $("#FinancialCapacity").val();
+         obj.TenderPointsToPass = $("#TenderPointsToPass").val();
+         obj.QualificationLargeEvaluation = {};
+
+         $("#tblLargeConfig input:text").each(function () {
+
+            obj[this.name] = this.value;
+         });
+
+         $("#tblLargeFinancialConfig input:text").each(function () {
+
+            obj[this.name] = this.value;
+         });
+      }
+
+      if (obj.TenderPointsToPass != 0 && obj.TenderPointsToPass != '') {
+         // عدد نقاط اجتياز التأهيل
+         if (obj.TenderPointsToPass > @((int)Enums.QualificationConfig.PointToPass)) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TenderPintsMustbeLargerThanZeroAndSmallerThanSeven)', alertMessageType.Danger);
+            return false;
+         }
+      }
+
+      var att = $('.file_uploader_message').find('div').find('a');
+      //$('.file_uploader_message').find('div').find('a').attr('href')
+      for (var i = 0; i < att.length; i++) {
+         var c = att[i].href;
+         obj.AttachmentReference += c.split("id=")[1] + ',';
+      }
+
+      if (obj.AttachmentReference.length > 0) {
+         obj.AttachmentReference = obj.AttachmentReference.slice(0, -1)
+      }
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $('#LoadingSite').fadeIn();
+      $.post("/Qualification/SaveDraft", {
+         model: obj, __RequestVerificationToken: token
+      }).done(function (res) {
+         if (res.tenderIdString != null && res.tenderIdString != '') {
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            window.location = "/Qualification/PreQualificationDetails?QualificationId=" + res.tenderIdString;
+         }
+      }).fail(function (error) {
+         debugger;
+         $('#LoadingSite').fadeOut();
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });
+   }
+
+   function CheckWeekEnds(date) {
+      var day = date.getDay();
+      var isWeekend = (day === 4) || (day === 5);    // 4 = firiday, 5 = Sunday
+   }
+
+      var fixing = false;
+      function blockSpecialChar(e) {
+         if (fixing)
+            return;
+         fixing = true;
+         var newString = "";
+         var stringValue = $(e.currentTarget).val();
+         for (var i = 0; i < stringValue.length; i++) {
+            var k = stringValue[i];
+            var iChars = "!@@#$%^&*()+=-[]\\\';,./{}|\":<>?_×÷،ٍِِِِِ’َ؟?‘ًَُ~ٍِـ`";
+            if (iChars.indexOf(k) == -1)
+               newString = newString + k;
+         }
+         $(e.currentTarget).val(newString);
+         fixing = false;
+      }
+
+   function allowDecimalWithCustomLength(event, inputlength) {
+      var _isTextSelected = isTextSelected(document.getElementById(event.target.id));
+      if (_isTextSelected) {
+         $("#" + event.target.id).val('');
+      }
+
+      event.target.value = event.target.value.replace(/[^0-9\.]/g, '');
+
+      if ((event.which != 46 || event.target.value.indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+         event.preventDefault();
+      }
+
+      if (checkInputLength(event.target.value, inputlength, event.key) == true) {
+         event.preventDefault();
+      }
+
+      if (hasDecimalPlace(event.target.value, 2) == true) {
+         event.preventDefault();
+      }
+   }
+
+   function checkInputLength(value, length, key) {
+
+      var inputLength = value.length + 1;
+      if (inputLength > length && key != '.') {
+         // check point
+         if (value.indexOf('.') != -1) {
+            inputLength = value.split('.')[0].length;
+            if (inputLength == length) {
+               return hasDecimalPlace(value, 2);
+            } else {
+               if (inputLength > length) {
+                  return true;
+               } else {
+                  return false;
+               }
+            }
+         }
+         return true;
+      } else {
+         if (key == ".") {
+            return hasDecimalPlace(value, 2);
+         } else {
+            return hasDecimalPlace(value, 2);
+         }
+      }
+      return false;
+   }
+
+   function allowNumericWithDecimal(event) {
+      var _isTextSelected = isTextSelected(document.getElementById(event.target.id));
+      if (_isTextSelected) {
+         $("#" + event.target.id).val('');
+      }
+      event.target.value = event.target.value.replace(/[^0-9\.]/g, '');
+
+      if ((event.which != 46 || event.target.value.indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+         event.preventDefault();
+      }
+      if (hasDecimalPlace(event.target.value, 2) == true) {
+         event.preventDefault();
+      }
+   }
+
+   function hasDecimalPlace(value, x)
+   {
+
+    var pointIndex = value.indexOf('.');
+      return pointIndex >= 0 && pointIndex < value.length - x;
+   }
+   function allowNumeric(event) {
+      event.target.value = event.target.value.replace(/[^\d].+/, "");
+      if ((event.which < 48 || event.which > 57)) {
+         event.preventDefault();
+      }
+   }
+
+   function PercentageCanNotExceed(event) {
+      if (event.target.value > 100) {
+         event.preventDefault();
+         event.target.value = 100;
+         return false;
+      }
+   }
+
+   function percentageLimitWithCustomLength(event, length) {
+      var _isTextSelected = isTextSelected(document.getElementById(event.target.id));
+      if (_isTextSelected) {
+         $("#" + event.target.id).val('');
+      }
+      allowDecimalWithCustomLength(event, length);
+      var inputId = event.target.id;
+      var _val = '';
+      if ($("#" + inputId).val() == '') {
+         _val = event.key;
+      } else {
+         _val = $("#" + inputId).val() + event.key;
+      }
+      if (_val > 100) {
+         event.preventDefault();
+         return false;
+      }
+   }
+
+   function percentageLimit(event) {
+      var _isTextSelected = isTextSelected(document.getElementById(event.target.id));
+      if (_isTextSelected) {
+         $("#" + event.target.id).val('');
+      }
+      allowNumericWithDecimal(event);
+      var inputId = event.target.id;
+      var _val = '';
+      if ($("#" + inputId).val() == '') {
+         _val = event.key;
+      } else {
+         _val = $("#" + inputId).val() + event.key;
+      }
+      if (_val > 100) {
+         event.preventDefault();
+         return false;
+      }
+   }
+
+   function isTextSelected(input) {
+      if (typeof input.selectionStart == "number") {
+         return input.selectionStart == 0 && input.selectionEnd == input.value.length;
+      } else if (typeof document.selection != "undefined") {
+         input.focus();
+         return document.selection.createRange().text == input.value;
+      }
+   }
+   var token = $('input[name=__RequestVerificationToken]').val();
+   if ('@User.UserRole()' == '@RoleNames.PreQualificationCommitteeSecretary') {
+      function qualificationTypeChange() {
+         $('#loader').show();
+         var type = $("#dllqualificationType").val();
+         if (type != '') {
+            var data = {};
+            data = @Html.Raw(Json.Serialize(Model))
+               data = JSON.stringify(data);
+            $.ajax({
+               url: '@Url.Action("QualificationConfigurationType", "Qualification")',
+               type: 'POST',
+               cache: false,
+               data: { type: type, obj: data, __RequestVerificationToken: token }
+            }).done(function (result) {
+               $('#divConfigurationQualification').html(result);
+            });
+
+         } else {
+            $('#divConfigurationQualification').html('');
+         }
+         $('#loader').hide();
+      }
+
+   }
+  
+      @*var token = $('input[name=__RequestVerificationToken]').val();
+   if ('@User.UserRole()' == '@RoleNames.PreQualificationCommitteeSecretary') {
+      function qualificationTypeChange() {
+         $('#loader').show();
+         var type = $("#dllqualificationType").val();
+         if (type != '') {
+            var data = {};
+            data = @Html.Raw(Json.Serialize(Model))
+               data = JSON.stringify(data);
+            $.post('@Url.Action("QualificationConfigurationType", "Qualification")',
+               {
+                  cache: false,
+                  data: { type: type, obj: data, __RequestVerificationToken: token }
+               }).done(function (result) {
+                  $('#divConfigurationQualification').html(result);
+               });
+
+         } else {
+            $('#divConfigurationQualification').html('');
+         }
+         $('#loader').hide();
+
+      }
+
+   }*@
+</script>

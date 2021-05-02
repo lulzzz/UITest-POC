@@ -1,0 +1,125 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@using System
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailsForCheckingModel
+@{
+    Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+    //ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferFinancialChecked;
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+</style>
+
+
+@using res = MOF.Etimad.Monafasat.Resources
+
+<div id="app">
+   @Html.AntiForgeryToken()
+   <input type="hidden" value="@Model.OfferIdString" id="hdOfferId" />
+   @Html.Partial("~/Views/Offer/CheckOffer/Partials/_OffersFinantialChecking.cshtml")
+
+   <div class="row">
+      <div class="col">
+         @{
+            //if (!User.IsInRole(RoleNames.OffersPurchaseManager) && !(User.IsInRole(RoleNames.OffersPurchaseSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed))
+            if (User.IsInRole(RoleNames.OffersCheckSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialChecking))
+            {
+            <button type="button" id="btnSubmit" class="btn btn-primary">
+               @res.SharedResources.DisplayInputs.Save
+            </button>
+            }
+         }
+      </div>
+      <div class="clearfix"></div>
+   </div>
+
+</div>
+
+@section scripts
+   {
+   <script>
+
+      $(document).ready(function () {
+         $("input").attr('disabled', true);
+         $('.check').attr("disabled", true);
+         $('.selectpicker').selectpicker('refresh');
+         $('#divRejectionReason').attr('hidden', true);
+         $('.rejectionDiv').attr('hidden', true);
+
+         if ('@Model.FinantialOfferStatusId' == '@Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)') {
+            $('#divRejectionReason').attr('hidden', false);
+            $('.rejectionDiv').attr('hidden', false);
+         }
+
+         if (@User.IsInRole(RoleNames.OffersCheckSecretary).ToString().ToLower() == true && (@Model.TenderStatusId == @((int)Enums.TenderStatus.OffersFinancialChecking) ||  @Model.TenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed)))
+         {
+            $("input").attr('disabled', false);
+            $('.check').attr("disabled", false);
+         }
+
+         $("#btnSubmit").click(function () {
+            if ($('#technicalOfferStatusId').val() == "") {
+               $("#spanTechnicalResult").show()
+               return false;
+            }
+            if ($('#technicalOfferStatusId').val() == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer) && $('#txtFinantialRejectionReason').val() == "") {
+               $("#RejectionReasonSpan").show()
+               return false;
+            }
+            if ($('#technicalOfferStatusId').val() == "" && $('#txtFinantialRejectionReason').val() == "") {
+               $("#RejectionReasonSpan").show()
+               $("#spanTechnicalResult").show()
+               return false;
+            }
+
+            var obj = {};
+            obj.FinantialOfferStatusId = $("#finantialOfferStatusId").val();
+            obj.RejectionReason = $("#txtFinantialRejectionReason").val();
+            obj.Notes = $("#txtNotes").val();
+            obj.OfferIdString = $('#hdOfferId').val();
+            var token = $('input[name=__RequestVerificationToken]').val();
+            console.log(obj);
+            $('#LoadingSite').fadeIn();
+            $.post("/Offer/TenderTowFilesFinancialCheck", {
+               model: obj, __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', 'success')
+               setTimeout(function () {
+                  window.location = "@Url.Action("TenderIndexCheckingStage", "Tender")";
+               }, 2000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+         });
+
+         $("#finantialOfferStatusId").change(function () {
+            var selectedValue = $('#finantialOfferStatusId option:selected').val();
+            if (selectedValue == '@Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)') {
+               $('#divRejectionReason').attr('hidden', false);
+               $('.rejectionDiv').attr('hidden', false);
+               $("#spanTechnicalResult").hide()
+            }
+            if (selectedValue == '@Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer)' || selectedValue == "") {
+               $('#divRejectionReason').attr('hidden', true);
+               $('.rejectionDiv').attr('hidden', true);
+               $('#txtFinantialRejectionReason').val(null);
+               $("#spanTechnicalResult").hide()
+            }
+         });
+   });
+   </script>
+
+}
+
+
+
+

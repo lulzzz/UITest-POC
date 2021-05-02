@@ -1,0 +1,29 @@
+
+<div class="table-responsive" id="attachmentdiv">
+   <table class="table table-striped" aria-describedby="Attachments grid">
+      <thead style="background-color: #e0efe8;">
+         <tr>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FileName </th>
+         </tr>
+      </thead>
+      <tbody>
+         @{
+
+            foreach (var att in Model)
+            {
+               <tr>
+                  <td data-label=" Milestone">
+                     <a href="#" onclick="RedirectURL('@att.FileNetId','@att.FileName');return false;" target="_blank"> @att.FileName </a>
+                  </td>
+               </tr>
+            }
+         }
+      </tbody>
+   </table>
+</div>
+
+<script>
+   function RedirectURL(fileNetReferenceId, fileName) {
+      window.open("/Upload/getfile/" + fileNetReferenceId + ":" + fileName, '_blank');
+   }
+</script>

@@ -1,0 +1,810 @@
+@model MOF.Etimad.Monafasat.ViewModel.GetConditionTemplateModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   ViewBag.Title = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles;
+   var showInvitationTab = (((Model.PreQualificationId != null || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender || Model.TenderTypeId == (int)Enums.TenderType.SecondStageTender || Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding ||
+             Model.TenderTypeId == (int)Enums.TenderType.LimitedTender || Model.TenderTypeId == (int)Enums.TenderType.FrameworkAgreement || Model.TenderTypeId == (int)Enums.TenderType.Competition ||
+             Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects) && Model.InvitationTypeId == (int)Enums.InvitationType.Specific) || (Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles));
+   var showDatesTab = Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects && Model.TenderCreatedByTypeId != (int)Enums.TenderCreatedByType.AgenciesRelatedByVRO;
+   var tenderLocalContentId = Model.TenderLocalContentId;
+   var localContentIDs = Html.Raw(Json.Serialize(Model.LocalContentMechanismIDs));
+
+
+   if (Model.TemplateIds.Any())
+   {
+      Model.IsTemplateHasOutput = false;
+   }
+   else
+   {
+      var templateId = Model.TemplateIds.FirstOrDefault();
+      if (templateId == (int)Enums.ConditionsTemplateCategory.General || templateId == (int)Enums.ConditionsTemplateCategory.BuildingConstruction
+         || templateId == (int)Enums.ConditionsTemplateCategory.MedicalSupplies || templateId == (int)Enums.ConditionsTemplateCategory.Pharmaceutical || templateId == (int)Enums.ConditionsTemplateCategory.GeneralSuppliesSupply)
+      {
+         Model.IsTemplateHasOutput = false;
+      }
+      else
+      {
+         Model.IsTemplateHasOutput = true;
+      }
+   }
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("TenderIndexUnderOperationsStage", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UnderstablishedStageTenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentsAttachments</li>
+      </ol>
+   </nav>
+}
+
+<form id="TemplateForm">
+   <input type="hidden" asp-for="EncryptedTenderId" />
+   <input type="hidden" id="hdnShowGeneralOnly" asp-for="ShowGeneralOnly" />
+   <input type="hidden" id="hdnListOfSections" value="@(string.Join(",", Model.ListOfSections))" />
+   <input type="hidden" id="hdnTemplateIds" value="@(string.Join(",", Model.TemplateIds))" />
+   <input type="hidden" asp-for="IsTemplateHasOutput" id="hdnIsOutput" />
+   <input type="hidden" asp-for="VersionId" id="hdnVersionId" />
+
+   @{
+      int currentStep = 1;
+   }
+   @Html.AntiForgeryToken()
+   <ul class="wizSteps">
+      <li>
+         <div>
+            @if (Model.TenderTypeId == (int)Enums.TenderType.SecondStageTender)
+            {
+               <h4><a id="hBasicStep" href="@Url.Action("BasicSecondStageData", "Tender", new { id = Model.EncryptedTenderId })"><span class="step-num">@currentStep</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</a></h4>
+            }
+            else
+            {
+               <h4><a id="hBasicStep" href="@Url.Action("BasicTenderData", "Tender", new { id = Model.EncryptedTenderId })"><span class="step-num">@currentStep</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</a></h4>
+            }
+         </div>
+         <div class="clearfix"></div>
+      </li>
+      @if (showDatesTab == true || User.UserIsVRO())
+      {
+         {
+            currentStep++;
+         }
+         <li class="">
+            <div>
+               <h4><a id="hDetailsStep" href="@Url.Action("TenderDates", "Tender", new { tenderId = Model.EncryptedTenderId })"><span class="step-num">@currentStep</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DetailsStep</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+      }
+      @{
+         currentStep++;
+      }
+      <li class="">
+         <div>
+            <h4><a id="hRealtionStep" href="@Url.Action("RelationsStep", "Tender",new {tenderId = Model.EncryptedTenderId})"><span class="step-num">@currentStep</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep</a></h4>
+         </div>
+         <div class="clearfix"></div>
+      </li>
+      @if (Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding)
+      {
+         {
+            currentStep++;
+         }
+         <li class="">
+            <div>
+               <h4 id="hQuantatysStep"><a href="@Url.Action("QuantitiesTableStep", "Tender", new { id = Model.EncryptedTenderId })"><span class="step-num">@currentStep</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+      }
+      @{
+         currentStep++;
+      }
+      <li class="active">
+         <div>
+            <h4 id="hAttachmentStep"><span class="step-num">@currentStep</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles <b class="step-count">(5 - 5)</b></h4>
+         </div>
+         <div class="col col-11 pull-right">
+            @Html.Partial("~/Views/Tender/ConditionTemplate/_Header.cshtml", Model)
+            <div class="row mt-4">
+               <div class="col-md-3 col-sm-12">
+                  @Html.Partial("~/Views/Tender/ConditionTemplate/_Tabs.cshtml", Model)
+               </div>
+               <div class="col-md-9 col-sm-12">
+                  <div class="tab-content tab-space p-0">
+                     <div class="tab-pane active show" id="section1">
+                        @Html.Partial("~/Views/Tender/ConditionTemplate/_Introduction.cshtml", Model)
+                     </div>
+                     <div class="tab-pane" id="section2">
+                        @Html.Partial("~/Views/Tender/ConditionTemplate/_PreparingOffers.cshtml", Model)
+                     </div>
+                     <div class="tab-pane" id="section6">
+                        @Html.Partial("~/Views/Tender/ConditionTemplate/_TechnicalDeclerations.cshtml", Model)
+                     </div>
+                     <div class="tab-pane" id="section7">
+                        @Html.Partial("~/Views/Tender/ConditionTemplate/_DescriptionAndConditions.cshtml", Model)
+                     </div>
+
+                     @if (Model.VersionId >= (int)Enums.ActivityVersions.Sprint7Activities)
+                     {
+                        <div class="tab-pane" id="section8">
+                           @Html.Partial("~/Views/Tender/ConditionTemplate/_LocalContentRequirements.cshtml", Model)
+                        </div>
+                     }
+
+
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="clearfix"></div>
+      </li>
+      @if (Model.TenderStatusId == (int)Enums.TenderStatus.Established)
+      {
+         @if (showInvitationTab == true)
+         {
+            <li class="">
+               <div>
+                  <h4><a id="hInvitationsStep" href="@Url.Action("SendInvitationsStep", "Tender", new { tenderIdString = Model.EncryptedTenderId })"><span class="step-num">6</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Invitations</a></h4>
+               </div>
+               <div class="clearfix"></div>
+            </li>
+         }
+
+      }
+      else
+      {
+         @if (showInvitationTab == true)
+         {
+            <li class="">
+               <div>
+                  <h4><a id="hInvitationsStep" href="#"><span class="step-num">6</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Invitations</a></h4>
+               </div>
+               <div class="clearfix"></div>
+            </li>
+         }
+
+      }
+   </ul>
+   <div class="row">
+      <div class="col">
+
+         <a href="@Url.Action("TenderIndexUnderOperationsStage", "Tender")" class="btn pull-right btn-outline-primary" id="btnBack">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButtonToMain
+         </a>
+      </div>
+   </div>
+   <div class="clearfix"></div>
+</form>
+@section scripts
+   {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script>
+      var isEdit = 0;
+      function nextTab() {
+         var currentTab = $('.vertical-nav-pill > li').find('a.active');
+         var nextTab = $(currentTab).parent().next().find('a');
+         $(currentTab).attr('data-toggle', 'tab');
+         $(nextTab).attr('data-toggle', 'tab');
+         $(nextTab).click()
+         $(nextTab).focus();
+      }
+
+      function prevTab() {
+         var currentTab = $('.vertical-nav-pill > li').find('a.active');
+         var prevTab = $(currentTab).parent().prev().find('a');
+
+         $(prevTab).click()
+      }
+
+      var _defintionsArr = [];
+      var _outputArr = [];
+      $(document).ready(function () {
+         debugger;
+         $('#LocalContentMechanismIDs').selectpicker('refresh');
+         if ('@Html.Raw(Model.IsTawreedActivity)' == 'True' && @tenderLocalContentId== 0) {
+            $('#LocalContentMechanismIDs').selectpicker('val', 3);
+            var localContentShowDiv = $('#LocalContentMechanismIDs').selectpicker('val');
+            setLocalContentCondtions(localContentShowDiv);
+         }
+
+         if ('@Html.Raw(Model.IsNotTawreed)' == 'True' && @tenderLocalContentId== 0) {
+            $('#LocalContentMechanismIDs').selectpicker('val', 1);
+            var localContentShowDiv = $('#LocalContentMechanismIDs').selectpicker('val');
+            setLocalContentCondtions(localContentShowDiv);
+
+         }
+
+         if ('@Model.LocalContentMechanismIDs.Any()' == 'True') {
+             setLocalContentCondtions('@localContentIDs');
+         }
+
+
+         if ('@Html.Raw(Model.HideTenderFragmentation)' == 'False') {
+            $('#chkFragmentation').removeAttr('checked');
+            $(".tenderFragmentation").toggle();
+         }
+         else {
+            $('#chkFragmentation').attr('checked', 'checked');
+         }
+         if ('@Html.Raw(Model.HideCerificatesIDs)' == 'False') {
+            $('#chkCerificatesIDsTenderSection').removeAttr('checked');
+            $(".tenderCerificatesIDs").show();
+          } else {
+
+            $(".tenderCerificatesIDs").hide();
+         }
+
+         $('#txtFragmentationValidation').hide();
+         $("#attach").val('@Html.Raw(Model.AttachmentReference)')
+         $("#StudyMinimumTargetFileNetReferenceId").val('@Html.Raw(Model.StudyMinimumTargetFileNetReferenceId)')
+
+         var outputs = @Html.Raw(Json.Serialize(Model.TenderConditionsTemplateOutputs));
+         for (var i = 0; i < outputs.length; i++) {
+            var defObj = {
+               'id': _outputArr.length + 1,
+               'TenderConditionsTemplateTechnicalOutputId': outputs[i].tenderConditionsTemplateTechnicalOutputId,
+               'OutputStage': outputs[i].outputStage,
+               'OutputName': outputs[i].outputName,
+               'OutputDescriptions': outputs[i].outputDescriptions,
+               'OutputDeliveryTime': outputs[i].outputDeliveryTime,
+            }
+            _outputArr.push(defObj);
+         }
+         var declerations = @Html.Raw(Json.Serialize(Model.TechnicalDeclrations));
+         for (var i = 0; i < declerations.length; i++) {
+            var defObj = {
+               'id': i + 1,
+               'TenderConditionsTemplateTechnicalDeclrationId': declerations[i].tenderConditionsTemplateTechnicalDeclrationId,
+               'Term': declerations[i].term,
+               'Decleration': declerations[i].decleration,
+            }
+            _defintionsArr.push(defObj);
+         }
+         var currentStatus = '@Html.Raw(Model.ConditionTemplateStageStatusId)';
+         console.log(currentStatus);
+
+         if (currentStatus == '@Html.Raw((int)Enums.TenderConditoinsStatus.Specifications)') {
+            $("#tab1").attr("data-toggle", "tab");
+            $("#tab2").attr("data-toggle", "tab");
+            $("#tab3").attr("data-toggle", "tab");
+            $("#tab4").attr("data-toggle", "tab");
+            $("#tab5").attr("data-toggle", "tab");
+            $("#tab6").attr("data-toggle", "tab");
+            $("#tab7").attr("data-toggle", "tab");
+            $("#tab8").attr("data-toggle", "tab");
+
+         }
+         else if (currentStatus == '@Html.Raw((int)Enums.TenderConditoinsStatus.TechnicalDeclerations)') {
+            console.log(currentStatus);
+            $("#tab1").attr("data-toggle", "tab");
+            $("#tab2").attr("data-toggle", "tab");
+            $("#tab3").attr("data-toggle", "tab");
+            $("#tab4").attr("data-toggle", "tab");
+            $("#tab5").attr("data-toggle", "tab");
+            $("#tab6").attr("data-toggle", "tab");
+         }
+          else if(currentStatus == '@Html.Raw((int)Enums.TenderConditoinsStatus.ContractingRequirments)') {
+            $("#tab1").attr("data-toggle", "tab");
+            $("#tab2").attr("data-toggle", "tab");
+            $("#tab3").attr("data-toggle", "tab");
+            $("#tab4").attr("data-toggle", "tab");
+            $("#tab5").attr("data-toggle", "tab");
+         }
+           else if(currentStatus == '@Html.Raw((int)Enums.TenderConditoinsStatus.EvaluateOffers)' ) {
+            $("#tab1").attr("data-toggle", "tab");
+            $("#tab2").attr("data-toggle", "tab");
+            $("#tab3").attr("data-toggle", "tab");
+            $("#tab4").attr("data-toggle", "tab");
+         }
+            else if(currentStatus == '@Html.Raw((int)Enums.TenderConditoinsStatus.DeliverOffers)'  ) {
+            $("#tab1").attr("data-toggle", "tab");
+            $("#tab2").attr("data-toggle", "tab");
+            $("#tab3").attr("data-toggle", "tab");
+         }
+         else if (currentStatus == '@Html.Raw((int)Enums.TenderConditoinsStatus.PreparteOffers)') {
+            $("#tab1").attr("data-toggle", "tab");
+            $("#tab2").attr("data-toggle", "tab");
+         }   else if(currentStatus == '@Html.Raw((int)Enums.TenderConditoinsStatus.GeneralStage)'  ) {
+            $("#tab1").attr("data-toggle", "tab");
+         }
+      });
+
+      //var fixing = true;
+      function blockSpecialChar(e) {
+         //if (fixing)
+         //   return;
+         //fixing = true;
+         //var newString = "";
+         //var stringValue = $(e.currentTarget).val();
+         //for (var i = 0; i < stringValue.length; i++) {
+         //   var k = stringValue[i];
+         //   var iChars = "!@@#$%^&*()+=-[]\\\';,./{}|\":<>?_×÷،ٍِِِِِ’َ؟?‘ًَُ~ٍِـ`";
+         //   if (iChars.indexOf(k) == -1)
+         //      newString = newString + k;
+         //}
+         //$(e.currentTarget).val(newString);
+         //fixing = false;
+      }
+      function isNumber(evt) {
+         evt = (evt) ? evt : window.event;
+         var charCode = (evt.which) ? evt.which : evt.keyCode;
+         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+         }
+         return true;
+      }
+
+      function toggleFinancialOffersDocuments() {
+         $(".FinancialDocumentSection").toggle(1000);
+      }
+      function toggleTechnicalOffersDocuments() {
+         $(".TechnicalDocumentSection").toggle(1000);
+      }
+      function toggleTenderFragmentation() {
+         $(".tenderFragmentation").toggle();
+      }
+
+      function toggleConfirimJoiningTheTenderSection() {
+         if ($('#chkJoiningTheTenderSection').is(":checked")) {
+            $("#JoiningTheTenderSectionTemplateIdDiv").hide();
+         } else {
+            $("#JoiningTheTenderSectionTemplateIdDiv").show();
+         }
+      }
+      function toggleCerificatesIDsTenderSection() {
+
+         //if (!$('#chkCerificatesIDsTenderSection').is(":checked")) {
+         //   $('#txtFragmentation').val('');
+         //}
+         $(".tenderCerificatesIDs").toggle();
+
+
+         if ($('#chkCerificatesIDsTenderSection').is(":checked")) {
+            $("#divTenderAreas").hide();
+         } else {
+            $("#divTenderAreas").show();
+         }
+      }
+
+      function addToString(arr, item, list) {
+
+         if (document.getElementById(item).value != "") {
+            document.getElementById(arr).value = document.getElementById(arr).value + document.getElementById(item).value + '#';
+            var _DocsArr = document.getElementById(arr).value.split('#');
+            _DocsArr.splice(-1, 1);
+            var rowTemp = "";
+            if (list == 'financialDocList') {
+               rowTemp =
+                  "<tr id=" + _DocsArr.lastIndexOf(_DocsArr[_DocsArr.length - 1]) + "><td>" + _DocsArr[_DocsArr.length - 1] + "</td>" +
+               "<td><button class=\"btn btn-danger btn-just-icon btn-sm \" onclick=\"removeFromString('FinanceDocHidArr','financialDocList'," + _DocsArr.lastIndexOf(_DocsArr[_DocsArr.length - 1]) + ")\" type=\"button\"><span class=\"material-icons\">delete</span></button></td> " +
+                  "</tr >"
+            }
+            else {
+               rowTemp =
+                  "<tr id=" + _DocsArr.lastIndexOf(_DocsArr[_DocsArr.length - 1]) + "><td>" + _DocsArr[_DocsArr.length - 1] + "</td>" +
+               "<td><button class=\"btn btn-danger btn-just-icon btn-sm \" onclick=\"removeFromString('TechnicalDocHidArr','technicalDocList'," + _DocsArr.lastIndexOf(_DocsArr[_DocsArr.length - 1]) + ")\" type=\"button\"><span class=\"material-icons\">delete</span></button></td> " +
+                  "</tr >"
+            }
+            $("#" + list).append(rowTemp);
+            document.getElementById(item).value = ''
+         }
+
+      }
+      function removeFromString(arr, list, id) {
+        // debugger;
+         var _docsArr = document.getElementById(arr).value.split('#');
+         _docsArr.splice(-1, 1);
+         var newStr = document.getElementById(arr).value.replace(_docsArr[id] + "#", "");
+         document.getElementById(arr).value = newStr;
+         _docsArr.splice(id, 1);
+         $('#' + list + " #" + id).remove();
+      }
+
+      function addDefinitionArry() {
+            var defObj = {
+               'id': GenerateUniqueId(),
+               'TenderConditionsTemplateTechnicalDeclrationId': 0,
+               'Term': document.getElementById('txtTerm').value,
+               'Decleration': document.getElementById('txtDefintion').value
+         }
+
+         if (defObj.Term.trim() != "" && defObj.Decleration.trim() != "") {
+            _defintionsArr.push(defObj);
+            var rowTemp =
+               "<tr id=\"" + defObj.id + "\"><td>" + defObj.Term + "</td><td>" + defObj.Decleration + "</td>"
+               + "<td><button class=\"btn btn-danger btn-just-icon btn-sm \" onclick=\"removeDefinitionArry('" + defObj.id + "')\" type=\"button\"><span class=\"material-icons\">delete</span></button>"
+               + "</tr >"
+            $("#DefList").append(rowTemp);
+            document.getElementById('txtTerm').value = '';
+            document.getElementById('txtDefintion').value = '';
+         } else {
+            //AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterTenderMentainanceRunnigWorks', alertMessageType.Danger);
+            AlertFun('الرجاء ادخال المصطلح والتعريف', alertMessageType.Danger);
+               return;
+         }
+      }
+      function removeDefinitionArry(id) {
+
+         _defintionsArr.splice(_defintionsArr.findIndex(x => x.id === id), 1);
+         $("#DefList > tr#" + id).remove();
+      }
+
+      function editDefinition(id) {
+         var term = $('#DefList >  tr#' + id + '> td:nth-child(1)').text();
+         var definitionText = $('#DefList >  tr#' + id + '> td:nth-child(2)').text();
+         document.getElementById('txtTerm').value = term;
+         document.getElementById('txtDefintion').value = definitionText;
+         removeDefinitionArry(id);
+      }
+
+      function addOutput() {
+         var outputStage = $("#outputStage").val().trim();
+         var OutputDescriptions = $("#outputDescriptions").val().trim();
+         var outputName = $("#outputName").val().trim();
+         if (outputStage == "") {
+            AlertFun('الرجاء ادخال المرحلة', alertMessageType.Danger);
+            return false;
+         }
+
+         if (OutputDescriptions == "") {
+            AlertFun('الرجاء ادخال الوصف', alertMessageType.Danger);
+            return false;
+         }
+
+         if (outputName == "") {
+            AlertFun('الرجاء ادخال اسم المخرج', alertMessageType.Danger);
+            return false;
+         }
+
+         var outputObject = {
+            'id': (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase(),
+            'TenderConditionsTemplateTechnicalOutputId': 0,
+            'OutputStage': document.getElementById('outputStage').value,
+            'OutputName': document.getElementById('outputName').value,
+            'OutputDescriptions': document.getElementById('outputDescriptions').value,
+            'OutputDeliveryTime': document.getElementById('outputDeliveryTime').value,
+         };
+         if (outputObject.OutputName != "" && outputObject.OutputStage != "" && outputObject.OutputDescriptions != "") {
+            _outputArr.push(outputObject);
+            var newRow =
+               "<tr id=\"" + outputObject.id + "\"><td>" + outputObject.OutputStage
+               + "</td><td>" + outputObject.OutputName
+               + "</td><td>" + outputObject.OutputDescriptions
+               + "</td><td>" + outputObject.OutputDeliveryTime
+               + "</td>" + "<td><button class=\"btn btn-danger btn-just-icon btn-sm \" onclick=\"removeOutput('" + outputObject.id + "')\" type=\"button\"><span class=\"material-icons\">delete</span></button></td> "
+               + "<td><button class=\"btn btn-warning btn-just-icon btn-sm \" onclick=\"editOutput('" + outputObject.id + "')\" type=\"button\"><span class=\"material-icons\">edit</span></button></td> " +
+               "</tr >";
+            $("#outputsList").append(newRow);
+            clearOutputForm();
+         }
+
+      }
+      function removeOutput(id) {
+         _outputArr.splice(_outputArr.findIndex(x => x.id === id), 1);
+         $('#outputsList >  tr#' + id).remove();
+      }
+      function editOutput(id) {
+         isEdit = 1;
+         var stage = $('#outputsList >  tr#' + id + '> td:nth-child(1)').text();
+         var exit = $('#outputsList >  tr#' + id + '> td:nth-child(2)').text();
+         var description = $('#outputsList >  tr#' + id + '> td:nth-child(3)').text();
+         var date = $('#outputsList >  tr#' + id + '> td:nth-child(4)').text();
+         document.getElementById('outputStage').value = stage;
+         document.getElementById('outputName').value = exit;
+         document.getElementById('outputDescriptions').value = description;
+         document.getElementById('outputDeliveryTime').value = date;
+         removeOutput(id);
+      }
+
+      function clearOutputForm() {
+         document.getElementById('outputStage').value = '';
+         document.getElementById('outputName').value = '';
+         document.getElementById('outputDescriptions').value = '';
+         document.getElementById('outputDeliveryTime').value = '';
+      }
+
+      //Fist Section  btnAddEditLocalContent
+      $("#btnAddEditIntroductionTemplate").click(function () {
+         if (isNaN($('#AgentPhone').val())) {
+            AlertFun('@MOF.Etimad.Monafasat.Resources.CommitteeResources.ErrorMessages.InvalidPhoneNumber', alertMessageType.Danger);
+            return;
+         }
+         if (isNaN($('#AgentFax').val())) {
+            AlertFun('@MOF.Etimad.Monafasat.Resources.CommitteeResources.ErrorMessages.InvalidFaxNumber', alertMessageType.Danger);
+            return;
+         }
+         if ($('#chkFragmentation').is(":checked") && $('#txtFragmentation').val().trim() == '') {
+            $("#txtFragmentationValidation").show();
+            return false;
+         }
+         var introductionObj = {
+            EncryptedTenderId: $('#EncryptedTenderId').val(),
+            AgencyDecalration: $('#AgencyDecalration').val(),
+            AgentName: $('#AgentName').val(),
+            AgentPhone: $('#AgentPhone').val(),
+            AgentFax: $('#AgentFax').val(),
+            AgentJob: $('#AgentJob').val(),
+            AgentEmail: $('#AgentEmail').val(),
+            CerificatesIDs: $('#CerificatesIDs').val(),
+            Description: $('#Description').val(),
+            TenderFragmentation: $('#chkFragmentation').is(":checked") ? $('#txtFragmentation').val() : '',
+            HideTenderFragmentation: $('#chkFragmentation').is(":checked"),
+            HideCerificatesIDs: $('#chkCerificatesIDsTenderSection').is(":checked"),
+            __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val()
+         }
+
+         postRequest("/Tender/AddEditIntroductionTemplateAsync", introductionObj, true).then(function (response) {
+                AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+            nextTab();
+         }).catch(function (error) {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         });
+
+      });
+
+      //Second Section
+      $("#btnAddEditPreparingOffers").click(function () {
+         $('#LoadingSite').fadeIn();
+         var token = $('input[name=__RequestVerificationToken]').val();
+
+         var preparingOffersObj = {
+
+            EncryptedTenderId: $('#EncryptedTenderId').val(),
+            HideFinancialDocumentSections: $("#HideFinancialDocumentSections").prop('checked') == true,
+            FinancialOfferDocuments: $('#FinanceDocHidArr').val(),
+            HideTechnicalDocumentSections: $("#HideTechnicalDocumentSections").prop('checked') == true,
+            TechnicalOfferDocuments: $('#TechnicalDocHidArr').val(),
+            HideConfirimJoiningTheTenderSection: $("#HideConfirimJoiningTheTenderSection").prop('checked') == true,
+            MaxTimeToSendQuestions: $('#MaxTimeToSendQuestions').val(),
+            MaxTimeToAnswerQuestions: $('#MaxTimeToAnswerQuestions').val(),
+            AlternativeEmailForCommuncation: $('#AlternativeEmailForCommuncation').val(),
+            JoiningTheTenderSectionTemplateId: $('#JoiningTheTenderSectionTemplateId').val(),
+            SupplierMustPriceAllSections: $("#SupplierMustPriceAllSections").prop('checked') == true,
+            AllowancePeriodToAddOffersIfNotAddedBeofre: $('#AllowancePeriodToAddOffersIfNotAddedBeofre').val(),
+            AllowedOfferSiningDays: $('#AllowedOfferSiningDays').val(),
+            OffersEvaluationCriteria: $('#OffersEvaluationCriteria').val(),
+            OffersChecking: $('#OffersChecking').val(),
+            AreAlternativeOfferAccepted: $("#AreAlternativeOfferAccepted").prop('checked') == true,
+            DocumentStyle: $('#DocumentStyle').val(),
+            WritePrice: $('#txtWritePrice').val(),
+            ConfirimJoiningTheTender: $('#ConfirimJoiningTheTender').val(),
+            VersionId: $('#hdnVersionId').val(),
+            ParticipationConfirmationLetterDate: $('#txtParticipationConfirmationLetterDate').val()
+         }
+               $.ajax({
+                  type: "POST",
+                  url: '@Url.Action("AddEditPreparingOffersTemplateAsync", "Tender")',
+                  data: {
+                     model: preparingOffersObj,
+                  __RequestVerificationToken: token
+               },
+                  success: function () {
+                     AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+                     nextTab();
+
+                     if ('@Html.Raw(showInvitationTab)' == 'True') {
+                     }
+                     else {
+                     }
+                  $('#LoadingSite').fadeOut();
+                  },
+                  error: function (error) {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     $('#LoadingSite').fadeOut();
+                  }
+            });
+      });
+
+      //Third Section
+      $("#btnAddEditTechnicalDeclerations").click(function () {
+         $('#LoadingSite').fadeIn();
+         var token = $('input[name=__RequestVerificationToken]').val();
+         var certificateTmplate = {
+            ShowGeneralOnly: $("#hdnShowGeneralOnly").val(),
+            ListOfSections: $("#hdnListOfSections").val(),
+            EncryptedTenderId: $('#EncryptedTenderId').val(),
+            TechnicalDeclrations: _defintionsArr,
+            TenderConditionsTemplateOutputs: _outputArr,
+            ProjectsScope: $('#txtProjectScop').val(),
+            WorksProgram: $('#txtWorksProgram').val(),
+            WorkLocationDetails: $('#txtWorkLocationDetails').val(),
+            ServicesAndWorkImplementationsMethod: $('#ServicesAndWorkImplementationsMethod').val(),
+            IsTemplateHasOutput: $('#hdnIsOutput').val(),
+            VersionId: $('#hdnVersionId').val()
+         }
+         $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddEditTechnicalDeclerationsTemplateAsync", "Tender")',
+            data: {
+               model: certificateTmplate,
+               __RequestVerificationToken: token
+            },
+            success: function () {
+               $('#LoadingSite').fadeOut();
+               AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+               nextTab();
+            },
+            error: function (error) {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               $('#LoadingSite').fadeOut();
+            }
+         });
+      });
+
+      $("#btnAddEditDescriptionAndConditions").click(function () {
+         $('#LoadingSite').fadeIn();
+         var token = $('input[name=__RequestVerificationToken]').val();
+         var certificateTmplate = {
+            EncryptedTenderId: $('#EncryptedTenderId').val(),
+            ListOfSections: $("#hdnListOfSections").val(),
+            TemplateIds: $("#hdnTemplateIds").val(),
+            WorkforceSpecifications: $('#txtworkForce').val(),
+            MaterialsSpecifications: $('#txtMaterialsSpecifications').val(),
+            BasicInformation: $('#BasicInformation').val(),
+            RequiredDcoumentationBefore: $('#RequiredDcoumentationBefore').val(),
+            Tests: $('#Tests').val(),
+            IntilizationAndStartWork: $('#IntilizationAndStartWork').val(),
+            RequiredDcoumentationAfter: $('#RequiredDcoumentationAfter').val(),
+            Trainging: $('#Trainging').val(),
+            Guarantee: $('#Guarantee').val(),
+            Maintanance: $('#Maintanance').val(),
+            MachineGuarantee: $('#MachineGuarantee').val(),
+            MachineMaintanance: $('#MachineMaintanance').val(),
+            EquipmentsSpecifications: $('#EquipmentsSpecifications').val(),
+            ContractBasedOnPerformanceDetails: $('#ContractBasedOnPerformanceDetails').val(),
+            QualitySpecifications: $('#QualitySpecifications').val(),
+            SafetySpecifications: $('#SafetySpecifications').val(),
+            SpecialConditions: $('#SpecialConditions').val(),
+            Attachments: $('#Attachments').val(),
+            AttachmentReference: $('#attach').val(),
+            IsTemplateHasOutput: $('#hdnIsOutput').val()
+         }
+
+               $.ajax({
+                  type: "POST",
+                  url: '@Url.Action("AddEditDescriptionAndConditionsTemplateAsync", "Tender")',
+                  data: {
+                     model: certificateTmplate,
+                  __RequestVerificationToken: token
+               },
+                  success: function () {
+                     $('#LoadingSite').fadeOut();
+                     AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+                     nextTab();
+                     debugger;
+                     
+                        if ('@Html.Raw(Model.showLocalContentTab)' == 'True') {
+                        if ('@Html.Raw(showInvitationTab)' == 'True') {
+                           window.location = '/Tender/SendInvitationsStep?tenderIdString=' + '@Html.Raw(Model.EncryptedTenderId)';
+                        }
+                        else {
+                           window.location = '/Tender/Index';
+                        }
+                     }
+
+
+                  },
+                  error: function (error) {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     $('#LoadingSite').fadeOut();
+                  }
+            });
+      });
+
+      function restoreWritePriceText() {
+         $("#txtWritePrice").val('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WritePriceDefaultValue)')
+      }
+      function restoreMaterialsSpecificationsText() {
+         $("#txtMaterialsSpecifications").val(`@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.MaterialSpecifications as string)`);
+      }
+      function restoreEquipmentSpecs() {
+         $("#EquipmentsSpecifications").val(`@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.EquipmentSpecifications as string)`);
+      }
+      function restoreTenderFragmentation() {
+         $("#txtFragmentation").val(`@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.FragmentationMsg as string)`);
+      }
+      function restoreWorkFroce1() {
+         $("#txtworkForce").val(`@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.WorForceSpecification1 as string)`);
+      }
+     function restoreWorkFroce2() {
+         $("#txtworkForce").val(`@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.WorForceSpecification2 as string)`);
+     }
+
+      $("#btnAddEditLocalContent").click(function () {
+         debugger;
+         var localContentConditions = $('#LocalContentMechanismIDs').selectpicker('val');
+         var MinimumBaselineValue = $("#MinimumBaseline").val();
+         var MinimumPercentageLocalContentTarget = $('#MinimumPercentageLocalContentTarget').val();
+         var StudyMinimumTargetFileNetReferenceId = $('#StudyMinimumTargetFileNetReferenceId').val();
+
+         if ((localContentConditions.indexOf('1') > -1 || localContentConditions.indexOf('2') > -1)  && (MinimumBaselineValue > 100 || MinimumBaselineValue < 0)) {
+            $("#MinimumBaselineErrorMessage").show();
+            return false;
+         }
+         else {
+            $("#MinimumBaselineErrorMessage").hide();
+
+         }
+
+         if (localContentConditions.indexOf('2') > -1  && (MinimumPercentageLocalContentTarget=="" || MinimumPercentageLocalContentTarget > 100 || MinimumPercentageLocalContentTarget < 0)) {
+            $("#MinimumPercentageLocalContentTargetErrorMessage").show();
+            return false;
+         }
+         else {
+            $("#MinimumPercentageLocalContentTargetErrorMessage").hide();
+         }
+
+         if (localContentConditions.indexOf('2') > -1 && StudyMinimumTargetFileNetReferenceId == "") {
+            $("#StudyMinimumTargetErrorMessage").show();
+            return false;
+         }
+         else {
+            $("#StudyMinimumTargetErrorMessage").hide();
+         }
+
+         var localContentObj = {
+            EncryptedTenderId: $('#EncryptedTenderId').val(),
+            LocalContentMechanismIDs: $('#LocalContentMechanismIDs').val(),
+            IsApplyProvisionsMandatoryList: $('#chkApplyProvisionsMandatoryList').is(":checked"),
+            MinimumBaseline: $('#MinimumBaseline').val(),
+            MinimumPercentageLocalContentTarget: $('#MinimumPercentageLocalContentTarget').val(),
+            StudyMinimumTargetFileNetReferenceId:$("#StudyMinimumTargetFileNetReferenceId").val(),
+            __RequestVerificationToken: $('input[name=__RequestVerificationToken]').val()
+         }
+
+         postRequest("/Tender/AddEditLocalContenteAsync", localContentObj, true).then(function (response) {
+                AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+    nextTab();
+
+                    if ('@Html.Raw(showInvitationTab)' == 'True') {
+                        window.location = '/Tender/SendInvitationsStep?tenderIdString=' + '@Html.Raw(Model.EncryptedTenderId)';
+                     }
+                     else {
+                        window.location = '/Tender/Index';
+                     }
+
+         }).catch(function (error) {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         });
+
+      });
+
+
+
+
+      $("#LocalContentMechanismIDs").change(function () {
+         Reset();
+         var localContentConditions = $('#LocalContentMechanismIDs').selectpicker('val');
+         setLocalContentCondtions(localContentConditions);
+      });
+            function Reset() {
+         $("#MinimumBaseline").val('');
+         $('#MinimumPercentageLocalContentTarget').val('');
+      }
+
+      function setLocalContentCondtions(localContentConditions) {
+         if (localContentConditions.indexOf('1') > -1 || localContentConditions.indexOf('2') > -1) {
+            $("#divMinimumBaseline").show();
+            $("#divLocalContentConditionsWeight").show();
+         }
+         else {
+            $("#divMinimumBaseline").hide();
+             $("#divLocalContentConditionsWeight").hide();
+         }
+
+         if (localContentConditions.indexOf('2') > -1) {
+            $("#divMinimumPercentageLocalContentTarget").show();
+            $("#divStudyMinimumTargetFileNetReferenceId").show();
+         } else {
+            $("#divMinimumPercentageLocalContentTarget").hide();
+            $("#divStudyMinimumTargetFileNetReferenceId").hide();
+         }
+      }
+   </script>
+
+}

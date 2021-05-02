@@ -1,0 +1,150 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationApplyDocumentsModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PageTitle;
+}
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.BreadCrumb</li>
+      </ol>
+   </nav>
+}
+   <form method="POST" autocomplete="off">
+      <div class="modal fade" id="myModal1" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i> 
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <p class="text-dark-green">
+                     @MOF.Etimad.Monafasat.Resources.QualificationResources.Messages.ConfirmSendSupplierDocs
+                  </p>
+               </div>
+               <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary btn-sm m-1" onclick="submitForm()">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Send
+                  </button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="card">
+         <div class="card-body">
+            @await Component.InvokeAsync("PreQualificationPartialDetail", new { qualificationId = @Model.PreQualificationIdString })
+            @if (Model.PreQualificationResult == (int?)Enums.OfferStatus.Received && User.IsInRole(RoleNames.supplier))
+            {
+               <div class="row">
+                  <div class="col-md-6 col-sm-12 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.Messages.Status
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span class="badge badge-success h6 d-inline-block" style="margin: 0px 5px;">@MOF.Etimad.Monafasat.Resources.QualificationResources.Messages.Recieved</span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            }
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="PreQualificationIdString" />
+            @if (Model.SupplierPreQualificationDocumentId == 0)
+            {
+               <div class="col-12">
+                  <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ApplyingDocuments</h4>
+               </div>
+               <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="form-group bmd-form-group p-0">
+                     <label asp-for="AttachmentRefrences" class="label bmd-label-static"></label>
+                     <span class="text-danger">*</span>
+                     @Html.FileUploaderFor(m => m.AttachmentRefrences, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                     <span asp-validation-for="AttachmentRefrences" class="text-danger"></span>
+                  </div>
+               </div>
+            }
+            else
+            {
+               if (Model.PreQualificationResult == (int)Enums.OfferStatus.Rejected)
+               {
+                  <div class="row">
+                     <div class="col-md-6 col-sm-12 col-xs-12">
+                        <ul class="list-group form-details-list">
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-4 etd-item-title">
+                                    @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.RejectionReason
+                                 </div>
+                                 <div class="col-8 etd-item-info">
+                                    <span asp-for="RejectionReason">@Model.RejectionReason</span>
+                                 </div>
+                              </div>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+               }
+               @await Component.InvokeAsync(typeof(MOF.Etimad.Monafasat.Web.ViewComponents.QualificationSupplierDocument.QualificationSupplierDocumentAttachmentViewComponent), new { PreQSupDocID = Model.SupplierPreQualificationDocumentIdString })
+            }
+         </div>
+      </div>
+
+      @await Component.InvokeAsync("QualificationSupplierData", new { qualificationId = Model.PreQualificationIdString, SupplierId = Model.SupplierId })
+
+      
+
+
+      <div class="row">
+         <div class="col-12">
+            @if (User.IsInRole(RoleNames.supplier) && Model.SupplierPreQualificationDocumentId == 0)
+            {
+               <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#myModal1">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Send
+               </button>
+            }
+            <a asp-action="Index" asp-controller="Qualification" class="btn btn-outline-primary btn-link pull-right">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+               <div class="ripple-container"></div>
+            </a>
+         </div>
+      </div>
+   </form>
+
+<script>
+   $(function () {
+      $('form').submit(function () {
+         if ($(this).valid()) {
+            $('#LoadingSite').fadeIn();
+         }
+         else {
+            $('#LoadingSite').fadeOut();
+
+         }
+      });
+   });
+</script>
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/ViewsScripts/Qualification/ApplyPreQualificationDocument.js"></script>
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+}

@@ -1,0 +1,79 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailsForCheckingModel
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+   <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.ClassificationCertificate</h5>
+   <div class="card">
+      <div class="col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached </label><span class="text-danger">*</span>
+            <div class="form-check">
+               <label class="form-check-label">
+                  <input asp-for="IsSpecificationAttached" name="IsSpecificationAttached" class="form-check-input" checked type="radio" id="IsSpecificationAttached1" value="true">
+                  @res.SharedResources.DisplayInputs.Yes
+                  <span class="circle">
+                     <span class="check"></span>
+                  </span>
+               </label>
+               <label class="form-check-label">
+                  <input asp-for="IsSpecificationAttached" name="IsSpecificationAttached" class="form-check-input" type="radio" id="IsSpecificationAttached2" value="false">
+                  @res.SharedResources.DisplayInputs.No
+                  <span class="circle">
+                     <span class="check"></span>
+                  </span>
+               </label>
+            </div>
+         </div>
+      </div>
+      <div class="col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.ClassificationCertificateStatus  </label>
+            <div class="form-check">
+               <label class="form-check-label">
+                  <input asp-for="IsSpecificationValidDate" name="IsSpecificationValidDate" class="form-check-input" checked type="radio" id="IsSpecificationValidDate1" value="true">
+                  @res.SharedResources.DisplayInputs.Valid
+                  <span class="circle">
+                     <span class="check"></span>
+                  </span>
+               </label>
+               <label class="form-check-label">
+                  <input asp-for="IsSpecificationValidDate" name="IsSpecificationValidDate" class="form-check-input" type="radio" id="IsSpecificationValidDate2" value="false">
+                  @res.SharedResources.DisplayInputs.Invalid
+                  <span class="circle">
+                     <span class="check"></span>
+                  </span>
+               </label>
+            </div>
+         </div>
+      </div>
+      <table class="table">
+         <caption></caption>
+         <thead style="background-color: #e0efe8;">
+            <tr>
+               <th scope="col">@res.OfferResources.DisplayInputs.ClassificationCertificateFor</th>
+               <th scope="col">@res.OfferResources.DisplayInputs.ClassificationDegree </th>
+               <th scope="col">@res.OfferResources.DisplayInputs.ConstuctionWork</th>
+               <th scope="col">@res.OfferResources.DisplayInputs.RunningMentainaceWork</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr class="SpecificationsGrid" v-for="(tbl,indexD) in Specifications">
+               <td data-label=" Quantity">
+                  <span> {{tbl.isForApplierString}}</span>
+                  <span style="display:none"> {{tbl.iIsForApplier}}</span>
+               </td>
+               <td data-label="Unit">
+                  <span> {{tbl.degree}}</span>
+               </td>
+               <td data-label="Details">
+                  <span> {{tbl.constructionWorkString}}</span>
+                  <span style="display:none"> {{tbl.constructionWorkId}}</span>
+               </td>
+               <td data-label="Details">
+                  <span> {{tbl.maintenanceRunningWorkString}}</span>
+                  <span style="display:none"> {{tbl.maintenanceRunningWorkId}}</span>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+   </div>
+</div>

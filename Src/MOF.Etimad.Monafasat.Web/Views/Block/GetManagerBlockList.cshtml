@@ -1,0 +1,206 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using Microsoft.Extensions.DependencyInjection;
+@model MOF.Etimad.Monafasat.ViewModel.BlockSearchCriteriaModel
+@{
+   ViewBag.Title = @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockedListRequest;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="/dashboard/index">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page"> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockedListRequest </li>
+      </ol>
+   </nav>
+}
+<div class="tab-content  tab-space col-12 " style="padding:0">
+   <div class="tab-pane active animated bounceInLeft  delay-1s hidden" id="BlockGrid">
+      <div class="modal fade" id="DeleteConfirmationModal" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">
+
+                     @MOF.Etimad.Monafasat.Resources.BlockResources.Messages.ConfirmDeletion
+                  </h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i> 
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <p>
+                     @MOF.Etimad.Monafasat.Resources.BlockResources.Messages.ConfirmSupplierDeletion
+                     <input type="hidden" name="hiddenValue" id="hiddenValue" value="" />
+                  </p>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-link btn-success" id="SaveModel" @@click="confirmDelete">    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm    </button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Cancel</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <form id="blockSupplierSearch" class="form ">
+         <div class="card">
+            <div class="card-body">
+               <h4 class="text-primary">
+                  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockedListRequest
+                  <a data-toggle="collapse" href="#SearchInBlocked" role="button" aria-expanded="false" aria-controls="SearchInBlocked" class="btn btn-outline-primary btn-link  pull-right btn-sm"><i class="material-icons">search</i>  بحث</a>
+               </h4>
+               <div class="clearfix"></div>
+               <div class=" collapse" id="SearchInBlocked">
+                  <div class="row">
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialRegistrationNo </label>
+                           <input type="text" id="CommercialRegistrationNo" name="CommercialRegistrationNo" maxlength="50" autocomplete="off" class="form-control">
+                        </div>
+                     </div>
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName</label>
+                           <input type="text" id="CommercialSupplierName" name="CommercialSupplierName" maxlength="50" autocomplete="off" class="form-control">
+                        </div>
+                     </div>
+                     <div class="col-12">
+                        <button class="btn btn-sm btn-primary" @@click="search" type="button"><i class="material-icons">search</i>   @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Search</button>
+                        <button class="btn btn-sm" @@click="reset" type="button"><i class="material-icons">close</i>  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Clear </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="table-responsive ">
+               <table class="table table-striped text-center" summary="desc">
+                  <thead>
+                     <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName</th>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialRegistrationNo</th>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status</th>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Options</th>
+                     </tr>
+                  </thead>
+                  <tbody v-if="Blocks && Blocks.length > 0">
+                     <tr v-for="(block, $index) in Blocks">
+                        <td> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+                        <td style="cursor:pointer" @@click="getSupplierInfo(block.commercialRegistrationNo)"> {{block.commercialSupplierName}}  </td>
+                        <td> {{block.commercialRegistrationNo}} </td>
+                        <td> {{block.blockStatusName}} </td>
+                        <td>
+                           <button @@click=showDetails(block.supplierBlockIdString) v-if="(block.blockStatusId==@((int)Enums.BlockStatus.ApprovedSecertary))" type="button" id="DeleteBTN" class="btn btn-sm btn-primary"><i class="material-icons"></i>    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve</button>
+                           <button @@click="showDetails(block.supplierBlockIdString)" v-if="(block.blockStatusId!=@((int)Enums.BlockStatus.ApprovedSecertary))" type="button" id="DeleteBTN" class="btn btn-sm btn-primary"><i class="material-icons">list</i>   @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Details</button>
+                        </td>
+                     </tr>
+                  </tbody>
+                  <tbody v-else>
+                     <tr>
+                        <td colspan="8" align="center" style="text-align:center !important">
+                           <i class="text-primary material-icons" style="font-size:3rem">sentiment_very_dissatisfied</i> 
+                           <br />
+                           @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.NoRecordsFound
+                           <br />
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+               <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+            </div>
+         </div>
+      </form>
+   </div>
+
+</div>
+<!--endtBody-->
+@section scripts{
+   <script src="~/javascriptUtils/DateConverterUtil.js"></script>
+   <script>
+      $(document).ready(function () {
+         $('li#menuLists').addClass('active');
+         $('li#menuLists a#menuGetManagerBlockList').addClass('active');
+
+      });
+         var grid = new Vue({
+            el: '#BlockGrid',
+            data: {
+               Blocks: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '/Block/GetManagerBlockListAsync',
+               queryString: ''
+            },
+            methods: {
+               showDetails: function (id) {
+                  window.location = '/Block/ManagerBlockDetails?Id=' + id;
+               },
+               showDialog: function (id) {
+                  
+                 if (typeof (id) !== "undefined"&& id!== "") {
+                    $("#DeleteConfirmationModal #hiddenValue").val(id);
+                    $("#DeleteConfirmationModal").modal("show");
+                 }
+               },
+
+               confirmDelete: function () {
+                  $('#DeleteConfirmationModal').modal('hide');
+                  var data_id = $(".modal-body #hiddenValue").val();
+                  $(".modal-body #hiddenValue").val("");
+                  ResetSupplier(data_id);
+               },
+                getSupplierInfo: function (CR) {
+                  getSupplierInfo(CR);
+               },
+               updateResource: function (data) {
+                  this.Blocks = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+               },
+               detailsUrl: function (params) {
+                  return '/Block/DetailsAsync?id=' + params;
+               },
+               deleteUrl: function (Id) {
+                  return '/Block/DeleteAsync?Id=' + Id;
+               },
+               search: function () {
+                  var queryString = '';
+                  queryString = 'CommercialRegistrationNo=' + $("#CommercialRegistrationNo").val().trim() + '&CommercialSupplierName=' + $("#CommercialSupplierName").val().trim();
+                  this.resource_url = '/Block/GetManagerBlockListAsync?' + queryString;
+               },
+               reset: function () {
+                  $("#CommercialRegistrationNo").val("");
+                  $("#CommercialSupplierName").val("");
+                  var queryString = '';
+                  queryString = '';
+                  this.resource_url = '/Block/GetManagerBlockListAsync?' + queryString;
+               }
+            }
+         });
+
+         $('.add-new-vendor').click(function () {
+            $('#add-new').click();
+         });
+      
+      function ResetSupplier(id) {
+         $.ajax({
+            type: "GET",
+            url: '@Url.Action("ResetSupplier", "Block")',
+            data: { Id: id },
+            success: function (data) {
+               if (data.status == "success") {
+                  AlertFun(data.message, alertMessageType.Success);
+                  grid.resource_url = grid.resource_url + "?d=" + new Date();
+               } else {
+                  AlertFun(data.message, alertMessageType.Danger);
+               }
+            },
+            error: function () {
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ExpiredActivationCode)', alertMessageType.Danger);
+            }
+         });
+      }
+
+   </script>
+}

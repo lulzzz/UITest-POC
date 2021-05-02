@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Src\MOF.Etimad.Monafasat.Core\MOF.Etimad.Monafasat.Core.csproj" />
+    <ProjectReference Include="..\..\Src\MOF.Etimad.Monafasat.Integration\MOF.Etimad.Monafasat.Integration.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
+</Project>

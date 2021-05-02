@@ -1,0 +1,37 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using displayInputs = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs;
+<div class="table-responsive ">
+   <table class="table  table-striped" id="JoiningRequestInvitationTable" aria-describedby="Request Invitation Table">
+      <thead>
+         <tr>
+            <th scope="col"class="text-center">#</th>
+            <th scope="col"class="text-center">@Html.Raw(displayInputs.TenderName)</th>
+            <th scope="col"class="text-center">@Html.Raw(displayInputs.Count)</th>
+            <th scope="col"class="text-center">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Operations)</th>
+         </tr>
+      </thead>
+      <tbody v-if="JoiningRequestInvitations && JoiningRequestInvitations.length > 0">
+         <tr v-for="(JoiningRequestInvitation, $index) in JoiningRequestInvitations">
+            <td class="text-center" data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td class="text-center" data-label="@Html.Raw(displayInputs.TenderName)"> {{JoiningRequestInvitation.tenderName}} </td>
+            <td class="text-center" data-label="@Html.Raw(displayInputs.TenderNumber)"> {{JoiningRequestInvitation.joiningRequestInvitationNumber}} </td>
+            <td class="text-center" data-label="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Operations)">
+               <a :href="joiningRequest(JoiningRequestInvitation.tenderIdString)" class="btn btn-primary btn-sm" title="@Html.Raw(displayInputs.DisplayingJoiningRequests)"
+                  v-if="((JoiningRequestInvitation.tenderTypeId == @((int)Enums.TenderType.CurrentDirectPurchase) || JoiningRequestInvitation.tenderTypeId == @((int)Enums.TenderType.NewDirectPurchase))
+                  && (JoiningRequestInvitation.invitationTypeId == @((int)Enums.InvitationType.Public)))"><i class="material-icons">list_alt</i></a>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td align="center" style="text-align:center !important" colspan="4">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i>
+               <br>
+               @Html.Raw(displayInputs.NoRecordsFound)
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource" @@request_finish="requestFinish"></pagination>
+</div>
+

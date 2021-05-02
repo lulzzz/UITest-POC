@@ -1,0 +1,576 @@
+@using System
+@inject IJsonHelper Json;
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.QuantitiesTablesModel
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantityTables</li>
+      </ol>
+   </nav>
+}
+<form id="myQuantityTableForm">
+   <div class="modal fade" id="myModal2" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@res.SharedResources.DisplayInputs.QuantityTables</h5>
+            </div>
+            <div class="modal-body">
+               <div class="row" id="divSpecification">
+                  <div class="col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group p-0">
+                        <label label class="label bmd-label-static">@res.OfferResources.DisplayInputs.ItemName</label><span class="text-danger">*</span>
+                        <input type="hidden" id="txtItemIndexD" class="form-control " />
+                        <input type="text" class="form-control" id="txtItemName" value="">
+                        <span class="bmd-help text-danger" id="txtNameValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterItemName</span>
+                     </div>
+                  </div>
+                  <div class="col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group p-0">
+                        <label label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Quantity</label><span class="text-danger">*</span>
+                        <input type="number" min="0" class="form-control" id="txtItemQuantity" value="">
+                        <span class="bmd-help text-danger" id="txtQuantityNaNValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterValidQuantity</span>
+                     </div>
+                  </div>
+                  <div class="col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Unit</label>
+                        <input type="text" class="form-control" id="txtItemUnit" value="">
+                     </div>
+                  </div>
+                  <div class="col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details</label>
+                        <input type="text" class="form-control" id="txtItemDetails" value="">
+                     </div>
+                  </div>
+                  <div class="col-12">
+                     <div id="editFileDiv" class="btn btn-outline-primary btn-sm" style="display:none; width:100%">
+                        <span class="d-inline-block p-1" id="lblFileName"></span>
+                        <button class="btn btn-sm btn-just-icon btn-primary btn-round pull-right" data-toggle="tooltip" data-placement="top" title="@res.SharedResources.DisplayInputs.ShowFile" href="#" onclick="RedirectURLEditMode();return false;">
+                           <i class="material-icons">remove_red_eye</i> 
+                        </button>
+                        <button type="button" class="btn btn-sm btn-just-icon btn-warning btn-round pull-right" data-toggle="tooltip" data-placement="top" onclick="changeFile()" title="@res.SharedResources.DisplayInputs.ChangeFile">
+                           <i class="material-icons">edit</i> 
+                        </button>
+                     </div>
+                  </div>
+                  <div id="uploaderDiv" class="form-group etd-search-btn col-12">
+                     @Html.FileUploader("attach", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 4, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                  </div>
+                  <div class="clearfix"></div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="button"
+                       id="uploadClassification" onclick="AddNewItem()"
+                       value="">
+                  @res.SharedResources.DisplayInputs.Save
+               </button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <input type="hidden" id="ModuleType" value="2" />
+   @Html.AntiForgeryToken()
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <input type="hidden" id="txtItemIndexD" class="form-control " />
+            <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+            @await Html.PartialAsync("_QuantitiesTablesUpdate")
+            <div class="clearfix"></div>
+         </div>
+      </div>
+   </div>
+</form>
+<script src="~/Etimad-UI/assets/js/xlsx.core.min.js"></script>
+<script src="~/Etimad-UI/assets/js/xls.core.min.js"></script>
+<script src="~/Etimad-UI/assets/js/xlsx.full.min.js"></script>
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script>
+      $('#myModal2').modal({ backdrop: 'static', show: false })
+      var token = $('#myQuantityTableForm input[name=__RequestVerificationToken]').val();
+      function ExportToTable(indexD) {
+         var regex = /^([a-zA-Z0-9\s_\\.\-:()])+(.xlsx|.xls)$/;
+         /*Checks whether the file is a valid excel file*/
+         if (regex.test($("#excelfile_" + indexD).val().toLowerCase())) {
+            var xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/
+            /*Checks whether the browser supports HTML5*/
+            if (typeof (FileReader) != "undefined") {
+               var reader = new FileReader();
+               reader.onload = function (e) {
+                  var data = e.target.result;
+                  var workbook = XLS.read(data, { type: 'binary' });
+                  var sheet_name_list = workbook.SheetNames;
+                  var cnt = 0; /*This is used for restricting the script to consider only first sheet of excel*/
+                  sheet_name_list.forEach(function (y) { /*Iterate through all sheets*/
+                     /*Convert the cell value to Json*/
+                     if (xlsxflag) {
+                        var exceljson = XLSX.utils.sheet_to_json(workbook.Sheets[y]);
+                     }
+                     else {
+                        var exceljson = XLS.utils.sheet_to_row_object_array(workbook.Sheets[y]);
+                     }
+                     if (exceljson.length > 0 && cnt == 0) {
+                        BindTable(exceljson, indexD);
+                        cnt++;
+                     }
+                  });
+                  $('#quantityTb_' + indexD).show();
+               }
+               if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/
+                  reader.readAsArrayBuffer($("#excelfile_" + indexD)[0].files[0]);
+               }
+               else {
+                  reader.readAsBinaryString($("#excelfile_" + indexD)[0].files[0]);
+               }
+            }
+            else {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.HTML5Error)', 'danger');
+            }
+         }
+         else {
+              AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ValidExcell)', 'danger');
+         }
+      }
+      function BindTable(jsondata, tableIndex) {/*Function used to convert the JSON array to Html Table*/
+         var columns = BindTableHeader(jsondata, tableIndex); /*Gets all the column headings of Excel*/
+         if (CheckIfDataIsValid(jsondata, columns)) {
+            for (var i = 0; i < jsondata.length; i++) {
+               $('#txtItemName_' + 0).val(jsondata[i][columns[0]]);
+               $('#txtItemQuantity_' + 0).val(parseInt(jsondata[i][columns[1]]));
+               $('#txtItemUnit_' + 0).val(jsondata[i][columns[2]]);
+               $('#txtItemDetails_' + 0).val(jsondata[i][columns[3]] == undefined ? "" : jsondata[i][columns[3]]);
+               var item = {};
+               item.name = jsondata[i][columns[0]];
+               item.quantity = parseInt(jsondata[i][columns[1]]);
+               item.unit = jsondata[i][columns[2]];
+               item.details = jsondata[i][columns[3]];
+               item.itemAttachmentId = '';
+               item.itemAttachmentName = '';
+               vueObj.QuantitiesTables[tableIndex].quantitiesTableItems.push(item);
+            }
+         }
+      }
+      function CheckIfDataIsValid(jsondata, columns)
+      {
+         for (var i = 0; i < jsondata.length; i++) {
+            if (
+               typeof jsondata[i][columns[0]] == 'undefined' || typeof jsondata[i][columns[1]] == 'undefined' || typeof jsondata[i][columns[2]] == 'undefined' || /*typeof jsondata[i][columns[3]] == 'undefined' ||*/
+               jsondata[i][columns[0]].trim() == '' || jsondata[i][columns[1]].trim() == '' || jsondata[i][columns[2]].trim() == '' /*|| jsondata[i][columns[3]].trim() == ''*/ ||
+               !Number.isInteger(parseInt(jsondata[i][columns[1]].trim())) ||
+               parseInt(jsondata[i][columns[1]].trim()) <= 0) {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ValidExcell)', 'danger');
+               return false;
+            }
+         }
+         return true;
+      }
+      function BindTableHeader(jsondata, tableid) {/*Function used to get all column names from JSON and bind the html table header*/
+         var columnSet = [];
+         var headerTr$ = $('<tr/>');
+         for (var i = 0; i < jsondata.length; i++) {
+            var rowHash = jsondata[i];
+            for (var key in rowHash) {
+               if (rowHash.hasOwnProperty(key)) {
+                  if ($.inArray(key, columnSet) == -1) {/*Adding each unique column names to a variable array*/
+                     columnSet.push(key);
+                     headerTr$.append($('<th/>').html(key));
+                  }
+               }
+            }
+         }
+         return columnSet;
+      }
+      // Export Table Data To Excel Sheet
+      function exportToExcel_(index) {
+         var uri = 'data:application/vnd.ms-excel;base64,';
+         var template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>';
+         var table = $('#quantityTb_' + index).clone();
+         table.find('tr').last().remove();
+         table.find('tr th').last().remove();
+         table.find('tr th').last().remove();
+         table.find('tr').each(function (i, row) {
+            if (row.cells.length > 4) {
+               $(row).find('td').last().remove();
+               $(row).find('td').last().remove();
+            }
+         });
+         var ctx = { worksheet: name || 'Worksheet', table: table.html() }
+         XLSX.writeFile(ctx, 'out.xlsx');
+         window.location = uri + base64(format(template, ctx))
+      }
+      function exportToExcel(index) {
+         var table = $('#quantityTb_' + index).clone();
+         table.find('tr').last().remove();
+         table.find('tr th').last().remove();
+         table.find('tr th').last().remove();
+         table.find('tr').each(function (i, row) {
+            if (row.cells.length > 4) {
+               $(row).find('td').last().remove();
+               $(row).find('td').last().remove();
+            }
+         });
+         var wb = XLSX.utils.table_to_book(table[0], { sheet: "جدول رقم 1" });
+         return XLSX.writeFile(wb, ('QuantitieTables.xlsx'));
+      }
+      function base64(s) {
+         return window.btoa(unescape(encodeURIComponent(s)))
+      }
+      function format(s, c) {
+         return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; })
+      }
+      function DrawQuantityTable() {
+         var HTMLQuantityTable = "";
+         HTMLQuantityTable += "";
+      }
+      function AddQuantityTable() {
+         if ($('#txtNDName').val() == '' || $('#txtNDName').val() == undefined) {
+            $('#txtTableNameValidation').show();
+            return false;
+         }
+         else { $('#txtTableNameValidation').hide(); }
+         if (vueObj.isTableEdited == 0) {
+            var tbl = {};
+            tbl.name = $('#txtNDName').val();
+            tbl.IsEditable = true;
+            tbl.IsDeliverableEditable = true;
+            tbl.TableChangeStatusId = '1';
+            tbl.quantitiesTableItems = [];
+            vueObj.QuantitiesTables.push(tbl);
+         }
+         else if (vueObj.isTableEdited == 1) {
+            vueObj.QuantitiesTables[vueObj.editedTableIndex].name = $('#txtNDName').val();
+         }
+         vueObj.isTableEdited = 0;
+         $("#txtNDName").val('');
+         return false;
+      }
+      var currentTableIndex;
+      var TablesList = [];
+      var quantitiesTablesList = [];
+      var OldquantitiesTablesList = [];
+      @if (Model != null && Model.QuantitiesTables != null)
+      {
+         @:quantitiesTablesList = @Html.Raw(Json.Serialize(Model.QuantitiesTables));
+         @: OldquantitiesTablesList = @Html.Raw(Json.Serialize(Model.QuantitiesTables));
+      }
+      var vueObj = new Vue({
+         el: "#app",
+         data: {
+            QuantitiesTables: quantitiesTablesList,
+            OldQuantitiesTables: OldquantitiesTablesList,
+            isTableEdited: 0,
+            isItemEdited: 0,
+            editedTableIndex: 0,
+            editedItemIndex: 0,
+            myDate: new Date()
+         },
+         methods: {
+            calcWeight: function (tbl) {
+               if (tbl) {
+                  var rate = tbl.Weight;
+                  var sumRate = 0;
+                  var sum100 = 0;
+                  $(tbl.quantitiesTableItems).each(function (i, item) {
+                     sumRate += parseFloat(item.quantity);
+                     sum100 += 100;
+                  })
+                  if (sum100 > 0)
+                     rate = sumRate * 100 / sum100;
+                  return this.precisionRound(rate, 2);
+               }
+               else
+                  return 0;
+            },
+            sendTables: function () {
+               if (vueObj.QuantitiesTables.length == 0) {
+                  $('#txtTablesValidation').show();
+                  return false;
+               }
+               else {
+                  $('#txtTablesValidation').hide();
+               }
+               var flag = 1;
+               for (i = 0; i < vueObj.QuantitiesTables.length; i++) {
+                  if (vueObj.QuantitiesTables[i].quantitiesTableItems.length == 0) {
+                     flag = flag * 0;
+                  }
+               }
+               if (flag == 0) {
+                  $('#txtTableItemValidation').show();
+                  return false;
+               }
+               else {
+                  $('#txtTableItemValidation').hide();
+               }
+               for (i = 0; i < vueObj.QuantitiesTables.length; i++) {
+                  vueObj.OldQuantitiesTables.filter(function (elem) {
+                     if (elem.quantitiesTableId == vueObj.QuantitiesTables[i].quantitiesTableId) {
+                        for (var item = 0; item < vueObj.QuantitiesTables[i].quantitiesTableItems.length; item++) {
+                           if (vueObj.QuantitiesTables[i].quantitiesTableItems[item].itemChangeStatusId != 0) {
+                              vueObj.QuantitiesTables[i].tableChangeStatusId = '2';
+                           }
+                        }
+                     }
+                  });
+               }
+               $('#LoadingSite').fadeIn();
+               $.post('/Tender/QuantitiesTableUpdates', {
+                  model: vueObj.QuantitiesTables, id: @(Model.TenderID), __RequestVerificationToken: token
+               }).done(function (e) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+                  setTimeout(function () {
+                     window.location = '@Url.Action("TenderQuantityTableChangesApprovement", "Tender", new { tenderIdString = @Model.TenderIdString})';
+                  }, 1000);
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            },
+            precisionRound: function (number, precision) {
+               var factor = Math.pow(10, precision);
+               return Math.round(number * factor) / factor;
+            },
+            setDate: function (item) {
+            },
+            showTableItemodal: function (i) {
+               $('#txtItemIndexD').val(i);
+               $('#myModal3').modal('show');
+            },
+            deleteQuantityTable: function (id) {
+               this.QuantitiesTables.splice(id, 1);
+            },
+            ExportToTableVue: function (id) {
+               ExportToTable(id);
+            },
+            tableToExcel: function (id) {
+               exportToExcel(id);
+            },
+            deleteMilestone: function (tbl, im) {
+               tbl.quantitiesTableItems.splice(im, 1);
+               tbl.tableChangeStatusId = '2'
+            },
+            editMilestone: function (tbl, im, index) {
+               this.isItemEdited = 1;
+               this.editedItemIndex = im;
+               this.UploaderIndex = index;
+               var item = tbl.quantitiesTableItems[im];
+               $('#txtItemName').val(item.name);
+               $('#txtItemQuantity').val(item.quantity);
+               $('#txtItemUnit').val(item.unit);
+               $('#txtItemDetails').val(item.details);
+               if (item.itemAttachmentId != "" && item.itemAttachmentName != "" && item.itemAttachmentId != null && item.itemAttachmentName != null) {
+                  $('#lblFileName').html(item.itemAttachmentName);
+                  $('#editFileDiv').show();
+                  $('#uploaderDiv').hide();
+                  $('#attach').val(item.itemAttachmentId + ":" + item.itemAttachmentName);
+               }
+               else {
+                  resetFileUpload();
+                  $('#attach').val('');
+                  $('#editFileDiv').hide();
+                  $('#uploaderDiv').show();
+               }
+            },
+            changeUploaderIndex: function (im) {
+               clearPopup();
+               this.UploaderIndex = im;
+               this.editedTableIndex = 0;
+               this.isItemEdited = 0;
+               this.editedItemIndex = 0;
+               $('#editFileDiv').hide();
+               $('#uploaderDiv').show();
+            },
+            RedirectURL: function (tbl, im) {
+               var item = tbl.quantitiesTableItems[im];
+               window.open("/Upload/getfile/" + item.itemAttachmentId + ":" + item.itemAttachmentName, '_blank');
+            },
+            editQuantityTable: function (index) {
+               this.isTableEdited = 1;
+               this.editedTableIndex = index;
+               $('#txtNDName').val(vueObj.QuantitiesTables[index].name);
+            },
+            AddItem: function (index) {
+               var item = {};
+               item.name = $('#txtItemName_' + index).val();
+               item.quantity = $('#txtItemQuantity_' + index).val();
+               item.unit = $('#txtItemUnit_' + index).val();
+               item.details = $('#txtItemDetails_' + index).val();
+               // rate not true
+               if (item.name == '' || item.name == undefined) {
+                  $('#txtNameValidation_' + index).show();
+                  return false;
+               }
+               else { $('#txtNameValidation_' + index).hide(); }
+               if (item.quantity == '' || isNaN(item.quantity)) {
+                  $('#txtQuantityValidation_' + index).show();
+                  return false;
+               }
+               else { $('#txtQuantityValidation_' + index).hide(); }
+               if (parseFloat(item.quantity) < 0) {
+                  $('#txtQuantityNaNValidation_' + index).show();
+                  return false;
+               }
+               else { $('#txtQuantityNaNValidation_' + index).hide(); }
+               var modelValue = $('#attach').val();
+               $('#uploadLable' + index).html(modelValue.split(":")[1]);
+               $('#hdnUploadLable' + index).val(modelValue.split(":")[0]);
+               item.itemAttachmentId = $('#hdnUploadLable' + index).val();
+               item.itemAttachmentName = $('#uploadLable' + index).html();
+               if (item.quantity != '' && item.quantity != undefined && item.name != '' && item.name != undefined) {
+                  vueObj.QuantitiesTables[index].quantitiesTableItems.push(item);
+                  $('#txtQuantityValidation_' + index).hide();
+                  $('#txtNameValidation_' + index).hide();
+                  $('#txtQuantityNaNValidation_' + index).hide();
+                  $('#txtItemUnit_' + index).val('');
+                  $('#txtItemName_' + index).val('');
+                  $('#txtItemQuantity_' + index).val('');
+                  $('#txtItemDetails_' + index).val('');
+                  $('#ItemFile_' + index).val('');
+                  $('#hdnUploadLable' + index).val('');
+                  $('#uploadLable' + index).html('');
+                  $('#model').val('');
+               }
+            }
+         },
+         updated: function () {
+            datePickerInit();
+         }
+      });
+      $(function () {
+         $('#txtValueValidation').hide();
+         document.addEventListener("keydown", function (event) {
+            if (event.srcElement.className.includes("minus")) {
+               if (event.keyCode === 189 || event.keyCode == 109 || event.keyCode == 107 || event.keyCode == 16) {
+                  event.preventDefault();
+                  return false;
+               }
+            }
+         });
+      });
+      function getQuantityTablesObject() {
+         var obj = {};
+         obj.QuantitiesTables = vueObj.QuantitiesTables;
+         return obj;
+      }
+      function RedirectURLEditMode() {
+         var item = vueObj.QuantitiesTables[vueObj.UploaderIndex].quantitiesTableItems[vueObj.editedItemIndex];
+         window.open("/Upload/getfile/" + item.itemAttachmentId + ":" + item.itemAttachmentName, '_blank');
+      }
+      function saveFiles() {
+         var modelValue = $('#model').val();
+         if (modelValue == "") {
+            return false;
+         }
+         else {
+            $('#uploadLable' + UploaderIndex).html(modelValue.split(":")[1]);
+            $('#hdnUploadLable' + UploaderIndex).val(modelValue.split(":")[0]);
+            $('#model').val('');
+            $('.file_uploader_message').remove();
+            $('#myModal2').hide();
+         }
+      }
+      function resetFileUpload() {
+         $('.file_uploader_message').html('');
+         $('.qq-upload-list').html('');
+         $('.file_uploader').css('display', 'block');
+         $('#attach').fineUploader().val('');
+      }
+      function EditFileUpload(fileId ,fileName) {
+         // this sould be implmentd on file uploader
+         $('.file_uploader_message').html('');
+         $('.qq-upload-list').html('');
+         $('.file_uploader').css('display', 'block');
+         $('#attach').fineUploader().val('');
+      }
+      function AddNewItem() {
+         var index =  vueObj.UploaderIndex;
+         var item = {};
+         item.name = $('#txtItemName').val();
+         item.quantity = $('#txtItemQuantity').val();
+         item.unit = $('#txtItemUnit').val();
+         item.details = $('#txtItemDetails').val();
+         item.itemChangeStatusId = '1';
+         // rate not true
+         if (item.name == '' || item.name == undefined) {
+            $('#txtNameValidation' ).show();
+            return false;
+         }
+         else { $('#txtNameValidation' ).hide(); }
+         if (item.quantity == '' || isNaN(item.quantity)) {
+            $('#txtQuantityNaNValidation').show();
+            return false;
+         }
+         else { $('#txtQuantityNaNValidation').hide(); }
+         if (parseFloat(item.quantity) < 0) {
+            $('#txtQuantityNaNValidation').show();
+            return false;
+         }
+         else {
+            $('#txtQuantityNaNValidation').hide();
+         }
+         var modelValue = $('#attach').val();
+         item.itemAttachmentId = modelValue.split(":")[0];
+         item.itemAttachmentName = modelValue.split(":")[1];
+         if (item.quantity != '' && item.quantity != undefined && item.name != '' && item.name != undefined) {
+            if (vueObj.isItemEdited == 0) {
+               vueObj.QuantitiesTables[index].quantitiesTableItems.push(item);
+            }
+            else if (vueObj.isItemEdited == 1) {
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].name = item.name;
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].unit = item.unit;
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].quantity = item.quantity;
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].details = item.details;
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].itemChangeStatusId = '2';
+               var modelValue = $('#attach').val();
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].itemAttachmentId = modelValue.split(":")[0];
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].itemAttachmentName = modelValue.split(":")[1];
+            }
+         }
+         clearPopup();
+         resetFileUpload();
+         vueObj.isItemEdited = 0;
+         $('#myModal2').modal('hide');
+      }
+      function clearPopup() {
+         $('#attach').val('');
+         $('#txtQuantityValidation').hide();
+         $('#txtNameValidation').hide();
+         $('#txtQuantityNaNValidation').hide();
+         $('#txtItemUnit').val('');
+         $('#txtItemName').val('');
+         $('#txtItemQuantity').val('');
+         $('#txtItemDetails').val('');
+         $('#ItemFile').val('');
+         $('#hdnUploadLable').val('');
+         $('#uploadLable').html('');
+         $('#attach').val('');
+      }
+      function changeFile() {
+         resetFileUpload();
+         $('#attach').val('');
+         $('#uploaderDiv').show();
+         $('#editFileDiv').hide();
+         return false;
+      }
+   </script>
+}

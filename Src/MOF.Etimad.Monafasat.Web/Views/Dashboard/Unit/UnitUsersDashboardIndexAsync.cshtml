@@ -1,0 +1,118 @@
+@model MOF.Etimad.Monafasat.ViewModel.DashboardIndexModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Dashboard;
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <button class=" btn btn-outline-primary btn-link btn-just-icon" onclick="window.location = '#'" data-toggle="tooltip"
+              data-placement="top" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProfileSettings" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProfileSettings">
+         <i class="material-icons">assignment_ind</i> 
+      </button>
+   </div>
+}
+<style>
+   .notfication-item {
+   }
+</style>
+<div class="clearfix"></div>
+<div class="row">
+   <div class="col-12">
+      <ul class="nav nav-pills">
+         <li class="nav-item "><a id="TendersWaitingTheUnitActionDivTab" class="nav-link text-center"  href="#TendersWaitingTheUnitActionDiv" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.TendersNeedApproval</a></li>
+        @* <li class="nav-item "><a id="TendersWaitingTheUnitActionDivTab" class="nav-link text-center" onclick="LoadRejectedTenderData()" href="#TendersWaitingTheUnitActionDiv" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.TendersNeedApproval</a></li>*@
+
+      </ul>
+      <div class="card">
+         <div class="">
+            <div class="tab-content tab-space p-0">
+               <div class="tab-pane" id="TendersWaitingTheUnitActionDiv" active show>
+                  <div class="card-body">
+                     <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.TendersNeedApproval</h4>
+                  </div>
+                  <div id="TendersWaitingTheUnitAction">
+                     <div class="table-responsive">
+                        @Html.Partial("/Views/Dashboard/Unit/_TendersWaitingTheUnitAction.cshtml")
+                     </div>
+                  </div>
+               </div>
+              
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+@section scripts{
+   <script src="~/Etimad-UI/assets/js/counter/waypoints.min.js"></script>
+   <script src="~/Etimad-UI/assets/js/counter/jquery.counterup.js"></script>
+   <script>
+      // we set numbers after ajax request so this counter need to be called after dom change
+      function callCounters() {
+         $('.counter').counterUp({
+            delay: 1000,
+            time: 500
+         });
+      }
+      jQuery(document).ready(function ($) {
+         $('.nav.nav-pills > li:first-child >a ').addClass('active show');
+         $('.tab-content.tab-space > div.tab-pane:first-child ').addClass('active show');
+      });
+      //$(document).ready(function () {
+      //   var activeTab = window.location.href.split('#')[1];
+      //   $('a[href=#' + activeTab + ']').click();
+      //});
+      var RejectedTender = new Vue({
+         el: '#TendersWaitingTheUnitAction',
+         data: {
+            TendersWaitingTheUnitAction: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 4,
+            resource_url: '/Dashboard/TendersWaitingTheUnitActionAsync',
+            queryString: '',
+            displayOnlyMode: true
+         },
+         methods: {
+            updateResource: function (data) {
+               this.TendersWaitingTheUnitAction = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+               $("#rejectedTenderProcessesCount").text(this.$refs.vpaginator.totalCount);
+            },
+            getTenderDetailsUrl: function (tenderIdString) {
+               return '/Tender/TenderDetailsForUnitSecretary?tenderIdString=' + tenderIdString;
+            },
+            GoToNegotiation: function (id) {
+               //location.href = '/CommunicationRequest/CreateSecondNegotiationRequest/' + id;
+               return '/CommunicationRequest/CreateSecondNegotiationRequest/' + id;
+            }
+         }
+      });
+      //function LoadlastTenPurshaseData() {
+      //   LastTenPurshase.resource_url = '/Dashboard/GetLastTenPurshaseAsync';
+      //}
+      //var LastTenPurshase = new Vue({
+      //   el: '#lastTenPurshase',
+      //   data: {
+      //      LastTenPurshase: [],
+      //      totalCount: 0,
+      //      currentPage: 1,
+      //      pageSize: 10,
+      //      resource_url: '',
+      //      queryString: '',
+      //      HasDate: false,
+      //   },
+      //   methods: {
+      //      getSupplierInfo: function (CR) {
+      //         getSupplierInfo(CR);
+      //      },
+      //      updateResource: function (data) {
+      //         this.LastTenPurshase = data;
+      //         this.totalCount = this.$refs.vpaginator.totalCount;
+      //         this.currentPage = this.$refs.vpaginator.currentPage;
+      //         this.pageSize = this.$refs.vpaginator.pageSize;
+      //      }
+      //   }
+      //});
+   </script>
+}

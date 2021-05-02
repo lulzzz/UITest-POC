@@ -1,0 +1,706 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.TenderCanelationModel
+@{
+   int tenderId = Model.TenderId;
+   string tenderIdString = Model.TenderIdString;
+
+
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelTender;
+
+   bool canReopenTender = false;
+   bool hasRejectTenderCancelRequest = false;
+   bool hasActiveTenderCancelRequest = false;
+   var supplierList = new object();
+   var isVROCommitteeUser = User.IsInRole(RoleNames.OffersOpeningAndCheckManager) || User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) ? "true" : "false";
+
+   var cancelationReason = Model.TenderChangeRequestModel != null ? Model.TenderChangeRequestModel.CancelationReasonId : 0;
+   string canEditCancelationValue = Model.TenderChangeRequestModel != null ? "false" : "true";
+   bool hasHigherAuthority = (User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.EtimadOfficer) || User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersOpeningAndCheckManager) || User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.OffersCheckManager)) ? true : false;
+   if (Model.TenderChangeRequestModel != null)
+   {
+      supplierList = Model.TenderChangeRequestModel.SupplierViolatorCRs != null ? Model.TenderChangeRequestModel.SupplierViolatorCRs.ToList() : null;
+
+      canReopenTender = Model.TenderChangeRequestModel.RequestedByRoleName == User.UserRole() ? true : false;
+      hasRejectTenderCancelRequest = Model.TenderChangeRequestModel.ChangeRequestStatusId == (int)Enums.ChangeStatusType.Rejected && Model.TenderChangeRequestModel.RequestedByRoleName == User.UserRole() ? true : false;
+      hasActiveTenderCancelRequest = Model.TenderChangeRequestModel.ChangeRequestStatusId == (int)Enums.ChangeStatusType.Rejected && Model.TenderChangeRequestModel.RequestedByRoleName == User.UserRole() ? true : false;
+   }
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelTender</li>
+      </ol>
+   </nav>
+}
+<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmCancel</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="row" id="divDelete">
+               <div class="col-sm-6 col-xs-12">
+                  <div class="form-group">
+                     <label id="" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.TenderCancelConfirmation</label>
+                  </div>
+               </div>
+               <div class="clearfix"></div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button" id="btnConfirmCancel">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Confirm</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="deleteCancellationModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DeleteRequest</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="row" id="divDeleteCancel">
+               <div class="col-sm-6 col-xs-12">
+                  <div class="form-group">
+                     <label id="" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DeleteCancelRequest</label>
+                  </div>
+               </div>
+               <div class="clearfix"></div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button" id="btnConfirmCancellation">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Confirm</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+@section modalTitle{
+   <div class="ApprovalContent">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</div>
+   <div class="RejectionContent">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve</div>
+}
+
+@section modalContent {
+   <div class="col-lg-12 col-sm-12 col-xs-12 RejectionContent">
+      <div class="form-group bmd-form-group" style="padding-top:0;">
+         <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+         <textarea class="form-control" rows="5" id="txtRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason"></textarea>
+         <div class="clearfix">
+            <span class="bmd-help text-danger" id="txtRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12 ApprovalContent">
+      <div class="form-group bmd-form-group divVerficationCode">
+         <input type="text" class="form-control col-md-12" id="txtActivationNo" name="ActivationCode" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+         <span class="bmd-help text-danger position-relative" id="txtActivationNoValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+         <br />
+         <p class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainingTime<span class=" text-danger" id="timer"></span></p>
+      </div>
+   </div>
+}
+
+@section modalButtons {
+   <button type="button" class="btn btn-primary btn-sm m-1  ApprovalContent" name="button" id="btnApproveConfirmation">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+   </button>
+
+   <button type="button" class="btn btn-primary btn-sm m-1 btn-primary RejectionContent" name="button" id="btnRejectConfirmation">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+   </button>
+   <button type="button" class="btn btn-primary btn-sm m-1 btn-outline-primary ApprovalContent" name="button" id="btnResendVerificationCode">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode
+   </button>
+   <button type="button" class="btn btn-danger m-1 btn-link" data-dismiss="modal">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+   </button>
+}
+<form id="AntiForgeryTokenHolder">
+   @Html.AntiForgeryToken()
+</form>
+<div class="card" id="cancelTender">
+   <div class="card-body">
+      <div class="row" id="basicDetials">
+         <div class="col-md-6 col-sm-12 col-xs-12">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.TenderName)</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumberForAgency
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.TenderNumber)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.TenderReferenceNumber)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+         <div class="col-md-6 col-sm-12 col-xs-12">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.TenderTypeName)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.TenderStatusName)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExecutionPlace
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.ExcutionPlace)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+      </div>
+
+      @if (Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects)
+      {
+         if (canEditCancelationValue == "true")
+         {
+            <div class="row">
+               <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="TenderChangeRequestModel.CancelationReasonId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <select data-live-search="true" asp-for="TenderChangeRequestModel.CancelationReasonId" name="CancelationReasonId" class="selectpicker" v-model="cancelationReasonId"
+                             asp-items="@(new SelectList(Model.CancelationReasons, "Id", "Name"))" id="cancelReasonId" data-style="select-with-transition" data-size="7">
+                        <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.Messages.RejectionReasonRequired </option>
+                     </select>
+                  </div>
+                  <span class="bmd-help text-danger" id="txtCancelationReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.Messages.RejectionReasonRequired</span>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12" v-show="showSupplierTab">
+                  <div class="form-group has-success bmd-form-group">
+                     <label asp-for="TenderChangeRequestModel.SupplierValidatorId" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierViolator</label>
+                     <select data-live-search="false" id="supplierViolatorId" class="selectpicker" data-search="supplierViolatorId" title="@MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SelectSupplierViolator" data-style="select-with-transition" multiple v-model="selectedBuyersSuppliers">
+                        <option :value="item.name" v-for="item in buyersSuppliers">{{item.value}}</option>
+                     </select>
+                     <span class="bmd-help text-danger" id="txtSupplierViolator">@MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SelectSupplierViolator</span>
+                     <br />
+                     <span id="supplierMessage" class="badge badge-warning h6 m-1"> @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.BookletNotBeReturnedToSupplier</span>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="TenderChangeRequestModel.CancelationReasonDescription" label class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <textarea class="form-control" id="txtDescription" asp-for="TenderChangeRequestModel.CancelationReasonDescription" rows="3" maxlength="1024"></textarea>
+                     <span class="bmd-help text-danger" id="txtDescriptionValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.CancelationReasonDescriptionRequired</span>
+                  </div>
+               </div>
+            </div>
+         }
+         else
+         {
+            <div class="row">
+               <hr />
+               <div class="col-md-12 col-sm-12 col-xs-12">
+                  <h4 class="text-primary">تفاصيل الإلغاء</h4>
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @Html.DisplayNameFor(a => a.TenderChangeRequestModel.CancelationReasonId)
+                              <span asp-for="TenderChangeRequestModel.CancelationReasonId" class="label bmd-label-static"></span>
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @Model.CancelationReasons.Where(b => b.Id == Model.TenderChangeRequestModel.CancelationReasonId).FirstOrDefault().Name
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+
+                     @if (cancelationReason == 4)
+                     {
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @Html.DisplayNameFor(a => a.TenderChangeRequestModel.SupplierValidatorId)
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    <span v-if="selectedBuyersSuppliers.length > 0">
+                                       <span v-for="supplier in selectedBuyersSuppliers" class="badge badge-primary h6 m-1">{{supplier}}</span>
+                                    </span>
+                                    <span v-else>
+                                       <span class="badge badge-primary h6 m-1"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist </span>
+                                    </span>
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                     }
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @Html.DisplayNameFor(a => a.TenderChangeRequestModel.CancelationReasonDescription)
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @Model.TenderChangeRequestModel.CancelationReasonDescription
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         }
+      }
+   </div>
+</div>
+@if (Model.TenderChangeRequestModel != null)
+{
+   @if (Model.CanAuditCancelRequest == true)
+   {
+      <div class="row">
+         <div class="col">
+            <div class="form-group bmd-form-group">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveCancel" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ApproveCancelRequest</button>
+               @if (Model.IsLowBudgetAndAssignedMember && (User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager)))
+               {
+                  <button type="button" class="btn btn-danger pull-left " name="button" id="btnCancelTenderCancellation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DeleteRequest</button>
+               }
+               else
+               {
+                  <button type="button" class="btn btn-danger pull-left " name="button" id="btnRejectCancel" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectCancelRequest</button>
+               }
+               <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="goBack();">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+                  <div class="ripple-container"></div>
+               </button>
+            </div>
+         </div>
+      </div>
+   }
+
+   @if ((User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) || User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.OffersCheckSecretary)) && @hasRejectTenderCancelRequest == true && @canReopenTender == true)
+   {
+      <div class="row">
+         <div class="col">
+            <div class="card">
+               <div class="card-body">
+                  <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</h4>
+                  <p>@Model.TenderChangeRequestModel.RejectionReason</p>
+               </div>
+            </div>
+            @if (hasHigherAuthority == false)
+            {
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnReOpen">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen</button>
+               <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="goBack();">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+                  <div class="ripple-container"></div>
+               </button>
+
+            }
+         </div>
+      </div>
+   }
+}
+@if (Model.CanCreateCancelRequest && hasActiveTenderCancelRequest == false && canReopenTender == false)
+{
+   <div class="row">
+      <div class="col">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnCancel">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmCancel</button>
+         <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="goBack();">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+            <div class="ripple-container"></div>
+         </button>
+      </div>
+   </div>
+}
+@section scripts{
+   <script>
+      var token = $('#AntiForgeryTokenHolder input[name=__RequestVerificationToken]').val();
+      var myVar;
+      function startTimer() {
+         clearTimeout(myVar);
+         var presentTime = document.getElementById('timer').innerHTML;
+         var timeArray = presentTime.split(/[:]+/);
+         var m = timeArray[0];
+         var s = checkSecond((timeArray[1] - 1));
+         if (s == 59) { m = m - 1 }
+         document.getElementById('timer').innerHTML = m + ":" + s;
+         myVar = setTimeout(startTimer, 1000);
+         checkTime(m, s, myVar);
+         if (m < 0 && s > 0) {
+            document.getElementById('timer').innerHTML = "0:00";
+            return false;
+         }
+      }
+      function checkSecond(sec) {
+         if (sec < 10 && sec >= 0) { sec = "0" + sec }; // add zero in front of numbers < 10
+         if (sec < 0) { sec = "59" };
+         return sec;
+      }
+      function checkTime(min, sec, myVar) {
+         if (min <= 0 && sec <= 0) {
+            $("#btnResendVerificationCode").prop("disabled", false);
+            clearTimeout(myVar)
+         };
+         return sec;
+      }
+      function doVerificationCod() {
+         $("#btnResendVerificationCode").prop("disabled", true);
+         document.getElementById('timer').innerHTML = 05 + ":" + 00;
+         $.post('/Tender/CreateVerificationCode', { tenderIdString: "@tenderIdString", __RequestVerificationToken: token });
+         startTimer();
+      }
+      function goBack() {
+         window.location = document.referrer;
+      }
+      $("#btnRejectCancel").on("click", function () {
+         $(".RejectionContent").show();
+         $(".ApprovalContent").hide();
+      });
+      $("#btnCancelTenderCancellation").on("click", function () {
+
+         $("#deleteCancellationModal").modal('show');
+      });
+      $(document).ready(function () {
+
+        if ('@canEditCancelationValue' == "false") {
+           $('#cancelReasonId').attr('disabled', true);
+           $('#txtDescription').attr('disabled', true);
+        }
+
+         $("#btnResendVerificationCode").on("click", function () {
+            doVerificationCod();
+         });
+
+         $("#btnApproveCancel").on("click", function () {
+            doVerificationCod();
+            $(".RejectionContent").hide();
+            $(".ApprovalContent").show();
+         });
+
+         $("#btnCancel").on("click", function () {
+            if (@Model.TenderTypeId != @((int)Enums.TenderType.NationalTransformationProjects)) {
+               if ($("#cancelReasonId").val() === "") {
+                  $("#txtCancelationReasonValidation").show();
+                  return false;
+               } else if ($("#cancelReasonId").val() === "4" && $('#supplierViolatorId').val().length === 0 && app.buyersSuppliers.length > 0) {
+                  $("#txtSupplierViolator").show();
+                  return false;
+               }
+               if ($("#txtDescription").val().trim() == '') {
+                  $("#txtDescriptionValidation").show();
+                  return false;
+               }
+               $("#cancelModal").modal('show');
+            } else {
+               $("#cancelModal").modal('show');
+            }
+         });
+
+         $("#btnConfirmCancel").on("click", function () { 
+            debugger;
+            var el = $(this);
+            var token = $('input[name=__RequestVerificationToken]').val();
+            var cancelObj = {
+               TenderIdString: '@tenderIdString',
+               CancelationReasonId: $("#cancelReasonId").val(),
+               CancelationReasonDescription: $("#txtDescription").val() == undefined ? $("#txtDescription").val() : $("#txtDescription").val().trim(),
+               SupplierViolatorCRs: app.selectedBuyersSuppliers,
+               __RequestVerificationToken: token
+            }
+            $('#LoadingSite').fadeIn();
+            debugger;
+
+            postRequest('/Tender/CreateCancelTenderRequestAsync', cancelObj).then(function (response) {
+               $("#btnCancel").attr("disabled", true);
+               $("#cancelModal").modal('hide');
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.CancelSentToApproval)', alertMessageType.Success);
+               setTimeout(function () {
+                  if ('@Model.IsLowBudgetAndAssignedMember' === 'True') {
+                        window.location = '@Url.Action("CancelTender", "Tender", new { STenderId = @tenderIdString })';
+
+                  } else {
+                     if ('@isVROCommitteeUser' == 'true')
+                        window.location = '@Url.Action("VROTendersIndexCheckingAndOpeningStage", "Tender")';
+                     else
+                        window.location = '@Url.Action("Index", "Tender")';
+                  }
+               }, 3000);
+            }).catch(function (error) {
+               $('#LoadingSite').fadeOut();
+               $("#cancelModal").modal('hide');
+            });
+         });
+         $("#btnApproveConfirmation").on("click", function () {
+            $('#LoadingSite').fadeOut();
+               var verificationCodeValue = $("#txtActivationNo").val();
+               if (verificationCodeValue == '') {
+               $("#txtActivationNoValidation").show();
+                  return false;
+               }
+            $('#LoadingSite').fadeIn();
+            $.post('@Url.Action("ApproveTenderCancelRequestAsync", "Tender")',
+               {
+                  tenderIdString: '@tenderIdString',
+                  CancelationReasonId: $("#cancelReasonId").val(),
+                  CancelationReasonDescription: $("#txtDescription").val(),
+                  verificationCode: verificationCodeValue,
+                  __RequestVerificationToken: token
+               }).done(function () {
+                  $('#myModal').modal('hide');
+                  $("#btnApproveCancel").attr("disabled", true);
+                  $("#btnRejectCancel").attr("disabled", true);
+
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.CancelTenderApproved)', alertMessageType.Success);
+                  // give user time to read the message
+                  setTimeout(function () {
+                      if ('@isVROCommitteeUser' == 'true')
+                        window.location = '@Url.Action("VROTendersIndexCheckingAndOpeningStage", "Tender")';
+                     else
+                        window.location = '@Url.Action("Index", "Tender")';
+                  }, 3000);
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  $('#myModal').modal('hide');
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+         });
+
+         $("#btnRejectConfirmation").on("click", function () {
+            var rejectionReason = $("#txtRejectionReason").val();
+            $("#txtRejectionReasonValidation").hide()
+            if (rejectionReason.trim() == "") {
+               $("#txtRejectionReasonValidation").show()
+               return false;
+               }
+            $('#myModal').modal('hide');
+            //$('#LoadingSite').fadeIn();
+            var tenderObj = {
+               tenderIdString: '@tenderIdString',
+                  rejectionReason: rejectionReason,
+                  __RequestVerificationToken: token
+            }
+            postRequest('/Tender/RejectTenderCancelRequestAsync', tenderObj, true).then(function () {
+               $('#myModal').modal('hide');
+               $("#btnApproveCancel").attr("disabled", true);
+               $("#btnRejectCancel").attr("disabled", true);
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.CancelTenderRejected)', alertMessageType.Success);
+               // give user time to read the message
+               setTimeout(function () {
+                  if ('@isVROCommitteeUser' == 'true')
+                     window.location = '@Url.Action("VROTendersIndexCheckingAndOpeningStage", "Tender")';
+                  else
+                     window.location = '@Url.Action("Index", "Tender")';
+               }, 3000);
+            }).catch(function (error) {
+               $('#myModal').modal('hide');
+            });
+
+         });
+         $("#btnConfirmCancellation").on("click", function () {
+            $('#LoadingSite').fadeIn();
+
+            $.post('@Url.Action("CancelTenderCancellationRequestAsync", "Tender")',
+               {
+               tenderIdString: '@Model.TenderIdString',
+                  __RequestVerificationToken: token
+               }).done(function () {
+                  $('#LoadingSite').fadeOut();
+                  $('#deleteCancellationModal').modal('hide');
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DeletedSuccessfully)', alertMessageType.Success);
+                  setTimeout(function () {
+                     window.location = '@Url.Action("TenderIndexCheckingDirectPuchaseStage", "Tender")';
+                  }, 3000);
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  $('#deleteCancellationModal').modal('hide');
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+         });
+
+         $("#btnReOpen").on("click", function () {
+            $('#LoadingSite').fadeIn();
+            $.post('@Url.Action("ReopenTenderAfterCancelAsync", "Tender")',
+               {
+               tenderIdString: '@Model.TenderIdString',
+                  __RequestVerificationToken: token
+               }).done(function () {
+                  $('#LoadingSite').fadeOut();
+                  $("#btnReOpen").attr("disabled", true);
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.TenderReopen)', alertMessageType.Success);
+
+                  setTimeout(function () {
+                     //Route to Edit Tender Page
+                     window.location = '@Url.Action("Details", "Tender", new { STenderId = @Model.TenderIdString })';
+                  }, 3000);
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            });
+      });
+      var app = new Vue({
+         el: '#cancelTender',
+         data: {
+            showSupplierTab: false,
+            buyersSuppliers: [],
+            selectedBuyersSuppliers: [],
+            cancelationReasonId: '@cancelationReason',
+            token: $('input[name=__RequestVerificationToken]').val()
+         },
+         watch: {
+            cancelationReasonId: function () {
+               if (this.cancelationReasonId == '4') {
+                  this.showSupplierTab = true;
+
+                  getRequest('/Tender/GetAllBuyerSuppliers?tenderIdString=' + '@Model.TenderIdString')
+                     .then(function (result) {
+                     app.buyersSuppliers = result.data;
+                     setTimeout(function () {
+                        $('#supplierViolatorId').selectpicker('refresh');
+                     }, 1000)
+                  });
+               }
+               else {
+                  this.showSupplierTab = false;
+                  this.selectedBuyersSuppliers = [];
+               }
+            },
+            selectedBuyersSuppliers: function () {
+               if (app.selectedBuyersSuppliers.length > 0) {
+                  $("#supplierMessage").show();
+               } else {
+                  $("#supplierMessage").hide();
+               }
+            }
+         },
+         created: function() {
+            $("#cancelReasonId").val(this.cancelationReasonId);
+            this.selectedBuyersSuppliers = @(Html.Raw(Model.TenderChangeRequestModel != null ? Newtonsoft.Json.JsonConvert.SerializeObject(Model.TenderChangeRequestModel.SupplierViolatorCRs.ToList()) : "{}"));
+            if (this.cancelationReasonId == '4') {
+
+               this.showSupplierTab = true;
+            } else {
+               this.showSupplierTab = false;
+               this.selectedBuyersSuppliers = [];
+            }
+         }
+         ,
+         methods: {
+            createCancelRequest: function () {
+               debugger;
+               var token = $('input[name=__RequestVerificationToken]').val();
+               var cancelObj = {
+                  TenderIdString: '@tenderIdString',
+                  CancelationReasonId: $("#cancelReasonId").val(),
+                  CancelationReasonDescription: $("#txtDescription").val(),
+                  SupplierViolatorCRs: app.selectedBuyersSuppliers,
+                  __RequestVerificationToken: token
+               }
+               $('#LoadingSite').fadeIn();
+               $.post('@Url.Action("CreateCancelTenderRequestAsync", "Tender")', cancelObj).done(function (response) {
+
+                // postRequest('/Tender/CreateCancelTenderRequestAsync', cancelObj).then(function (response) {
+                  $('#LoadingSite').fadeOut();
+
+                  $("#btnCancel").attr("disabled", true);
+                  $("#cancelModal").modal('hide');
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.CancelSentToApproval)', alertMessageType.Success);
+                  setTimeout(function () {
+                     if ('@isVROCommitteeUser' == 'true')
+                        window.location = '@Url.Action("VROTendersIndexCheckingAndOpeningStage", "Tender")';
+                     else
+                        window.location = '@Url.Action("Index", "Tender")';
+                  }, 3000);
+            }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  $("#cancelModal").modal('hide');
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.response.data.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            }
+         }
+      });
+   </script>
+}

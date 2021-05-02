@@ -1,0 +1,114 @@
+<link href="~/Etimad-UI/assets/scss/Etimad/tendersCard.min.css" rel="stylesheet" />
+<div class="animated delay-2s col-12 col-md-12 mt-3" id="cardsresult">
+   <div class="row justify-content-center" v-if="announcements && announcements.length > 0">
+      <div class="col-12 col-md-12 mb-4" v-for="(br, $index) in announcements">
+         <div class="tender-card card rounded card mt-0 mb-0" v-bind:data-ref="br.referenceNumber">
+            <div class="row">
+               <div class="col-12 col-md-12 p-0">
+                  <div class="tender-metadata border-bottom">
+                     <div class="row">
+                        <div class="col-12">
+                           <div class="row ">
+                              <div class="col-6">
+                                 @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.PublishDate : <span>{{ br.publishDateString }}</span>
+                              </div>
+                              <div class="col-6 text-left">
+                                 <span class="badge badge-primary">{{ br.tenderTypeString }}</span>
+                              </div>
+                              <div class="col-12">
+                                 <h3>
+                                    <a :href="detailsUrl(br.announcementIdString)" v-bind:data-original-title="[br.announcementName]">
+                                       {{ br.announcementName.length > 100 ? br.announcementName.substring(0,100) + '...' : br.announcementName }}
+                                    </a>
+                                 </h3>
+                              </div>
+                              <div class="col-12">
+                                 <p class="pb-2">
+                                    {{ br.agencyName }}
+                                    <a class="pull-right" :href="detailsUrl(br.announcementIdString)">
+                                       @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details
+                                    </a>
+                                 </p>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-12 col-md-12 p-0">
+                  <div class="tender-date border-left">
+                     <div class="row">
+                        <div class="col-12 col-md-4">
+                           <label class="col-12 p-0 mb-3">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementDetails
+                           </label>
+                           <span>{{ br.announcementDetails }}</span>
+                        </div>
+                        <div class="col-12 col-md-2">
+                           <label class="col-12 p-0 mb-3">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementStatus
+                           </label>
+                           <span data-toggle="tooltip" data-placement="bottom" :title="br.announcementStatusString">
+                              {{ br.announcementStatusString }}
+                           </span>
+                        </div>
+                        <div class="col-12 col-md-2">
+                           <label class="col-12 p-0 mb-3">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementPeriod
+                           </label>
+                           <span data-toggle="tooltip" data-placement="bottom" :title="br.announcementStatusString">
+                              {{ br.announcementPeriod }}
+                           </span>
+                        </div>
+                        <div class="col-12 col-md-2">
+                           <label class="col-12 p-0 mb-3">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.PublishDate
+                           </label>
+                           <span class="ml-3" data-toggle="tooltip" data-placement="bottom" :title="br.publishDateString">
+                              <i>
+                                 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" x="0" y="0" version="1.1" viewBox="0 0 19 19" xml:space="preserve"><g id="calendar_1_" transform="translate(853 257)"><path id="Path_4414_3_" d="M-838.9-253.1c.3 0 .7-.1.9-.4.2-.2.4-.6.4-.9v-1.3c0-.7-.6-1.3-1.3-1.3-.7 0-1.3.6-1.3 1.3v1.3c0 .3.1.7.4.9.2.2.5.4.9.4z" /><path id="Path_4415_3_" d="M-834.3-254.8h-2.6v.7c0 1.1-.9 1.9-2 1.9s-2-.9-2-1.9v-.7h-5.3v.7c0 1.1-.9 2-2 2s-2-.9-2-2v-.7h-2.6v16.3h18.5v-16.3zm-1.3 15h-15.8v-10.4h15.8v10.4z" class="st0" /><path id="Path_4416_3_" d="M-848.2-253.1c.3 0 .7-.1.9-.4.2-.2.4-.6.4-.9v-1.3c0-.7-.6-1.3-1.3-1.3-.7 0-1.3.6-1.3 1.3v1.3c0 .3.1.7.4.9.3.2.6.4.9.4z" class="st0" /><path id="Rectangle_1468_3_" d="M-846.2-248.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1469_3_" d="M-842.8-248.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1470_3_" d="M-839.7-248.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1471_3_" d="M-846.2-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1472_3_" d="M-842.8-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1473_3_" d="M-839.7-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1474_3_" d="M-846.2-242.8h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1475_3_" d="M-849.5-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1476_3_" d="M-849.5-242.8h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1477_3_" d="M-842.8-242.8h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1478_3_" d="M-839.7-242.8h2.1v1.8h-2.1z" class="st0" /></g></svg>
+                              </i> 
+                              {{ br.publishDateString }}
+                           </span>
+                           <span>
+                              <i>
+                                 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" x="0" y="0" version="1.1" viewBox="0 0 19 19" xml:space="preserve"><g id="calendar_1_" transform="translate(853 257)"><path id="Path_4414_3_" d="M-838.9-253.1c.3 0 .7-.1.9-.4.2-.2.4-.6.4-.9v-1.3c0-.7-.6-1.3-1.3-1.3-.7 0-1.3.6-1.3 1.3v1.3c0 .3.1.7.4.9.2.2.5.4.9.4z" /><path id="Path_4415_3_" d="M-834.3-254.8h-2.6v.7c0 1.1-.9 1.9-2 1.9s-2-.9-2-1.9v-.7h-5.3v.7c0 1.1-.9 2-2 2s-2-.9-2-2v-.7h-2.6v16.3h18.5v-16.3zm-1.3 15h-15.8v-10.4h15.8v10.4z" class="st0" /><path id="Path_4416_3_" d="M-848.2-253.1c.3 0 .7-.1.9-.4.2-.2.4-.6.4-.9v-1.3c0-.7-.6-1.3-1.3-1.3-.7 0-1.3.6-1.3 1.3v1.3c0 .3.1.7.4.9.3.2.6.4.9.4z" class="st0" /><path id="Rectangle_1468_3_" d="M-846.2-248.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1469_3_" d="M-842.8-248.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1470_3_" d="M-839.7-248.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1471_3_" d="M-846.2-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1472_3_" d="M-842.8-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1473_3_" d="M-839.7-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1474_3_" d="M-846.2-242.8h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1475_3_" d="M-849.5-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1476_3_" d="M-849.5-242.8h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1477_3_" d="M-842.8-242.8h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1478_3_" d="M-839.7-242.8h2.1v1.8h-2.1z" class="st0" /></g></svg>
+                              </i> 
+                              <span>
+                                 {{ br.publishDateHijriString }}
+                              </span>
+                           </span>
+                        </div>
+                        <div class="col-12 col-md-2">
+                           <label class="col-12 p-0 mb-3">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.LastJoinDate
+                           </label>
+                           <span class="ml-3" data-toggle="tooltip" data-placement="bottom" :title="br.lastApplyingRequestsDateString">
+                              <i>
+                                 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" x="0" y="0" version="1.1" viewBox="0 0 19 19" xml:space="preserve"><g id="calendar_1_" transform="translate(853 257)"><path id="Path_4414_3_" d="M-838.9-253.1c.3 0 .7-.1.9-.4.2-.2.4-.6.4-.9v-1.3c0-.7-.6-1.3-1.3-1.3-.7 0-1.3.6-1.3 1.3v1.3c0 .3.1.7.4.9.2.2.5.4.9.4z" /><path id="Path_4415_3_" d="M-834.3-254.8h-2.6v.7c0 1.1-.9 1.9-2 1.9s-2-.9-2-1.9v-.7h-5.3v.7c0 1.1-.9 2-2 2s-2-.9-2-2v-.7h-2.6v16.3h18.5v-16.3zm-1.3 15h-15.8v-10.4h15.8v10.4z" class="st0" /><path id="Path_4416_3_" d="M-848.2-253.1c.3 0 .7-.1.9-.4.2-.2.4-.6.4-.9v-1.3c0-.7-.6-1.3-1.3-1.3-.7 0-1.3.6-1.3 1.3v1.3c0 .3.1.7.4.9.3.2.6.4.9.4z" class="st0" /><path id="Rectangle_1468_3_" d="M-846.2-248.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1469_3_" d="M-842.8-248.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1470_3_" d="M-839.7-248.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1471_3_" d="M-846.2-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1472_3_" d="M-842.8-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1473_3_" d="M-839.7-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1474_3_" d="M-846.2-242.8h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1475_3_" d="M-849.5-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1476_3_" d="M-849.5-242.8h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1477_3_" d="M-842.8-242.8h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1478_3_" d="M-839.7-242.8h2.1v1.8h-2.1z" class="st0" /></g></svg>
+                              </i> 
+                              {{ br.lastApplyingRequestsDateString }}
+                           </span>
+                           <span>
+                              <i>
+                                 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" x="0" y="0" version="1.1" viewBox="0 0 19 19" xml:space="preserve"><g id="calendar_1_" transform="translate(853 257)"><path id="Path_4414_3_" d="M-838.9-253.1c.3 0 .7-.1.9-.4.2-.2.4-.6.4-.9v-1.3c0-.7-.6-1.3-1.3-1.3-.7 0-1.3.6-1.3 1.3v1.3c0 .3.1.7.4.9.2.2.5.4.9.4z" /><path id="Path_4415_3_" d="M-834.3-254.8h-2.6v.7c0 1.1-.9 1.9-2 1.9s-2-.9-2-1.9v-.7h-5.3v.7c0 1.1-.9 2-2 2s-2-.9-2-2v-.7h-2.6v16.3h18.5v-16.3zm-1.3 15h-15.8v-10.4h15.8v10.4z" class="st0" /><path id="Path_4416_3_" d="M-848.2-253.1c.3 0 .7-.1.9-.4.2-.2.4-.6.4-.9v-1.3c0-.7-.6-1.3-1.3-1.3-.7 0-1.3.6-1.3 1.3v1.3c0 .3.1.7.4.9.3.2.6.4.9.4z" class="st0" /><path id="Rectangle_1468_3_" d="M-846.2-248.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1469_3_" d="M-842.8-248.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1470_3_" d="M-839.7-248.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1471_3_" d="M-846.2-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1472_3_" d="M-842.8-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1473_3_" d="M-839.7-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1474_3_" d="M-846.2-242.8h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1475_3_" d="M-849.5-245.9h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1476_3_" d="M-849.5-242.8h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1477_3_" d="M-842.8-242.8h2.1v1.8h-2.1z" class="st0" /><path id="Rectangle_1478_3_" d="M-839.7-242.8h2.1v1.8h-2.1z" class="st0" /></g></svg>
+                              </i> 
+                              <span>
+                                 {{ br.lastApplyingRequestsHijriDateString }}
+                              </span>
+                           </span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-12" v-else>
+      @await Html.PartialAsync("~/Views/Shared/_NoData.cshtml")
+   </div>
+   <div class="col-12 m-5 m-auto">
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+</div>

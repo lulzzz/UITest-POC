@@ -1,0 +1,30 @@
+<div class="table-responsive">
+   <table class="table table-striped text-center" aria-describedby="Suppliers Enquiry">
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.InquiryName</th>
+         </tr>
+      </thead>
+      <tbody v-if="Enquires && Enquires.length > 0">
+         <tr v-for="(item, $index) in Enquires">
+            <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td> 
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName" > {{item.supplierName}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{item.tenderName}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.InquiryName"> {{item.enquiryName}} </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td align="center" style="text-align:center !important" colspan="4">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i>
+               <br>
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NoRecordsFound
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>

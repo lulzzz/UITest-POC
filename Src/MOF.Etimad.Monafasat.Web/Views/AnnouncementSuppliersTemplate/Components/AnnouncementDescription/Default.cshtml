@@ -1,0 +1,59 @@
+@model MOF.Etimad.Monafasat.ViewModel.AnnouncementDescriptionModel
+ 
+<style>
+   .agencyLogo {
+      border-radius: 100%;
+      border: 2px solid #ccc;
+      padding: 5px;
+      width: 56px;
+   }
+</style>
+<div class="row">
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <div class="">
+         <ul class="list-group form-details-list">
+            @*<li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.RequiredAttachment
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>@(Model.RequiredAttachment)</span>
+                  </div>
+               </div>
+            </li>*@
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title"> @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.RequirementConditionsToJoinList</div>
+                  <div class="col-8 etd-item-info"><span>@(Model.RequirementConditionsToJoinList)</span></div>
+               </div>
+            </li>
+            
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title"> @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.IsRequiredAttachmentToJoinList</div>
+                  <div class="col-8 etd-item-info"><span>@(Model.IsRequiredAttachmentToJoinList == true ? "نعم ": "لا")</span></div>
+               </div>
+            </li>
+
+            @if (Model.IsRequiredAttachmentToJoinList)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title"> @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.RequiredAttachment</div>
+                     <div class="col-8 etd-item-info"><span>@(Model.RequiredAttachment)</span></div>
+                  </div>
+               </li>
+            }
+
+
+         </ul>
+      </div>
+   </div>
+
+    
+
+   
+
+</div>
+ 

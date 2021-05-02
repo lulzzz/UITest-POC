@@ -1,0 +1,392 @@
+@model MOF.Etimad.Monafasat.ViewModel.AnnouncementTemplateDetailsForSupplierForPrintModel
+<link rel="icon" href="~/Etimad-UI/assets/imgs/favicon.ico">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script>
+   document.title = "تفاصيل القائمة";
+   (function () {
+      var link = document.createElement('link');
+      oldLink = document.getElementById('dynamic-favicon');
+      link.id = 'dynamic-favicon';
+      link.rel = 'shortcut icon';
+      link.href = '~/Etimad-UI/assets/imgs/favicon.ico';
+      document.getElementsByTagName('head')[0].appendChild(link);
+   })();
+   function printData() {
+      window.print();
+      window.close();
+   }
+   function saveData() {
+      var sourceHTML = document.getElementById("printDiv").innerHTML;
+      var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      var fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = 'document.doc';
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+   }
+</script>
+
+@{
+   var tenderExecutionPlace = (Model != null && Model.InsideKSA != null) ? (Model.InsideKSA == true ? MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InsideKSA : @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OutsideKSA) : "";
+}
+<style type="text/css">
+   .table tr td {
+      width: 50% !important;
+   }
+</style>
+<button id="printButton" onclick="printData();" class="btn btn-success d-print-none" style="margin:20px;">طباعة / حفظ</button>
+<div id="printDiv">
+
+
+   <div class="row" dir="rtl" style="margin:20px;">
+      <div class="col-sm-12 text-center d-print-none">
+         <img alt="" class="rounded mx-auto" src="~/Etimad-UI/assets/imgs/favicon.ico" />
+         <hr />
+      </div>
+      <h2 class="col-sm-12 text-center">تفاصيل القائمة</h2>
+    
+      <table class="table table-bordered col-sm-12">
+         <caption></caption>
+         <tr>
+            <th scope="row">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementSupplierTemplateName</th>
+            <td class="text-center">@Model?.AnnouncementName</td>
+         </tr>
+
+         <tr>
+            <th scope="row">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.ReferenceNumber</th>
+            <td class="text-center">@Model?.ReferenceNumber</td>
+         </tr>
+         <tr>
+            <th scope="row">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.IntroAboutAnnouncementTemplate</th>
+            <td class="text-center">@Model?.IntroAboutAnnouncementTemplate</td>
+         </tr>
+         <tr>
+            <th scope="row">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.PublishDate</th>
+            <td class="text-center">@Model?.PublishDateHijriString</td>
+         </tr>
+
+
+         @if (!User.IsInRole(MOF.Etimad.Monafasat.SharedKernel.RoleNames.supplier) && !User.IsInRole(MOF.Etimad.Monafasat.SharedKernel.RoleNames.CustomerService) && !User.IsInRole(MOF.Etimad.Monafasat.SharedKernel.RoleNames.MonafasatAccountManager) && Model.IsCreatedByAgncy)
+         {
+
+            <tr>
+               <th scope="row">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy</th>
+               <td class="text-center">@Model?.CreatedBy</td>
+            </tr>
+         }
+
+         <tr>
+            <th scope="row">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementTemplateSuppliersListType</th>
+            <td class="text-center">@Model?.AnnouncementListTypeName</td>
+         </tr>
+
+
+         <tr>
+            <th scope="row">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.TemplateStatus</th>
+            <td class="text-center">@Model?.StatusName</td>
+         </tr>
+
+         <tr>
+            <th scope="row">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.TenderTypeName</th>
+            <td class="text-center">@Model?.TenderTypeName</td>
+         </tr>
+
+         @if (Model.IsEffectiveList)
+         {
+            <tr>
+               <th scope="row">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.EffectiveListDate</th>
+               <td class="text-center">@Model?.EffectiveListDate</td>
+            </tr>
+         }
+         <tr>
+            <th scope="row">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.IsRequiredAttachmentToJoinList</th>
+            <td class="text-center"><span>@(Model.IsRequiredAttachmentToJoinList == true ? "نعم " : "لا")</span></td>
+         </tr>
+         <tr>
+            <th scope="row">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.RequirementConditionsToJoinList</th>
+            <td class="text-center">@Model?.RequirementConditionsToJoinList</td>
+         </tr>
+         @if (Model.IsRequiredAttachmentToJoinList)
+         {
+            <tr>
+               <th scope="row">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.RequiredAttachment</th>
+               <td class="text-center">@Model?.RequiredAttachment</td>
+            </tr>
+         }
+
+         <tr>
+            <th scope="row">  @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.Descriptions</th>
+            <td class="text-center">@Model?.Descriptions</td>
+         </tr>
+
+         <tr>
+            <th scope="row">  @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.Agency</th>
+            <td class="text-center">@Model?.AgencyName</td>
+         </tr>
+
+         <tr>
+            <th scope="row">  @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.Address</th>
+            <td class="text-center">@Model?.AgencyAddress</td>
+         </tr>
+
+         <tr>
+            <th scope="row"> الهاتف</th>
+            <td class="text-center">@Model?.AgencyPhone</td>
+         </tr>
+
+         <tr>
+            <th scope="row"> البريد الإلكتروني </th>
+            <td class="text-center">@Model?.AgencyEmail</td>
+         </tr>
+         <tr>
+            <th scope="row">  الفاكس</th>
+            <td class="text-center">@Model?.AgencyFax</td>
+         </tr>
+      </table>
+
+      <div class="col-md-6 col-sm-12 col-xs-12">
+         <div class="">
+            <h4 class="col-sm-12 text-center">مكان التنفيذ والأنشطة</h4>
+
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ExecutionPlace
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @tenderExecutionPlace
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @if (Model.Areas != null && Model.Areas.Count > 0)
+                        {
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Areas
+                        }
+                        else
+                        {
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Countries
+                        }
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <ol>
+                           @if (Model?.Areas != null && Model?.Areas.Count > 0)
+                           {
+                              @foreach (var areaItem in Model?.Areas)
+                              {
+                                 <li> @areaItem.Name</li>
+                              }
+                           }
+                           else
+                           {
+                              @if (Model?.Countries != null && Model?.Countries.Count > 0)
+                              {
+                                 @foreach (var countryItem in Model?.Countries)
+                                 {
+                                    <li> @countryItem.Name</li>
+                                 }
+                              }
+                           }
+                        </ol>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EstablishingActions
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <ol>
+                           @if (Model?.ConstructionWorks != null)
+                           {
+                              @foreach (var constructionWorkItem in Model?.ConstructionWorks)
+                              {
+                                 <li> @constructionWorkItem.Name</li>
+                              }
+                           }
+                        </ol>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MaintenanceOperationActions
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <ol>
+                           @if (Model?.MaintenanceOperationActions != null)
+                           {
+                              @foreach (var maintenanceWorkItem in Model?.MaintenanceOperationActions)
+                              {
+                                 <li> @maintenanceWorkItem.Name</li>
+                              }
+                           }
+                        </ol>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderActivity
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <ol>
+                           @if (Model?.TenderActivities != null)
+                           {
+                              @foreach (var activityItem in Model?.TenderActivities)
+                              {
+                                 <li>@activityItem.Name</li>
+                              }
+                           }
+                        </ol>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.ActivityDescription
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @Model?.ActivityDescription
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.Details
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @Model?.Details
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+         </div>
+     
+         @if (User.IsInRole(RoleNames.supplier))
+         {
+
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <div class="">
+                  <h4 class="col-sm-12 text-center"> طلب الانضمام للقائمة </h4>
+
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              حالة طلب الانضمام
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              @if (Model?.JoinRequest?.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.Sent || Model?.JoinRequest?.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.PendingAcceptance || Model?.JoinRequest?.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.PendingRejection)
+                              {
+                                 <span>تم الارسال </span>
+                              }
+                              else
+                              {
+                                 <span> @(Model?.JoinRequest?.JoinRequestStatusName)</span>
+                              }
+                           </div>
+                        </div>
+                     </li>
+
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              تاريخ ارسال طلب الانضمام
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span> @(Model?.JoinRequest?.JoinRequestSendingDate)</span>
+                           </div>
+                        </div>
+                     </li>
+
+                     @if (Model?.JoinRequest?.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.Withdrawn)
+                     {
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 تاريخ الإنسحاب من القائمة
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span> @(Model?.JoinRequest?.WithdrawalDate)</span>
+                              </div>
+                           </div>
+                        </li>
+                     }
+                     @if (Model?.JoinRequest?.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.Rejected)
+                     {
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model?.JoinRequest?.RejectionReason)</span>
+                              </div>
+                           </div>
+                        </li>
+                     }
+                     @if (Model?.JoinRequest?.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.Deleted)
+                     {
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.SupplierDeleteReason
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model?.JoinRequest?.DeleteReason)</span>
+                              </div>
+                           </div>
+                        </li>
+                     }
+                     @if (Model?.JoinRequest?.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.Accepted)
+                     {
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.TemplateExtendMechanism
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model?.JoinRequest?.TemplateExtendMechanism)</span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 آلية التوقف عن استخدام القائمة
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model?.JoinRequest?.StopUsingAnnouncemetMechanism)</span>
+                              </div>
+                           </div>
+                        </li>
+                     }
+                  </ul>
+
+               </div>
+            </div>
+            
+         }
+
+      </div>
+
+   </div>
+

@@ -1,0 +1,16 @@
+@model MOF.Etimad.Monafasat.ViewModel.GetConditionTemplateModel
+<ul class="nav nav-pills vertical-nav-pill">
+   <li class="nav-item mb-3"><a id="tab1" class="nav-link text-center active show" href="#section1" data-toggle="tab"> المقدمة و الأحكام العامة</a></li>
+   <li class="nav-item mb-3"><a id="tab2" class="nav-link text-center" href="#section2"> إعداد العروض</a></li>
+   @*<li class="nav-item mb-3"><a id="tab3" class="nav-link text-center" href="#section3"> تسليم العروض</a></li>*@
+   @*<li class="nav-item mb-3"><a id="tab4" class="nav-link text-center" href="#section4"> تقييم العروض</a></li>
+      <li class="nav-item mb-3"><a id="tab5" class="nav-link text-center" href="#section5"> متطلبات التعاقد</a></li>*@
+   <li class="nav-item mb-3"><a id="tab6" class="nav-link text-center" href="#section6"> التعريفات الفنية</a></li>
+   <li class="nav-item mb-3"><a id="tab7" class="nav-link text-center" href="#section7"> المواصفات والشروط المطلوبة</a></li>
+   @if (Model.VersionId >= 4)
+   {
+      <li class="nav-item mb-3"><a id="tab8" class="nav-link text-center" href="#section8">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LocalContentRequirement</a></li>
+   }
+
+
+</ul>

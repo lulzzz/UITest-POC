@@ -1,0 +1,58 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+    string tenderNameResString = MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.PreQualificationName;
+    string tenderNumberResString = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber;
+    string preQualificationNumberResString = MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.PreQualificationNumber;
+    string notFound = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotFound; 
+    string noDataResString = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData;
+    string lastDateToReciveOffersResString = MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.LastDateToReciveOffers;
+    string lastDateToReciveDocumentsResString = MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.LastDateToReciveDocument;
+    string offersOpeningAppointmentResString = MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.OffersOpeningAppointment;
+    string acceptanceTypeNameResString = MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.AcceptanceTypeName;
+}
+<div class="table-responsive ">
+   <table class="table table-striped" id="PreQualificationProcessNeedsActionTable" aria-describedby="Pre Qualification Process">
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col">@Html.Raw(tenderNameResString)</th>
+            <th scope="col">@Html.Raw(preQualificationNumberResString)</th>
+            <th scope="col">@Html.Raw(lastDateToReciveDocumentsResString)</th>
+            <th scope="col">@Html.Raw(acceptanceTypeNameResString)</th>
+            <th scope="col">@Html.Raw(@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options)</th>
+
+         </tr>
+      </thead>
+      <tbody v-if="PreQualificationProcessNeedsAction && PreQualificationProcessNeedsAction.length > 0">
+         <tr v-for="(tender, $index) in PreQualificationProcessNeedsAction">
+            <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td data-label="@Html.Raw(tenderNameResString)"> {{tender.tenderName}} </td>
+            <td data-label="@Html.Raw(tenderNumberResString)"> {{tender.tenderNumber}} </td>
+            <td data-label="@Html.Raw(lastDateToReciveOffersResString)"> {{tender.lastOfferPresentationDate != null ? tender.lastOfferPresentationDate.split('T')[0] : "@Html.Raw(notFound)" }} </td>
+            <td data-label="@Html.Raw(acceptanceTypeNameResString)"> {{tender.acceptanceTypeName}} </td>
+            <td data-label="@Html.Raw(@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options)">
+               <div class="dropdown">
+                  @if (User.IsInRole(RoleNames.Auditer))
+                  {
+                     <a :href="detailsUrl(tender.tenderIdString, tender.tenderStatusIdString, tender.changeRequestTypeId)" class="dropdown-item">
+                        <i class="material-icons">undo</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve
+                     </a>
+                  }
+                  
+                  </div>                 
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td align="center" style="text-align:center !important" colspan="6">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i>
+               <br>
+               @Html.Raw(noDataResString)
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>
+

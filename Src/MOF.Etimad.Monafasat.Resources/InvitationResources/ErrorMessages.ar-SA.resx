@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CheckWithAuditor" xml:space="preserve">
+    <value>الرجاء التواصل مع مدقق البيانات</value>
+  </data>
+  <data name="CommitteeNameExist" xml:space="preserve">
+    <value>اسم اللجنة موجود من قبل</value>
+  </data>
+  <data name="CommitteeNotFound" xml:space="preserve">
+    <value>اللجنة غير موجودة</value>
+  </data>
+  <data name="ConditionBookNotZero" xml:space="preserve">
+    <value>الرجاء ادخال قيمة اكبر من الصفر</value>
+  </data>
+  <data name="EmailExist" xml:space="preserve">
+    <value>الايميل موجود بالفعل</value>
+  </data>
+  <data name="EnterConditionBook" xml:space="preserve">
+    <value>الرجاء ادخال سعر كراسة الشروط</value>
+  </data>
+  <data name="EnterEmail" xml:space="preserve">
+    <value>يجب كتابة ايميل</value>
+  </data>
+  <data name="EnterLastEnqueriesDate" xml:space="preserve">
+    <value>الرجاء ادخال اخر موعد لاستلام الاستفسارات</value>
+  </data>
+  <data name="EnterLastOfferPresentationDate" xml:space="preserve">
+    <value>الرجاء ادخال اخر موعد لتقديم العروض</value>
+  </data>
+  <data name="EnterLastOfferPresentationTime" xml:space="preserve">
+    <value>الرجاء ادخال اخر وقت لتقديم العروض</value>
+  </data>
+  <data name="EnterOfferPresentationPlace" xml:space="preserve">
+    <value>الرجاء ادخال مكان تقديم العروض</value>
+  </data>
+  <data name="EnterOffersOpeningAddress" xml:space="preserve">
+    <value>الرجاء ادخال مكان فتح العروض</value>
+  </data>
+  <data name="EnterOffersOpeningDate" xml:space="preserve">
+    <value>الرجاء ادخال تاريخ فتح العروض</value>
+  </data>
+  <data name="EnterOffersOpeningTime" xml:space="preserve">
+    <value>الرجاء ادخال وقت فتح العروض</value>
+  </data>
+  <data name="EnterConditionsBookletDeliveryAddress" xml:space="preserve">
+    <value>الرجاء ادخال عنوان استلام كراسة الشروط</value>
+  </data>
+  <data name="EnterPhone" xml:space="preserve">
+    <value>يجب كتابة رقم الجوال</value>
+  </data>
+  <data name="EnterTechnicalCommittee" xml:space="preserve">
+    <value>الرجاء اختيار اسم الجهه الفنيه</value>
+  </data>
+  <data name="EnterTenderActivities" xml:space="preserve">
+    <value>الرجاء اختيار النشاطات</value>
+  </data>
+  <data name="EnterTenderAreas" xml:space="preserve">
+    <value>الرجاء اختيار المناطق</value>
+  </data>
+  <data name="EnterTenderName" xml:space="preserve">
+    <value>الرجاء ادخال اسم المنافسة</value>
+  </data>
+  <data name="EnterTenderNumber" xml:space="preserve">
+    <value>الرجاء ادخال رقم المنافسة</value>
+  </data>
+  <data name="ModelDataError" xml:space="preserve">
+    <value>الرجاء مراجعة البيانات والمحاولة مرة اخرى</value>
+  </data>
+  <data name="PhoneExist" xml:space="preserve">
+    <value>رقم الجوال موجود بالفعل</value>
+  </data>
+  <data name="TenderSentFailed" xml:space="preserve">
+    <value>خطا فى الارسال</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>حدث خطأ غير متوقع، الرجاء المحاولة مرة اخرى</value>
+  </data>
+  <data name="WrongEmail" xml:space="preserve">
+    <value>الايميل غير صحيح</value>
+  </data>
+  <data name="DataEntryPermissions" xml:space="preserve">
+    <value>مدخل البيانات فقط الذى يستطيع أن ينشئ أو يعدل المنافسة</value>
+  </data>
+  <data name="EnterQuantitiesTable" xml:space="preserve">
+    <value>الرجاء إدخال جدول كميات على الأقل</value>
+  </data>
+  <data name="EnterQuantitiesTableItem" xml:space="preserve">
+    <value>الرجاء إدخال عنصر واحد على الأقل فى جدول الكميات</value>
+  </data>
+  <data name="OfficialVacationDate" xml:space="preserve">
+    <value>التاريخ يجب ألا يكون أجازة رسمية</value>
+  </data>
+  <data name="TenderNotExist" xml:space="preserve">
+    <value>المنافسة غير موجودة</value>
+  </data>
+  <data name="WeekendDate" xml:space="preserve">
+    <value>التاريخ يجب ألا يكون أجازة أسبوعية</value>
+  </data>
+  <data name="TechnicalOrganizationRequired" xml:space="preserve">
+    <value>برجاء إدخال إسم الجهة الفنية</value>
+  </data>
+  <data name="DateLessThanToday" xml:space="preserve">
+    <value>التاريخ يجب أن يكون أكبر من تاريخ اليوم</value>
+  </data>
+  <data name="InvalidLastEnqueriesDate" xml:space="preserve">
+    <value>اخر موعد لإستلام استفسارات الموردين يجب أن يكون أقل من تاريخ فتح العروض وتاريخ تقديم العروض</value>
+  </data>
+  <data name="EnterFourtyCharacters" xml:space="preserve">
+    <value>برجاء إدخال أربعين حرف علي الأقل</value>
+  </data>
+  <data name="EnterTenderPurpose" xml:space="preserve">
+    <value>الرجاء ادخال الغرض من المنافسة</value>
+  </data>
+  <data name="EnterSamplesAdress" xml:space="preserve">
+    <value>الرجاء إدخال عنوان تسليم العينات</value>
+  </data>
+  <data name="ExpiredActivationCode" xml:space="preserve">
+    <value>رمز التحقق خطأ برجاء إعادة ارسال رمز التحقق</value>
+  </data>
+</root>

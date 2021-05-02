@@ -1,0 +1,155 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+@model MOF.Etimad.Monafasat.ViewModel.ApproveAnnouncemntSupplierTemplateModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementTemplateDetails;
+}
+@section modalTitle{
+   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+}
+@section modalContent{
+   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="divApprovedTender">
+      <div class="form-group bmd-form-group" id="divVerficationCode">
+         <span class="text-dark">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.Messages.ApprovalMessage</span>
+         <br/>
+         <input type="number" class="form-control col-md-12" id="txtActivationNo" name="ActivationCode" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+         <span class="bmd-help text-danger position-relative" id="txtActivationNoValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+         <br />
+         <span class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainigTimeToApprove<span class=" text-danger" id="timer"></span></span>
+
+      </div>
+   </div>
+}
+@section modalButtons{
+   <button type="button" class="btn  btn-primary btn-sm m-1" name="button" id="btnApproveConfirmation">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</button>
+   <button type="button" class="btn  btn-primary btn-sm m-1" name="button" id="btnResendVerificationCode"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+   <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+}
+
+
+<div class="col-12">
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+            <div id="dvPreQualificationDetail">
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row" id="approval">
+   @Html.AntiForgeryToken()
+   <input id="tenderIdHidden" hidden type="number" value="@Model.AnnouncementId" />
+   <div class="col-12 ">
+      @if (Model.StatusId == (int)Enums.AnnouncementSupplierTemplateStatus.UnderCreation && Model.CreatedById == Model.UserProfileId)
+      {
+         <button type="button" policy="CreateAnnouncementTemplatePolicy" class="btn btn-primary pull-left" name="button" id="btnApprove" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve</button>
+      }
+      <a class="btn btn-outline-primary btn-link pull-right" asp-action="AllAgencyAnnouncementSupplierTemplates" asp-controller="AnnouncementSuppliersTemplate">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+   </div>
+</div>
+<script type="text/javascript">
+     var token = $('#approval input[name=__RequestVerificationToken]').val();
+   $(document).ready(function () {
+      getAnnouncementSuppliersTemplateDetailsViewComponent();
+   });
+   function getAnnouncementSuppliersTemplateDetailsViewComponent() {
+        $('#loader').show();
+      $.get('/AnnouncementSuppliersTemplate/GetAnnouncementSuppliersTemplateDetailsViewComponent?announcementId=' + '@Html.Raw(@Model.AnnouncementIdString)', function (data) {
+         $("#dvPreQualificationDetail").html(data);
+         $('#loader').hide();
+      });
+   }
+
+    $("#btnApprove").on("click", function () {
+        document.getElementById('timer').innerHTML = 05 + ":" + 00;
+        startTimer();
+        $("#btnResendVerificationCode").prop("disabled", true);
+        createVerificationCode();
+        $("#divApprovedTender").show();
+       $("#btnApproveConfirmation").show();
+       $("#btnConfirmRejectApproveFromManager").hide();
+        $("#divApproveChange").hide();
+    });
+
+   $("#btnResendVerificationCode").on("click", function () {
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $("#btnResendVerificationCode").prop("disabled", true);
+      document.getElementById('timer').innerHTML = 05 + ":" + 00;
+      $.post('/AnnouncementSuppliersTemplate/CreateVerificationCode', { announcementIdString: '@Html.Raw(@Model.AnnouncementIdString)', __RequestVerificationToken: token });
+      startTimer();
+   });
+   $("#btnApproveConfirmation").on("click", function () {
+      debugger;
+        var token = $('#approval input[name=__RequestVerificationToken]').val();
+      var verificationCodeValue = $("#txtActivationNo").val();
+      if (verificationCodeValue == '') {
+         $("#txtActivationNoValidation").show();
+         return false;
+      }
+      $('#LoadingSite').fadeIn();
+      $.post('@Url.Action("ApproveAnnouncementAsync", "AnnouncementSuppliersTemplate")',
+         {
+             announcementIdString: '@Html.Raw(@Model.AnnouncementIdString)',
+            verficationCode: verificationCodeValue,
+            __RequestVerificationToken: token
+         }).done(function () {
+            $("#myModal").modal("hide");
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+               window.location = '@Url.Action("AllAgencyAnnouncementSupplierTemplates", "AnnouncementSuppliersTemplate")';
+            }, 2000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '@Url.Action("Logout", "Account")'; return;
+            }
+         });
+   });
+    function checkSecond(sec) {
+        if (sec < 10 && sec >= 0) { sec = "0" + sec };
+        if (sec < 0) { sec = "59" };
+        return sec;
+    }
+    function checkTime(min, sec, myVar) {
+        if (min <= 0 && sec <= 0) {
+            $("#btnResendVerificationCode").prop("disabled", false);
+            clearTimeout(myVar)
+        };
+        return sec;
+    }
+   var myVar;
+    function startTimer() {
+        clearTimeout(myVar);
+        var presentTime = document.getElementById('timer').innerHTML;
+        var timeArray = presentTime.split(/[:]+/);
+        var m = timeArray[0];
+        var s = checkSecond((timeArray[1] - 1));
+        if (s == 59) { m = m - 1 }
+        document.getElementById('timer').innerHTML = m + ":" + s;
+        myVar = setTimeout(startTimer, 1000);
+        checkTime(m, s, myVar);
+        if (m < 0 && s > 0) {
+            document.getElementById('timerChangeRequest').innerHTML = "0:00";
+            return false;
+        }
+    }
+   function createVerificationCode() {
+   axios.get("CreateVerificationCode", {
+      params: {
+         idString: '@Html.Raw(@Model.AnnouncementIdString)',
+      }
+         })
+            .then(res => {
+   $('#LoadingSite').fadeOut();
+})
+   .catch(error => {
+      $('#LoadingSite').fadeOut();
+      obj.ErrorMessage(error.response.data.message);
+   });
+      }
+
+</script>

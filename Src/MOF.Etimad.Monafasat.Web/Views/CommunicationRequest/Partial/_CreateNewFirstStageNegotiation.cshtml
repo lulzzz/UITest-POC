@@ -1,0 +1,160 @@
+@model MOF.Etimad.Monafasat.ViewModel.CreateNegotiationFirstStageDataModel
+<div class="col-md-12 col-sm-12 col-xs-12">
+   <div class="card ">
+      <div class="card-body">
+         @{if (Model.StatusId == (int)Enums.enNegotiationStatus.CheckManagerReject && (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseSecretary)))
+             { <ul class="list-group form-details-list col-md-6">
+                  <li class="list-group-item ">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @Model.RejectionReason
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+               </ul> }
+             }
+         <form asp-controller="CommunicationRequest" asp-action="CreateFirstStageNegotiationData" id="frmCreate" data-ajax-loading="LoadingSite"
+               data-ajax-begin="StartLoading()"
+               data-ajax="true"
+               data-ajax-method="POST"
+               data-ajax-mode="replace"
+               data-ajax-success="success"
+               data-ajax-failure="Fail">
+
+            <div class="row">
+               <div class="col-lg-4 col-sm-6 col-xs-12" id="divTenderType">
+                  <input type="hidden" asp-for="TenderIdString" />
+                  <input type="hidden" asp-for="EnOperationType" />
+                  <input type="hidden" asp-for="NegotiationIdString" name="NegotiationIdString" />
+                  <input type="hidden" asp-for="StatusId" />
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="NegotiationReasonId" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                     <select asp-items="@Model.ReductionReasons" asp-for="NegotiationReasonId" id="selectNegotiationReasonId" class="form-control" data-style="select-with-transition" data-size="7" onchange="GetProjectBudjetFromNIS(this)">
+                        <option value="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Select </option>
+
+                     </select>
+                     <span asp-validation-for="NegotiationReasonId" class="text-danger"></span>
+                  </div>
+
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="DesiredOffersAmount" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                     <input type="text" asp-for="DesiredOffersAmount" class="form-control  allownumericwithdecimal" id="txtDiscount" />
+                     <span asp-validation-for="DesiredOffersAmount" class="bmd-help text-danger"></span>
+                     <span id="spLowestOfferValidation" class="bmd-help text-danger">يجب ان تكون القيمة المستهدفة للعروض اكبر من 1 واقل من قيمة اقل عرض</span>
+                  </div>
+               </div>
+               <div class="col-lg-4  col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label class="label bmd-label-static noSpecial"> @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.SupplierReplyPeriod (أيام - ساعات)</label> <span class="text-danger">*</span>
+                     <div class="row">
+                        <div class="col-6">
+
+                           <input type="text" asp-for="Days" id="txtDays" class="form-control" placeholder="أيام " />
+                           <span asp-validation-for="Days" class="text-danger"></span>
+                        </div>
+                        <div class="col-6">
+
+                           <input type="text" asp-for="Hours" id="txtHours" class="form-control" placeholder=" ساعات" />
+                           <span asp-validation-for="Hours" class="text-danger"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="col-lg-12 col-sm-12 col-xs-12">
+                  <div class="form-group bmd-form-group" id="divFileUpload">
+                     <label asp-for="ReductionLetterrefId" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                     @Html.FileUploaderFor(m => m.ReductionLetterrefId, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                     <span asp-validation-for="ReductionLetterrefId" class="text-danger"></span>
+                  </div>
+               </div>
+               @{
+                  if ((User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseSecretary) || Model.IsUserHasAccessToLowBudgetTender == true) && (Model.StatusId == (int)Enums.enNegotiationStatus.New || Model.StatusId == (int)Enums.enNegotiationStatus.UnderUpdate || Model.StatusId == (int)Enums.enNegotiationStatus.CheckManagerReject || Model.StatusId == (int)Enums.enNegotiationStatus.UnitSpecialistReject))
+                  {
+                     <div class="col-12">
+                        <button type="button" class="btn btn-warning" name="ActionType" onclick="Preview()" value="@Enums.enSubmitActionType.Preview">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.PreviewOffers</button>
+                        @if (Model.IsUserHasAccessToLowBudgetTender)
+                        {
+                           
+                           <button type="submit" class="btn btn-primary" name="ActionType" onclick="StartLoading()" value="@Enums.enSubmitActionType.SaveAndSend">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve
+                           </button>
+
+                        }
+                        else
+                        {
+                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SendToApproveModal">
+                              @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.SendToApprove
+                           </button>
+                        }
+
+                        <button type="submit" class="btn btn-primary" name="ActionType" onclick="StartLoading()" value="@Enums.enSubmitActionType.SaveOnly">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+                        <a asp-controller="Tender" class="btn btn-outline-primary pull-right" asp-action="DetailsForAll" asp-route-STenderId="@Model.TenderIdString">رجوع</a>
+                     </div>
+
+                     <div class="modal fade" id="SendToApproveModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                           <div class="modal-content">
+                              <div class="modal-header">
+                                 <h5 class="modal-title">
+                                    @MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.NegotiationRequestForApproveModalTitle
+                                 </h5>
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                 </button>
+                              </div>
+                              <div class="modal-body">
+                                 <p>@MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.SendNegotiationRequestForApprove</p>
+                              </div>
+                              <div class="modal-footer">
+                                 <button type="submit" class="btn btn-primary" name="ActionType" onclick="StartLoading()" value="@Enums.enSubmitActionType.SaveAndSend">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Send</button>
+                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  } }
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+@if (Model.StatusId == (int)Enums.AgencyCommunicationRequestStatus.Rejected)
+{
+   <div class="col-md-6 col-sm-6 col-xs-6">
+      <ul class="list-group form-details-list">
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Status
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @Model.negotiationFirstStageViewModel?.StatusName
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.RejectedReason
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @Model.negotiationFirstStageViewModel?.RejectionReason
+                  </span>
+               </div>
+            </div>
+         </li>
+      </ul>
+   </div>
+}

@@ -1,0 +1,277 @@
+
+@{
+   ViewData["Title"] = "قوائم المنع";
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+}
+
+
+
+<ul class="nav nav-pills nav-pills-icons" role="tablist">
+   <li class="nav-item">
+      <a class="nav-link text-center active show" href="#d-1" role="tab" data-toggle="tab" aria-selected="true">
+         <i class="fa fa-user-times" aria-hidden="true"></i> 
+         الموردين الممنوعين
+      </a>
+   </li>
+   <li class="nav-item">
+      <a class="nav-link text-center" id="add-new" href="#d-2" role="tab" data-toggle="tab" aria-selected="true">
+         <i class="fa fa-user-plus" aria-hidden="true"></i> 
+         أضافة مورد لقائمة لممنوعين
+      </a>
+   </li>
+</ul>
+<div class="tab-content  tab-space col-12 " style="padding:0">
+   <div class="tab-pane active animated bounceInLeft  delay-1s show" id="d-1">
+      <div class="card">
+         <div class="card-body">
+            <h4 class="text-primary"> قائمة الممنوعين  <a class="btn p-2 btn-outline-primary pull-right" data-toggle="collapse" href="#SearchInBlocked" role="button" aria-expanded="false" aria-controls="SearchInBlocked"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search </a></h4>
+            <div class="clearfix"></div>
+            <div class=" collapse" id="SearchInBlocked">
+               <div class="row">
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">رقم السجل التجاري </label>
+                        <input type="text" id="txtTenderName" name="TenderName" maxlength="50" autocomplete="off" class="form-control">
+                     </div>
+
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">الإسم التجاري </label>
+                        <input type="text" id="txtTenderName" name="TenderName" maxlength="50" autocomplete="off" class="form-control">
+                     </div>
+
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">نوع المنع</label>
+                        <select data-live-search="false" class="selectpicker" data-style="select-with-transition" title="إختر" data-size="7">
+                           <option> يوم</option>
+                           <option> شهر </option>
+                           <option> ستة أشهر</option>
+                           <option> الكل</option>
+
+                        </select>
+                     </div>
+
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">حالة المنع</label>
+                        <select data-live-search="false" class="selectpicker" data-style="select-with-transition" title="إختر" data-size="7">
+                           <option> يوم</option>
+                           <option> شهر </option>
+                           <option> ستة أشهر</option>
+                           <option> الكل</option>
+
+                        </select>
+                     </div>
+
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">تم حذفها </label>
+                        <select data-live-search="false" class="selectpicker" data-style="select-with-transition" title="إختر" data-size="7">
+                           <option> يوم</option>
+                           <option> شهر </option>
+                           <option> ستة أشهر</option>
+                           <option> الكل</option>
+
+                        </select>
+                     </div>
+
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group form-check etd-calendar-group">
+                        <label for="datepick" class="label bmd-label-static"> التاريخ</label>
+                        <div class="input-group-prepend">
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="LastOfferPresentationDate" id="lsastOfferPresentationDate" placeholder="من">
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="LastOfferPresentationDate" id="lsastOfferPresentationDate" placeholder="ألى">
+                        </div>
+                     </div>
+
+                  </div>
+
+
+                  <div class="col-12">
+                     <button class="btn btn-sm btn-primary"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</button>
+                     <button class="btn btn-sm "><i class="material-icons">close</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear </button>
+                  </div>
+               </div>
+            </div>
+
+         </div>
+         <div class="table-responsive ">
+            <table class="table table-striped text-center" summary="description">
+               <thead>
+                  <tr>
+                     <th scope="col">الإسم التجاري</th>
+                     <th scope="col">رقم السجل التجاري</th>
+                     <th scope="col">تفاصيل المنع</th>
+                     <th scope="col">التواريخ</th>
+                     <th scope="col">أنشأت عن طريق</th>
+                     <th scope="col">إجراءات</th>
+
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td>اسم المنافسة</td>
+                     <td>اسم المنافسة</td>
+                     <td>اسم المنافسة</td>
+                     <td>اسم المنافسة</td>
+                     <td>اسم المنافسة</td>
+                     <td>
+                        <button class="btn btn-sm btn-danger">حذف من القائمة</button>
+                     </td>
+
+                  </tr>
+                  <tr>
+                     <td colspan="6" align="center" style="text-align:center !important">
+                        <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                        <br />
+                        لا يوجد بيانات
+                        <br />
+                        <button type="button" class="btn btn-primary btn-sm add-new-vendor"><i class="fa fa-user-plus"></i>  إضافة مورد جديد</button>
+                     </td>
+
+
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+   <div class="tab-pane animated bounceInLeft  delay-1s show" id="d-2">
+      <div class="card">
+         <div class="card-body">
+            <h4 class="text-primary">
+               قائمة الموردين المسجلين
+               <a data-toggle="collapse" href="#SearchInUnblocked" role="button" aria-expanded="false" aria-controls="SearchInUnblocked" class="btn p-2 btn-outline-primary pull-right"><i class="material-icons">add</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Add</a>
+               <a data-toggle="collapse" href="#SearchInUnblocked" role="button" aria-expanded="false" aria-controls="SearchInUnblocked" class="btn p-2 btn-outline-primary pull-right"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search </a>
+            </h4>
+            <div class="clearfix"></div>
+            <div class=" collapse" id="SearchInUnblocked">
+               <div class="row">
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">رقم السجل التجاري </label>
+                        <input type="text" id="txtTenderName" name="TenderName" maxlength="50" autocomplete="off" class="form-control">
+                     </div>
+
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">الإسم التجاري </label>
+                        <input type="text" id="txtTenderName" name="TenderName" maxlength="50" autocomplete="off" class="form-control">
+                     </div>
+
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">نوع المنع</label>
+                        <select data-live-search="false" class="selectpicker" data-style="select-with-transition" title="إختر" data-size="7">
+                           <option> يوم</option>
+                           <option> شهر </option>
+                           <option> ستة أشهر</option>
+                           <option> الكل</option>
+
+                        </select>
+                     </div>
+
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">حالة المنع</label>
+                        <select data-live-search="false" class="selectpicker" data-style="select-with-transition" title="إختر" data-size="7">
+                           <option> يوم</option>
+                           <option> شهر </option>
+                           <option> ستة أشهر</option>
+                           <option> الكل</option>
+
+                        </select>
+                     </div>
+
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">تم حذفها </label>
+                        <select data-live-search="false" class="selectpicker" data-style="select-with-transition" title="إختر" data-size="7">
+                           <option> يوم</option>
+                           <option> شهر </option>
+                           <option> ستة أشهر</option>
+                           <option> الكل</option>
+
+                        </select>
+                     </div>
+
+                  </div>
+                  <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group form-check etd-calendar-group">
+                        <label for="datepick" class="label bmd-label-static"> التاريخ</label>
+                        <div class="input-group-prepend">
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="LastOfferPresentationDate" id="lsastOfferPresentationDate" placeholder="من">
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="LastOfferPresentationDate" id="lsastOfferPresentationDate" placeholder="ألى">
+                        </div>
+                     </div>
+
+                  </div>
+
+
+                  <div class="col-12">
+                     <button class="btn btn-sm btn-primary"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</button>
+                     <button class="btn btn-sm "><i class="material-icons">close</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear </button>
+                  </div>
+               </div>
+            </div>
+
+         </div>
+         <div class="table-responsive ">
+            <table class="table table-striped text-center" summary="description">
+               <thead>
+                  <tr>
+                     <th scope="col">الأسم التجاري</th>
+                     <th scope="col">رقم السجل التجاري</th>
+                     <th scope="col">تفاصيل المنع</th>
+                     <th scope="col">التواريخ</th>
+                     <th scope="col">أنشأت عن طريق</th>
+                     <th scope="col">إجراءات</th>
+
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td>اسم المنافسة</td>
+                     <td>اسم المنافسة</td>
+                     <td>اسم المنافسة</td>
+                     <td>اسم المنافسة</td>
+                     <td>اسم المنافسة</td>
+                     <td>إضافة لقائمة المنع</td>
+
+                  </tr>
+                  <tr>
+                     <td colspan="6" align="center" style="text-align:center !important">
+                        <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                        <br />
+                        لا يوجد بيانات
+                        <br />
+                        <button type="button" class="btn btn-primary btn-sm add-new-vendor"><i class="fa fa-user-plus"></i>  إضافة مورد جديد</button>
+                     </td>
+
+
+                  </tr>
+               </tbody>
+
+            </table>
+         </div>
+
+      </div>
+   </div>
+</div>
+@section scripts{
+   <script>
+      $('.add-new-vendor').click(function () {
+         $('#add-new').click();
+      });
+   </script>
+}

@@ -1,0 +1,364 @@
+@model MOF.Etimad.Monafasat.ViewModel.RegistryReportForQualificationModel
+
+@{
+   var colspan = "3";
+   if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Small)
+   {
+      colspan = "3";
+   }
+   else if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Medium)
+   {
+      colspan = "5";
+   }
+   else if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Large)
+   {
+      colspan = "6";
+   }
+}
+
+<link rel="icon" href="~/Etimad-UI/assets/imgs/favicon.ico">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+<meta charset="UTF-8">
+<style>
+   .table thead th {
+      vertical-align: middle;
+      color: #00665e;
+      background-color: rgba(41,173,111,.278431);
+      border-bottom: 2px solid #a6afb8;
+   }
+
+   .table {
+      margin-bottom: 50px
+   }
+
+   .text-primary {
+      color: #29ad6f !important
+   }
+
+   .table-bordered td, .table-bordered th {
+      border: 1px solid #b0bac4;
+   }
+
+   @@media print {
+      .table thead th {
+         vertical-align: middle;
+         color: #00665e;
+         background-color: rgba(41,173,111,.278431);
+         border-bottom: 2px solid #a6afb8;
+      }
+   }
+</style>
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script>
+   document.title = "محضر الفحص الفني للتأهيل";
+   (function () {
+      var link = document.createElement('link'),
+         oldLink = document.getElementById('dynamic-favicon');
+      link.id = 'dynamic-favicon';
+      link.rel = 'shortcut icon';
+
+      link.href = '~/Etimad-UI/assets/imgs/favicon.ico';
+      document.getElementsByTagName('head')[0].appendChild(link);
+   })();
+   function printData() {
+      window.print();
+      window.close();
+   }
+   function saveData() {
+      var sourceHTML = document.getElementById("printDiv").innerHTML;
+
+      var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      var fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = 'محضر الفحص الفني للتأهيل.doc';
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+   }
+</script>
+
+<button id="printButton" onclick="printData();" class="btn btn-success d-print-none" style="margin:20px;">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Print</button>
+@*<button id="saveButton" onclick="saveData();" class="btn btn-success d-save-none" style="margin:20px;">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>*@
+<button id="saveButton" onclick="saveData();" class="btn btn-success d-save-none d-print-none" style="margin:20px;">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+
+<div class="row col-sm-12 text-center">
+   <img class="rounded mx-auto" src="~/Etimad-UI/assets/imgs/favicon.ico"  alt=""/>
+</div>
+<div id="printDiv" class="row" dir="rtl" style="margin:20px; text-align:right;">
+   <div class="col-sm-12 text-center" style=" direction:rtl">
+      <h3 class="col-sm-12 text-center" style="direction:rtl">محضر الفحص الفني للتأهيل</h3>
+      <hr />
+   </div>
+   <table class="table table-bordered" dir="rtl" cellspacing="3" cellpadding="0"   summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow">
+      <thead>
+         <tr>
+            <th  id="th94" class="text-center">رقم المحضر</th>
+            <th  id="th95" class="text-center">تاريخ المحضر</th>
+            <th id="th96"  class="text-center">يوم المحضر</th>
+            <th id="th97"  class="text-center">وقت المحضر</th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr>
+            <td class="text-center">
+               @Model.Id
+               <br />
+               <br />
+            </td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+         </tr>
+      </tbody>
+   </table>
+   <br />
+   <table class="table table-bordered" dir="rtl" cellspacing="3" cellpadding="0"    summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow">
+      <thead>
+         <tr>
+            <th  id="thQualificationNumber117" class="text-center">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationNumber</th>
+            <th  id="thname118" class="text-center">اسم  التأهيل</th>
+            <th  id="thSubmtionDate119" class="text-center">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.SubmtionDate</th>
+            <th  id="thdate120" class="text-center">تاريخ استلام وثائق التأهيل من المتنافسين</th>
+            <th  id="thcount121" class="text-center">عدد المشاركين في التأهيل</th>
+            <th  id="thavg122" class="text-center">المعدل اللازم لاجتياز التأهيل</th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr>
+            <td class="text-center">@Model.QualificationNumber</td>
+            <td class="text-center">@Model.QualificationName</td>
+            <td class="text-center">@Model.QualificationSubmitionDateString</td>
+            <td class="text-center">@Model.QualificationCheckingDate</td>
+            <td class="text-center">@Model.QualificationParticipantsNumber</td>
+            <td class="text-center">@Model.QualificationReqiredPoints</td>
+         </tr>
+      </tbody>
+   </table>
+
+   <h4 class="text-primary m-4 col-12 text-center" style="direction:rtl">بيانات المشاركين و بيانات التأهيل</h4>
+   <table class="table table-bordered" dir="rtl" cellspacing="3" cellpadding="0"   summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow">
+      <thead>
+         <tr>
+            <th  id="thparticpates141" class="text-center" rowspan="3">المشاركين بالتأهيل (المجتازين)</th>
+            <th  id="thability142" class="text-center" colspan="@colspan">القدرات الفنية</th>
+            <th  id="thfinance143" class="text-center">القدرات المالية</th>
+            <th  id="thavg144" class="text-center" rowspan="3">معدل تقييم تأهيل المتعاقد</th>
+            <th  id="thresult145" class="text-center" rowspan="3">نتيجة التأهيل</th>
+         </tr>
+         <tr>
+            @*small*@
+            <td class="text-center">وزن الخبرات السابقة</td>
+            <td class="text-center">وزن الالتزامات التعاقدية القائمة</td>
+            <td class="text-center">وزن  الموارد البشرية</td>
+            @if (Model.QualificationTypeId != (int)Enums.PreQualificationType.Small)
+            {
+               <td class="text-center">وزن لجودة</td>
+               <td class="text-center">وزن البيئة والصحة والسلامة</td>
+            }
+            @if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Large)
+            {
+               <td class="text-center">وزن التأمين</td>
+            }
+            @*financial*@
+            <td class="text-center">وزن نسبة السيولة</td>
+         </tr>
+         <tr>
+            @*small*@
+            <td class="text-center">@Model.PreviousExperienceYearPercentage</td>
+            <td class="text-center">@Model.ExistingContractualObligationsPercentage</td>
+            <td class="text-center">@Model.HumanResourcePercentage</td>
+            @if (Model.QualificationTypeId != (int)Enums.PreQualificationType.Small)
+            {
+               <td class="text-center">@Model.QualityPercentage</td>
+               <td class="text-center">@Model.EnviromentAndHealthyPercentage</td>
+            }
+            @if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Large)
+            {
+               <td class="text-center">@Model.InsurancePercentage</td>
+            }
+            @*financial*@
+            <td class="text-center">@Model.FinancialStatementsPercentage</td>
+         </tr>
+
+      </thead>
+      <tbody>
+         @if (Model.PassedQualificationSubCategoryWeights?.Count > 0)
+         {
+            @foreach (var passed in Model.PassedQualificationSubCategoryWeights)
+            {
+               <tr>
+                  <td class="text-center">@passed.SupplierName</td>
+
+                  @*small*@
+                  <td class="text-center">@passed.PreviousExperienceYearWeight</td>
+                  <td class="text-center">@passed.ExistingContractualObligationsWeight</td>
+                  <td class="text-center">@passed.HumanResourceWeight</td>
+                  @if (Model.QualificationTypeId != (int)Enums.PreQualificationType.Small)
+                  {
+                     <td class="text-center">@passed.QualityWeight</td>
+                     <td class="text-center">@passed.EnviromentAndHealthyWeight</td>
+                  }
+                  @if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Large)
+                  {
+                     <td class="text-center">@passed.InsuranceWeight</td>
+                  }
+                  @*financial*@
+                  <td class="text-center">@passed.FinancialStatementsWeight</td>
+
+                  <td class="text-center">@passed.QualificationResultValueString</td>
+                  <td class="text-center">@passed.QualificationResultString</td>
+               </tr>
+            }
+         }
+         else
+         {
+            <tr>
+               <th  id="thfail215" class="text-center" colspan="12">*لم يجتز أي من المشتركين التأهيل</th>
+            </tr>
+         }
+      </tbody>
+   </table>
+   <br />
+
+   <table class="table table-bordered" dir="rtl" cellspacing="3" cellpadding="0"   summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow">
+      <thead>
+         <tr>
+            <th  id="thfailedparticpates225" class="text-center" rowspan="3">المشاركين بالتأهيل (غير مجتازين)</th>
+            <th  id="thfsiledability226" class="text-center" colspan="@colspan">القدرات الفنية</th>
+            <th  id="thffinance227" class="text-center">القدرات المالية</th>
+            <th  id="thavg228" class="text-center" rowspan="3">معدل تقييم تأهيل المتعاقد</th>
+            <th  id="thfresult229" class="text-center" rowspan="3">نتيجة التأهيل</th>
+         </tr>
+         <tr>
+            @*small*@
+            <td class="text-center">وزن الخبرات السابقة</td>
+            <td class="text-center">وزن الالتزامات التعاقدية القائمة</td>
+            <td class="text-center">وزن  الموارد البشرية</td>
+            @if (Model.QualificationTypeId != (int)Enums.PreQualificationType.Small)
+            {
+               <td class="text-center">وزن لجودة</td>
+               <td class="text-center">وزن البيئة والصحة والسلامة</td>
+            }
+            @if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Large)
+            {
+               <td class="text-center">وزن التأمين</td>
+            }
+            @*financial*@
+            <td class="text-center">وزن نسبة السيولة</td>
+         </tr>
+         <tr>
+            @*small*@
+            <td class="text-center">@Model.PreviousExperienceYearPercentage</td>
+            <td class="text-center">@Model.ExistingContractualObligationsPercentage</td>
+            <td class="text-center">@Model.HumanResourcePercentage</td>
+            @if (Model.QualificationTypeId != (int)Enums.PreQualificationType.Small)
+            {
+               <td class="text-center">@Model.QualityPercentage</td>
+               <td class="text-center">@Model.EnviromentAndHealthyPercentage</td>
+            }
+            @if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Large)
+            {
+               <td class="text-center">@Model.InsurancePercentage</td>
+            }
+            @*financial*@
+            <td class="text-center">@Model.FinancialStatementsPercentage</td>
+         </tr>
+
+      </thead>
+      <tbody>
+         @if (Model.FailedQualificationSubCategoryWeights?.Count > 0)
+         {
+            @foreach (var passed in Model.FailedQualificationSubCategoryWeights)
+            {
+               <tr>
+                  <td class="text-center">@passed.SupplierName</td>
+
+                  @*small*@
+                  <td class="text-center">@passed.PreviousExperienceYearWeight</td>
+                  <td class="text-center">@passed.ExistingContractualObligationsWeight</td>
+                  <td class="text-center">@passed.HumanResourceWeight</td>
+                  @if (Model.QualificationTypeId != (int)Enums.PreQualificationType.Small)
+                  {
+                     <td class="text-center">@passed.QualityWeight</td>
+                     <td class="text-center">@passed.EnviromentAndHealthyWeight</td>
+                  }
+                  @if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Large)
+                  {
+                     <td class="text-center">@passed.InsuranceWeight</td>
+                  }
+                  @*financial*@
+                  <td class="text-center">@passed.FinancialStatementsWeight</td>
+
+                  <td class="text-center">@passed.QualificationResultValueString</td>
+                  <td class="text-center">@passed.QualificationResultString</td>
+               </tr>
+            }
+         }
+         else
+         {
+            <tr>
+               <th id="thnoparticpates299"  class="text-center" colspan="12">*لا يوجد مشتركين غير مجتازين للتأهيل</th>
+            </tr>
+         }
+      </tbody>
+   </table>
+
+   <h4 class="text-primary m-4 col-12 text-center" style="direction:rtl">أعضاء لجنة التأهيل</h4>
+   <br />
+   <table class="table table-bordered" dir="rtl" cellspacing="3" cellpadding="0"    summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow">
+      <thead>
+         <tr>
+            <th id="thdone309"  class="text-center" colspan="6">تم تشكيل اللجنة  بناء على.....رقم(....)وتاريخ(....)</th>
+         </tr>
+         <tr>
+            <th  id="threcom313" class="text-center">
+               توصيات أعضاء اللجنة
+            </th>
+            <td class="text-center" colspan="5"></td>
+
+         </tr>
+         <tr>
+            <th  id="thnumber320" class="text-center"></th>
+            <th  id="thadmin321" class="text-center">الإدارة</th>
+            <th  id="thtitle322" class="text-center">المسمى الوظيفي</th>
+            <th  id="thsignature323" class="text-center">التوقيع</th>
+            <th  id="thdate324" class="text-center">تاريخ إعتماد المحضر</th>
+            <th id="thmem325"  class="text-center">تحفظات الأعضاء </th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr>
+            <td>عضو</td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+         </tr>
+         <tr>
+            <td>عضو</td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+         </tr>
+         <tr>
+            <td>عضو</td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+         </tr>
+         <tr>
+            <td>رئيس اللجنة</td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+         </tr>
+      </tbody>
+   </table>
+</div>

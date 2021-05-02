@@ -1,0 +1,276 @@
+@using IdentityServer4.Extensions
+@{
+    string name = null;
+    string fullname = null;
+    if (!true.Equals(ViewData["signed-out"]))
+    {
+       name = Context.User?.GetDisplayName();
+       fullname = Context.User.Claims.FirstOrDefault(f => f.Type == "fullname")?.Value;
+    }
+    string changePassword = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ChangePassword;
+    string signout = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Signout;
+    string signin = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Signin;
+    string allRightsText = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AllRightsText;
+    string unifiedContactNumber = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.UnifiedContactNumber;
+    string pleaseWait = MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseWait;
+}
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8" />
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Etimad.Monafasat</title>
+   <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+   <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" />
+   <link href="~/css/style.css" rel="stylesheet" />
+   <link rel="icon" href="~/img/favicon.ico" />
+   <link href="~/css/responsive.min.css" rel="stylesheet" />
+   <link rel="stylesheet" href="~/css/select2.min.css" />
+   <style>
+      .select2-container--default .select2-selection--single {
+         border-radius: 0 !important;
+         padding-top: 6px !important;
+         border: none !important;
+      }
+      .select2-container--default .select2-selection--multiple .select2-selection__choice {
+         float: right !important;
+         text-align: right !important;
+         direction: rtl !important;
+      }
+      .select2-results__option[aria-selected] {
+         cursor: pointer;
+         text-align: right !important;
+      }
+      .select2-results__option[aria-selected=true] {
+         cursor: pointer;
+         text-align: right !important;
+         display: none;
+      }
+      .select2-results__option {
+         cursor: pointer;
+         text-align: right !important;
+      }
+   </style>
+   <script src="~/lib/jquery/jquery.js"></script>
+   <script src="~/Etimad-UI/assets/js/jquery.easing.js"></script>
+   <script src="~/Etimad-UI/assets/js/Alert-Message.js"></script>
+   <link rel="stylesheet" href="~/css/select2.min.css" />
+   <script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+   <script src="~/Etimad-UI/assets/js/vue-app/vue2-filters.min.js"></script>
+   <script src="~/Etimad-UI/assets/js/vue-app/pagination.js"></script>
+</head>
+<body>
+   <a id="root" href='@Url.Content("~/")' style="display: none"></a>
+   @await Html.PartialAsync("_StatusMessage")
+   <div class="message-box-container container"><div class="row"><div class="message-box col-xs-12"></div></div></div>
+   <!--NavBar-->
+   <nav class="navbar navbar-default">
+      <!--upperNavBar-->
+      <div class="upperNavBar">
+         <div class="padding">
+            <div class="logos">
+               <a class="merasLogo" href="@Url.Action("Index", "Home")"><img src="~/img/EITMAD-logo01.svg" /></a>
+            </div>
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+               @if (!string.IsNullOrWhiteSpace(name))
+               {
+                  {
+                     <div class="dropdown">
+                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                           <i class="fa fa-user" aria-hidden="true"></i>
+                           @name <span class="caret"></span> <p class="SubTitle"> @fullname</p>
+                        </a>
+                        <ul class="dropdown-menu">
+                           <li><a asp-action="ChangePassword" asp-controller="Account">@changePassword</a>
+                           <li role="separator" class="divider"></li>
+                           <li> <a asp-action="Logout" asp-controller="Account">@signout</a></li>
+                        </ul>
+                     </div>
+                  }
+               }
+               else // تسجيل الدخول
+               {
+                  <a asp-action="Login" asp-controller="Account" class="loginBtn">@signin</a>
+               }
+               <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                       aria-expanded="false">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+               </button>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            @Html.Partial("_UserMenuItem")
+            <!-- /.navbar-collapse -->
+            <!-- /.container-fluid -->
+         </div>
+      </div>
+      <!--upperNavBar-->
+      <!-- /.container-fluid -->
+   </nav>
+   <!--NavBar-->
+   <!--BreadCramb-->
+   <div class="breadCramb">
+      <div class="padding">
+         @*<h3>التعاقدات</h3>
+            <h2>عرض التعاقدات</h2>
+            <a href="#"> <i class="fa fa-plus"></i> تعاقد جديد </a>*@
+         @RenderSection("breadcrumb", false)
+      </div>
+   </div>
+   <!--BreadCramb-->
+   <!--content-->
+   <div class="paddingContainer">
+      <!--content-->
+      <div class="contentDiv">
+         <div class="companiesGrid">
+            <div class="col-md-12 col-sm-12 col-xs-12 padd0">
+               @RenderBody()
+            </div>
+         </div>
+      </div>
+   </div>
+   <!--content-->
+   <!--Footer-->
+   <footer>
+      <div class="col-md-12 col-sm-12 col-xs-12">
+         <div class="col-md-3 col-sm-12 col-xs-12">
+            <div class="logosF">
+               <a class="mofLogo" href="https://www.mof.gov.sa/Pages/default.aspx"><img src="~/img/MOF-Logo-03.svg" /></a>
+               <img src="~/img/vision.png" class="visionLogo" />
+            </div>
+         </div>
+         <div class="col-md-4 col-sm-12 col-xs-12">
+            <p class="copyRights">@allRightsText @@ @System.DateTime.Now.Year</p>
+         </div>
+         <div class="col-md-4 col-sm-12 col-xs-12">
+            <div class="social">
+               <ul>
+                  <li>
+                     <a href="https://twitter.com/etimadsa" class="twitter">
+                        <i class="fa fa-twitter" aria-hidden="true"></i>
+                     </a>
+                  </li>
+                  <li>
+                     <a href="https://www.facebook.com/etimadsa" class="facebook">
+                        <i class="fa fa-facebook" aria-hidden="true"></i>
+                     </a>
+                  </li>
+                  <li>
+                     <a href="https://www.youtube.com/channel/UCBG5lDLChSd1D4lGJefSygw" class="youtube">
+                        <i class="fa fa-youtube-play" aria-hidden="true"></i>
+                     </a>
+                  </li>
+                  <li>
+                     <a href="https://www.instagram.com/etimadsa/" class="instagram">
+                        <i class="fa fa-instagram" aria-hidden="true"></i>
+                     </a>
+                  </li>
+               </ul>
+               <div class="number">
+                  <span>
+                     @unifiedContactNumber :
+                     <label>920002299</label>
+                  </span>
+                  <span>|</span>
+
+               </div>
+               <div class="email">
+                  <span>ecare@@etimad.sa </span>
+               </div>
+               <!-- <div class="privacy">
+                   <a href="#">...سياسة الخصوصية</a>
+                   <span>|</span>
+                   <a href="#">شروط الإستخدام</a>
+                   <span>|</span>
+                   <a href="#">النماذج</a>
+                 </div> -->
+            </div>
+         </div>
+      </div>
+      <!--underFotter-->
+      <!-- <div id="underFooter">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+        </div>
+      </div> -->
+      <!--underFotter-->
+   </footer>
+   <!--Footer-->
+   <!--Modal-->
+   <div id="dialog_loader" style="display: none;">
+      <div class="modal-backdrop fade in" style="z-index:1060;"></div>
+      <div style="position: fixed; left: 50%; top: 30%; z-index: 1061">
+         <div style="position: relative; left: -50%;">
+            <div class="waiting-modal">
+               <img src='/Etimad-UI/assets/imgs/loader.gif' alt="@pleaseWait" title="@pleaseWait" />
+               <span>@pleaseWait ...</span>
+            </div>
+         </div>
+      </div>
+   </div>
+   @*<script src="~/lib/jquery/jquery.js"></script>*@
+
+   @*<script src="~/lib/bootstrap/js/bootstrap.js"></script>
+      <script src="~/js/select2.min.js"></script>
+      <script src="~/js/dist/build.js"></script>
+      <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+      <script src="~/lib/jquery-validation/dist/additional-methods.js"></script>
+      <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+      <script src="~/js/calendar/jquery.plugin.js"></script>
+      <script src="~/js/calendar/jquery.calendars.js"></script>
+      <script src="~/js/calendar/jquery.calendars.plus.js"></script>
+      <script src="~/js/calendar/jquery.calendars.picker.js"></script>
+      <script src="~/js/calendar/jquery.calendars.ummalqura.js"></script>
+      <script src="~/js/calendar/jquery.calendars.islamic.js"></script>
+      <script src="~/js/calendar/jquery.calendars-ar.js"></script>
+      <script src="~/js/calendar/jquery.calendars.picker-ar.js"></script>
+      <script src="~/js/calendar/jquery.calendars.ummalqura-ar.js"></script>
+      <script src="~/js/calendar/jquery.calendars.islamic-ar.js"></script>
+      <script src="~/js/calendar/calendar.template.js"></script>
+      <script src="~/js/jquery.filter_input.js"></script>
+      <script src="~/js/common.js"></script>*@
+   <script src="~/Etimad-UI/assets/js/bundle.js"></script>
+   @*<script src="~/js/vue-app/vue@2.5.2.js"></script>
+   <script src="~/js/vue-app/vue2-filters.min.js"></script>
+   <script src="~/js/vue-app/pagination.js"></script>*@
+
+   @RenderSection("scripts", required: false)
+   @RenderSection("xyz", required: false)
+   <script>
+      $(document).on('click', '.panel-heading span.clickable', function (e) {
+         var $this = $(this);
+
+         if (!$this.hasClass('panel-collapsed')) {
+            $this.parents('.panel').find('.panel-body').hide();
+            $this.addClass('panel-collapsed');
+            $this.find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+         } else {
+            $this.parents('.panel').find('.panel-body').show().addClass("animated fadeInUp");
+            $this.removeClass('panel-collapsed');
+            $this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+         }
+      });
+      // this is the id of the form
+      $("form").submit(function (e) {
+         var form = $(this);
+         var url = form.attr('action');
+         $.ajax({
+            type: "POST",
+            url: url,
+            data: form.serialize(), // serializes the form's elements.
+            success: function (data) {
+               alert(data); // show response from the php script.
+            },
+            error: function(e){
+
+            }
+         });
+
+         e.preventDefault(); // avoid to execute the actual submit of the form.
+      });
+   </script>
+</body>
+</html>

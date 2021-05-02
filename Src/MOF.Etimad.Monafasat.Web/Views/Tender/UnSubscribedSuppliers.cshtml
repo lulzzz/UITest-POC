@@ -1,0 +1,420 @@
+@{
+   ViewData["Title"] = "منافاسات";
+}
+
+
+@section modalTitle{ البحث المتقدم}
+@section modalContent{
+   عزيزنا مستخدم منصة إعتماد, كي تستطيع إستخدام مزايا البحث المتقدم التالية :
+   <br />
+   <span class="badge badge-green-bule h6 m-1">إسم المنافسة</span>
+   <span class="badge badge-green-bule h6 m-1">إسم المنافسة</span>
+   <span class="badge badge-green-bule h6 m-1">إسم المنافسة</span>
+   <span class="badge badge-green-bule h6 m-1">إسم المنافسة</span>
+   <span class="badge badge-green-bule h6 m-1">إسم المنافسة</span>
+   <br />
+   <p class="text-center">
+      يجب الإشتراك من خلال بوابة إعتماد أو تسجيل الدخول إذا لديك حساب فعال
+      <a href="" class="btn btn-primary">الإشتراك</a>
+      <a href="" class="btn btn-outline-primary">تسجيل الدخول</a>
+   </p>
+
+   @* @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SubscribtionMessage*@
+
+}
+@section headerContent{
+   <style>
+      .page-header {
+         height: auto;
+         min-height: calc(100vh - 54px) !important;
+         /*position: absolute;*/
+         left: 0;
+         right: 0;
+         transform: none !important;
+      }
+
+      footer {
+         display: block;
+         /*margin: -73px 0;*/
+         color: #fff;
+         background-image: url(/Etimad-ui/assets/imgs/pattern.png);
+         background-repeat: repeat;
+         background-size: 60%;
+         background-position: center center;
+         -webkit-filter: contrast(1);
+         filter: contrast(1);
+         background-color: #27bfb1;
+         padding: 0
+      }
+
+         footer:before {
+            background: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            z-index: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            left: 0;
+            top: 0;
+            content: "";
+         }
+
+         footer nav {
+            color: #fff
+         }
+
+      span.filter-option.pull-left {
+         color: #fff;
+         font-size: 1.3em;
+      }
+
+      .copyright {
+         position: relative;
+      }
+
+      .bootstrap-select .select-with-transition {
+         background: #ffffff70 !important;
+      }
+
+      .bmd-form-group {
+         position: relative;
+         padding-top: 8px;
+      }
+
+      .btn.dropdown-toggle::after {
+         color: #fff;
+         margin: 0;
+         margin-top: 8px;
+         vertical-align: 0.1rem;
+         border-top: 0.5em solid;
+         border-right: 0.5em solid transparent;
+         border-bottom: 0;
+         border-left: 0.5em solid transparent;
+      }
+
+      .nav-pills .nav-item .nav-link {
+         line-height: 24px;
+         text-transform: uppercase;
+         font-size: 12px;
+         font-weight: 500;
+         min-width: 100px;
+         text-align: center;
+         color: #fff;
+         transition: all .3s;
+         border-radius: 30px;
+         padding: 10px 15px;
+      }
+
+         .nav-pills .nav-item .nav-link.active {
+            background-color: #29ad6f
+         }
+
+      ul.nav.nav-pills {
+         max-width: 237px;
+         margin: 0 auto;
+      }
+
+      .title > h2 {
+         display: none
+      }
+
+      .main.main-raised {
+         display: none;
+      }
+
+      .badge.badge-green-bule {
+         background-color: #2e8c85;
+      }
+
+      #Search-plus {
+         position: fixed;
+         width: 100%;
+         min-height: calc(100vh - 100px);
+         height: 100%;
+         /*background: #006d64;*/
+         z-index: 100;
+         left: 0;
+         right: 0;
+         /*overflow: auto;*/
+         padding: 65px 0;
+         top: 0;
+         background-image: url(/Etimad-ui/assets/imgs/pattern.png);
+         background-repeat: repeat;
+         background-size: 60%;
+         background-position: center center;
+         -webkit-filter: contrast(1);
+         filter: contrast(1);
+         background-color: #27bfb1;
+      }
+
+         #Search-plus:before {
+            background: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            z-index: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            left: 0;
+            top: 0;
+            content: "";
+         }
+
+      #cardsresult {
+         overflow: auto;
+         height: 100%;
+      }
+
+      .pagination > .page-item > .page-link, .pagination > .page-item > span {
+         color: #fff;
+      }
+   </style>
+   <h5 class="text-center text-white" style="  margin-top: 71px;">إدارة المنافسات و المشتريات</h5>
+   <h2 class="text-center text-white d-none d-sm-block" style="      margin-bottom: 30px;">إبحث في أكثر من  <span class="h1" style="color: #66c498;">40,000+</span> منافسة مطروحة</h2>
+   <ul class="nav nav-pills nav-pills-success">
+      <li class="nav-item"><a class="nav-link active" href="#pill1" data-toggle="tab">منافسة عامة</a></li>
+      <li class="nav-item"><a class="nav-link" href="#pill2" data-toggle="tab">شراء مباشر</a></li>
+   </ul>
+   <div class="card etd-search-card" id="SuppliersGrid">
+      <div class="card-body">
+         <form>
+
+            <div class="row">
+
+               <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+
+                     <select data-live-search="true" id="activitiesList" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderActivity" data-style="select-with-transition" v-model="selectedActivity">
+                        <option :value="item.value" v-for="item in activitiesList">{{item.text}}</option>
+                     </select>
+                  </div>
+               </div>
+
+               <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+
+                     <select id="ConditionaBookletRange" name="ConditionaBookletRange" data-live-search="false" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PriceRange" data-style="select-with-transition" data-size="7">
+                        <option value="">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose
+                        </option>
+                        <option value="0">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Free
+                        </option>
+                        <option value="1">
+                           1 - 1,000
+                        </option>
+                        <option value="2">
+                           1,001 - 10,000
+                        </option>
+                        <option value="3">
+                           10,001 - 20,000
+                        </option>
+                        <option value="4">
+                           20,001 - 40,000
+                        </option>
+                        <option value="5">
+                           40,001 - 50,000
+                        </option>
+                        <option value="6">
+                           > 50,000
+                        </option>
+                     </select>
+
+                  </div>
+               </div>
+               <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <select data-live-search="true" id="AgencyCode" name="AgencyCode" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency" data-style="select-with-transition" v-model="selectedAgency">
+                        <option :value="item.agencyCode" v-for="item in agencyList">{{item.nameArabic}}</option>
+                     </select>
+                  </div>
+               </div>
+               <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <select data-live-search="true" id="areaList" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Area" data-style="select-with-transition" multiple v-model="selectedAreaList">
+                        <option :value="item.id" v-for="item in areasList">{{item.name}}</option>
+                     </select>
+                  </div>
+               </div>
+               <div class="col-12">
+                  <button type="button" class="btn btn-primary btn-round col-md-4 col-sm-6 col-xs-12 text-center" id="searchBtn" data-toggle="collapse" href="#Search-plus" role="button" aria-expanded="false" aria-controls="Search-plus" name="button" @@click="search">
+                     <i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+                  </button>
+                  <a class="btn btn-link pull-right text-white text-left" data-toggle="modal" data-target="#myModal">المزيد <i class="material-icons">more_horiz</i> </a>
+               </div>
+               <div class="container collapse" id="Search-plus">
+                  <h5 class="text-left text-white " style="position: relative;    padding: 10px 20px;">نتائج البحث  <button type="button" data-toggle="collapse" href="#Search-plus" role="button" aria-expanded="false" aria-controls="Search-plus" class="btn btn-primary btn-sm pull-right">عودة للبحث</button></h5>
+                  <div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="cardsresult">
+                     <div class="row" v-if="Tenders && Tenders.length > 0">
+                        <div class="monafasa-item col-lg-6 col-md-6 col-sm-12 col-xs-12" v-for="(tender, $index) in Tenders">
+                           <div class="card">
+                              <div class="card-body">
+                                 <div class="row">
+                                    @Html.Partial("_SupplierTenderCard.cshtml")
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-12" v-else>
+                        <div class="row text-center">
+                           <div class="card">
+                              <div class="card-body text-center">
+                                 <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                                 <br />
+                                 @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-12  m-auto p-3 ">
+                        <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+                     </div>
+                  </div>
+                  <div class="clearfix"></div>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+}
+@section scripts{
+   <script>
+      $("#txtTenderName").on("input", function () {
+         AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SubscribtionMessage', alertMessageType.Danger);
+      });
+      var cardsCont = document.getElementById('cardsresult');
+      $(function () {
+         $("input").keypress(function (event) {
+            if (event.which === 13) {
+               event.preventDefault();
+               $("#searchBtn").click();
+            }
+         });
+      });
+      var Tender = new Vue({
+         el: '#SuppliersGrid',
+         data: {
+            Tenders: [],
+            activitiesList: [],
+            selectedActivity: '',
+            areasList: [],
+            selectedAgency: '',
+            agencyList: [],
+            selectedTenderType: 0,
+            selectedAreaList: [],
+            selectedTenderId: 0,
+            selectedRowStatus: '',
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/Tender/AllSubscribedSupplierTendersAsync',
+            queryString: '',
+            searchState: 'off'
+         },
+         created: function () {
+            this.getTenderAreas();
+         },
+         methods: {
+            updateResource: function (data) {
+               data.forEach(function (item) {
+                  if (item.submitionDate) {
+                     item.submitionDate = item.submitionDate.slice(0, 10); //.split('T')[0]
+                     item.submitionDate = item.submitionDate == "0001-01-01" ? false : (item.tenderStatusId == 1 ? " " : item.submitionDate);
+                  }
+               });
+               this.Tenders = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+               setTimeout(function () {
+                  updateAgencyLogos();
+               }, 1000);
+            },
+            percentageLeft: function (pubDate, lastDate, remainingDays, remainingHours) {
+               return calculateCardPercentage(pubDate, lastDate, remainingDays, remainingHours);
+            },
+            detailsUrl: function (id) {
+              
+               return '/Tender/Details?STenderId=' + id;
+            },
+            getTenderAreas: function () {
+               $.get('/Tender/GetAreasAsync').done(function (result) {
+                  Tender.areasList = result;
+
+                  setTimeout(function () {
+                     $('#areaList').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (error) {
+
+                  console.log(error.statusText);
+               });
+
+               $.get('/Tender/GetActivitiesAsync').done(function (result) {
+                  Tender.activitiesList = result;
+
+                  setTimeout(function () {
+                     $('#activitiesList').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (error) {
+
+                  console.log(error.statusText);
+               });
+
+               $.get('/Tender/GetAllAgenciesAsync').done(function (result) {
+
+                  Tender.agencyList = result;
+                  setTimeout(function () {
+                     $('#AgencyCode').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+            },
+            search: function () {
+
+               this.queryString = this.queryString + '&TenderAreasIdString=' + this.selectedAreaList + '&TenderActivityId=' + this.selectedActivity + '&AgencyCode=' + this.selectedAgency;
+
+               this.resource_url = '/Tender/AllSubscribedSupplierTendersAsync' + '?' + this.queryString;
+               this.queryString = '';
+            },
+            clear: function () {
+
+               $("#AgencyCode").val('default');
+               $("#AgencyCode").selectpicker("refresh");
+               $("#activitiesList").val('default');
+               $("#activitiesList").selectpicker("refresh");
+               $("#areaList").val('default');
+               $("#areaList").selectpicker("refresh");
+               $("#ConditionaBookletRange").val('default');
+               $("#ConditionaBookletRange").selectpicker("refresh");
+            },
+            toggleSarch: function () {
+               this.searchState == 'off' ? searchState = 'on' : searchState = 'off'
+            }
+         },
+         updated: function () {
+            $("#ConditionaBookletRange, #AgencyCode , #activitiesList").val(null);
+               var _cards = $('#cardsresult');
+               if (_cards.hasClass('col-md-12')) {
+                  _cards.find('.monafasa-item').addClass('col-md-6');
+                  _cards.find('.monafasa-item').removeClass('col-md-12');
+                  _cards.find('.monafasa-item').addClass('col-lg-6');
+                  _cards.find('.monafasa-item').removeClass('col-lg-12');
+                  _cards.find('.monafasa-item').addClass('col-xl-4');
+                  _cards.find('.monafasa-item').removeClass('col-xl-6');
+               } else if (_cards.hasClass('col-md-8')) {
+                  _cards.find('.monafasa-item').removeClass('col-md-6');
+                  _cards.find('.monafasa-item').addClass('col-md-12');
+                  _cards.find('.monafasa-item').removeClass('col-lg-6');
+                  _cards.find('.monafasa-item').addClass('col-lg-12');
+                  _cards.find('.monafasa-item').removeClass('col-xl-4');
+                  _cards.find('.monafasa-item').addClass('col-xl-6');
+               }
+
+            $('[data-toggle="tooltip"]').tooltip();
+         }
+      });
+   </script>
+}
+
+

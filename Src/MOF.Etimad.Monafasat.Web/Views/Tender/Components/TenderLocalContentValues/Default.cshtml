@@ -1,0 +1,154 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.Tender.LocalContent.TenderLocalContentValuesViewModel
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.TenderLocalContentSettings;
+}
+
+<div class="row" id="basicDetials">
+   <div class="col-12">
+      <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.TenderLocalContentSettings </h4>
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <ul class="list-group form-details-list">
+         @if (!Model.IsOldTender && !User.IsInRole(RoleNames.supplier) && User.UserRoles().Count != 0)
+         {
+            @if (Model.ConShowNationalProduct)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.NationalProductPercentageAdvantage
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @Model.NationalProductPercentage
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            }
+            else
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.NationalProductPercentageAdvantage
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            }
+            @if (Model.IsTenderNewWithLocalContent && (Model.LocalContentMechanismIds.Contains((int)Enums.LocalContentMechanismPerfermance.MinimumRequiredMechanismLocalContent)
+        || Model.LocalContentMechanismIds.Contains((int)Enums.LocalContentMechanismPerfermance.MechanismForWeighingLocalContentFinancialEvaluation)))
+            {
+
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MinimumBaseline
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @Model.MinimumBaseline
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MinimumPercentageLocalContentTarget
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @Model.MinimumPercentageLocalContentTarget
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.LocalContentMaximumPercentage
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @Model.LocalContentMaximumPercentage
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.PriceWeightAfterAdjustment
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @Model.PriceWeightAfterAdjustment
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.LocalContentWeightAndFinancialMarket
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @Model.LocalContentWeightAndFinancialMarket
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.BaselineWeight
+
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @Model.BaselineWeight
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.LocalContentTargetWeight
+
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @Model.LocalContentTargetWeight
+                        </span>
+                     </div>
+                  </div>
+               </li>
+
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.FinancialMarketListedWeight
+
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @Model.FinancialMarketListedWeight
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            }
+         }
+      </ul>
+   </div>
+
+</div>

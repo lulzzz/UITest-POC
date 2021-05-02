@@ -1,0 +1,79 @@
+@model List<MOF.Etimad.Monafasat.ViewModel.CheckOfferAttachmentModel>
+<div class="table-responsive" id="attachmentdiv">
+   <table class="table table-striped">
+      <caption></caption>
+      <thead style="background-color: #e0efe8;">
+         <tr>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FileName </th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FileTypeName </th>
+         </tr>
+      </thead>
+      <tbody>
+         @{
+            foreach (var att in Model)
+            {
+               if (att.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+               {
+                  <tr>
+                     <td data-label=" Milestone">
+                        <a href="#" onclick="RedirectURL('@att.FileNetId','@att.FileName');return false;" target="_blank"> @att.FileName </a>
+                     </td>
+                     <td data-label=" Milestone">
+                        <a href="#"> @att.FiletypeName </a>
+                     </td>
+                  </tr>
+               }
+               else
+               {
+                  if (att.TenderStatusId != (int)Enums.TenderStatus.Approved && att.TenderStatusId != (int)Enums.TenderStatus.UnderEstablishing
+                      && att.TenderStatusId != (int)Enums.TenderStatus.Established)
+                  {
+                     if (att.FiletypeID == (int)Enums.AttachmentType.SupplierTechnicalProposalAttachment)
+                     {
+                        <tr>
+                           <td data-label="Milestone">
+                              <a href="#" onclick="RedirectURL('@att.FileNetId','@att.FileName');return false;" target="_blank">@att.FileName</a>
+                           </td>
+                           <td data-label="Milestone">
+                              <a href="#">@att.FiletypeName</a>
+                           </td>
+                        </tr>
+                     }
+                  }
+                  if (att.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed
+                        || att.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStage
+                        || att.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStageApproved
+                        || att.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStagePending
+                        || att.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStageRejected
+                        || att.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialChecking
+                        || att.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingPending
+                        || att.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingApproved
+                        || att.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected
+                        || att.TenderStatusId == (int)Enums.TenderStatus.OffersAwardedConfirmed
+                        || att.TenderStatusId == (int)Enums.TenderStatus.OffersAwardedPending
+                        || att.TenderStatusId == (int)Enums.TenderStatus.OffersAwardedRejected
+                        || att.TenderStatusId == (int)Enums.TenderStatus.OffersAwarding)
+                  {
+                     if (att.FiletypeName != MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TechnicalFile)
+                     {
+                        <tr>
+                           <td data-label=" Milestone">
+                              <a href="#" onclick="RedirectURL('@att.FileNetId','@att.FileName');return false;" target="_blank"> @att.FileName </a>
+                           </td>
+                           <td data-label=" Milestone">
+                              <a href="#"> @att.FiletypeName </a>
+                           </td>
+                        </tr>
+                     }
+                  }
+               }
+            }
+         }
+      </tbody>
+   </table>
+</div>
+<script>
+   function RedirectURL(fileNetReferenceId, fileName) {
+      window.open("/Upload/getfile/" + fileNetReferenceId + ":" + fileName, '_blank');
+   }
+</script>

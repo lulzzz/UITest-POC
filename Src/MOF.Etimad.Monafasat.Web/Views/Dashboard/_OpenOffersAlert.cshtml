@@ -1,0 +1,33 @@
+<div class="table-responsive">
+   <table class="table table-striped text-center" aria-describedby="Tender Offers">
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.DateOpeningOffers</th>
+         </tr>
+      </thead>
+      <tbody v-if="OpeningNotifications && OpeningNotifications.length > 0">
+         <tr v-for="(openingNotification, $index) in OpeningNotifications">
+
+            <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName"> {{openingNotification.tenderName}} </td>
+            <td data-label=" @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber"> {{openingNotification.tenderNumber}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.DateOpeningOffers"> {{openingNotification.offersOpeningDate.split('T')[0]}}</td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td align="center" style="text-align:center !important" colspan="5">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i>
+               <br>
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NoRecordsFound
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <div style="display:none">
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+</div>

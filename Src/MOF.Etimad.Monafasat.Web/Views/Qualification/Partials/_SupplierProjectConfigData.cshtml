@@ -1,0 +1,50 @@
+
+<div class="card">
+   <div class="card-body">
+      <div class="row">
+         <div class="col-12">
+            <div class="table-responsive" style="min-height:100px" id="supplierConfigDataProject">
+               <table class="table  table-striped text-center" v-if="supplierProject && supplierProject.length > 0">
+                  <caption>تفاصيل المشروع</caption>
+                  <thead class="text-center">
+                     <tr>
+                        @*<th scope="col" class="text-center">#</th>*@
+                        <th scope="col" class="text-center">تاريخ بداية المشروع</th>
+                        <th scope="col" class="text-center">تاريخ نهاية المشروع</th>
+                        <th scope="col" class="text-center">اسم العقد</th>
+                        <th scope="col" class="text-center">وصف نطاق الأعمال</th>
+                        <th scope="col" class="text-center">قيمة العقد</th>
+                        <th scope="col" class="text-center">اسم صاحب العمل</th>
+                        <th scope="col" class="text-center">وسيلة الاتصال (هاتف)</th>
+                        <th scope="col" class="text-center">وسيلة الاتصال (بريد الكتروني)</th>
+
+                     </tr>
+                  </thead>
+                  <tbody class="text-center">
+                     <tr v-for="(project, $index) in supplierProject">
+
+                        @*<td class="text-center"> {{$index +1}} </td>*@
+                        <td class="text-center"> {{ project.startDateStr }} </td>
+                        <td class="text-center"> {{ project.endDateStr }} </td>
+                        <td class="text-center"> {{ project.contractName }} </td>
+                        <td class="text-center"> {{ project.description }} </td>
+                        <td class="text-center"> {{ project.contractValue }} </td>
+                        <td class="text-center"> {{ project.ownerName }} </td>
+                        <td class="text-center"> {{ project.phoneNumber }} </td>
+                        <td class="text-center"> {{ project.emailAddress }} </td>
+
+                     </tr>
+                  </tbody>
+
+               </table>
+               <div v-else>
+                  @Html.Partial("~/Views/Shared/_NoData.cshtml")
+               </div>
+
+               <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+            </div>
+
+         </div>
+      </div>
+   </div>
+</div>

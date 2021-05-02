@@ -1,0 +1,15 @@
+@using resDisplayInputs = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+<a :href="detailsUrl(tender.tenderIdString, tender.tenderStatusIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted<i @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details</a>
+
+<a :href="OffersReport(tender.tenderIdString)" target="_blank" :id="tender.tenderId" class="dropdown-item"
+   v-if="showOpenOffersReport(tender.tenderStatusId)">
+   <i class="material-icons">library_books</i> @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OffersReport
+</a>
+
+
+<a :href="suppliersReport(tender.tenderIdString)" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)
+      || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedPending)"
+   class="dropdown-item"><i class="material-icons">library_books</i> @resDisplayInputs.AppliedSuppliersReport</a>
+

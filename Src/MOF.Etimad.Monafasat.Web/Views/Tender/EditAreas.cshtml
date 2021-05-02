@@ -1,0 +1,153 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderAreasModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditAreas;
+}
+
+@using (Html.BeginForm())
+{
+   @Html.AntiForgeryToken()
+   
+   <div class="modal fade" id="confirmPopup" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmModification  </h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i> 
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="row" id="divSpecification">
+                  <div class="col-xs-12">
+                     <h5 class="modal-title"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AreYouSureYouWantSaveThisModification</h5>
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button id="btnSubmit" class="btn btn-primary btn-sm" type="submit">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Yes
+               </button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.No
+               </button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <form id="editAreasForm" method="post" asp-controller="Tender" asp-action="EditAreas" autocomplete="off">
+      <input type="hidden" asp-for="InsideKSA" id="hdnInsideKSA" />
+      <div class="card">
+         <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:10px;">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.TenderName)</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.TenderNumber)</span>
+                     </div>
+                  </div>
+               </li>
+            </ul>
+
+         </div>
+         @if (Model.InsideKSA.Value)
+         {
+            <div class="card-body">
+               <input type="hidden" asp-for="TenderIdString" />
+               <div class="row" id="relationalForm">
+                  <div class="col-lg-8 col-sm-6 col-xs-12" id="divTenderAreas">
+                     <div class="form-group bmd-form-group">
+                        <label asp-for="Areas" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                        <select asp-for="TenderAreaIDs" name="TenderAreaIDs" data-live-search="true" id="dD_TenderAreas" class="selectpicker" required
+                                asp-items="@(new SelectList(Model.Areas, "Id", "Name"))" data-style="select-with-transition" data-size="7"></select>
+                     </div>
+                     <span asp-validation-for="TenderAreaIDs" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="clearfix"></div>
+            </div>
+         }
+         @if (!Model.InsideKSA.Value)
+         {
+            <div class="card-body">
+               <input type="hidden" asp-for="TenderIdString" />
+               <div class="row" id="relationalForm">
+                  <div class="col-lg-8 col-sm-6 col-xs-12" id="divTenderAreas">
+                     <div class="form-group bmd-form-group">
+                        <label asp-for="Countries" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                        <select asp-for="TenderCountryIDs" name="TenderCountryIDs" data-live-search="true" id="dD_TenderCountries" class="selectpicker" required
+                                asp-items="@(new SelectList(Model.Countries, "CountryId", "Name"))" data-style="select-with-transition" data-size="7"></select>
+                     </div>
+                     <span asp-validation-for="TenderCountryIDs" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="clearfix"></div>
+            </div>
+         }
+         </div>
+      <div class="">
+         <a data-toggle="modal"
+            data-target="#confirmPopup"
+            style="color:white"
+            class="btn btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveUpdates
+         </a>
+         @*<button type="button" id="btnCancel" class="btn btn-danger" onclick="window.location = '/Tender/Index'">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+         </button>*@
+         <a asp-action="Index" asp-controller="Tender" class="btn btn-outline-primary btn-link pull-right">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+         </a>
+      </div>
+   </form>
+   <script>
+
+      $("#btnSubmit").click(function () {
+         
+         if ($('#hdnInsideKSA').val() == "True" || $('#hdnInsideKSA').val() == "true") {
+            var TenderAreaIDs_isvalid = $("select[name='TenderAreaIDs'] option:selected").length > 0;
+            var TenderAreaIDs_error = $("span[data-valmsg-for='TenderAreaIDs']");
+            TenderAreaIDs_error.text("");
+            if (!TenderAreaIDs_isvalid) {
+                  TenderAreaIDs_error.text("@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterTenderAreas)");
+               return false;
+            }
+         }
+         else {
+            var TenderAreaIDs_isvalid = $("select[name='TenderCountryIDs'] option:selected").length > 0;
+            var TenderAreaIDs_error = $("span[data-valmsg-for='TenderCountryIDs']");
+            TenderAreaIDs_error.text("");
+            if (!TenderAreaIDs_isvalid) {
+                  TenderAreaIDs_error.text("@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterTenderCountries)");
+               return false;
+            }
+         }
+         
+            $('#LoadingSite').fadeIn();
+      });
+   jQuery(function ($) {
+      $('#editAreasForm').bind('submit', function () { 
+         if ($('#editAreasForm').valid())
+            $('#LoadingSite').fadeIn();
+      })
+   })
+   </script>
+}
+@section scripts
+   {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

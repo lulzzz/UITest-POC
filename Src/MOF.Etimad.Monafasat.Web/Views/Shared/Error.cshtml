@@ -1,0 +1,15 @@
+@using Microsoft.AspNetCore.Hosting;
+@using Microsoft.Extensions.Configuration;
+@using Microsoft.Extensions.Hosting;
+@inject IWebHostEnvironment host;
+@{
+   var error = Model?.Error?.Error;
+   var errorDescription = host.IsDevelopment() ? Model?.Error?.ErrorDescription : null;
+   var request_id = Model?.Error?.RequestId;
+}
+<body id="errorPage">
+   <img alt="" src="~/img/error.png" />
+   <h1 class="text-danger">عملية غير صحيحة.</h1>
+   <h2 class="text-danger">لقد قمت بعملية خاطئة داخل النظام.</h2>
+   <p><strong>إذا كنت تعتقد أن العملية صحيحة الرجاء الاتصال بمدير النظام لحل المشكلة. وشكراً.</strong></p>
+</body>

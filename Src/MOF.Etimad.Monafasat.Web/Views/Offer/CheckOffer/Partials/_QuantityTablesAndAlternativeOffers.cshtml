@@ -1,0 +1,148 @@
+@model List<MOF.Etimad.Monafasat.ViewModel.AlternativeSupplierQuantityTableForCheckingModel>
+
+<style>
+   .form-check .form-check-label .circle {
+      top: -11px;
+   }
+</style>
+<div id="collapse">
+   <div class="title">
+      <h3>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.QuantityTables</h3>
+   </div>
+   <div class="row">
+      <div class="col-md-12">
+         <div id="accordion" role="tablist">
+            @foreach (var Qt in Model)
+            {
+               <div class="card card-collapse">
+                  <div class="card-header" role="tab" id="headingOne">
+                     <h5 class=" p-2 m-0">
+                        <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                           @Qt.TableQuantityName
+                           <i class="material-icons pull-right">keyboard_arrow_down</i>
+                        </a>
+                     </h5>
+                  </div>
+                  <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                     <div class="card-body">
+                        <table id="quantatyTable_@(Model.IndexOf(Qt))" class="table" aria-describedby="Quantity Table">
+                           <thead style="background-color: rgb(224, 239, 232);">
+                              <tr>
+                                 <th scope="col" style="width:33px">  </th>
+                                 <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ItemName</th>
+                                 <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Quantity</th>
+                                 <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Unit</th>
+                                 <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Price</th>
+                                 <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Attachment</th>
+                                 <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DiscountPercent</th>
+                                 <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.vat</th>
+                                 <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TotalPrice</th>
+                                 <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TotalPriceAfterDiscount</th>
+                                 <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Actions</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              @foreach (var item in Qt.AlternativeSupplierQuantityTableItemForCheckingModels)
+                              {
+                              <tr class="ItemsGrid" isAlternative="@((item.hasAlternative || item.isAlternative) == true ? "true" : "false")">
+                                 <td>
+                                    @{ if (item.hasAlternative || item.isAlternative)
+                                       {
+                                          <div class="form-check p-0 m-0">
+                                             <label class="form-check-label p-0">
+                                                <input name="@(item.hasAlternative ? item.IdString : item.OriginalItemId)" @(item.isSelected ? "Checked" : "") class="form-check-input ableToAlternativeCheck" type="radio" id="@item.Id" value="@item.Id" disabled="disabled" onclick="calcTotal();">
+                                                <span class="circle">
+                                                   <span class="check"></span>
+                                                </span>
+                                             </label>
+                                             @if (item.isAlternative)
+                                             {
+                                                <i class="material-icons text-dark-green pull-left">
+                                                   keyboard_return
+                                                </i>
+                                             }
+                                          </div>
+                                       }
+                                       else
+                                       {
+                                          <input type="hidden" value="@item.Id" id="hdnId" />
+                                       }
+                                    }
+
+                                 </td>
+                                 <td data-label=" Milestone">
+                                    <input type="hidden" name="OriginalItemId" value="" autocomplete="off" disabled="disabled">
+                                    <input type="hidden" name="TenderQuantityTableItemId" value="51" autocomplete="off" disabled="disabled">
+                                    <input type="hidden" name="SupplierTableQuantityId" value="170" autocomplete="off" disabled="disabled">
+                                    <input type="hidden" name="Id" value="226" autocomplete="off" disabled="disabled">
+                                    <input type="hidden" name="Quantity" value="43" autocomplete="off" disabled="disabled">
+                                    <span id="spnName">@item.Name @item.Id</span>
+                                 </td>
+                                 <td data-label=" Quantity">
+                                    <span id="spanQuantity"> @item.Quantity</span>
+
+                                 </td>
+                                 <td data-label="Unit">
+                                    <span id="spnUnit"> @item.Unit</span>
+                                 </td>
+                                 <td data-label="Details">
+                                    <input class="form-control" type="number" min="0" id="txtPrice" name="price" value="@item.Price" disabled />
+                                 </td>
+                                 <td style="text-align:center">
+                                    <div class="input-group">
+                                       @if (item.ItemAttachmentId != null)
+                                       {
+                                          <a href="/Upload/getfile/@item.ItemAttachmentId:@item.ItemAttachmentName" target="_blank"> @item.ItemAttachmentName  </a>}
+                                       else
+                                       {
+                                          <span> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotAvailable</span>
+                                       }
+
+                                    </div>
+
+                                 </td>
+
+                                 <td data-label="Discount">
+
+                                    <div class="input-group">
+                                       <input class="form-control txtDiscount" type="number" id="txtDiscount" min="0" max="100" name="discount" value="@item.Discount" pattern="[0-9]+([\.,][0-9]+)?" disabled/>
+                                    </div>
+                                 </td>
+                                 <td data-label="VAT">
+
+                                    <div class="input-group">
+                                       <input class="form-control txtDiscount" type="number" id="txtVAT" name="VAT" value="@item.VAT" min="0" max="100" pattern="[0-9]+([\.,][0-9]+)?" disabled/>
+                                    </div>
+                                 </td>
+
+                                 <td data-label="Details" style="text-align:center">
+                                    <input class="form-control" id="txtTotPriceItem" name="itemtotalprice" value="@((item.Quantity * item.Price).ToString("#,##0.00"))" disabled />
+                                 </td>
+                                 <td style="text-align:center">
+                                    <input class="form-control" id="txtTotalAfter" name="itemTotaldiscount" value="@(((item.Price * item.Quantity - ((item.Price * item.Quantity) * (item.Discount / 100)))+((item.Price * item.Quantity - ((item.Price * item.Quantity) * (item.Discount / 100)))*(item.VAT/100))).ToString("#,##0.00"))" disabled />
+                                 </td>
+                                 <td style="text-align: center;"></td>
+                              </tr>
+                              }
+                           </tbody>
+                           <tfoot>
+                              <tr>
+                                 <td colspan="7"></td>
+                                 <td style="text-align:center"><b>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Total</b> </td>
+                                 <td style="text-align:center">
+                                    <input class="form-control" id="tblTotalPrice@(Model.IndexOf(Qt))" name="tblTotalPriceAfterAlternative" disabled />
+                                 </td>
+                                 <td style="text-align:center">
+                                    <input class="form-control" id="tblTotalAfterDiscount@(Model.IndexOf(Qt))" name="tbltotawithalterfterdiscount" value="@Qt.TotalAlternativePriceAfterDiscount.ToString("#,##0.00")" disabled />
+                                 </td>
+                              </tr>
+                           </tfoot>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            }
+         </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,114 @@
+@model MOF.Etimad.Monafasat.ViewModel.Notification.OperationCodeViewModel
+
+@{
+   ViewData["Title"] = "إعدادات الاشعارات";
+
+} 
+<form asp-controller="Account" asp-action="PostNotificationOperationCodeCreate" method="post"> 
+   <div class="row">
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="col-lg-4 col-sm-6 col-xs-12">
+            <div class="form-group has-success bmd-form-group">
+               <label asp-for="OperationCode" class="label bmd-label-static"></label>
+               <input type="text" asp-for="OperationCode" class="form-control" />
+               <span asp-validation-for="OperationCode" class="bmd-help"> </span>
+
+            </div>
+         </div>
+         <div class="form-group has-success bmd-form-group">
+             <input asp-for="IdString" type="hidden" />
+            <label asp-for="ArabicName" class="label bmd-label-static"></label>
+            <input type="text" asp-for="ArabicName" class="form-control" />
+            <span asp-validation-for="ArabicName" class="bmd-help"> </span>
+
+         </div>
+      </div>
+
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group has-success bmd-form-group">
+            <label asp-for="EnglishName" class="label bmd-label-static"></label>
+            <input type="text" asp-for="EnglishName" class="form-control" />
+            <span asp-validation-for="EnglishName" class="bmd-help"> </span>
+
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+
+            <label asp-for="UserRoleId" class="label bmd-label-static"></label>
+            <select asp-for="UserRoleId" asp-items="Model.UserRoles" data-live-search="true" class="selectpicker" data-style="select-with-transition"  title="Multi Select with Search" data-size="7">
+            </select>
+
+         </div>
+      </div>
+
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+
+            <label asp-for="NotificationCategoryId" class="label bmd-label-static"></label>
+            <select asp-for="NotificationCategoryId" asp-items="Model.Categories" data-live-search="true" class="selectpicker" data-style="select-with-transition"  title="Multi Select with Search" data-size="7">
+            </select>
+
+         </div>
+      </div>
+
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group has-success bmd-form-group">
+            <label asp-for="PanelTemplateEn" class="label bmd-label-static"></label>
+            <textarea rows="8" asp-for="PanelTemplateEn" class="form-control"></textarea>
+            <span asp-validation-for="PanelTemplateEn" class="bmd-help"> </span>
+
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group has-success bmd-form-group">
+            <label asp-for="PanelTemplateAr" class="label bmd-label-static"></label>
+            <textarea rows="8" rows="8" asp-for="PanelTemplateAr" class="form-control"></textarea>
+            <span asp-validation-for="PanelTemplateAr" class="bmd-help"> </span>
+
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group has-success bmd-form-group">
+            <label asp-for="EmailBodyTemplateEn" class="label bmd-label-static"></label>
+            <textarea rows="8" asp-for="EmailBodyTemplateEn" class="form-control"></textarea>
+            <span asp-validation-for="EmailBodyTemplateEn" class="bmd-help"> </span>
+
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group has-success bmd-form-group">
+            <label asp-for="EmailBodyTemplateAr" class="label bmd-label-static"></label>
+            <textarea rows="8" asp-for="EmailBodyTemplateAr" class="form-control"></textarea>
+            <span asp-validation-for="EmailBodyTemplateAr" class="bmd-help"> </span>
+
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group has-success bmd-form-group">
+            <label asp-for="SmsTemplateEn" class="label bmd-label-static"></label>
+            <textarea rows="8" asp-for="SmsTemplateEn" class="form-control"></textarea>
+            <span asp-validation-for="SmsTemplateEn" class="bmd-help"> </span>
+
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group has-success bmd-form-group">
+            <label asp-for="SmsTemplateAr" class="label bmd-label-static"></label>
+            <textarea rows="8" asp-for="SmsTemplateAr" class="form-control"></textarea>
+            <span asp-validation-for="SmsTemplateAr" class="bmd-help"> </span>
+
+         </div>
+      </div>
+
+      <div class="col-12 ">
+         <input class="btn btn-primary" type="submit" value="حفظ">
+         <a class="btn btn-danger" href="/Account/OperationCodes">إلغاء</a>
+      </div>
+
+
+   </div>
+</form>
+
+
+

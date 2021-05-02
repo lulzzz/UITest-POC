@@ -1,0 +1,533 @@
+@model MOF.Etimad.Monafasat.ViewModel.ExtendOffersValidityModel
+@using res = MOF.Etimad.Monafasat.Resources
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtendOfferValidity;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@res.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item" aria-current="page"><a href="#">@res.TenderResources.DisplayInputs.Tenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@res.TenderResources.DisplayInputs.ExtendOfferValidity</li>
+      </ol>
+   </nav>
+}
+@section modalTitle{
+   @res.SharedResources.DisplayInputs.Confirm
+}
+@section modalContent{
+
+   <div class="col-xs-12" id="divRejectReason">
+      <div class="form-group bmd-form-group" style="padding-top:0">
+         <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+         <textarea class="form-control" rows="5" id="txtRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason"></textarea>
+         <div class="pull-left">
+            <span class="bmd-help text-danger" id="txtRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divSendToApproveMessage"><div class="form-group bmd-form-group"><lable>@res.CommunicationRequest.Messages.SendToApproveExtendOffersRequest</lable></div></div>
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divApproveConfirmationMessage"><div class="form-group bmd-form-group"><lable>@res.CommunicationRequest.Messages.ApproveConfirmationExtendOffersRequest</lable></div></div>
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divApproveAndResetExeclusionReasonsMessage"><div class="form-group bmd-form-group"><lable>@res.CommunicationRequest.Messages.ExtendOfferValidityAndResetAwardingActionsDirectPurchaseMember</lable></div></div>
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divEditMessage"><div class="form-group bmd-form-group"><lable>@res.CommunicationRequest.DisplayInputs.ConfirmEditRequest</lable></div></div>
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divDeleteMessage"><div class="form-group bmd-form-group"><lable>@res.CommunicationRequest.DisplayInputs.DeleteExtendOffersRequest</lable></div></div>
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divConfirmApprove">
+      <input type="text" class="form-control" id="txtverificationCode" name="verificationCode" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+      <div class="pull-left">
+         <span class="bmd-help text-danger position-relative" id="txtverificationCodeValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+      </div>
+
+      <br />
+      <p id="divTimer" class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainingTime<span class=" text-danger" id="timer"></span></p>
+   </div>
+}
+@section modalButtons{
+   <button type="button" class="btn btn-sm btn-primary" name="button" id="btnRejectConfirmation" onclick="RejectRequestAsync()"> @res.QualificationResources.DisplayInputs.RejectionConfirm</button>
+   <button type="button" class="btn btn-sm btn-primary" name="button" id="btnApproveConfirmation" onclick="ApproveRequestAsync()"> @res.SharedResources.DisplayInputs.Confirm</button>
+   <button type="button" class="btn btn-sm btn-primary" name="button" id="btnSendToApprove" onclick="SendToApproveAsync()"> @res.SharedResources.DisplayInputs.Confirm </button>
+   <button type="button" class="btn btn-sm btn-primary" name="button" id="btnEditRequest" data-dismiss="modal" onclick="EditRequestAsync()">  @res.SharedResources.DisplayInputs.Confirm </button>
+   <button type="button" class="btn btn-sm btn-primary" name="button" id="btnDeleteRequest" onclick="DeleteRequestAsync()">  @res.SharedResources.DisplayInputs.Confirm </button>
+   <button type="button" class="btn btn-sm btn-primary m-1" name="button" id="btnResendVerificationCode"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+   <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.SharedResources.DisplayInputs.Cancel</button>
+}
+<div class="modal fade" id="approvalModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@res.EnquiryResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="col-lg-12 col-sm-12 col-xs-12" id="divApprove">
+               <div class="form-group bmd-form-group">
+                  @if (Model.IsLowBudgetDirectPurchase.HasValue && Model.IsLowBudgetDirectPurchase.Value)
+                  {
+                     <label> @res.CommunicationRequest.Messages.ExtendOfferValidityAndResetAwardingActionsDirectPurchaseMember</label>
+                  }
+                  else
+                  {
+                     <label> @res.CommunicationRequest.Messages.ExtendOfferValidityAndResetAwardingActions</label>
+                  }
+               </div>
+               <div class="clearfix"></div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button" onclick="SendToApproveAsync()">@res.EnquiryResources.DisplayInputs.Confirm</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+@Html.AntiForgeryToken()
+<div id="app">
+   <div class="col-12">
+      <div class="row">
+         <div class="card">
+            <div class="card-body" id="ExtendValidityForm">
+               @Html.Partial("~/Views/CommunicationRequest/Partials/_ExtendOfferValidityForm.cshtml", Model.ExtendOffersValiditySavingModel)
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-12">
+      <div class="row">
+         <div class="card">
+            <div class="card-body">
+               @Html.Partial("~/Views/CommunicationRequest/Partials/_ExtendOffersTenderDetails.cshtml", Model.TenderBasicInfoModel)
+               <div class="row">
+                  <div class="col-12">
+                     <h4 class="text-primary">@res.TenderResources.DisplayInputs.OffersList</h4>
+                  </div>
+                  @Html.Partial("~/Views/CommunicationRequest/Partials/_OffersExtendValidityGrid.cshtml")
+               </div>
+            </div>
+         </div>
+      </div>
+
+      @if (!(Model.IsLowBudgetDirectPurchase.HasValue && Model.IsLowBudgetDirectPurchase.Value))
+      {
+         @if (((User.IsInRole(RoleNames.OffersCheckSecretary) && Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase) ||
+  (User.IsInRole(RoleNames.OffersPurchaseSecretary) && Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase)) &&
+  Model.AgencyRequestStatusId == (int)Enums.AgencyCommunicationRequestStatus.UnderUpdate)
+         {
+            if (Model.IsTenderHasExecludedReasonOrAwardingValue)
+            {
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApproveAndResetAwarding" onclick="SendToApproveAndResetAwarding()">
+                  @res.QualificationResources.DisplayInputs.SendToApprove
+               </button>
+            }
+            else
+            {
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApprove" onclick="SendToApprove()" data-toggle="modal" data-target="#myModal">
+                  @res.QualificationResources.DisplayInputs.SendToApprove
+               </button>
+            }
+         }
+      }
+
+      @if (((User.IsInRole(RoleNames.OffersCheckManager) && Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase) ||
+((User.IsInRole(RoleNames.OffersPurchaseManager) || (User.IsInRole(RoleNames.OffersPurchaseSecretary) && Model.IsLowBudgetDirectPurchase.HasValue && Model.IsLowBudgetDirectPurchase.Value)) && Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase)) &&
+(Model.AgencyRequestStatusId == (int)Enums.AgencyCommunicationRequestStatus.Pending || (Model.AgencyRequestStatusId == (int)Enums.AgencyCommunicationRequestStatus.UnderUpdate && Model.IsLowBudgetDirectPurchase.HasValue && Model.IsLowBudgetDirectPurchase.Value)))
+      {
+         <div class="col-12">
+            @if (Model.IsLowBudgetDirectPurchase.HasValue && Model.IsLowBudgetDirectPurchase.Value && Model.IsTenderHasExecludedReasonOrAwardingValue)
+            {
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveAndResetAwarding" data-toggle="modal" data-target="#myModal" onclick="ApproveRequest()">
+                  @res.CommunicationRequest.DisplayInputs.Approved
+               </button>
+            }
+            else
+            {
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnApprove" onclick="ApproveRequest()" data-toggle="modal" data-target="#myModal">@res.CommunicationRequest.DisplayInputs.Approved</button>
+            }
+
+            @if (!(Model.IsLowBudgetDirectPurchase.HasValue && Model.IsLowBudgetDirectPurchase.Value))
+            {
+               <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" onclick="RejectRequest()" data-toggle="modal" data-target="#myModal">@res.CommunicationRequest.DisplayInputs.Reject</button>
+            }
+         </div>
+      }
+
+   </div>
+   @if (((User.IsInRole(RoleNames.OffersCheckSecretary) && Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase) ||
+(User.IsInRole(RoleNames.OffersPurchaseSecretary) && Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase)) &&
+Model.AgencyRequestStatusId == (int)Enums.AgencyCommunicationRequestStatus.Rejected)
+   {
+      <div id="divRejectionReason">
+         <div class="card">
+            <div class="card-body">
+               <h3 class="text-primary">@res.TenderResources.DisplayInputs.RejectionReason</h3>
+               <span style="white-space: pre-line">@Model.RejectionReason</span>
+            </div>
+         </div>
+         @if (Model.StatusId == (int)Enums.TenderStatus.OffersAwarding)
+         {
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnEditRequest" onclick="EditRequest()" data-toggle="modal" data-target="#myModal">@res.CommunicationRequest.DisplayInputs.EditExtendOffersRequest</button>
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnDeleteRequest" onclick="DeleteRequest()" data-toggle="modal" data-target="#myModal">@res.CommunicationRequest.DisplayInputs.DeleteExtendOffersRequest</button>
+         }
+      </div>
+   }
+   <a class="btn btn-outline-primary btn-link pull-right" asp-action="DetailsForAll" asp-controller="Tender" asp-route-STenderId="@Model.TenderIdString">
+      @res.SharedResources.DisplayInputs.BackButton
+   </a>
+   <div class="clearfix"></div>
+</div>
+@section scripts{
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+
+      $(document).ready(function () {
+         if (@Model.AgencyRequestStatusId !== 0) {
+            if (@Model.AgencyRequestStatusId==@((int)Enums.AgencyCommunicationRequestStatus.Rejected)) {
+               $("#ExtendOffersValidityForm").hide();
+            }
+         }
+      });
+
+      $(function () {
+         $('#ExtendOffersValidityForm').on('submit', function (e) { //use on if jQuery 1.7+
+
+            $("#submitButton").attr('disabled', 'disabled');
+
+            setTimeout(function () { $("#submitButton").removeAttr('disabled'); }, 1000);
+         });
+      });
+
+      var token = $('input[name=__RequestVerificationToken]').val();
+
+      function SendToApprove() {
+         $("#divApproveConfirmationMessage").hide();
+         $("#divApproveAndResetExeclusionReasonsMessage").hide();
+         $("#divRejectReason").hide();
+         $("#btnResendVerificationCode").hide();
+         $("#btnRejectConfirmation").hide();
+         $("#btnApproveConfirmation").hide();
+         $("#divEditMessage").hide();
+         $("#divDeleteMessage").hide();
+         $("#btnDeleteRequest").hide();
+         $("#btnEditRequest").hide();
+         $("#divConfirmApprove").hide();
+      }
+
+
+      function SendToApproveAsync() {
+       $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("SendToApproveExtendOffersRequestAsync", "CommunicationRequest")',
+            {
+               AgencyRequestId: '@Model.AgencyRequestIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.RequestSentToApprovedSuccessfully)', alertMessageType.Success);
+               window.location = '@Url.Action("DetailsForAll", "Tender", new { STenderId = Model.TenderIdString })';
+               $('#myModal').modal('hide');
+               $('#approvalModal').modal('hide');
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#myModal').modal('hide');
+               $('#approvalModal').modal('hide');
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+
+
+   function SendToApproveAndResetAwarding() {
+      $("#approvalModal").modal('show');
+      }
+
+      function RejectRequest() {
+         $("#divApproveConfirmationMessage").hide();
+         $("#divApproveAndResetExeclusionReasonsMessage").hide();
+           $("#divEditMessage").hide();
+         $("#divSendToApproveMessage").hide();
+         $("#btnResendVerificationCode").hide();
+           $("#btnSendToApprove").hide();
+           $("#divDeleteMessage").hide();
+           $("#btnDeleteRequest").hide();
+           $("#divRejectReason").show();
+           $("#btnRejectConfirmation").show();
+           $("#btnApproveConfirmation").hide();
+           $("#btnEditRequest").hide();
+           $("#divConfirmApprove").hide();
+           $("#divConfirmApprove").hide();
+      }
+      function RejectRequestAsync() {
+         $("#divRejectReason").show();
+         $("#btnRejectConfirmation").show();
+         $("#btnApproveConfirmation").hide();
+         var rejectionReason = $("#txtRejectionReason").val();
+         $("#txtRejectionReasonValidation").hide();
+         if (rejectionReason == '') {
+            $("#txtRejectionReasonValidation").show();
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+
+         $.post('@Url.Action("RejectExtendOffersRequestAsync", "CommunicationRequest")',
+            {
+               AgencyRequestId: '@Model.AgencyRequestIdString',
+               RejectionReason: $("#txtRejectionReason").val(),
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                window.location = '@Url.Action("DetailsForAll", "Tender", new { STenderId = Model.TenderIdString })';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#myModal').modal('hide');
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+
+      function EditRequest() {
+
+         $("#divApproveConfirmationMessage").hide();
+         $("#divApproveAndResetExeclusionReasonsMessage").hide();
+         $("#divRejectReason").hide();
+         $("#divSendToApproveMessage").hide();
+         $("#btnRejectConfirmation").hide();
+         $("#btnResendVerificationCode").hide();
+         $("#btnApproveConfirmation").hide();
+         $("#btnSendToApprove").hide();
+         $("#divDeleteMessage").hide();
+         $("#btnDeleteRequest").hide();
+         $("#divEditMessage").show();
+         $("#btnEditRequest").show();
+         $("#divConfirmApprove").hide();
+
+      }
+      function EditRequestAsync() {
+
+
+       $('#LoadingSite').fadeIn();
+         $("#ExtendOffersValidityForm").show();
+         $("#divRejectionReason").hide();
+         $("#divConfirmApprove").hide();
+       $('#LoadingSite').fadeOut();
+      }
+
+      function DeleteRequest() {
+         $("#divApproveConfirmationMessage").hide();
+         $("#divApproveAndResetExeclusionReasonsMessage").hide();
+         $("#divRejectReason").hide();
+         $("#btnSendToApprove").hide();
+         $("#btnResendVerificationCode").hide();
+         $("#btnRejectConfirmation").hide();
+         $("#btnApproveConfirmation").hide();
+         $("#divEditMessage").hide();
+         $("#divDeleteMessage").show();
+         $("#btnDeleteRequest").show();
+         $("#btnEditRequest").hide();
+         $("#divSendToApproveMessage").hide();
+         $("#divConfirmApprove").hide();
+      }
+
+      function DeleteRequestAsync() {
+         debugger;
+       $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("DeleteExtendOffersRequestAsync", "CommunicationRequest")',
+            {
+               AgencyRequestId: '@Model.AgencyRequestIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+              window.location = '@Url.Action("DetailsForAll", "Tender", new { STenderId = Model.TenderIdString })';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#myModal').modal('hide');
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+
+
+      function ApproveRequest() {
+         document.getElementById('timer').innerHTML = 05 + ":" + 00;
+         startTimer();
+         $("#btnResendVerificationCode").prop("disabled", true);
+         $("#divTimer").show();
+         $("#btnResendVerificationCode").show();
+         $("#btnApproveConfirmation").show();
+         if ('@Model.IsLowBudgetDirectPurchase' == 'True' && '@Model.IsTenderHasExecludedReasonOrAwardingValue' == 'True') {
+            $("#divApproveConfirmationMessage").hide();
+            $("#divApproveAndResetExeclusionReasonsMessage").show();
+         }
+         else {
+            $("#divApproveAndResetExeclusionReasonsMessage").hide();
+            $("#divApproveConfirmationMessage").show();
+         }
+         $("#divConfirmApprove").show();
+         $("#divRejectReason").hide();
+         $("#btnRejectConfirmation").hide();
+         $("#btnSendToApprove").hide();
+         $("#divEditMessage").hide();
+         $("#divDeleteMessage").hide();
+         $("#btnDeleteRequest").hide();
+         $("#btnEditRequest").hide();
+         $("#divSendToApproveMessage").hide();
+
+         $.post('/CommunicationRequest/CreateVerificationCode', { tenderIdString: "@Model.TenderIdString", __RequestVerificationToken: token });
+      }
+      function ApproveRequestAsync() {
+         $("#txtverificationCodeValidation").hide()
+         var verificationCodeValue = $("#txtverificationCode").val();
+         if (verificationCodeValue == '') {
+            $("#txtverificationCodeValidation").show();
+            return false;
+         }
+
+       $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ApproveExtendOffersRequestAsync", "CommunicationRequest")',
+            {
+               tenderIdString : '@Model.TenderIdString',
+               AgencyRequestId: '@Model.AgencyRequestIdString',
+               verificationCode: verificationCodeValue,
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.RequestSentToApprovedSuccessfully)', alertMessageType.Success);
+                   window.location = '@Url.Action("DetailsForAll", "Tender", new { STenderId = Model.TenderIdString })';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#LoadingSite').fadeOut();
+               $('#myModal').modal('hide');
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+
+
+      var app = new Vue({
+         el: "#app",
+         data: {
+            // Begin Grid
+            Offers: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/CommunicationRequest/GetTenderOffersPagingAsync?tenderIdString=' + '@Model.TenderIdString' + '&&extendOfferValidityId=' + '@Model.ExtendOfferValidityId' + '&&extendofferValidityStatusId=' + '@Model.AgencyRequestStatusId',
+            queryString: '',
+            // End Grid
+         },
+         methods: {
+            RedirectURL: function (fileNetReferenceId, fileName) {
+
+               window.open("/Upload/getfile/" + fileNetReferenceId + ":" + fileName, '_blank');
+            },
+            updateResource: function (data) {
+               this.Offers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            viewOfferFiles: function (id) {
+               return '/CommunicationRequest/OfferNegotiationFiles/' + id;
+            },
+            viewOfferDetails: function (offerIdString, CombineIdString, combinedCount, offerPresentationWay) {
+
+               return '/Offer/FinancialOfferDetails?offerIdString=' + offerIdString +'&PreviusAction=' + '@Context.Request.Path'
+            },
+         }
+      });
+
+      function getdate(NumberOfDays) {
+         if (Number(NumberOfDays.value) > 90) {
+            $("#txtOffersDuration").val("");
+            AlertFun('@Html.Raw(res.CommunicationRequest.ErrorMessages.MustNotExceed90Days)', 'danger');
+            return false;
+         }
+
+         var days = NumberOfDays.value;
+         var today = new Date();
+         var newdate = new Date();
+         newdate.setDate(today.getDate() + Number(days));
+         var dd = newdate.getDate();
+         var mm = newdate.getMonth() + 1;
+         var y = newdate.getFullYear();
+         var someFormattedDate = dd + '/' + mm + '/' + y;
+         var formatedDateForTime = mm + '/' + dd + '/' + y;
+
+         setDate(someFormattedDate);
+         setTime(formatedDateForTime)
+      }
+   function setDate(someFormattedDate) {
+      if ($('#cb_txtNewOffersExpiryDate').is(':checked')) {
+         $("#txtNewOffersExpiryDate").val(someFormattedDate);
+      } else {
+         var RNewDate = convertGregorianToUmmalqura(someFormattedDate);
+         $("#txtNewOffersExpiryDate").val(RNewDate);
+      }
+   }
+
+   function setTime(newDate) {
+      dayOfWeekNo = new Date(newDate).getDay();
+      if (dayOfWeekNo == 5 || dayOfWeekNo == 6) {
+         $("#replyReceivingDurationTime").val("2:00 PM");
+      }
+      else {
+         $("#replyReceivingDurationTime").val("8:00 PM");
+      }
+   }
+
+   $("#btnResendVerificationCode").on("click", function () {
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $("#btnResendVerificationCode").prop("disabled", true);
+      document.getElementById('timer').innerHTML = 05 + ":" + 00;
+      $.post('/CommunicationRequest/CreateVerificationCode', { tenderIdString: "@Model.TenderIdString", __RequestVerificationToken: token });
+      startTimer();
+   });
+
+      var myVar;
+      function startTimer() {
+         clearTimeout(myVar);
+         var presentTime = document.getElementById('timer').innerHTML;
+         var timeArray = presentTime.split(/[:]+/);
+         var m = timeArray[0];
+         var s = checkSecond((timeArray[1] - 1));
+         if (s == 59) { m = m - 1 }
+         document.getElementById('timer').innerHTML =
+            m + ":" + s;
+         myVar = setTimeout(startTimer, 1000);
+         checkTime(m, s, myVar);
+         if (m < 0 && s > 0) {
+            document.getElementById('timer').innerHTML = "0:00";
+            return false;
+         }
+      }
+
+      function checkSecond(sec) {
+         if (sec < 10 && sec >= 0) { sec = "0" + sec };
+         if (sec < 0) { sec = "59" };
+         return sec;
+      }
+
+      function checkTime(min, sec, myVar) {
+         if (min <= 0 && sec <= 0) {
+            $("#btnResendVerificationCode").prop("disabled", false);
+            clearTimeout(myVar)
+         };
+         return sec;
+      }
+
+
+
+      function allowNumeric(event) {
+         event.target.value = event.target.value.replace(/[^\d].+/, "");
+         if ((event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+         }
+         if (event.target.value.length > 10) {
+            event.target.value = event.target.value.substring(0, 11);
+            event.preventDefault();
+            return false;
+         }
+      }
+
+   function RedirectURL(fileNetReferenceId, fileName) {
+      window.open("/Upload/getfile/" + fileNetReferenceId + ":" + fileName, '_blank');
+   }
+
+</script>
+}

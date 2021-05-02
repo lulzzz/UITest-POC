@@ -1,0 +1,250 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.Offer.OfferFullDetailsModel
+
+
+@{
+   ViewData["Title"] = res.OfferResources.DisplayInputs.OfferDataDetails;
+}
+
+@{
+   if (Model.isOwner)
+   {
+      <div class="card">
+         <div class="card-body">
+            <div class="row" id="basicDetials">
+               <div class="col-12">
+                  <h4 class="text-primary">
+                     @res.TenderResources.DisplayInputs.MainInformation <span class="pull-right">
+                     </span>
+                  </h4>
+               </div>
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @res.OfferResources.DisplayInputs.SupplierName
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>@Model.SupplierName</span>
+                           </div>
+                        </div>
+                     </li>
+                     @{
+                        if (!(Model.tenderTypeId == (int)Enums.TenderType.Competition || Model.tenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.tenderTypeId == (int)Enums.TenderType.FirstStageTender))
+                        {
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-4 etd-item-title">
+                                    @res.OfferResources.DisplayInputs.OfferAmount
+                                 </div>
+                                 <div class="col-8 etd-item-info">
+                                    <span>
+                                       @Model.FinalPrice
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-4 etd-item-title">
+                                    @res.OfferResources.DisplayInputs.OfferAmount
+                                 </div>
+                                 <div class="col-8 etd-item-info">
+                                    <span>
+                                       @Model.FinalPriceText
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                           @if (Model.isAltenative)
+                           {
+
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-4 etd-item-title">
+                                    @res.OfferResources.DisplayInputs.AlternativeOfferTotal
+                                 </div>
+                                 <div class="col-8 etd-item-info">
+                                    <span>
+                                       @Model.FinalAlternativePrice
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-4 etd-item-title">
+                                    @res.OfferResources.DisplayInputs.AlternativeOfferTotal
+                                 </div>
+                                 <div class="col-8 etd-item-info">
+                                    <span>
+                                       @Model.FinalAlternativePriceText
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+
+                           }
+
+                        } }
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @res.OfferResources.DisplayInputs.OfferStatus
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>@Model.offerStatus</span>
+                           </div>
+                        </div>
+                     </li>
+
+                  </ul>
+
+               </div>
+         
+            </div>
+         </div>
+      </div>
+   }
+}
+
+@{
+   if (Model.isSolidarity && Model.isOwner)
+   {
+      <div class="card">
+         <div class="card-body">
+            <div class="row" id="basicDetials">
+
+               <div class="col-12">
+                  <h4 class="text-primary"> @Html.Raw(res.OfferResources.DisplayInputs.CombinedList)</h4>
+               </div>
+
+            </div>
+
+         </div>
+         <table class="table">
+            <caption>قائمة الموردين</caption>
+            <thead>
+               <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)</th>
+                  <th scope="col">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)</th>
+                  <th scope="col"></th>
+               </tr>
+            </thead>
+            <tbody>
+               @foreach (var Combined in Model.CombinedSuppliers)
+               {
+                  <tr>
+                     <td>
+                        @(Model.CombinedSuppliers.IndexOf(Combined) + 1)
+                     </td>
+                     <td>
+                        @Combined.CommericalName
+                     </td>
+                     <td>
+                        @Combined.CommericalRegisterNo
+                     </td>
+                     <td>
+                       @Combined.SolidarityTypeName
+                     </td>
+                  </tr>
+               }
+            </tbody>
+         </table>
+      </div>
+   }
+
+
+}
+
+<div class="card">
+   <div class="card-body">
+      <div class="row" id="basicDetials">
+         <div class="col-12">
+            <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Atachementes</h4>
+         </div>
+
+
+         <table class="table table-striped" summary="المرفقات">
+            <thead style="background-color: #e0efe8;">
+               <tr>
+                  <th scope="col">@res.SharedResources.DisplayInputs.FileName </th>
+                  <th scope="col">@res.SharedResources.DisplayInputs.AttachementType </th>
+
+               </tr>
+            </thead>
+            <tbody>
+               @foreach (var tbl in Model.attachments)
+               {
+
+                  <tr>
+                     <td data-label=" Milestone">
+
+                        <a href="/Upload/getfile/@(string.Concat( tbl.FileNetId,":",tbl.FileName )): " target="_blank"> @tbl.FileName</a>
+                     </td>
+                     <td data-label=" Quantity">
+                        @{
+
+                           switch (tbl.type)
+                           {
+                              case (int)Enums.AttachmentType.SupplierTechnicalAndFinancialProposalAttachment:
+                                 @:<span> @res.OfferResources.DisplayInputs.FinancialAndTechnicalOffer </span>
+                                 break;
+                              case (int)Enums.AttachmentType.SupplierTechnicalProposalAttachment:
+                                 @:<span> @res.OfferResources.DisplayInputs.TechnicalOffer </span>
+                                 break;
+                              case (int)Enums.AttachmentType.SupplierFinancialProposalAttachment:
+                                 @:<span> @res.OfferResources.DisplayInputs.FinancialOffer </span>
+                                 break;
+                              case 17:
+
+                                 @:<span> @res.OfferResources.DisplayInputs.CombinationLetter </span>
+                                 break;
+                              case (int)Enums.AttachmentType.SupplierOriginalAttachment:
+                                 @:<span> @res.OfferResources.DisplayInputs.OfferAttachment </span>
+                                 break;
+
+                           }
+
+
+                        }
+
+                     </td>
+
+                  </tr>
+
+               }
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+         </table>
+      </div>
+
+   </div>
+  
+</div>
+@{
+   if (!(Model.tenderTypeId == (int)Enums.TenderType.Competition || Model.tenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.tenderTypeId == (int)Enums.TenderType.FirstStageTender))
+   {
+      <div class="card">
+         <div class="card-body">
+            <h4 class="text-primary"> @Html.Raw(res.OfferResources.DisplayInputs.QuantityTables)</h4>
+            <div id="divQuantityTable" class="card-collapse" style="border:1px solid #ccc;border-radius:6px;overflow:hidden;">
+
+               @Html.Partial("~/Views/Offer/Partial/_ApplyOfferQuantityTables.cshtml", Model.QuantitiesTemplateModel)
+
+               @*<h1>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Loading</h1>*@
+            </div>
+         </div>
+      </div>
+
+
+   }
+
+
+}
+
+

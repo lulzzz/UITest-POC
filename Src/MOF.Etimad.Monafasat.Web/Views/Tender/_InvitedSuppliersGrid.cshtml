@@ -1,0 +1,43 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+@using res = MOF.Etimad.Monafasat.Resources
+
+
+<div class="table-responsive" style="min-height:100px">
+   <table id="InvitedSuppliersTable" class="table  table-striped text-center" summary="desc">
+      <thead class="text-center">
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@Html.Raw(res.InvitationResources.DisplayInputs.ComericalRegisterName)</th>
+            <th scope="col" class="text-center">@Html.Raw(res.SharedResources.DisplayInputs.ComericalRegisterNo)</th>
+            <th  scope="col" class="text-center">@Html.Raw(res.SharedResources.DisplayInputs.Operations)</th>
+         </tr>
+      </thead>
+      <tbody class="text-center" v-if="InvitedSuppliers && InvitedSuppliers.length > 0">
+         <tr v-for="(Supplier, $index) in InvitedSuppliers">
+
+            <td class="text-center" data-label="@Html.Raw(res.InvitationResources.DisplayInputs.ComericalRegisterName)"> {{$index +1}} </td>
+            <td class="text-center" data-label="@Html.Raw(res.InvitationResources.DisplayInputs.ComericalRegisterName)" style="cursor:pointer" @@click="getSupplierInfo(Supplier.crNumber)"> {{Supplier.crName}} </td>
+            <td class="text-center" data-label="@Html.Raw(res.SharedResources.DisplayInputs.ComericalRegisterNo)"> {{Supplier.crNumber}} </td>
+            <td class="text-center" data-label=" @Html.Raw(res.SharedResources.DisplayInputs.Operations)">
+               <template>
+                 
+                  <template v-if="Supplier.statusId == '2'|| Supplier.statusId == '6' ">
+                     <button type="button" class="btn btn-just-icon btn-danger  btn-round btn-sm" id="btnAddToInvitationGrid" disabled @@click="RemoveInvitationGrid(Supplier)"><i class="material-icons">remove</i> </button>
+                  </template>
+                  <template v-else>
+                     <button type="button" class="btn btn-just-icon btn-danger  btn-round btn-sm" id="btnAddToInvitationGrid" @@click="RemoveInvitationGrid(Supplier)"><i class="material-icons">remove</i> </button>
+                  </template>
+               </template>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="9" class="text-center">
+               @Html.Raw(res.SharedResources.DisplayInputs.NoData)
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="invitedResource_url" @@update="updateInvitedResource"></pagination>
+</div>

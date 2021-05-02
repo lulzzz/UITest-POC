@@ -1,0 +1,50 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierQuantityTableItemModel
+
+<h4>SupplierQuantityTableItemModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+       <form asp-action="_SupplierQuantityTableItemForm">
+          @Html.AntiForgeryToken()
+          <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+          @*<div class="form-group">
+          <label asp-for="Id" class="control-label"></label>
+          <hidden asp-for="Id" class="form-control" readonly="readonly" />
+          <span asp-validation-for="Id" class="text-danger"></span>
+      </div>*@
+          @*<div class="form-group">
+             <label asp-for="TenderQuantityTableUnitName" class="control-label"></label>
+             <input asp-for="TenderQuantityTableUnitName" class="form-control" readonly="readonly" />
+             <span asp-validation-for="TenderQuantityTableUnitName" class="text-danger"></span>
+          </div>*@
+          <div class="form-group">
+             <label asp-for="Price" class="control-label"></label>
+             <input asp-for="Price" class="form-control" />
+             <span asp-validation-for="Price" class="text-danger"></span>
+          </div>
+          <div class="form-group">
+             <label asp-for="Discount" class="control-label"></label>
+             <input asp-for="Discount" class="form-control" />
+             <span asp-validation-for="Discount" class="text-danger"></span>
+          </div>
+          <div class="form-group">
+             <label asp-for="Total" class="control-label"></label>
+             <input asp-for="Total" class="form-control" />
+             <span asp-validation-for="Total" class="text-danger"></span>
+          </div>
+          <div class="form-group">
+             <label asp-for="DiscountedTotal" class="control-label"></label>
+             <input asp-for="DiscountedTotal" class="form-control" />
+             <span asp-validation-for="DiscountedTotal" class="text-danger"></span>
+          </div>
+          <div class="form-group">
+             <input type="submit" value="Create" class="btn btn-default" />
+          </div>
+       </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

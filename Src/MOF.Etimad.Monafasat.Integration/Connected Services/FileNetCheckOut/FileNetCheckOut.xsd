@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://www.ejada.com" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.ejada.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element ibmSchExtn:docRoot="true" name="FileNetCheckOutRq" type="FileNetCheckOutRq_Type" />
+  <xsd:element ibmSchExtn:docRoot="true" name="FileNetCheckOutRs" type="FileNetCheckOutRs_Type" />
+  <xsd:element name="ContentCopied" type="Flg_Type" />
+  <xsd:element name="UserCredentials" type="UserCredentials_Type" />
+  <xsd:element name="FileId" type="FileId_Type" />
+  <xsd:element name="RepositoryId" type="RepositoryId_Type" />
+  <xsd:element name="ResponseStatus" type="ResponseStatus_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Response Status</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="Password" type="SecInfo_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Password</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="ClientDt" type="DateTime">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Client timestamp</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="EchoData" type="EchoData_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Echo back field, the value in it will be echoed back in message response header</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="FuncId" type="FuncId_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Function identifier</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="MsgRecDt" type="DateTime">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Service provider processing timestamp</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="MsgRqHdr" type="MsgRqHdr_Type" />
+  <xsd:element name="MsgRsHdr" type="MsgRsHdr_Type" />
+  <xsd:element name="OverrideStatus" type="OverrideStatus_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Override Status aggregate</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="PartyIdNum" type="PartyIdNum_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Party identifier</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="PartyIdType" type="PartyIdType_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Party identifier Type</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="RqMode" type="RqMode_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Reversal options</xsd:documentation>
+      <xsd:documentation source="LOV">0: Normal request(Default)
+Greater than 0: Repeated request
+-1: Reversal request
+Less than -1: Repeated reversal request</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="RqUID" type="RqUID_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Universally unique identifier for the request message</xsd:documentation>
+      <xsd:documentation source="LOV">SCId||Date(DDMMYYYY)||(Sequence)#######
+Example: IB190520081000001
+			</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="SCId" type="SCId_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Service consumer identifier</xsd:documentation>
+      <xsd:documentation source="LOV" />
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="SPRefNum" type="SPRefNum_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Service provider reference number</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="StatusCode" type="StatusCode_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Response status code</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="StatusDesc" type="StatusDesc_Type" />
+  <xsd:element name="Version" type="Version_Type" />
+  <xsd:element name="UserId" type="UserId_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">User identifier</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="ProcessUID" type="ProcessUID_Type" />
+  <xsd:element name="ProxyUserId" type="UserId_Type" />
+  <xsd:element name="ServiceId" type="ServiceId_Type" />
+  <xsd:element name="SessionId" type="SessionId_Type" />
+  <xsd:element name="PartyId" type="PartyId_Type">
+    <xsd:annotation>
+      <xsd:documentation>Party Identification</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="DateTime" type="DateTime" />
+  <xsd:simpleType name="SecInfo_Type">
+    <xsd:restriction base="C">
+      <xsd:maxLength value="1024" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="C">
+    <xsd:annotation>
+      <xsd:documentation>Character indicates an element that allows character data up to a maximum number of characters, regardless of the number of bytes required to represent each character</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string" />
+  </xsd:simpleType>
+  <xsd:simpleType name="DateTime">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}(T[0-9]{2}:[0-9]{2}(:[0-9]{2}(\.[0-9]{6})?((-|\+)[0-9]{2}:[0-9]{2})?)?)?" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Desc_Type">
+    <xsd:restriction base="C">
+      <xsd:maxLength value="1024" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EchoData_Type">
+    <xsd:restriction base="C">
+      <xsd:maxLength value="1024" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="FuncId_Type">
+    <xsd:restriction base="C">
+      <xsd:maxLength value="8" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Identifier_Type">
+    <xsd:annotation>
+      <xsd:documentation>Object identifiers in the IFX Specification are of the data type "Identifier."  This is a Narrow Character data type with a maximum length of 36.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="NC">
+      <xsd:maxLength value="36" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Long">
+    <xsd:annotation>
+      <xsd:documentation>Long is an integer value, which may be positive, negative, or zero, with values ranging from -2147483648 to 2147483647.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:long" />
+  </xsd:simpleType>
+  <xsd:simpleType name="NC">
+    <xsd:annotation>
+      <xsd:documentation>Elements of type Narrow Character are elements of character data type with the additional restriction that the only allowable characters are those contained within the ISO Latin-1 character set (http://www.htmlhelp.com/reference/charset/). </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string" />
+  </xsd:simpleType>
+  <xsd:simpleType name="OverrideCode_Type">
+    <xsd:restriction base="NC">
+      <xsd:maxLength value="20" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="OverrideDesc_Type">
+    <xsd:restriction base="Desc_Type">
+      <xsd:maxLength value="80" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="RqMode_Type">
+    <xsd:restriction base="Long" />
+  </xsd:simpleType>
+  <xsd:simpleType name="RqUID_Type">
+    <xsd:restriction base="Identifier_Type" />
+  </xsd:simpleType>
+  <xsd:simpleType name="SCId_Type">
+    <xsd:restriction base="NC">
+      <xsd:maxLength value="20" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="SPRefNum_Type">
+    <xsd:annotation>
+      <xsd:documentation>Suggetion: RefNum_Type C-20 and SP, Trn based on it</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="C">
+      <xsd:maxLength value="20" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StatusCode_Type">
+    <xsd:restriction base="NC">
+      <xsd:maxLength value="32" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StatusDesc_Type">
+    <xsd:restriction base="Desc_Type" />
+  </xsd:simpleType>
+  <xsd:simpleType name="Version_Type">
+    <xsd:annotation>
+      <xsd:documentation source="DES">Service consumer interface version </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="NC">
+      <xsd:maxLength value="8" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="UserId_Type">
+    <xsd:restriction base="Identifier_Type">
+      <xsd:maxLength value="20" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ProcessUID_Type">
+    <xsd:restriction base="Identifier_Type" />
+  </xsd:simpleType>
+  <xsd:simpleType name="ServiceId_Type">
+    <xsd:restriction base="Identifier_Type" />
+  </xsd:simpleType>
+  <xsd:simpleType name="SessionId_Type">
+    <xsd:restriction base="Identifier_Type" />
+  </xsd:simpleType>
+  <xsd:simpleType name="PartyIdNum_Type">
+    <xsd:restriction base="NC">
+      <xsd:maxLength value="30" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="PartyIdType_Type">
+    <xsd:restriction base="ClosedEnum">
+      <xsd:enumeration value="IqamaNumber" />
+      <xsd:enumeration value="NationalId" />
+      <xsd:enumeration value="CommercialRegistration" />
+      <xsd:enumeration value="700Code" />
+      <xsd:enumeration value="AccountNumber" />
+      <xsd:enumeration value="FamilyCardNumber" />
+      <xsd:enumeration value="BorderNumber" />
+      <xsd:enumeration value="PassportNumber" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="RepositoryId_Type">
+    <xsd:restriction base="C">
+      <xsd:maxLength value="100" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Boolean">
+    <xsd:annotation>
+      <xsd:documentation>Boolean indicates a logical True or False condition.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Y" />
+      <xsd:enumeration value="N" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ClosedEnum">
+    <xsd:restriction base="C">
+      <xsd:maxLength value="80" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Flg_Type">
+    <xsd:restriction base="Boolean" />
+  </xsd:simpleType>
+  <xsd:simpleType name="FileId_Type">
+    <xsd:restriction base="C">
+      <xsd:maxLength value="50" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="FileNetCheckOutRq_Type">
+    <xsd:sequence>
+      <xsd:element ref="MsgRqHdr" />
+      <xsd:element name="Body" type="FileNetCheckOutRqBody_Type" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FileNetCheckOutRs_Type">
+    <xsd:sequence>
+      <xsd:element ref="MsgRsHdr" />
+      <xsd:element minOccurs="0" name="Body" type="FileNetCheckOutRsBody_Type" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FileNetCheckOutRqBody_Type">
+    <xsd:sequence>
+      <xsd:element ref="UserCredentials" />
+      <xsd:element ref="RepositoryId" />
+      <xsd:element ref="FileId" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FileNetCheckOutRsBody_Type">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" ref="FileId" />
+      <xsd:element minOccurs="0" ref="ContentCopied" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MsgRqHdr_Type">
+    <xsd:sequence>
+      <xsd:element ref="RqUID" />
+      <xsd:element minOccurs="0" ref="ProcessUID" />
+      <xsd:element minOccurs="0" ref="SessionId" />
+      <xsd:element ref="SCId" />
+      <xsd:element ref="ServiceId" />
+      <xsd:element ref="FuncId" />
+      <xsd:element minOccurs="0" ref="RqMode" />
+      <xsd:element minOccurs="0" ref="PartyId" />
+      <xsd:element minOccurs="0" ref="UserId" />
+      <xsd:element minOccurs="0" ref="ProxyUserId" />
+      <xsd:element minOccurs="0" ref="ClientDt" />
+      <xsd:element minOccurs="0" ref="EchoData" />
+      <xsd:element minOccurs="0" ref="Version" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MsgRsHdr_Type">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" ref="RqUID" />
+      <xsd:element minOccurs="0" ref="ProcessUID" />
+      <xsd:element minOccurs="0" ref="SessionId" />
+      <xsd:element minOccurs="0" ref="SPRefNum" />
+      <xsd:element minOccurs="0" ref="MsgRecDt" />
+      <xsd:element minOccurs="0" ref="OverrideStatus" />
+      <xsd:element ref="ResponseStatus" />
+      <xsd:element minOccurs="0" ref="EchoData" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OverrideStatus_Type">
+    <xsd:sequence>
+      <xsd:element name="Code" type="OverrideCode_Type">
+        <xsd:annotation>
+          <xsd:documentation source="DES">Override code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Desc" type="OverrideDesc_Type">
+        <xsd:annotation>
+          <xsd:documentation source="DES">Override description</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PartyId_Type">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" ref="PartyIdNum" />
+      <xsd:element minOccurs="0" ref="PartyIdType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ResponseStatus_Type">
+    <xsd:sequence>
+      <xsd:element ref="StatusCode" />
+      <xsd:element minOccurs="0" ref="StatusDesc" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="UserCredentials_Type">
+    <xsd:sequence>
+      <xsd:element ref="UserId" />
+      <xsd:element minOccurs="0" ref="Password" />
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

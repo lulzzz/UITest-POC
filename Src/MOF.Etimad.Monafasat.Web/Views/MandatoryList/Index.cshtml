@@ -1,0 +1,151 @@
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.MandatoryList;
+}
+@section breadcrumb
+      {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.MandatoryList</li>
+      </ol>
+   </nav>
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <span class="d-block pull-left" data-toggle="tooltip" data-placement="top" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search">
+         <button id="searchBtnColaps" class="btn p-2 btn-outline-primary" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search">
+            <i class="material-icons">search</i>
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+         </button>
+      </span>
+   </div>
+}
+<div class="clearfix"></div>
+<div class="row tendar-navigation position-relative" style="min-height:0px;">
+   <div policy="@PolicyNames.AddMandatoryListPolicy" class="col-12">
+      <a class="btn btn-lg btn-primary pull-right m-0  d-sm-block d-none" asp-action="Add" asp-controller="MandatoryList" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.AddMandatoryList">
+         <i class="material-icons">add</i> @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.AddNewDivision
+      </a>
+      <a class="btn btn-lg btn-primary pull-right text-center m-1 btn-block d-sm-none d-inline-block" asp-action="Add" asp-controller="MandatoryList" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.AddMandatoryList">
+         <i class="material-icons">add</i> @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.AddNewDivision
+      </a>
+   </div>
+</div>
+<div class="row" style="position:relative" id="MandatoryListGrid">
+   <div class="collapse col-lg-4 col-md-4 col-sm-12 col-xs-12" id="Search">
+
+      <div class="card card-body">
+         <div class="text-right">
+            <button id="closeSearch" type="button" class="btn btn-sm btn-link btn-default pull-right p-1">
+               <i class="material-icons">close</i>
+
+            </button>
+         </div>
+
+         <div class="row">
+            <partial name="_SearchForm.cshtml" />
+         </div>
+         <div class="input-group-prepend pull-left etd-search-btn">
+            <button type="button" class="btn btn-primary btn-block text-center btn-sm" id="searchBtn" name="button" @@click="search()">
+               <i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+            </button>
+            <button type="reset" class="btn btn-block text-center btn-sm" name="reset" @@click="clearSearch()">
+               <i class="material-icons">close</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+            </button>
+         </div>
+      </div>
+   </div>
+   <div class="tableDiv col-md-12 col-sm-12 col-xs-12 animated  delay-2s" id="gridresult">
+      <div class="card">
+         <partial name="_Grid" />
+      </div>
+      <div class="col-12 m-5 m-auto">
+         <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+      </div>
+   </div>
+</div>
+
+@section scripts {
+   <script>
+      function toggleGrid() {
+         var _grid = $('#gridresult');
+
+         if (_grid.hasClass('col-md-12')) {
+
+            _grid.removeClass('col-md-12');
+            _grid.addClass('col-md-8');
+
+         } else if (_grid.hasClass('col-md-8')) {
+            _grid.addClass('col-md-12');
+            _grid.removeClass('col-md-8 ');
+         }
+      }
+      $('#searchBtnColaps').click(function () {
+         toggleGrid();
+         $('#closeSearch').on("click", function () {
+            $('#searchBtnColaps').click()
+         });
+
+      });
+
+      var grid = new Vue({
+         el: '#MandatoryListGrid',
+         data: {
+            mandatoryLists: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/MandatoryList/IndexPagingAsync',
+            divisionName: '',
+            divisionCode: '',
+            statusId: '',
+            csiCode: '',
+            priceCelling: '',
+            productName: ''
+         },
+         methods: {
+            updateResource: function (data) {
+               this.mandatoryLists = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            search: function () {
+               this.resource_url = '/MandatoryList/IndexPagingAsync' + '?'
+                  + '&divisionName=' + this.divisionName
+                  + '&divisionCode=' + this.divisionCode
+                  + '&StatusId=' + this.statusId
+                  + '&csiCode=' + this.csiCode
+                  + '&priceCelling=' + this.priceCelling
+                  + '&productNameAr=' + this.productName
+            },
+            clearSearch: function () {
+               this.divisionCode = '';
+               this.divisionName = '';
+               this.statusId = ' ';
+               this.csiCode = '';
+               this.priceCelling = '';
+               this.productName = '';
+               this.resource_url = '/MandatoryList/IndexPagingAsync';
+
+               setTimeout(function () {
+                  $("#statusList").selectpicker("refresh");
+               }, 0);
+            }
+
+         },
+         updated: function () {
+            $('.popover-status').each(function () {
+               var content = $(this).find('.popover-content').html();
+               $(this).attr('data-content', content);
+            });
+            $(function () {
+               $('[data-toggle="popover"]').popover({
+                  trigger: 'hover',
+                  html: true
+               })
+            })
+         }
+      });
+   </script>
+}

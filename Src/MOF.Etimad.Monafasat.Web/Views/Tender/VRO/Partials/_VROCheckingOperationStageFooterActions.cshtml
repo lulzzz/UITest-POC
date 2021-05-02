@@ -1,0 +1,32 @@
+<div class="card-footer row">
+   <div class="col-md-12 text-right">
+      @if (User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary))
+      {
+         <a :href="confirmCheckOffersCheck(tender.tenderIdString)" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingApproved)" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmOpenOfferStage
+         </a>
+         <a :href="checkTenderOffers(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalChecking) || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersCheckingAndTechnicalEval)) && tender.userCommitteeType != @((int)Enums.UserCommitteeType.None))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckTechnicalEvaluation
+         </a>
+         <a :href="checkTenderOffers(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialChecking) || tender.tenderStatusId == @((int)Enums.TenderStatus.VROFinancialCheckingOpening)) && tender.userCommitteeType != @((int)Enums.UserCommitteeType.None))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OpenFinancialOffers
+         </a>
+         <a :href="checkTenderOffers(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingRejected)) && tender.userCommitteeType != @((int)Enums.UserCommitteeType.None))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenCheck
+         </a>
+         <a :href="checkTenderOffers(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingRejected)) && tender.userCommitteeType != @((int)Enums.UserCommitteeType.None))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenOfferOpening
+         </a>
+      }
+      @if (User.IsInRole(RoleNames.OffersOpeningAndCheckManager))
+      {
+         <a :href="confirmCheckOffersCheck(tender.tenderIdString)" v-if="tender.canStartTechnicalEvaluation" class="btn btn-sm btn-primary">
+            تأكيد مرحلة فحص العروض
+         </a>
+         <a :href="confirmCheckOffersCheck(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersFinancialCheckingPending) || tender.tenderStatusId == @((int)Enums.TenderStatus.VROOffersTechnicalCheckingPending) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingPending)) && tender.userCommitteeType != @((int)Enums.UserCommitteeType.None))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReviewData
+         </a>
+      }
+
+   </div>
+</div>

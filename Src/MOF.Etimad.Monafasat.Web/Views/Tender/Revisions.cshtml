@@ -1,0 +1,216 @@
+@{
+
+   ViewBag.Title = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtensionsRequests;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page"><a href="@Url.Action("Revisions", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtensionsRequests</a></li>
+      </ol>
+   </nav>
+}
+@section pagecontrols{
+   <div class="dropdown">
+     
+      <button id="searchBtnColaps" class="btn p-2 btn-outline-primary" data-toggle="collapse" href="#_revisionDateSearchFrom" role="button" aria-expanded="false" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search" aria-controls="Search"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search<div class="ripple-container"></div></button>
+      @*<button class=" btn btn-outline-primary btn-link btn-just-icon" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.AddCommittee" onclick="window.location = '/Branch/createasync'"><i class="material-icons">add</i><div class="ripple-container"></div></button>*@
+   </div>
+}
+
+<div class="tab-content  tab-space col-12 " style="padding:0">
+
+   <div class="tab-pane  animated bounceInLeft  delay-1s  active" id="TenderRevisionDate">
+
+
+      <form id="revisionDateSearchFrom" class="form ">
+  
+      
+         <div class=" collapse" id="_revisionDateSearchFrom">
+            <div class="card">
+               <div class="card-body">
+                  <div class="row">
+
+                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="TenderName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName </label>
+                           <input type="text" id="TenderName" name="TenderName" maxlength="50" autocomplete="off" class="form-control">
+                        </div>
+                     </div>
+
+                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group form-check etd-calendar-group">
+                           <label for="RequestDateFrom" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RequestDateFrom</label>
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="RequestDateFrom" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date">
+                           <input type="hidden" id="RequestDateFromS">
+                        </div>
+                     </div>
+                     <div class="col-lg-6 col-md-12 col-sm-6 col-xs-6">
+                        <div class="form-group form-check etd-calendar-group">
+                           <label for="RequestDateTo" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RequestDateTo</label>
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="RequestDateTo" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date">
+                           <input type="hidden" id="RequestDateToS">
+                        </div>
+                     </div>
+
+                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group form-check etd-calendar-group">
+                           <label for="ResponseDateFrom" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResponseDateFrom</label>
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="ResponseDateFrom" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date">
+                           <input type="hidden" id="ResponseDateFromS">
+                        </div>
+                     </div>
+                     <div class="col-lg-6 col-md-12 col-sm-6 col-xs-6">
+                        <div class="form-group form-check etd-calendar-group">
+                           <label for="ResponseDateTo" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResponseDateTo</label>
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="ResponseDateTo" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date">
+                           <input type="hidden" id="ResponseDateToS">
+                        </div>
+                     </div>
+
+                     <div class="col-12">
+                        <button class="btn btn-sm btn-primary" @@click="search" type="button"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Search</button>
+                        <button class="btn btn-sm " type="button" @@click="reset"><i class="material-icons">close</i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Clear </button>
+                     </div>
+                     <hr />
+                     <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Results </h4>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </form>
+   
+      <div class="card">
+         <div class="table-responsive" id="revisionList">
+            <table class="table table-striped" aria-describedby="Revision List">
+               <thead>
+                  <tr>
+                     <th scope="col" class="">#</th>
+                     <th scope="col" class="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</th>
+                     <th scope="col" class="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber</th>
+                     <th scope="col" class="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber</th>
+                     <th scope="col" class="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate</th>
+                     <th scope="col" class="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate</th>
+                     <th scope="col" class="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate</th>
+                     <th scope="col" class="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersCheckingDate</th>
+                     <th scope="col" class=""> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy</th>
+                     <th scope="col" class="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status</th>
+                  </tr>
+               </thead>
+               <tbody v-if="RevisionsDates && RevisionsDates.length > 0">
+                  <tr v-for="(revisionDate, $index) in RevisionsDates">
+                     <td class="text-center">{{++$index}}</td>
+                     <td><a :href="detailsUrl(revisionDate.tenderIdString, revisionDate.tenderStatusIdString)">{{revisionDate.tenderName}}</a></td>
+                     <td>{{revisionDate.tenderNumber}}</td>
+                     <td>{{revisionDate.referenceNumber}}</td>
+                     <td>{{revisionDate.lastEnqueriesDate ? revisionDate.lastEnqueriesDate.split('T')[0] : "لا يوجد"}}</td>
+                     <td>{{revisionDate.lastOfferPresentationDate ? revisionDate.lastOfferPresentationDate.split('T')[0] : "لا يوجد"}}</td>
+                     <td>{{revisionDate.offersOpeningDate ? revisionDate.offersOpeningDate.split('T')[0]: "لا يوجد"}}</td>
+                     <td>{{revisionDate.offersCheckingDate ? revisionDate.offersCheckingDate.split('T')[0]: "لا يوجد"}}</td>
+                     <td class="">{{revisionDate.createdBy}}</td>
+                     <td>{{revisionDate.changeRequestStatusName}}</td>
+                  </tr>
+               </tbody>
+               <tbody v-else>
+                  <tr>
+                     <td colspan="8" align="center" style="text-align:center !important">
+                        <i class="text-primary material-icons" style="font-size:3rem">info</i>
+                        <br />
+                        @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.NoRecordsFound
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         <div class="col-12 m-5 m-auto">
+            <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<!--endtBody-->
+@section scripts{
+   <script>
+      $(document).ready(function () {
+         $('li#menuLists').addClass('active');
+         $('li#menuLists a#menuRevisions').addClass('active');
+
+        
+      });
+      function handleDateVal(fromInput, fromDateStringInput) {
+         var startDate = "";
+         if ($("#" + fromInput).val() != "") {
+            var i = $("#" + fromInput).val().split('/');
+            if ($('input[name="cb_' + fromInput + '"]').is(':checked')) {
+               $("#" + fromDateStringInput).val(i[0] + ',' + i[1] + ',' + i[2] + ',' + 'G');
+               var i = $("#" + fromInput).val().split('/');
+               startDate = i[1] + '/' + i[0] + '/' + i[2];
+            }
+            else {
+               $("#" + fromDateStringInput).val(i[0] + ',' + i[1] + ',' + i[2] + ',' + 'H');
+               startDate = convertUmmalquraToGregorian($("#" + fromInput).val());
+            }
+         }
+         return startDate;
+      }
+
+      var TenderRevisionDate = new Vue({
+         el: '#TenderRevisionDate',
+         data: function () {
+            return {
+               RevisionsDates: [],
+               tenderStatusList: [],
+               pageSize: @((int)Enums.PageSize.Six),
+               totalCount: 0,
+               currentPage: 1,
+               resource_url: '/Tender/RevisionDatesPagingAsync?pageSize='+@((int)Enums.PageSize.Six),
+               queryString: ''
+            };
+         },
+         methods: {
+            updateResource: function (data) {
+               TenderRevisionDate.RevisionsDates = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = @((int)Enums.PageSize.Six);
+            },
+            detailsUrl: function (id, statusId) {
+               return '/Tender/Details?STenderId=' + id + '&STenderStatusId=' + statusId;
+            },
+            reset: function () {
+               this.resource_url = '/Tender/RevisionDatesPagingAsync';
+               $('#revisionDateSearchFrom').trigger("reset");
+            },
+            search: function () {
+               var RequestDateFrom = handleDateVal('RequestDateFrom', 'RequestDateFromS');
+               var RequestDateTo = handleDateVal('RequestDateTo', 'RequestDateToS');
+
+               if (RequestDateFrom != "" && RequestDateTo != "") {
+                  if (RequestDateFrom > RequestDateTo) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDateBiggerStart)', alertMessageType.Danger);
+                     return false;
+                  }
+               }
+
+               var ResponseDateFrom = handleDateVal('ResponseDateFrom', 'ResponseDateFromS');
+               var ResponseDateTo = handleDateVal('ResponseDateTo', 'ResponseDateToS');
+
+               if (ResponseDateFrom != "" && ResponseDateTo != "") {
+                  if (ResponseDateFrom > ResponseDateTo) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDateBiggerStart)', alertMessageType.Danger);
+                     return false;
+                  }
+               }
+
+               this.queryString = $('#revisionDateSearchFrom').serialize();
+               this.resource_url = '/Tender/RevisionDatesPagingAsync' + '?' + this.queryString
+                  + '&RequestDateFromS=' + $("#RequestDateFrom").val() + '&RequestDateToS=' + $("#RequestDateTo").val()
+                  + '&ResponseDateFromS=' + $("#ResponseDateFrom").val() + '&ResponseDateToS=' + $("#ResponseDateTo").val();
+            }
+         }
+      });
+   </script>
+}

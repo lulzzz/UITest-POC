@@ -1,0 +1,350 @@
+@model MOF.Etimad.Monafasat.ViewModel.QuantityTableStepDTO
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+}
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables;
+}
+<div class="modal fade" id="changeRequestModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@res.EnquiryResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="col-12" id="divChangeRequestRejectReason">
+               <div class="form-group bmd-form-group" style="padding-top:0">
+                  <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+                  <textarea class="form-control" rows="5" id="txtRejectionReasonChangeRequest" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason"></textarea>
+                  <div class="pull-left">
+                     <span class="bmd-help text-danger" id="txtChangeRequestRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+                  </div>
+               </div>
+            </div>
+            <div class="form-group bmd-form-group" id="divVerficationCodeChangeRequest">
+               <input type="text" class="form-control col-md-12" id="txtActivationNoChangeRequest" name="ActivationCodeChangeRequest" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+               <span class="bmd-help text-danger position-relative" id="txtActiveNoValidChangeRequest">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+               <br />
+               <p class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainingTime<span class=" text-danger" id="timerChangeRequest"></span></p>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm" name="button" id="btnQuantityTableApprovalConfirm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmApprovingChange</button>
+            <button type="button" class="btn btn-primary btn-sm" name="button" id="btnQuantityTableRejectConfirm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmRejectingChange</button>
+            <button type="button" class="btn btn-primary btn-sm" name="button" id="btnResendVerificationCodeChangeRequest"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+<form id="detailsForm">
+   @Html.AntiForgeryToken()
+   @section breadcrumb
+      {
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+            <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables</li>
+         </ol>
+      </nav>
+   }
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            @if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding)
+            {
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group">
+                     <label asp-for="HasAlternativeOffer" class="label bmd-label-static"></label>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="HasAlternativeOffer" name="HasAlternativeOffer" class="form-check-input" type="radio" id="hasAlternativeOfferYes" value="true" disabled="disabled" onchange="changeHasAlternativeOffer()">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Yes
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input asp-for="HasAlternativeOffer" name="HasAlternativeOffer" class="form-check-input" checked type="radio" id="hasAlternativeOfferNo" value="false" disabled="disabled" onchange="changeHasAlternativeOffer()">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.No
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+            }
+            <br />
+            <br />
+            <div class="col-12">
+               <div class="card-collapse" style="border: 1px solid #ccc;border-radius: 6px;overflow: hidden;">
+                  @await Html.PartialAsync("~/Views/Tender/_QuantityTablesChangesCreate.cshtml")
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-12">
+         <div class="card">
+            <div class="card-body" id="quantitiesTableDiv">
+               <div class="row" id="NewQuantitiesTable">
+                  @if (Model.ChangeRequestTypeId == (int)Enums.ChangeRequestType.QuantitiesTables && Model.ChangeRequestStatusId == (int)Enums.ChangeStatusType.New && (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PurshaseSpecialist)))
+                  {
+                     <div class="col-12 ">
+                        <div class="form-group bmd-form-group">
+                           <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendTablesChangeToApprove">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendChangeForApprovement</button>
+                        </div>
+                     </div>
+                  }
+                  @if (Model.ChangeRequestTypeId == (int)Enums.ChangeRequestType.QuantitiesTables && Model.ChangeRequestStatusId == (int)Enums.ChangeStatusType.Pending && (User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.EtimadOfficer)))
+                  {
+                     <div class="col-12 ">
+                        <div class="form-group bmd-form-group">
+                           <button type="button" class="btn btn-primary pull-left" name="button" id="btnQuantityTableApprrove" data-toggle="modal" data-target="#changeRequestModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ApproveChange</button>
+                           <button type="button" class="btn btn-danger pull-left" name="button" id="btnQuantityTableReject" data-toggle="modal" data-target="#changeRequestModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectChange</button>
+                        </div>
+                     </div>
+                  }
+                  @if (Model.ChangeRequestTypeId == (int)Enums.ChangeRequestType.QuantitiesTables && Model.ChangeRequestStatusId == (int)Enums.ChangeStatusType.Rejected && (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PurshaseSpecialist)))
+                  {
+                     <div class="col-12 ">
+                        <h3>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</h3>
+                        <p>@(Model.RejectionReason)</p>
+                        <div class="form-group bmd-form-group">
+                           <button type="button" id="btnCancelQuantityTableUpdate" class="btn btn-danger" style="margin-top:30px">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CloseChange
+                           </button>
+                        </div>
+                     </div>
+                  }
+               </div>
+            </div>
+         </div>
+         <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("Index", "Tender")'">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToAllTenders
+            <div class="ripple-container"></div>
+         </button>
+      </div>
+   </div>
+</form>
+<script src="~/Etimad-UI/assets/js/xlsx.core.min.js"></script>
+<script src="~/Etimad-UI/assets/js/xls.core.min.js"></script>
+<script src="~/Etimad-UI/assets/js/xlsx.full.min.js"></script>
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script>
+      $(document).ready(function () {
+         $('.TableNameSection').each(function () {
+            var item = $(this).find('span.tableName');
+            var editItem = $(this).find('input');
+            item.text(editItem.val());
+         });
+         if ('@Model.HasAlternativeOffer' == 'True')
+            $('#hasAlternativeOfferYes').prop('checked', true);
+         else
+            $('#hasAlternativeOfferNo').prop('checked', true);
+      });
+   </script>
+   <script>
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $("#btnSendTablesChangeToApprove").on("click", function () {
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("SendUpdateQuantityTableToApproveAsync", "Tender")',
+            {
+               tenderId: @Model.TenderID,
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $('#btnSendTablesChangeToApprove').attr('disabled', true);
+
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ChangeRequestSentToApproval)', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@Url.Action("Index", "Tender")';
+
+               }, 3000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+       //******************** Quantity tables
+      $("#btnQuantityTableApprrove").on("click", function () {
+         document.getElementById('timerChangeRequest').innerHTML = 05 + ":" + 00;
+         startTimerChangeRequest();
+         $("#btnResendVerificationCodeChangeRequest").prop("disabled", true);
+         createVerificationCode();
+         $("#divVerficationCodeChangeRequest").show();
+         $("#btnResendVerificationCodeChangeRequest").show();
+         $("#divChangeRequestRejectReason").hide();
+         $("#btnQuantityTableApprovalConfirm").show();
+         $("#btnQuantityTableRejectConfirm").hide();
+      });
+      $("#btnQuantityTableReject").on("click", function () {
+         $("#btnResendVerificationCodeChangeRequest").hide();
+         $("#divVerficationCodeChangeRequest").hide();
+         $("#divChangeRequestRejectReason").show();
+         $("#btnQuantityTableApprovalConfirm").hide();
+         $("#btnQuantityTableRejectConfirm").show();
+      });
+      $("#btnQuantityTableApprovalConfirm").on("click", function () {
+         $("#btnResendVerificationCodeChangeRequest").show();
+         $("#txtActiveNoValidChangeRequest").hide();
+         var verificationCode = $("#txtActivationNoChangeRequest").val();
+         if (verificationCode == '') {
+            $("#txtActiveNoValidChangeRequest").show();
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ApproveTenderQuantityTablesChangeRequestAsync", "Tender")',
+            {
+               tenderIdString:  '@Model.TenderIdString',
+               verificationCode: verificationCode,
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $("#changeRequestModal").modal('hide');
+               $("#btnQuantityTableApprrove").attr('disabled', true);
+               $("#btnQuantityTableReject").attr('disabled', true);
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ChangeRequestApproved)', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@Url.Action("Index", "Tender")';
+               }, 3000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               $("#changeRequestModal").modal('hide');
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      $("#btnQuantityTableRejectConfirm").on("click", function () {
+         $("#txtActiveNoValidChangeRequest").hide()
+         var rejectionReasonValue = $("#txtRejectionReasonChangeRequest").val();
+         $("#txtRejectionReasonValidation").hide()
+         if (rejectionReasonValue.trim() == '') {
+            $("#txtChangeRequestRejectionReasonValidation").show()
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("RejectTenderUpdateQuantityTableAsync", "Tender")',
+            {
+               tenderIdString: '@Model.TenderIdString',
+               rejectionReason: rejectionReasonValue,
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $("#changeRequestModal").modal('hide');
+               $('#btnQuantityTableApprrove').attr('disabled', true);
+               $('#btnQuantityTableReject').attr('disabled', true);
+
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ChangeRequestRejected)', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@Url.Action("Index", "Tender")';
+               }, 1000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               $("#changeRequestModal").modal('hide');
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      $('#btnCancelQuantityTableUpdate').click(function () {
+         // sam sam at Qtable :D
+         $.post('@Url.Action("CancelQuantityTableUpdateAsync", "Tender")',
+            {
+               tenderIdString: '@Model.TenderIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $('#btnCancelQuantityTableUpdate').attr('disabled', true);
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ChangeRequestCanceled)', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@Url.Action("Index", "Tender")';
+               }, 3000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      $("#btnResendVerificationCodeChangeRequest").on("click", function () {
+         $("#btnResendVerificationCodeChangeRequest").prop("disabled", true);
+         document.getElementById('timerChangeRequest').innerHTML = 05 + ":" + 00;
+         createVerificationCode();
+         startTimerChangeRequest();
+      });
+      function checkSecond(sec) {
+         if (sec < 10 && sec >= 0) { sec = "0" + sec }; // add zero in front of numbers < 10
+         if (sec < 0) { sec = "59" };
+         return sec;
+      }
+      function checkTime(min, sec, myVar) {
+         if (min <= 0 && sec <= 0) {
+            $("#btnResendVerificationCode").prop("disabled", false);
+            clearTimeout(myVar)
+         }; // add zero in front of numbers < 10
+         return sec;
+      }
+      var myVar;
+      function startTimerChangeRequest() {
+         clearTimeout(myVar);
+         var presentTime = document.getElementById('timerChangeRequest').innerHTML;
+         var timeArray = presentTime.split(/[:]+/);
+         var m = timeArray[0];
+         var s = checkSecond((timeArray[1] - 1));
+         if (s == 59) { m = m - 1 }
+         document.getElementById('timerChangeRequest').innerHTML = m + ":" + s;
+         myVar = setTimeout(startTimerChangeRequest, 1000);
+         checkTimeChangeRequest(m, s, myVar);
+         if (m < 0 && s > 0) {
+            document.getElementById('timerChangeRequest').innerHTML = "0:00";
+            return false;
+         }
+      }
+      function checkTimeChangeRequest(min, sec, myVar) {
+         if (min <= 0 && sec <= 0) {
+            $("#btnResendVerificationCodeChangeRequest").prop("disabled", false);
+            clearTimeout(myVar)
+         }; // add zero in front of numbers < 10
+         return sec;
+      }
+      function createVerificationCode() {
+         $.post('/Tender/CreateVerificationCode', { tenderIdString: "@Model.TenderIdString", __RequestVerificationToken: token }).fail(function (error) {
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+            $("#changeRequestModal").modal('hide');
+            $("#myModal").modal('hide');
+         });
+      }
+   </script>
+}

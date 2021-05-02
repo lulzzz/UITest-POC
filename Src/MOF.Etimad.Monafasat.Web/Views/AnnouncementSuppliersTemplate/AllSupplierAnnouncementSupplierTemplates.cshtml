@@ -1,0 +1,210 @@
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.AnnouncementSuppliersTemplate;
+   if (User.SupplierName() == "")
+      Layout = "_Layout-Visitor";
+}
+@section breadcrumb
+      {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.AnnouncementSuppliersTemplate</li>
+      </ol>
+   </nav>
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <span class="d-block pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search">
+         <button id="searchBtnColaps" class="btn p-2 btn-outline-primary" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search">
+            <i class="material-icons">search</i>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+         </button>
+      </span>
+   </div>
+}
+
+<form class="form" id="searchCriteriaForm">
+   @Html.AntiForgeryToken()
+   <div id="AnnouncementGrid" v-cloak>
+
+      <div class="row tendar-navigation position-relative" style="min-height:0px;">
+         <ul class="nav nav-pills nav-pills-teal col-md-8 col-sm-12 col-xs-12">
+            <li class="nav-item active" @@click="getAnnouncementsByActiveStatusId(@((int)Enums.AnnouncemetTamplateApplyingStatus.All))">
+               <a class="nav-link active" href="#pill1" data-toggle="tab">
+                  <i class="material-icons pull-left" style="padding:0 3px">layers</i>@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.AllSupplierAnnouncementTemplates
+               </a>
+            </li>
+            @if (User.IsInRole(RoleNames.supplier))
+            {
+               <li class="nav-item" @@click="getAnnouncementsByActiveStatusId(@((int)Enums.AnnouncemetTamplateApplyingStatus.TemplatesAlreadyJoined))">
+                  <a class="nav-link" href="#pill1" data-toggle="tab">
+                     <i class="material-icons pull-left" style="padding:0 3px">layers</i>@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.TemplatesAlreadyJoined
+                  </a>
+               </li>
+            }
+         </ul>
+      </div>
+
+      <div class="row" style="position:relative; width: 100%;margin-right: 0px;">
+         <div class="collapse col-lg-4 col-md-4 col-sm-12 col-xs-12" id="Search">
+            <div class="card card-body">
+               <div class="row">
+                  <div class="col-12">
+                     <a class="search-expand d-block" data-toggle="collapse" href="#basicInfo" role="button" aria-expanded="false" aria-controls="basicInfo">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation
+                        <i class="material-icons pull-right">keyboard_arrow_up</i>
+                     </a>
+                     <div class="collapse multi-collapse" id="basicInfo">
+                        <div class="row">
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group has-success bmd-form-group">
+                                 <label for="activitiesList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainActivity</label>
+                                 <select data-live-search="true" id="activitiesList" class="selectpicker" name="TenderActivityId" data-search="TenderActivityId" data-style="select-with-transition" v-model="selectedActivity">
+                                    <option :value="''">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose)</option>
+                                    <option :value="item.value" v-for="item in activitiesList">{{item.text}}</option>
+                                 </select>
+                              </div>
+                           </div>
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group has-success bmd-form-group">
+                                 <label for="subActivitiesList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SubActivity</label>
+                                 <select data-live-search="true" id="subActivitiesList" name="TenderSubActivityId" data-search="TenderSubActivityId" class="selectpicker" disabled="disabled" data-style="select-with-transition" v-model="selectedSubActivity">
+                                    <option :value="0">@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseChooseActivity)</option>
+                                    <option :value="item.value" v-for="item in subActivitiesList">{{item.text}}</option>
+                                 </select>
+                              </div>
+                           </div>
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group has-success bmd-form-group">
+                                 <label for="agency" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency</label>
+                                 <select data-live-search="true" id="agencyList" name="AgencyCode" data-search="AgencyCode" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectAgency" data-style="select-with-transition" v-model="selectedAgency">
+                                    <option :value="item.agencyCode" v-for="item in agencyList">{{item.nameArabic}}</option>
+                                 </select>
+                              </div>
+                           </div>
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group has-success bmd-form-group">
+                                 <label for="areaList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Areas</label>
+                                 <select data-live-search="true" id="areaList" name="AreaId" data-search="TenderAreasIdString" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose" data-style="select-with-transition" v-model="selectedAreaList">
+                                    <option :value="item.id" v-for="item in areasList">{{item.name}}</option>
+                                 </select>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div>
+                  <a class="search-expand d-block collapsed" data-toggle="collapse" href="#dates" role="button" aria-expanded="false" aria-controls="dates">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AdvancedSearch
+                     <i class="material-icons pull-right">keyboard_arrow_up</i>
+                  </a>
+                  <div class="collapse multi-collapse" id="dates">
+                     <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.AnnouncementName </label>
+                              <input type="text" class="form-control" id="txtAnnouncementName" data-search="AnnouncementName" name="AnnouncementName" maxlength="50" />
+                           </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="ReferenceNumber" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.ReferenceNumber </label>
+                              <input type="text" class="form-control" id="txtReferenceNumber" data-search="ReferenceNumber" name="ReferenceNumber" maxlength="50" />
+                           </div>
+                        </div>
+                        @if (User.IsInRole(RoleNames.supplier))
+                        {
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group form-check etd-calendar-group">
+                                 <label for="datepick" class="label bmd-label-static"> حالة التقديم</label>
+                                 <select id="ApplyStatus" name="ApplyStatus" data-live-search="false" data-search="ApplyStatus" class="selectpicker" data-style="select-with-transition" data-size="7" v-model="announcementApplyingStatusId">
+                                    <option value="">
+                                       @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose
+                                    </option>
+                                    <option value="@((int)Enums.AnnouncemetTamplateApplyingStatus.All)">
+                                       @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All
+                                    </option>
+                                    <option value="@((int)Enums.AnnouncemetTamplateApplyingStatus.TemplatesAvilableToJoin)">
+                                       @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.TemplatesAvilableToJoin
+                                    </option>
+                                    <option value="@((int)Enums.AnnouncemetTamplateApplyingStatus.TemplatesAlreadyJoined)">
+                                       @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.TemplatesAlreadyJoined
+                                    </option>
+                                 </select>
+                              </div>
+                           </div>
+                        }
+                        <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="PublishDate" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.PublishDate</label>
+                              <select id="PublishDate" name="PublishDate" data-live-search="false" data-search="PublishDate" class="selectpicker" data-style="select-with-transition" data-size="7" v-model="announcementPublishDateCriteriaId">
+                                 <option value="">
+                                    @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose
+                                 </option>
+                                 <option value="@((int)Enums.AnnouncementPublishDateCriteria.AnyTime)">
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AnyTime
+                                 </option>
+                                 <option value="@((int)Enums.AnnouncementPublishDateCriteria.TwoDaysAgo)">
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TwoDaysAgo
+                                 </option>
+                                 <option value="@((int)Enums.AnnouncementPublishDateCriteria.WeekAgo)">
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WeekAgo
+                                 </option>
+                                 <option value="@((int)Enums.AnnouncementPublishDateCriteria.MonthAgo)">
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MonthAgo
+                                 </option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                           <div class="form-group has-success bmd-form-group">
+                              <label for="statusList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.TemplateStatus</label>
+                              <select data-live-search="false" id="statusList" name="StatusId" class="selectpicker" data-search="StatusId" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseStatus" data-style="select-with-transition" v-model="selectedStatus">
+                                 <option value=" ">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                                 <option :value="item.id" v-for="item in announcementStatusList">{{item.name}}</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.TemplateType</label>
+                              <select data-live-search="false" class="selectpicker" data-style="select-with-transition" id="TemplateTypeId" title=@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Choose data-size="2" v-model="selectedTypeId">
+                                 <option value=" ">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                                 <option value="@((int)Enums.AnnouncementTemplateSuppliersListTypeId.Public)"> @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.PublicTemplates</option>
+                                 <option value="@((int)Enums.AnnouncementTemplateSuppliersListTypeId.Private)">القوائم الخاصة</option>
+                              </select>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="input-group-prepend pull-left etd-search-btn">
+                  <button type="button" class="btn btn-primary btn-block text-center btn-sm" id="searchBtn" name="button" @@click="search">
+                     <i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+                  </button>
+                  <button type="reset" class="btn btn-block text-center btn-sm" name="button" @@click="clear">
+                     <i class="material-icons">close</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+                  </button>
+               </div>
+            </div>
+         </div>
+         @await Html.PartialAsync("Partials/_SupplierAnnouncementSupplierTemplateCard.cshtml")
+         <input type="hidden" id="hdnfromPublishDate" />
+         <input type="hidden" id="hdntoPublishDate" />
+      </div>
+      <div class="clearfix"></div>
+   </div>
+</form>
+@section scripts{
+   <script src="~/ViewsScripts/AnnouncementSuppliersTemplate/AllSupplierAnnouncementSupplierTemplates.js"></script>
+   <script>
+      initialize(
+         {
+            pleaseChooseActivity: '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseChooseActivity)',
+            pleaseChoose: '@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose)',
+            noData: '@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData)',
+            dateRangeValidationMessage: '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDateBiggerStart)'
+         });
+   </script>
+}

@@ -1,0 +1,94 @@
+@model MOF.Etimad.Monafasat.ViewModel.NegotiationSupplierViewModel
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FirstStageNegotiation;
+
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.TenderDetails</li>
+      </ol>
+   </nav>
+}
+<meta name="format-detection" content="telephone=no">
+<div class="col-12" id="applyOffer" v-cloak>
+   <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+      <li class="nav-item">
+         <a class="nav-link active" href="#monafasa-info" role="tab" data-toggle="tab">
+            <i class="material-icons">assignment</i> 
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails
+         </a>
+      </li>
+
+      <li class="nav-item">
+         <a class="nav-link" href="#NegotiationInfo" role="tab" data-toggle="tab">
+            <i class="material-icons">attach_file</i> 
+            @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.NegotiationInfo
+         </a>
+      </li>
+
+
+
+   </ul>
+   <div class="tab-content tab-space">
+      <div class="tab-pane active" id="monafasa-info">
+         <div class="col-12">
+            <div class="row">
+               <div class="card">
+                  <div class="card-body">
+
+                     @{await Html.RenderPartialAsync("~/Views/CommunicationRequest/Partial/_NegotiationSupplierTenderInfo.cshtml", Model.SupplierTenderMainInfo); }
+                  </div>
+               </div>
+
+
+            </div>
+
+         </div>
+      </div>
+
+      <div class="tab-pane" id="NegotiationInfo">
+         <div class="col-12">
+            <div class="row">
+               <div class="card">
+                  <div class="card-body">
+                     <div class="tab-pane" id="NegotiationData">
+
+                        @{ await Html.RenderPartialAsync("~/Views/CommunicationRequest/Partial/_NegotiationSupplierOfferInfo.cshtml", Model.supplierOfferInfo); }
+
+
+
+
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div>
+            </div>
+         </div>
+
+      </div>
+   </div>
+</div>
+@section scripts
+   {
+
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+   <script>
+      function StartLoading() {
+         $('#LoadingSite').fadeIn();
+      }
+      function RedirectURL(ids, names) {
+         window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+      }
+   </script>
+
+}

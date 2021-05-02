@@ -1,0 +1,201 @@
+@model MOF.Etimad.Monafasat.ViewModel.GetConditionTemplateModel;
+@{
+   if (string.IsNullOrEmpty(Model.MaterialsSpecifications))
+   {
+      Model.MaterialsSpecifications = MOF.Etimad.Monafasat.Resources.TenderResources.Messages.MaterialSpecifications;
+   }
+
+   if (string.IsNullOrEmpty(Model.EquipmentsSpecifications))
+   {
+      Model.EquipmentsSpecifications = MOF.Etimad.Monafasat.Resources.TenderResources.Messages.EquipmentSpecifications;
+   }
+
+   var workForce2 = Model.TemplateIds.Count > 1;
+
+   if (workForce2)
+   {
+
+      Model.WorkforceSpecifications = string.IsNullOrEmpty(Model.WorkforceSpecifications) ? MOF.Etimad.Monafasat.Resources.TenderResources.Messages.WorForceSpecification2 : Model.WorkforceSpecifications;
+   }
+   else
+   {
+      var templateId = Model.TemplateIds.FirstOrDefault();
+      var workForce1 = templateId == (int)Enums.ConditionsTemplateCategory.EngineeringServicesDesign
+         || templateId == (int)Enums.ConditionsTemplateCategory.EngineeringServicesSupervision
+         || templateId == (int)Enums.ConditionsTemplateCategory.ConsultingServices
+
+         || templateId == (int)Enums.ConditionsTemplateCategory.Pharmaceutical
+         || templateId == (int)Enums.ConditionsTemplateCategory.MedicalSupplies
+         || templateId == (int)Enums.ConditionsTemplateCategory.GeneralSuppliesSupply;
+      if (workForce1)
+      {
+         Model.WorkforceSpecifications = string.IsNullOrEmpty(Model.WorkforceSpecifications) ? MOF.Etimad.Monafasat.Resources.TenderResources.Messages.WorForceSpecification1 : Model.WorkforceSpecifications;
+      }
+      workForce2 = templateId == (int)Enums.ConditionsTemplateCategory.CleanlinessOfCities
+          || templateId == (int)Enums.ConditionsTemplateCategory.Food
+          || templateId == (int)Enums.ConditionsTemplateCategory.General
+          || templateId == (int)Enums.ConditionsTemplateCategory.MaintenanceAndOperation
+          || templateId == (int)Enums.ConditionsTemplateCategory.MedicalMaintenance
+          || templateId == (int)Enums.ConditionsTemplateCategory.RoadConstruction
+          || templateId == (int)Enums.ConditionsTemplateCategory.InformationTechnology
+          || templateId == (int)Enums.ConditionsTemplateCategory.BuildingConstruction;
+      if (workForce2)
+      {
+         Model.WorkforceSpecifications = string.IsNullOrEmpty(Model.WorkforceSpecifications) ? MOF.Etimad.Monafasat.Resources.TenderResources.Messages.WorForceSpecification2 : Model.WorkforceSpecifications;
+      }
+   }
+}
+
+<div class="row">
+
+   @if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.WorkForce))
+   {
+      if (Model.TemplateIds.Count == 1 && Model.TemplateIds.FirstOrDefault() != (int)Enums.ConditionsTemplateCategory.GeneralSuppliesSupply)
+      {
+         <div class="col-12">
+            <h4 class=" text-primary mt-0 mb-0">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Employment</h4>
+         </div>
+         <div class="col-12">
+            <div class="form-group bmd-form-group">
+               <label class="label bmd-label-static noSpecial"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WorkforceSpecifications</label><span class="text-danger">*</span>
+               <textarea asp-for="WorkforceSpecifications" id="txtworkForce" class="form-control" rows="8"></textarea>
+               <div class="h6 text-danger"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EmploymentPlaceholder  </div>
+            </div>
+            <button class="btn btn-sm btn-default" type="button" onclick="'@workForce2' === 'True' ? restoreWorkFroce2() : restoreWorkFroce1()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestoreDefaultText</button>
+         </div>
+         <div class="col-12 my-4">
+            <hr />
+         </div>
+      }
+   }
+   @if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.Materials))
+   {
+      <div class="col-12">
+         <h4 class=" text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Materials</h4>
+      </div>
+      <div class="col-12">
+         <div class="form-group bmd-form-group">
+            <label class="label bmd-label-static noSpecial"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MaterialsSpecifications</label><span class="text-danger">*</span>
+            <textarea asp-for="MaterialsSpecifications" id="txtMaterialsSpecifications" class="form-control" rows="8"></textarea>
+         </div>
+         <button class="btn btn-sm btn-default" type="button" onclick="restoreMaterialsSpecificationsText()"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestoreDefaultText</button>
+      </div>
+   }
+   @*@if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.MaterialsAdvanced) && !Model.ShowGeneralOnly)
+      {
+         <div class="col-12">
+            <div class="form-group bmd-form-group">
+               <label class="label bmd-label-static noSpecial"> البيانات الرئيسية والمواصفات</label><span class="text-danger">*</span>
+               <input asp-for="BasicInformation" class="form-control" rows="6" />
+            </div>
+            <span asp-validation-for="BasicInformation" class="text-danger"></span>
+         </div>
+         <div class="col-12">
+            <div class="form-group bmd-form-group">
+               <label class="label bmd-label-static noSpecial"> المستندات الواجب تقديمها قبل التوريد</label><span class="text-danger">*</span>
+               <input asp-for="RequiredDcoumentationBefore" class="form-control" rows="6" />
+            </div>
+            <span asp-validation-for="RequiredDcoumentationBefore" class="text-danger"></span>
+         </div>
+         <div class="col-12">
+            <div class="form-group bmd-form-group">
+               <label class="label bmd-label-static noSpecial"> الفحوصات</label><span class="text-danger">*</span>
+               <input asp-for="Tests" class="form-control" rows="6" />
+            </div>
+            <span asp-validation-for="Tests" class="text-danger"></span>
+         </div>
+      }*@
+   @if (Model.ListOfSections.Contains((int)Enums.ConditionsTemplateSections.Equipments))
+   {
+      <div class="col-12">
+         <h4 class=" text-primary"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Equipments</h4>
+      </div>
+      <div class="col-12">
+         <div class="form-group bmd-form-group">
+            <label class="label bmd-label-static noSpecial">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EquipmentsSpecifications</label><span class="text-danger">*</span>
+            <textarea asp-for="EquipmentsSpecifications" class="form-control" rows="8"></textarea>
+         </div>
+         <button class="btn btn-sm btn-default" type="button" onclick="restoreEquipmentSpecs()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestoreDefaultText</button>
+      </div>
+      <div class="col-12 my-4">
+         <hr />
+      </div>
+   }
+
+   <div class="col-12">
+      <h4 class=" text-primary"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QualitySpecifications</h4>
+   </div>
+   <div class="col-12">
+      <div class="form-group bmd-form-group">
+         <label class="label bmd-label-static noSpecial"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QualitySpecifications</label><span class="text-danger">*</span>
+         <textarea asp-for="QualitySpecifications" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.Messages.QualitySpecificationsPlaceholder" class="form-control" rows="6"></textarea>
+      </div>
+   </div>
+   <div class="col-12 my-4">
+      <hr />
+   </div>
+
+   <div class="col-12">
+      <h4 class=" text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SafetySpecifications</h4>
+   </div>
+   <div class="col-12">
+      <div class="form-group bmd-form-group">
+         <label class="label bmd-label-static noSpecial"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SafetySpecifications </label><span class="text-danger">*</span>
+         <textarea asp-for="SafetySpecifications" class="form-control" rows="6"></textarea>
+      </div>
+   </div>
+   <div class="col-12 my-4">
+      <hr />
+   </div>
+
+   <div class="col-12">
+      <h4 class=" text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SpecialConditions</h4>
+   </div>
+   <div class="col-12">
+      <div class="form-group bmd-form-group">
+         <label class="label bmd-label-static noSpecial"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SpecialConditions</label><span class="text-danger">*</span>
+         <textarea asp-for="SpecialConditions" class="form-control" rows="8" placeholder="تضيف الجهة الشروط الخاصة التي تراها مناسبة بحسب نطاق العمل"></textarea>
+         <span asp-validation-for="SpecialConditions" class="text-danger"></span>
+
+      </div>
+   </div>
+   <div class="col-12 my-4">
+      <hr />
+   </div>
+   <div class="col-12">
+      <h4 class=" text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Attachments</h4>
+   </div>
+   <div class="col-12">
+      <div class="form-group bmd-form-group">
+         <label class="label bmd-label-static noSpecial"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Attachments</label><span class="text-danger">*</span>
+         <textarea asp-for="Attachments" class="form-control" rows="8"></textarea>
+         <span asp-validation-for="Attachments" class="text-danger"></span>
+      </div>
+   </div>
+   <div class="col-12 my-4">
+      <hr />
+   </div>
+   <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+      <div class="form-group bmd-form-group p-0">
+         <label asp-for="AttachmentReference" class="label bmd-label-static"></label>
+         @Html.FileUploader("attach", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 40, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+
+         <input type="hidden" id="ModuleType" value="@((int)Enums.DeleteModule.Tender)" />
+      </div>
+   </div>
+
+
+</div>
+<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+   <div class="form-group bmd-form-group p-0">
+      <span class="text-warning">ملاحظة: يرجى إرفاق الملفات الصحيحة بحيث ان محتوى الملفات سوف يظهر لعامة المستخدمين، علما بأنه في حال إرفاق الشروط الخاصة سيتم حذفها تلقائيا من النظام  </span>
+   </div>
+</div>
+<div class="row">
+
+   <div class="col mt-3">
+      <button class="btn btn-default" type="button" onclick="prevTab()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+      <button class="btn btn-primary pull-right" id="btnAddEditDescriptionAndConditions" type="button">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveContinue</button>
+
+   </div>
+</div>

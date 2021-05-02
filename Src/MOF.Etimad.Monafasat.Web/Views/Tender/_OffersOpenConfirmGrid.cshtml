@@ -1,0 +1,75 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderOffersModel
+<div class="table-responsive">
+   <table id="OffersOpenTable" class="table table-striped text-center" aria-describedby="Open Offers">
+      <thead class="text-center">
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferNumber</th>
+            @if (User.IsInRole(RoleNames.OffersOppeningManager) && Model.TenderTypeId!=(int)Enums.TenderType.ReverseBidding && Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender)
+            {
+               if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+               {
+                  <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue</th>
+               }
+            }
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferPresentationType</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseStatus</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferStatus</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OpenOffers</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+         </tr>
+      </thead>
+      <tbody class="text-center" v-if="InvitationsOffersOpen && InvitationsOffersOpen.length > 0">
+         <tr v-for="(invitationOffer, $index) in InvitationsOffersOpen">
+            <td class="text-center" data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td class="text-center text-primary" style="cursor:pointer" @@click="getSupplierInfo(invitationOffer.commericalRegisterNo)" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName"> {{invitationOffer.commericalRegisterName}} </td>
+
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{invitationOffer.commericalRegisterNo}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferNumber"> @Model.OffersCount / {{ (currentPage -1) * (pageSize) +  $index + 1}}  </td>
+            @if (User.IsInRole(RoleNames.OffersOppeningManager) && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding && Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender)
+            {
+               if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+               {
+                  <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferStatus"> {{invitationOffer.finalPriceAfterDiscount}} </td>
+               }
+            }
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainActivity"> {{invitationOffer.offerPresentationType}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseDate"> {{invitationOffer.invitationDate}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseStatus">{{invitationOffer.invitationStatus}}</td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferStatus"> {{invitationOffer.offerStatusName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OpenOffers"> {{invitationOffer.openingState}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               <div class="dropdown">
+                  <button class="btn btn-primary btn-link btn-just-icon" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i><div class="ripple-container"></div></button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                     <a :href="OfferFiles(invitationOffer.offerIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferFiles</a>
+                     <a :href="UploadOfferAttachments(invitationOffer.offerIdString,invitationOffer.offerPresentationWay,invitationOffer.combinedCount)" class="dropdown-item"
+                        v-if="invitationOffer.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedConfirmed)
+                        || invitationOffer.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedPending)
+                        || invitationOffer.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalOppening)
+                        || invitationOffer.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalOppeningConfirmed)
+                         || invitationOffer.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalOppeningPending)
+                         || invitationOffer.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalOppeningRejected)
+                        || invitationOffer.tenderStatusId == @((int)Enums.TenderStatus.OffersOppenedRejected)
+                          || invitationOffer.tenderStatusId == @((int)Enums.TenderStatus.OffersOppening)
+                        "><i class="material-icons">format_list_bulleted</i>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails</a>
+                     </div>
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+         <tbody v-else>
+            <tr>
+               <td colspan="9" class="text-center">
+                  <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                  <br />
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>

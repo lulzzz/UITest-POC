@@ -1,0 +1,60 @@
+<div class="table-responsive ">
+   <table class="table table-striped" id="UserGrid" aria-describedby="users grid">
+      <thead>
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.UserName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.NationalId</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.MobileNumber</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Email</th>
+
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Roles</th>
+            <th scope="col" style="width:130px" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+         </tr>
+      </thead>
+      <tbody v-if="Users && Users.length > 0">
+         <tr v-for="(usr, $index) in Users">
+            <td data-label="#" class="text-center"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.UserName"><a :href="detailsUrl(usr.nationalId)"> {{usr.fullName}}</a> </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.NationalId"> {{usr.nationalId}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency"> {{usr.agencyNames}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.MobileNumber"> {{usr.mobileNumber}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Email"> {{usr.email}} </td>
+
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Roles">
+               <div class="">
+                  <span class="badge badge-primary m-1" v-for="(role, $index) in usr.roles" v-if="$index < 5">
+                     {{ role.roleNameAr != null ? role.roleNameAr : '' }}
+                  </span>
+                  <br />
+                  <button :id="'showmorerolesTableBtn' + $index" class="btn btn-sm btn-primary btn-link" type="button" v-if="usr.roles.length > 5" v-on:click="toggleRolesTextTable($index, true)" style="display:block">@MOF.Etimad.Monafasat.Resources.UsersResources.Messages.ViewMore</button>
+                  <br />
+                  <div class="row" :id="'showmorerolesTable' + $index" v-if="usr.roles.length >=5" style="display:none">
+                     <span class="badge badge-primary m-1" v-for="(role, $index) in usr.roles" v-if="$index >= 5">
+                        {{ role.roleNameAr != null ? role.roleNameAr : '' }}
+                     </span>
+                     <br />
+                  </div>
+                  <button :id="'showlessrolesTableBtn' + $index" class="btn btn-link" type="button" v-if="usr.roles.length > 5" v-on:click="toggleRolesTextTable($index, false)" style="display:none">@MOF.Etimad.Monafasat.Resources.UsersResources.Messages.ViewLess</button>
+               </div>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               @Html.Partial("_UserListActions.cshtml")
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="13" class="text-center">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i>
+               <br />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>
+
+

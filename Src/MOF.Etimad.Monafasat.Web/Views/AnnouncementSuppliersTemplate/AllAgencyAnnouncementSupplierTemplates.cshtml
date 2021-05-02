@@ -1,0 +1,197 @@
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.AnnouncementSuppliersTemplate;
+}
+@section breadcrumb
+      {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.AnnouncementSuppliersTemplate</li>
+      </ol>
+   </nav>
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <span class="d-block pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search">
+         <button id="searchBtnColaps" class="btn p-2 btn-outline-primary" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search">
+            <i class="material-icons">search</i>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+         </button>
+      </span>
+      @{
+         if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer))
+         {
+            <a class="d-block pull-left" v-if="'@User.UserRole()' == '@RoleNames.DataEntry' || '@User.UserRole()' == '@RoleNames.Auditer'" data-toggle="tooltip" asp-action="CreateAnnouncementSuppliersTemplate" asp-controller="AnnouncementSuppliersTemplate" data-placement="top" title="" data-container="body" data-original-title="إضافة قائمة">
+               <button id="searchBtnColaps" class="btn p-2 btn-outline-primary" data-toggle="collapse" role="button" aria-expanded="false">
+                  <i class="material-icons">add</i> إضافة قائمة
+               </button>
+            </a>
+         }
+      }
+   </div>
+}
+
+<div class="modal fade" id="deleteModel" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="modal-body">
+            <p> تاكيد حذف القائمة</p>
+         </div>
+         <input type="hidden" id="announcementIdString" />
+         <div class="modal-footer">
+            <button type="button" onclick="DeleteAnnouncement()" class="btn btn-success btn-sm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+<form class="form" id="searchCriteriaForm">
+   @Html.AntiForgeryToken()
+   <div id="AnnouncementGrid" v-cloak>
+      <div class="row tendar-navigation position-relative" style="min-height:0px;">
+         <ul class="nav nav-pills nav-pills-teal col-md-8 col-sm-12 col-xs-12">
+
+            @if (!(User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2) || User.IsInRole(RoleNames.UnitManagerUser)))
+            {
+               <li class="nav-item active" @@click="getPrivateAnnouncement()">
+                  <a class="nav-link active" href="#pill1" data-toggle="tab">
+                     <i class="material-icons pull-left" style="padding:0 3px">layers</i> القوائم الخاصة
+                  </a>
+               </li>
+
+            }
+
+            <li class="nav-item" @@click="getPublicAnnouncement()">
+               <a class="nav-link " href="#pill1" data-toggle="tab">
+                  <i class="material-icons pull-left" style="padding:0 3px">layers</i>@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.PublicTemplates
+               </a>
+            </li>
+
+            @if (!(User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2) || User.IsInRole(RoleNames.UnitManagerUser)))
+            {
+               <li class="nav-item" @@click="getUsedPublicAnnouncement()">
+                  <a class="nav-link " href="#pill1" data-toggle="tab">
+                     <i class="material-icons pull-left" style="padding:0 3px">layers</i>قوائم عامة تم استخدامها
+                  </a>
+               </li>
+            }
+
+
+         </ul>
+      </div>
+      <div class="row" style="position:relative; width: 100%;margin-right: 0px;">
+         <div class="collapse col-lg-4 col-md-4 col-sm-12 col-xs-12 " id="Search">
+            <div class="card card-body">
+               <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.AnnouncementName </label>
+                        <input type="text" class="form-control" id="txtAnnouncementName" data-search="AnnouncementName" name="AnnouncementName" maxlength="50" />
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="ReferenceNumber" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.ReferenceNumber </label>
+                        <input type="text" class="form-control" id="txtReferenceNumber" data-search="ReferenceNumber" name="ReferenceNumber" maxlength="50" />
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="JoinedCount" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.JoinedCount</label>
+                        <select id="JoinedCount" name="JoinedCount" data-live-search="false" data-search="JoinedCount" class="selectpicker" data-style="select-with-transition" data-size="7" v-model="JoinedCountId">
+                           <option value="">
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose
+                           </option>
+                           <option value="@((int)Enums.joinedCount.LessThanTen)">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.LessThanTen
+                           </option>
+                           <option value="@((int)Enums.joinedCount.FromTenToThirty)">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.FromTenToThirty
+                           </option>
+                           <option value="@((int)Enums.joinedCount.FromThirtyToSixty)">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.FromThirtyToSixty
+                           </option>
+                           <option value="@((int)Enums.joinedCount.FromSixtyToNinty)">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.FromSixtyToNinty
+                           </option>
+                           <option value="@((int)Enums.joinedCount.MoreThanNinty)">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.MoreThanNinty
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+                  @if (User.IsInRole(RoleNames.MonafasatAccountManager))
+                  {
+                     <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                        <div class="form-group has-success bmd-form-group">
+                           <label for="agency" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.Agency</label>
+                           <select data-live-search="true" id="agencyList" name="AgencyCode" data-search="AgencyCode" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectAgency" data-style="select-with-transition" v-model="selectedAgency">
+                              <option :value="item.agencyCode" v-for="item in agencyList">{{item.nameArabic}}</option>
+                           </select>
+                        </div>
+                     </div>
+                  }
+                  @if (User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.MonafasatAdmin))
+                  {
+                     <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                        <div class="form-group has-success bmd-form-group">
+                           <label for="branchId" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Branches</label>
+                           <select data-live-search="true" id="branchId" name="BranchId" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All" data-style="select-with-transition" v-model="selectedBranch">
+                              <option :value="item.id" v-for="item in branchesList">{{item.name}}</option>
+                           </select>
+                        </div>
+                     </div>
+                  }
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group has-success bmd-form-group">
+                        <label for="statusList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.TemplateStatus</label>
+                        <select data-live-search="false" id="statusList" name="StatusId" class="selectpicker" data-search="StatusId" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseStatus" data-style="select-with-transition" v-model="selectedStatus">
+                           <option value="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                           <option :value="item.id" v-for="item in announcementStatusList">{{item.name}}</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group form-check etd-calendar-group">
+                        <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.PublishDate</label>
+                        <div class="input-group-prepend">
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="PublishDate" data-search="PublishDate" id="fromPublishDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.From">
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="PublishDate" data-search="PublishDate" id="toPublishDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.To">
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="input-group-prepend pull-left etd-search-btn">
+                  <button type="button" class="btn btn-primary btn-block text-center btn-sm" id="searchBtn" name="button" @@click="search">
+                     <i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+                  </button>
+                  <button type="reset" class="btn btn-block text-center btn-sm" name="button" @@click="clear">
+                     <i class="material-icons">close</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+                  </button>
+               </div>
+            </div>
+         </div>
+         @await Html.PartialAsync("Partials/_AgencyAnnouncementSupplierTemplateCard.cshtml")
+         <input type="hidden" id="hdnfromPublishDate" />
+         <input type="hidden" id="hdntoPublishDate" />
+      </div>
+      <div class="clearfix"></div>
+   </div>
+</form>
+@section scripts{
+   <script src="~/ViewsScripts/AnnouncementSuppliersTemplate/AllAgencyAnnouncementSupplierTemplates.js"></script>
+   <script>
+      initialize(
+         {
+            pleaseChooseActivity: '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseChooseActivity)',
+            pleaseChoose: '@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose)',
+            noData: '@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData)',
+            dateRangeValidationMessage: '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDateBiggerStart)'
+         });
+   </script>
+}

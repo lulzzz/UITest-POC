@@ -1,0 +1,559 @@
+@model MandatoryListViewModel
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.MandatoryListDetails;
+   ViewData["DivisionCode"] = Model.DivisionCode;
+}
+@section breadcrumb
+      {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "MandatoryList")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.MandatoryListDetails</li>
+      </ol>
+   </nav>
+}
+
+<div class="card">
+   <div class="card-body">
+      <div class="row">
+         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <h4 class="text-primary title"> @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.SectorInformation</h4>
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonNameAr
+                     </div>
+                     <div class="col-8 etd-item-info"><span>@Model.DivisionNameAr</span></div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonNameEn
+                     </div> <div class="col-8 etd-item-info"><span> @Model.DivisionNameEn </span></div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonCode
+                     </div> <div class="col-8 etd-item-info"><span>@Model.DivisionCode </span></div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+
+         <div class="col-12">
+            <hr />
+            <h4 class="text-primary title"> @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.Products</h4>
+            @if (Model.Products.Any())
+            {
+               @foreach (var product in Model.Products)
+               {
+                  <partial name="~/Views/MandatoryList/_ProductItemsDetails.cshtml" model="product" view-data="ViewData" />
+               }
+            }
+            else
+            {
+               <div class="card-body text-center">
+                  <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                  <br />
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+               </div>
+            }
+         </div>
+      </div>
+      @if (Model.StatusId == (int)Enums.MandatoryListStatus.CancelRejected)
+      {
+         <hr />
+         <div policy="@PolicyNames.EditMandatoryListPolicy" class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.RejectedReason
+                     </div>
+                     <div class="col-8 etd-item-info"><span>@Model.RejectionReason</span></div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+      }
+   </div>
+</div>
+
+@if (Model.ChangeRequests.Any(a => a.StatusId == (int)Enums.MandatoryListChangeRequestStatus.WaitingApproval)
+|| Model.ChangeRequests.Any(a => a.StatusId == (int)Enums.MandatoryListChangeRequestStatus.Rejected)
+&& Model.StatusId == (int)Enums.MandatoryListStatus.Approved)
+{
+   <h3>
+      التحديث
+   </h3>
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+               <h4 class="text-primary title"> @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.SectorInformation</h4>
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonNameAr
+                        </div>
+                        <div class="col-8 etd-item-info"><span>@Model.ChangeRequest.DivisionNameAr</span></div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonNameEn
+                        </div> <div class="col-8 etd-item-info"><span> @Model.ChangeRequest.DivisionNameEn </span></div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonCode
+                        </div> <div class="col-8 etd-item-info"><span>@Model.ChangeRequest.DivisionCode </span></div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+
+            <div class="col-12">
+               <hr />
+               <h4 class="text-primary title"> @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.Products</h4>
+               @if (Model.Products.Any())
+               {
+                  @foreach (var product in Model.ChangeRequest.Products)
+                  {
+                     <partial name="~/Views/MandatoryList/_ProductItemsDetails.cshtml" model="product" view-data="ViewData" />
+                  }
+               }
+               else
+               {
+                  <div class="card-body text-center">
+                     <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                     <br />
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                  </div>
+               }
+            </div>
+         </div>
+         <div class="row">
+            @if (Model.StatusId == (int)Enums.MandatoryListStatus.Approved && Model.ChangeRequests.Any(a => a.StatusId == (int)Enums.MandatoryListChangeRequestStatus.Rejected))
+            {
+               <hr />
+               <div policy="@PolicyNames.EditMandatoryListPolicy" class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.RejectedReason
+                           </div>
+                           <div class="col-8 etd-item-info"><span>@Model.ChangeRequest.RejectionReason</span></div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            }
+         </div>
+      </div>
+   </div>
+}
+
+@* MOVE TO PARTIAL VIEW *@
+<div class="row">
+
+   <div class="col-12">
+      @if (Model.StatusId == (int)Enums.MandatoryListStatus.Approved)
+      {
+
+         @if (Model.ChangeRequests.Any(a => a.StatusId == (int)Enums.MandatoryListChangeRequestStatus.WaitingApproval))
+         {
+            <button policy="@PolicyNames.MandatoryListApprovalPolicy" type="button" id="approveEditButton" class="btn btn-success">
+               @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.ApproveEditButton
+
+            </button>
+
+            <button policy="@PolicyNames.MandatoryListApprovalPolicy" type="button" onclick="$('#rejectEditModal').modal('show')" class="btn btn-danger">
+               @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.RejectEditButton
+            </button>
+         }
+         if (Model.ChangeRequests.Any(a => a.StatusId == (int)Enums.MandatoryListChangeRequestStatus.Rejected))
+         {
+            <button policy="@PolicyNames.EditMandatoryListPolicy" type="button" onclick="$('#closeEditModal').modal('show')" class="btn btn-danger">
+               @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.CloseEdit
+            </button>
+         }
+         if (Model.ChangeRequest == null)
+         {
+            <button policy="@PolicyNames.EditMandatoryListPolicy" type="button" id="requestDeleteButton" class="btn btn-danger">
+               @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.RequestDelete
+            </button>
+            <a href="@Url.Action("Edit","MandatoryList", new { id = Model.Id})" policy="@PolicyNames.EditMandatoryListPolicy" type="button" class="btn btn-warning">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit
+            </a>
+         }
+      }
+
+      @if (Model.StatusId == (int)Enums.MandatoryListStatus.WaitingCancelApproval)
+      {
+         <button policy="@PolicyNames.MandatoryListApprovalPolicy" type="button" id="approveDeleteBtn" class="btn btn-success">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Accept
+         </button>
+         <button policy="@PolicyNames.MandatoryListApprovalPolicy" type="button" onclick="$('#rejectDeleteModal').modal('show')" class="btn btn-danger">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Reject
+         </button>
+      }
+      @if (Model.StatusId == (int)Enums.MandatoryListStatus.CancelRejected)
+      {
+         <button policy="@PolicyNames.EditMandatoryListPolicy" type="button" id="submitReopen" class="btn btn-success">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+         </button>
+      }
+      <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="goBack()">
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+      </button>
+   </div>
+</div>
+
+
+@* MODALS (to be changed to one modal) *@
+<div class="modal fade" id="requestDeleteModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="modal-body">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AreYouSure
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm" name="button" id="submitRequestDelete">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+            </button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="rejectDeleteModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="modal-body">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AreYouSure
+            <div class="col-sm-12 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.RejectedReason<span class="text-danger">*</span></label>
+                  <textarea class="form-control" rows="4" id="rejectionReason" required></textarea>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm" name="button" id="submitRejectDelete">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+            </button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+
+@* Edit Modal Approvals *@
+<div class="modal fade" id="rejectEditModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="modal-body">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AreYouSure
+            <div class="col-sm-12 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.RejectedReason<span class="text-danger">*</span></label>
+                  <textarea class="form-control" rows="4" id="rejectionReasonForEdit" required></textarea>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm" name="button" id="submitRejectEdit">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+            </button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="closeEditModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="modal-body">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AreYouSure
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm" name="button" id="submitCloseEdit">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+            </button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="OTPApproveDeleteModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="modal-body">
+               هل أنت متأكد من إلغاء القائمة الإلزامية؟
+            </div>
+            <div class="form-group bmd-form-group" id="divVerficationCode">
+               <input type="number" class="form-control col-md-12" id="txtVerificationCode" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+               <span class="bmd-help text-danger position-relative" id="txtVerificationCodeValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+               <br />
+               <p class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainingTime<span class=" text-danger" id="timer"></span></p>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm m-1" name="button" id="submitApproveDelete">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+            <button type="button" class="btn btn-primary btn-sm m-1" name="button" id="btnResendVerificationCode">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="OTPApproveEditModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="modal-body">
+               هل أنت متأكد من قبول التعديل على القائمة الإلزامية؟
+            </div>
+            <div class="form-group bmd-form-group" id="divVerficationCode">
+               <input type="number" class="form-control col-md-12" id="txtVerificationCodeEdit" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+               <span class="bmd-help text-danger position-relative" id="txtVerificationCodeValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+               <br />
+               <p class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainingTime<span class=" text-danger" id="timerEdit"></span></p>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm m-1" name="button" id="submitApproveEdit">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+            <button type="button" class="btn btn-primary btn-sm m-1" name="button" id="btnResendVerificationCodeEdit">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+
+@* End of Edit of Modal Approvals *@
+
+@section scripts {
+   <script>
+      $(document).ready(function () {
+         function goBack() {
+            window.location = document.referrer;
+         }
+
+         function createVerificationCode() {
+            document.getElementById("timer").innerHTML = 05 + ":" + 00;
+            $("#btnResendVerificationCode").prop("disabled", true);
+            startOTPTimer("timer", "#btnResendVerificationCode");
+            var model = { id: "@Model.Id" };
+
+            postRequest('/MandatoryList/CreateVerificationCode', model)
+               .catch(function () {
+                  $("#approveModal").modal('hide');
+               });
+         }
+
+         function createVerificationCodeEdit() {
+            document.getElementById("timerEdit").innerHTML = 05 + ":" + 00;
+            $("#btnResendVerificationCodeEdit").prop("disabled", true);
+            startOTPTimer("timerEdit", "#btnResendVerificationCodeEdit");
+            var model = { id: "@Model.Id" };
+
+            postRequest('/MandatoryList/CreateVerificationCode', model)
+               .catch(function () {
+                  $("#approveModal").modal('hide');
+               });
+         }
+
+         $("#requestDeleteButton").on("click", function () {
+            $('#requestDeleteModal').modal('show')
+         });
+
+         //Delete Actions
+         $("#btnResendVerificationCode").on("click", function () {
+            createVerificationCode();
+         });
+
+         $("#approveDeleteBtn").on("click", function () {
+            createVerificationCode();
+            $("#OTPApproveDeleteModal").modal('show');
+         });
+
+         $("#submitRequestDelete").on("click", function () {
+            postRequest("RequestDelete?id=" + '@Model.Id', null, true).then(function () {
+               AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.RequestSentToApproval', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@Url.Action("Index", "MandatoryList")';
+               }, 1000);
+            }).catch(function (error) {
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+            });
+         });
+
+         $("#submitApproveDelete").on("click", function () {
+            var verificationCode = $("#txtVerificationCode").val();
+            postRequest("ApproveDelete?id=" + '@Model.Id' + "&verificationCode=" + verificationCode, null, true).then(function () {
+               AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@Url.Action("Index", "MandatoryList")';
+               }, 1000);
+            }).catch(function (error) {
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+            });
+         });
+
+         $("#submitRejectDelete").on("click", function () {
+            var rejectionReason = $("#rejectionReason").val();
+            var rejectDelete = {
+               id: '@Model.Id',
+               rejectionReason: rejectionReason
+            }
+            postRequest("RejectDelete", rejectDelete, true).then(function () {
+               AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@Url.Action("Index", "MandatoryList")';
+               }, 1000);
+            }).catch(function (error) {
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+            });
+         });
+
+         //End of detele actions
+
+         $("#submitReopen").on("click", function () {
+            postRequest('@Url.Action("ReopenMandatoryListAsync", "MandatoryList")', { encryptedId: '@Model.Id' }, true)
+               .then(function () {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.ReopenSuccess', alertMessageType.Success);
+                  setTimeout(function () {
+                     window.location = '@Url.Action("Index", "MandatoryList")';
+                  }, 1000);
+               })
+               .catch(function (error) {
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+         });
+         $("#btnResendVerificationCodeEdit").on("click", function () {
+            createVerificationCodeEdit();
+         });
+
+         $("#approveEditButton").on("click", function () {
+            createVerificationCodeEdit();
+            $("#OTPApproveEditModal").modal('show');
+         });
+
+         $("#submitApproveEdit").on("click", function () {
+            var code = $("#txtVerificationCodeEdit").val();
+            postRequest('@Url.Action("ApproveEdit", "MandatoryList")', { id: '@Model.Id', verificationCode: code }, true)
+               .then(function () {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.ApproveEdit', alertMessageType.Success);
+                  setTimeout(function () {
+                     window.location = '@Url.Action("Index", "MandatoryList")';
+                  }, 1000);
+               })
+               .catch(function (error) {
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+         });
+
+         $("#submitCloseEdit").on("click", function () {
+            postRequest('@Url.Action("CloseEdit", "MandatoryList")', { id: '@Model.Id' }, true)
+               .then(function () {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.ChangeRequestClosed', alertMessageType.Success);
+                  setTimeout(function () {
+                     window.location = '@Url.Action("Index", "MandatoryList")';
+                  }, 1000);
+               })
+               .catch(function (error) {
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+         });
+
+         $("#submitRejectEdit").on("click", function () {
+            var rejectionReason = $("#rejectionReasonForEdit").val();
+            var rejectDelete = {
+               id: '@Model.Id',
+               rejectionReason: rejectionReason
+            }
+            postRequest("RejectEdit", rejectDelete, true).then(function () {
+               AlertFun('@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.RejectEdit', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@Url.Action("Index", "MandatoryList")';
+               }, 1000);
+            }).catch(function (error) {
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+            });
+         });
+      });
+   </script>
+}

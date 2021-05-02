@@ -1,0 +1,215 @@
+@model MOF.Etimad.Monafasat.ViewModel.CombinedInvitationDetailsModel
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails;
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+}
+@Html.AntiForgeryToken()
+<div class="" id="TenderDetials" v-cloak>
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @Model.TenderName
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @Model.TenderReferenceNo
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExecutionPlace
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <ol>
+                              @foreach (var item in Model.ExcutionPlace)
+                              {
+                                 <li> @item</li>
+                              }
+                           </ol>
+                        </div>
+                     </div>
+                  </li>
+
+               </ul>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <ul class="list-group form-details-list">
+                  @*<li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InitialGuranteePresentationAddress
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @Model.IntialGuranteeAddress
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InitialGuranteePresentationAddress
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @Model.ApplyOfferWithComnined
+                           </span>
+                        </div>
+                     </div>
+                  </li>*@
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferStatus
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @Model.OfferStatus
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  @if (Model.FileName != null && Model.FileReferenceId != null)
+                  {
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Combinedletter
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <a href="#" onclick="RedirectURL('@Model.FileReferenceId','@Model.FileName'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                                 @Model.FileName
+                              </a>
+                           </div>
+                        </div>
+                     </li>
+                  }
+               </ul>
+            </div>
+         </div>
+         <div class="text-primary">
+            <h4>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AcceptingCombinedRequestMessage</h4>
+         </div>
+         <div id="TenderGrid" v-cloak>
+            <div class="tableDiv">
+               @Html.Partial("_CombinedSuppliersGrid")
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="card">
+      <div class="card-body">
+         <a :href="OfferDetails()" class="btn btn-primary">
+            @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AcceptRequest
+         </a>
+         <button type="button" class="btn btn-danger" name="rejectBtn" data-toggle="modal" data-target="#myModal">
+            @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.RejectRequest
+            <div class="ripple-container"></div>
+         </button>
+         <a :href="BackToCombinedList()" class="btn btn-outline-primary btn-link pull-right">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+            <div class="ripple-container"></div>
+         </a>
+      </div>
+   </div>
+   @section modalTitle{
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+   }
+   @section modalContent{
+
+      <div class="" id="divRejectReason">
+         <p class="text-primary">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.WaningWhenRejectCombinedRequest</p>
+      </div>
+   }
+   @section modalButtons{
+      <button type="button" class="btn btn-danger" id="btnRejectCombined">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmReject
+         <div class="ripple-container"></div>
+      </button>
+      <button type="button" class="btn btn-danger btn-link btn-sm m-1" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+   }
+</div>
+@section scripts{
+<script>
+      var Tender = new Vue({
+         el: '#TenderDetials',
+         data: {
+            Tenders: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            // Here you define the url of your paginated API
+            resource_url: '/Offer/GetAllCombinedSuppliersAsync?offerId= @MOF.Etimad.Monafasat.SharedKernal.Util.Decrypt(Model.OfferIdString)',
+            queryString: ''
+         },
+         methods: {
+            updateResource: function (data) {
+               data.forEach(function (item) {
+                  //item.createdAt = item.createdAt.slice(0, 10);
+               });
+               this.Tenders = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            OfferDetails: function () {
+               return '/Offer/OfferDetailsForAcceptingCombined/@Model.CombinedIdString';
+            },
+            BackToCombinedList: function () {
+               return '/Offer/CombinedInvitationsForSupplier';
+            }
+         },
+      });
+      function RedirectURL(ids, names) {
+         window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+      }
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $("#btnRejectCombined").on("click", function () {
+      $('#LoadingSite').fadeIn();
+      $.post('@Url.Action("RejectCombinedInvitation", "Offer")',
+         {
+            combinedIdString: '@Model.CombinedIdString',
+            __RequestVerificationToken: token
+         }).done(function () {
+            $("#myModal").modal("hide");
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+               window.location ='@Url.Action("CombinedInvitationsForSupplier", "Offer")';
+            }, 2000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                setTimeout(function () {
+                     window.location ='@Url.Action("CombinedInvitationsForSupplier", "Offer")';
+                }, 2000);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '@Url.Action("Logout", "Account")'; return;
+            }
+         });
+   });
+</script>
+}

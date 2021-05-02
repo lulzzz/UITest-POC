@@ -1,0 +1,10 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailsModel
+
+@{
+   ViewData["Title"] = res.TenderResources.DisplayInputs.TenderDetails;
+}
+
+@await Component.InvokeAsync("QuantityTables", new { TenderId = Model.Id })
+@*@await Component.InvokeAsync("OfferDetails", new { TenderId = Model.Id })*@
+

@@ -1,0 +1,36 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderHistoryModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+<div class="row" id="approval">
+   @*<input id="tenderIdHidden" hidden type="number" value="@tenderId" />*@
+   @if (Model.StatusId == (int)Enums.TenderStatus.Established && User.IsInRole(RoleNames.DataEntry))
+   {
+      <div class="col-12 ">
+         <div class="form-group bmd-form-group">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApprove">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove</button>
+         </div>
+      </div>
+   }
+   //pending for approval
+   else if (Model.StatusId == (int)Enums.TenderStatus.Pending && User.IsInRole(RoleNames.Auditer))
+   {
+      <div class="col-12 ">
+         <div class="form-group bmd-form-group">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnApprove" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve</button>
+            <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+         </div>
+      </div>
+   }
+   else if ((Model.StatusId == (int)Enums.TenderStatus.Rejected || Model.StatusId == (int)Enums.TenderStatus.RejectedFromUnit) && User.IsInRole(RoleNames.DataEntry))
+   {
+      <div class="col-12 ">
+         <div class="card">
+            <div class="card-body">
+               <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</h4>
+               <p>@Model.RejectionReason</p>
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnReOpen">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen</button>
+            </div>
+         </div>
+      </div>
+   }
+</div>

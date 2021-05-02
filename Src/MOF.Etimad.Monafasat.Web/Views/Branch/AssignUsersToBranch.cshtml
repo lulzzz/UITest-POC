@@ -1,0 +1,371 @@
+@model MOF.Etimad.Monafasat.ViewModel.BranchUserModel
+
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.UsersAssign;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb"> 
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li> 
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Branch")">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Branches</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AssignUsers</li>
+      </ol>
+   </nav>
+
+}
+<form method="POST">
+   <div class="row" id="divBranches">
+      <input type="hidden" id="RoleName" value="@Model.RoleName" />
+      <input type="hidden" id="BranchId" name="BranchId" value="@Model.BranchId" />
+      <div class="modal fade" id="DeleteConfirmationModal" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">
+                     @MOF.Etimad.Monafasat.Resources.BranchResources.Messages.ConfirmDeletion
+                  </h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <p>
+                     @MOF.Etimad.Monafasat.Resources.BranchResources.Messages.ConfirmSupplierDeletion
+                     <input type="hidden" name="hiddenValueUser" id="hiddenValueUser" value="" />
+                     <input type="hidden" name="hiddenValueRole" id="hiddenValueRole" value="" />
+                     <input type="hidden" name="hiddenValueBranchIdString" id="hiddenValueBranchIdString" value="@(Model.BranchId)" />
+                  </p>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-link btn-success" id="SaveModel" @@click="confirmDelete()">    @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Deleted    </button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Cancel</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+         <div class="card">
+            <div class="card-body">
+               <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.BranchDetails</h4>
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.BranchName
+                        </div> <div class="col-8 etd-item-info"><span>@(Model.BranchName)</span></div>
+                     </div>
+                  </li>
+               </ul>
+               <div>
+                  <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.SearchUsers <a class="btn p-2 btn-outline-primary pull-right" data-toggle="collapse" href="#SearchInBlocked" role="button" aria-expanded="false" aria-controls="SearchInBlocked"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</a></h4>
+                  <div class="clearfix"></div>
+                  <div class=" collapse" id="SearchInBlocked">
+                     <div class="row">
+                        <div class="col-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="UserName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.UserName </label>
+                              <input type="text" id="UserName" v-model="searchCriteria.UserName" maxlength="50" autocomplete="off" class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="Email" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Email</label>
+                              <input type="text" id="Email" name="Email" v-model="searchCriteria.Email" maxlength="50" autocomplete="off" class="form-control">
+                           </div>
+                        </div>
+                        <div class="col-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="RoleName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.RoleName</label>
+                              <select id="RoleName1" v-model="searchCriteria.RoleName1" class="form-control" title=@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.All data-size="7">
+                                 <option value=""> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.All</option>
+                                 @if (User.UserIsVRO())
+                                 {
+                                    <option value="NewMonafasat_PurshaseSpecialist"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.PurchaseSpecialist</option>
+                                    <option value="NewMonafasat_EtimadOfficer"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.EtimadOfficer</option>
+                                 }
+                                 else
+                                 {
+                                    <option value="NewMonafasat_Auditer"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Auditor</option>
+                                    <option value="NewMonafasat_DataEntry"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.DataEntry</option>
+                                    <option value="NewMonafasat_PlanningOfficer"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.PrePlanningOfficer</option>
+                                    <option value="NewMonafasat_PlanningApprover"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.PrePlanningAuditor</option>
+                                    <option value="NewMonafasat_ApproveTenderAward"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.ApproveTenderAwarding</option>
+                                 }
+                              </select>
+                           </div>
+                        </div>
+                        <div class="col-12">
+                           <button class="btn btn-sm btn-primary" @@click="search" type="button"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Search</button>
+                           <button class="btn btn-sm " type="button" @@click="Emptysearch"><i class="material-icons">close</i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Clear </button>
+                        </div>
+                     </div>
+                  </div>
+                  <hr/>
+               </div>
+               <div class="" id="divUserName">
+                  <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AssignUserToBranchOrCommitte</h4>
+                     <div class="form-group bmd-form-group p-0">
+                        <label asp-for="UserName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.UserName</label><span class="text-danger">*</span>
+
+                        <select v-model="userId" name="userName" id="userId" @@change="GetUserRoles()" class="selectpicker" data-style="select-with-transition">
+                           <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseChoose </option>
+                           <option v-for="x in users" :key="x.userId" :value="x.userName">{{x.name}}</option>
+                        </select>
+                        <span id="vldUserName" class="text-danger" style="display:none"> @MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.UserName</span>
+                     </div>
+               </div>
+               <div class="" id="divRoleName">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="RoleName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.RoleName</label><span class="text-danger">*</span>
+                     <select name="roleName" id="drpRoleName" class="form-control" @@change="GetBranches()"   v-model="selectedRoleId">
+                        <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseChoose </option>
+                        <option v-for="r in userCurrentRoles" :key="r.roleId" :value="r.roleName">{{r.roleNameAr}}</option>
+                     </select>
+                     <span id="vldRoleName" class="text-danger" style="display:none"> @MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.RoleName</span>
+                  </div>
+               </div>
+
+               <div id="EstimatedValue" style="display:none;">
+                  <div class="form-group bmd-form-group">
+                     <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.EstimatedValue</label><span class="text-danger">*</span>
+                     <div class="row">
+                        <div class="col-lg-6 col-sm-6 col-xs-12">
+                           <input type="tel" class="form-control" placeholder="@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.EstimatedValueFrom" name="EstimatedValueFrom" id="estimatedValueFrom">
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-xs-12">
+                           <input type="tel" class="form-control" placeholder="@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.EstimatedValueTo" onkeydown="EstimatedValueToChanged();"  onkeyup="EstimatedValueToChanged();"  name="EstimatedValueTo" id="estimatedValueTo">
+                        </div>
+                     </div>
+                  </div>
+                  <span style="display:none;white-space: normal;line-height: 1.5;" id="budgetWarningMessage" class="h6 badge badge-warning">@MOF.Etimad.Monafasat.Resources.BranchResources.Messages.EstimatedValueWarning</span>
+               </div>
+               <div>
+                  <button type="submit" onclick='return checkForm();' class=" btn btn-primary btn-sm">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+                  </button>
+               </div>
+            </div>
+         </div>
+
+      </div>
+      <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+         <div class="card">
+            <table id="CommitteeTable" class="table table-striped text-center" aria-describedby="assigned users to branches">
+               <thead class="text-center">
+                  <tr>
+                     <th scope="col" class="text-center">#</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.UserName </th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.NationalId</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.Email </th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.RoleName</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.EstimatedValueFromTo</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Operations </th>
+                  </tr>
+               </thead>
+               <tbody class="text-center" v-if="branches && branches.length > 0">
+                  <tr v-for="(branch, index) in branches">
+                     <td class="text-center">
+                        {{index + 1}}
+                     </td>
+                     <td class="text-center">
+                        {{branch.fullName}}
+                     </td>
+                     <td class="text-center">
+                        {{branch.userName}}
+                     </td>
+                     <td class="text-center">
+                        {{branch.email}}
+                     </td>
+                     <td class="text-center">
+                        {{branch.roleName}}
+                     </td>
+                     <td class="text-center" v-if="branch.estimatedValueFrom!=null && branch.estimatedValueTo!=null">
+                        {{branch.estimatedValueFrom }} - {{branch.estimatedValueTo}}
+                     </td>
+                     <td class="text-center" v-else>
+                        لا يوجد
+                     </td>
+                     <td class="text-center">
+                        <div style="text-align: center;">
+                           <button type="button" @@click=showDialog(branch.userId,branch.roleId,index) class="btn-sm btn btn-danger btn-round btn-just-icon "><i class="material-icons">remove</i><div class="ripple-container"></div></button>
+                        </div>
+                     </td>
+                  </tr>
+               </tbody>
+               <tbody v-else>
+                  <tr>
+                     <td colspan="9" class="text-center">
+                        <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                        <br />
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+            <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateCommitteeResource"></pagination>
+         </div>
+
+      </div>
+   </div>
+   <div>
+      <button class="btn btn-outline-primary btn-link pull-right" type="button" onclick="window.location = '@Url.Action("Index", "Branch")'">
+         @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BackButton
+         <div class="ripple-container"></div>
+      </button>
+      <div class="clearfix"></div>
+   </div>
+</form>
+<script>
+   function confirmDelete() {
+      Join.confirmDelete();
+   }
+</script>
+@section scripts {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+
+      var Join = new Vue({
+         el: '#divBranches',
+         data: {
+            x: {},
+            searchCriteria: {},
+            branches: [],
+            users: [],
+            userCurrentRoles:[],
+            userId: 0,
+            selectedRoleId:0,
+            totalCount: 0,
+            currentPage: 1,
+            selectedUser: 1,
+            enquiryIdString: '',
+            loading:'@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Loading)',
+            pageSize: 10,
+            resource_url: "/Branch/GetBranchUsersAsync?BranchId=" + '@Model.BranchId',
+            queryString: ''
+         },
+         updated: function () {
+            $('.selectpicker').selectpicker('refresh')
+         },
+         methods: {
+            updateCommitteeResource: function (data) {
+               this.branches = data;
+               this.totalCount = this.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            GetUserRoles: function (_value) {
+               Join.userCurrentRoles = [];
+               Join.userCurrentRoles.push({roleId:0,roleName:this.loading});
+               var userid = this.userId;
+               if (!this.userId) {
+                  return false;
+               }
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Branch/GetUserRolesById', { userName: userid, __RequestVerificationToken: token }).done(function (result) {
+                  
+                  Join.userCurrentRoles = result;
+                  Join.selectedRoleId = " ";
+                                }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+               });
+            },
+            GetBranches: function () {
+               $("#EstimatedValue").hide();
+               var roleId = $('#drpRoleName').val();
+                     if (roleId=="@Enums.UserRole.NewMonafasat_ApproveTenderAward") {
+                        $("#EstimatedValue").show();
+                     }
+            },
+            Emptysearch: function () {
+               $('#LoadingSite').fadeIn();
+               this.searchCriteria = {};
+               var queryString ='' ;
+               $.get('/Branch/AssignUsersToBranchAsync?' + queryString).done(function (result) {
+                  $('#LoadingSite').fadeOut();
+                   Join.users = result;
+         }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+               });
+            },
+            search: function () {
+               $('#LoadingSite').fadeIn();
+               var queryString = '';
+               queryString = 'UserName=' + (!this.searchCriteria.UserName ? '' : this.searchCriteria.UserName) + '&EMail=' + (!this.searchCriteria.Email ? '' : this.searchCriteria.Email) + '&RoleName=' + (!this.searchCriteria.RoleName1 ? '' : this.searchCriteria.RoleName1);
+              $.get('/Branch/AssignUsersToBranchAsync?'+ queryString).done(function (result) {
+                 $('#LoadingSite').fadeOut();
+                 Join.users = result;
+         }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+               });
+            },
+            confirmDelete: function () {
+               
+               $('#DeleteConfirmationModal').modal('hide');
+               var user_id = $(".modal-body #hiddenValueUser").val();
+               var role_id = $(".modal-body #hiddenValueRole").val();
+               $(".modal-body #hiddenValueUser").val("");
+               $(".modal-body #hiddenValueRole").val("");
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $.post('/Branch/RemoveAssignedUserAsync', { userId: user_id, branchId: '@Model.BranchId', roleName: role_id, __RequestVerificationToken: token }).done(function (result) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success)
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+               });
+               setTimeout(function () {
+                  location.reload();  //Refresh page
+               }, 2000);
+            },
+            showDialog: function (userId, roleName) {
+               if (typeof (userId) !== "undefined" && userId !== "" && typeof (roleName) !== "undefined" && roleName !== "") {
+                  $("#DeleteConfirmationModal #hiddenValueUser").val(userId);
+                  $("#DeleteConfirmationModal #hiddenValueRole").val(roleName);
+                  $("#DeleteConfirmationModal").modal("show");
+               }
+            }
+         },
+         created: function () {
+               var queryString = '';
+      $.get('/Branch/AssignUsersToBranchAsync?' + queryString).done(function (result) {
+         
+         Join.users = result;
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+               });
+ }
+      });
+
+      function checkForm() {
+         if ($("#userId").val() == "") {
+            $("#vldUserName").show();
+            return false;
+         }
+         else
+            $("#vldUserName").hide();
+         if ($("#drpRoleName").val() == "" || $("#drpRoleName").val() == null) {
+            $("#vldRoleName").show();
+            return false;
+         } else
+            $("#vldRoleName").hide();
+         $('#LoadingSite').fadeIn();
+         return true;
+      }
+
+      function EstimatedValueToChanged() {
+         var estimatedValue = $("#estimatedValueTo").val();
+         
+         if (estimatedValue != "") {
+            if (parseFloat(estimatedValue) > parseFloat(10000000)) {
+               $("#budgetWarningMessage").show();
+            } else {
+               $("#budgetWarningMessage").hide();
+            }
+         }
+      }
+   </script>
+}

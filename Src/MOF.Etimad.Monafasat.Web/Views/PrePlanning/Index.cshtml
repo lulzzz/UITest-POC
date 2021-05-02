@@ -1,0 +1,258 @@
+@*@model MOF.Etimad.Monafasat.ViewModel.CommitteeModel*@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.PrePlanning;
+}
+@{
+   @section breadcrumb
+      {
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.PrePlanning</li>
+         </ol>
+      </nav>
+   }
+   @section pagecontrols{
+      <div class="dropdown">
+         <button type="button" id="toglGrid" onclick="toggleViewGrid('PrePlanningGrid')" class="btn p-2 btn-outline-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsMenu"><i class="material-icons">view_column</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsMenu</button>
+         <button type="button" id="toglCards" onclick="toggleViewCards('PrePlanningGrid')" class="btn p-2 btn-outline-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsCards"><i class="material-icons">view_quilt</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsCards</button>
+         <button class="btn p-2 btn-outline-primary" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search" aria-controls="Search"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search<div class="ripple-container"></div></button>
+      
+      </div>
+   } 
+   <form id="cSearchForm" class="form">
+      @Html.AntiForgeryToken()
+      <div id="PrePlanningGrid" v-cloak>
+         <div class="modal fade" id="DeleteConfirmationModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title">
+
+                        @MOF.Etimad.Monafasat.Resources.BlockResources.Messages.ConfirmDeletion
+                     </h5>
+                     <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons">clear</i>
+                     </button>
+                  </div>
+                  <div class="modal-body">
+                     <p>
+                        هل انت متاكد من حذف التخطيط المسبق؟
+                        <input type="hidden" name="hiddenValue" id="hiddenValue" value="" />
+                     </p>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-sm btn-primary" id="SaveModel" v-on:click="confirmDelete">    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm    </button>
+                     <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Cancel</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="clearfix"></div>
+         <div class="row">
+            <div class="col-12">
+               @if (User.IsInRole(RoleNames.PrePlanningCreator))
+               {
+                  <button class="btn btn-lg btn-primary pull-right m-0  d-sm-block d-none" data-toggle="tooltip" type="button" data-placement="top" title="" data-container="body" onclick="window.location = '/PrePlanning/AddEditPreplanning'">
+                     <i class="material-icons">add</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddPrePlanning<div class="ripple-container"></div>
+                  </button>
+                  <button class="btn btn-lg btn-primary text-center pull-right m-1 btn-block d-sm-none d-inline-block" type="button" data-toggle="tooltip" data-placement="top" title="" data-container="body" onclick="window.location = '/PrePlanning/AddEditPreplanning'">
+                     <i class="material-icons">add</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddPrePlanning<div class="ripple-container"></div>
+                  </button>
+               }
+            </div>
+
+         </div>
+         <div class="collapse  " id="Search">
+            <div class="card">
+               <div class="card-body">
+                  <div class="row">
+                     @if (!User.IsInRole(RoleNames.supplier))
+                     {
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ProjectName</label>
+                              <input type="text" class="form-control" id="txtProjectName" data-search="TenderName" name="ProjectName" maxlength="50" />
+                           </div>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                           <div class="form-group has-success bmd-form-group">
+                              <label for="quarterList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.YearQuarter</label>
+                              <select data-live-search="false" id="quarterList" class="selectpicker" data-search="QuarterYearId" data-style="select-with-transition" v-model="selectedQuarter">
+                                 <option value=" ">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                                 <option :value="item.id" v-for="item in quartersList">{{item.name}}</option>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                           <div class="form-group has-success bmd-form-group">
+                              <label for="typeList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ProjectType</label>
+                              <select data-live-search="false" id="typeList" class="selectpicker" data-search="ProjectTypeId" data-style="select-with-transition" v-model="selectedType">
+                                 <option value=" ">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                                 <option :value="item.value " v-for="item in typesList">{{item.text}}</option>
+                              </select>
+
+                           </div>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                           <div class="form-group has-success bmd-form-group">
+                              <label for="statusesList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.Status</label>
+                              <select data-live-search="false" id="statusList" class="selectpicker" data-search="StatusId" data-style="select-with-transition" v-model="selectedStatus">
+                                 <option value=" ">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                                 <option :value="item.id" v-for="item in statusesList">{{item.name}}</option>
+                              </select>
+                           </div>
+                        </div>
+                     }
+                     else
+                     {
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                           <div class="form-group has-success bmd-form-group">
+                              <label for="agenciesList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agencies</label>
+                              <select data-live-search="false" id="agenciesList" class="selectpicker" data-search="AgencyCode" data-style="select-with-transition" v-model="selectedAgency">
+                                 <option value=" ">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                                 <option :value="item.agencyCode" v-for="item in agencyList ">{{item.nameArabic}}</option>
+                              </select>
+                           </div>
+                        </div>
+                     }
+                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <button type="button" class="btn btn-primary btn-sm" name="button" @@click="search" style="margin-right:10px;">
+                           <i class="material-icons">search</i>
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm" name="reset" @@click="reset" style="margin-right:10px;">
+                           <i class="material-icons">clear</i>
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+                        </button>
+                     </div>
+                  </div>
+               </div>
+
+
+            </div>
+         </div>
+
+         <div class="row">
+            <div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="cardsresult">
+               <div class="row">
+                  @Html.Partial("_PrePlanningsCard.cshtml")
+               </div>
+
+            </div>
+            <div class="tableDiv col-md-12 col-sm-12 col-xs-12 animated  delay-2s" id="gridresult">
+               <div class="card">
+                  @Html.Partial("_PrePlanningsGrid.cshtml")
+               </div>
+            </div>
+         </div>
+         <div class="col-12 m-5 m-auto">
+            <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+         </div>
+      </div>
+   </form>
+
+   <!--endtBody-->
+   @section scripts{
+      <script>
+         $(document).ready(function () {
+            $('li#menuPreplanning a').addClass('active');
+         });
+         $(function () {
+            toggleViewGrid('PrePlanningGrid');
+            grid.getDropDownData();
+         });
+         var grid = new Vue({
+            el: '#PrePlanningGrid',
+            data: {
+               PrePlannings: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: '@((int)Enums.PageSize.Six)',
+               typesList: [],
+               selectedType: ' ',
+               statusesList: [],
+               selectedStatus: 0,
+               quartersList: [],
+               selectedQuarter: 0,
+               agencyList: [],
+               selectedAgency: ' ',
+               //resource_url: '/PrePlanning/IndexPagingAsync' + '?' + this.queryString,
+               resource_url: '/PrePlanning/IndexPagingAsync?pageSize=' +@((int)Enums.PageSize.Six),
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.PrePlannings = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+               },
+               detailsUrl: function (params) {
+                  return '/PrePlanning/Details?id=' + params;
+               },
+               confirmDelete: function () {
+                    $('#DeleteConfirmationModal').modal('hide');
+
+                  var data_id = $(".modal-body #hiddenValue").val();
+                  $(".modal-body #hiddenValue").val("");
+
+                  window.location = '/PrePlanning/Deactivate?id=' + data_id;
+                  AlertFun("تم إرسال طلب الحذف بنجاح", 'success');
+               },
+               deleteUrl: function (params) {
+                  if (typeof (params) !== "undefined" && params !== "") {
+                     $("#DeleteConfirmationModal #hiddenValue").val(params);
+                     $("#DeleteConfirmationModal").modal("show");
+                  }
+               },
+               editUrl: function (params) {
+                  return '/PrePlanning/AddEditPreplanning?id=' + params;
+               },
+               reOpenUrl: function (params) {
+                  return '/PrePlanning/Details?id=' + params;
+               },
+               
+               getDropDownData: function () {
+                  fillDLLs();
+                  //this.isAjaxMethodsCalled = true;
+               },
+               search: function () {
+                  debugger;
+                  this.queryString = $('form').serialize();
+                  this.resource_url = '/PrePlanning/IndexPagingAsync' + '?' + this.queryString + '&ProjectTypeId=' + this.selectedType + '&AgencyCode=' + this.selectedAgency + '&StatusId=' + this.selectedStatus + '&YearQuarterId=' + this.selectedQuarter;
+               },
+               reset: function () {
+                  $("#txtProjectName").val("");
+                  this.selectedType = '';
+                  this.selectedStatus = '';
+                  this.selectedQuarter = '' ;
+                  this.selectedAgency = '';
+                   $('#agenciesList , #quarterList,#typeList,#statusList').val('');
+                  $('#agenciesList , #quarterList,#typeList,#statusList').selectpicker('refresh');
+                  //this.search();
+                  this.resource_url = '/PrePlanning/IndexPagingAsync';
+               }
+            }
+         });
+
+
+         function fillDLLs() {
+            $.get('/PrePlanning/GetLookUpsAsync', null, function (result) {
+               grid.typesList = result.projectTypesList;
+               grid.agencyList = result.agecies;
+               grid.statusesList = result.statuses;
+               grid.quartersList = result.yearQuarters;
+               setTimeout(function () {
+                  $('#typeList').selectpicker('refresh');
+                  $('#quarterList').selectpicker('refresh');
+                  $('#agenciesList').selectpicker('refresh');
+                  $('#statusList').selectpicker('refresh');
+               }, 1000)
+            });
+         }
+      </script>
+   }
+}

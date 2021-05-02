@@ -1,0 +1,568 @@
+@model MOF.Etimad.Monafasat.ViewModel.NegotiationAgencyPageModel
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FirstStageNegotiation;
+}
+@using res = MOF.Etimad.Monafasat.Resources
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FirstStageNegotiation</li>
+      </ol>
+   </nav>
+}
+<div class="col-12" id="applyOffer" v-cloak>
+   <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+      <li class="nav-item">
+         <a class="nav-link active" href="#monafasa-info" role="tab" data-toggle="tab">
+            <i class="material-icons">assignment</i> 
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails
+         </a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link" href="#NegotiationInfo" role="tab" data-toggle="tab">
+            <i class="material-icons">attach_file</i> 
+            @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.NegotiationInfo
+         </a>
+      </li>
+   </ul>
+   <div class="tab-content tab-space">
+      <div class="tab-pane active" id="monafasa-info">
+         <div class="col-12">
+            <div class="row">
+               <div class="card">
+                  <div class="card-body">
+                     @{await Html.RenderPartialAsync("~/Views/CommunicationRequest/Partial/_NegotiationTenderInfo.cshtml", Model.NegotiationTenderModel); }
+                  </div>
+               </div>
+
+               <div class="col-12" id="app">
+                  @*<div class="row">
+                        <div class="card">
+                           <div class="card-body">
+                              <div class="row">
+                                 <div class="col-12">
+                                 </div>  @Html.Partial("~/Views/CommunicationRequest/Partials/_OffersExtendValidityGrid.cshtml")
+                              </div>
+                           </div>
+                        </div>
+                     </div>*@
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="tab-pane" id="NegotiationInfo">
+         <div class="tab-pane" id="NegotiationData">
+
+            @{
+               await Html.RenderPartialAsync("~/Views/CommunicationRequest/Partial/_PreviewFirstStageNegotiation.cshtml", Model.NegotiationFirstStageModel);
+
+            }
+
+
+
+         </div>
+
+         <div class="row">
+            <div class="col-12">
+
+
+
+               @if ((User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersPurchaseManager)) && Model.NegotiationFirstStageModel.StatusId == (int)Enums.enNegotiationStatus.CheckManagerPendingApprove)
+               {
+
+
+
+                  <form asp-controller="CommunicationRequest" asp-action="RejectFirstStageNegotiationRequest" id="frmreject"
+                        data-ajax="true"
+                        data-ajax-method="POST"
+                        data-ajax-mode="replace"
+                        data-ajax-complete="StopLoader"
+                        data-ajax-success="successManagerAction"
+                        data-ajax-failure="failManagerAction">
+                     <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                           <div class="modal-content">
+                              <div class="modal-header">
+                                 <h5 class="modal-title">
+                                    @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.RejectedReason<span class="text-danger">*</span>
+                                 </h5>
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                 </button>
+                              </div>
+                              <div class="modal-body">
+                                 <input type="hidden" value="@(Enums.enNegotiationStatus.CheckManagerReject)" name="Status" />
+                                 <input type="hidden" value="@Model.NegotiationFirstStageModel.NegotiationIdString" name="NegotiationIdString" />
+
+                                 <textarea class="form-control" rows="4" name="RejectionReason" id="RejectionReason"></textarea>
+                                 <span class="bmd-help text-danger" id="spnRejectionReason">يرجى ادخال سبب الرفض</span>
+                              </div>
+                              <div class="modal-footer">
+
+                                 <button type="submit" class="btn btn-primary btn-sm">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm </button>
+                                 <button type="button" class="btn btn-danger btn-sm btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+
+                  </form>
+
+
+
+
+                  <form asp-controller="CommunicationRequest" asp-action="ApproveFirstStageNegotiationRequest" id="frmCreate"
+                        data-ajax="true"
+                        data-ajax-method="POST"
+                        data-ajax-mode="replace"
+                        data-ajax-success="successManagerAction"
+                        data-ajax-complete="StopLoader"
+                        data-ajax-failure="failManagerAction">
+
+                     <div class="modal fade" id="confirmApproveModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                           <div class="modal-content">
+                              <div class="modal-header">
+                                 <h5 class="modal-title">
+                                    @MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.NegotiationRequestForApproveModalTitle
+                                 </h5>
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                 </button>
+                              </div>
+                              <div class="modal-body">
+                                 <div class="form-group bmd-form-group" id="divVerficationCode">
+                                    <input type="hidden" value="@(Enums.enNegotiationStatus.SentToSuppliers)" name="Status" />
+                                    <input type="hidden" value="@Model.NegotiationFirstStageModel.NegotiationIdString" name="NegotiationIdString" />
+
+                                    <input type="number" class="form-control col-md-12 VerificationCode" id="txtActivationNo" name="VerificationCode" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+                                    <div class="pull-left"><span class="bmd-help text-danger" id="txtActivationNoValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span></div>
+                                    <br />
+                                    <p class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainigTimeToApprove<span class=" text-danger" id="timer"></span></p>
+                                 </div>
+                              </div>
+                              <div class="modal-footer">
+
+                                 <button type="submit" class="btn btn-primary btn-sm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve </button>
+                                 <button type="button" class="btn  btn-primary btn-sm m-1" name="button" id="btnResendVerificationCode" onclick="ResendCode()"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+                                 <button type="button" class="btn btn-danger btn-link btn-sm" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+
+
+                     <button type="button" id="btnApproveNegotiation" class="btn btn-success" data-toggle="modal" data-target="#confirmApproveModal">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Accepted
+                     </button>
+                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#rejectModal">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Reject
+                     </button>
+                  </form>
+
+               }
+               @*@if (User.IsInRole(RoleNames.OffersCheckSecretary) && Model.NegotiationFirstStageModel.StatusId == (int)Enums.enNegotiationStatus.CheckManagerReject)
+                  {
+
+                     <button class="btn btn-primary" onclick="LoadNegotiationData('@Model.NegotiationFirstStageModel.NegotiationIdString')">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</button>
+
+                  }*@
+            </div>
+         </div>
+
+      </div>
+
+      <div class="">
+         <div class="">
+            <div class="card">
+               <div id="divPreview" class="col-md-12 col-lg-12">
+                  @Html.Partial("~/Views/CommunicationRequest/Partial/_OfferslistAfterDiscount.cshtml")
+               </div>
+               <div class="card-body">
+
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-12">
+            @{
+               if ((User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseSecretary)) && (Model.NegotiationFirstStageModel.StatusId == (int)Enums.enNegotiationStatus.CheckManagerReject))
+               {
+                  @*<a asp-controller="CommunicationRequest" class="btn btn-primary" asp-action="CreateNegotiation" asp-route-TenderIdString="@(Model.NegotiationFirstStageModel.TenderIdString)" asp-route-NegotiationIdString="@(Model.NegotiationFirstStageModel.NegotiationIdString)">إعادة فتح</a>*@
+
+
+                  <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApprove" onclick="Reopen()">
+                     @res.TenderResources.DisplayInputs.Reopen
+                  </button>
+
+
+               }
+
+            }
+
+            <a asp-action="DetailsForAll" asp-controller="Tender" asp-route-STenderId="@Model.NegotiationTenderModel.TenderIdString" class="btn btn-outline-primary pull-right">الرجوع الى تفاصيل المنافسة</a>
+            <a asp-action="TenderIndexAwardingStage" asp-controller="Tender" class="btn btn-outline-primary pull-right">ألرجوع الى منافسات مرحلة الترسية</a>
+         </div>
+      </div>
+   </div>
+</div>
+@section scripts
+   {
+
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+   <script>
+
+       function Reopen() {
+
+            $('#LoadingSite').fadeIn();
+            $.get('/CommunicationRequest/ReopenSecondNegotiation?negotiationId=' + '@Model.NegotiationFirstStageModel.NegotiationIdString').done(function (data) {
+
+               
+               location.reload();
+            }) .fail(function (error) {
+               
+               $('#LoadingSite').fadeOut();
+
+               // $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+         }
+      function checkSecond(sec) {
+         if (sec < 10 && sec >= 0) { sec = "0" + sec };
+         if (sec < 0) { sec = "59" };
+         return sec;
+      }
+      function checkTime(min, sec, myVar) {
+         if (min <= 0 && sec <= 0) {
+            $("#btnResendVerificationCode").prop("disabled", false);
+            clearTimeout(myVar)
+         };
+         return sec;
+      }
+      var myVar;
+      function startTimer() {
+         clearTimeout(myVar);
+         var presentTime = document.getElementById('timer').innerHTML;
+         var timeArray = presentTime.split(/[:]+/);
+         var m = timeArray[0];
+         var s = checkSecond((timeArray[1] - 1));
+         if (s == 59) { m = m - 1 }
+         document.getElementById('timer').innerHTML = m + ":" + s;
+         myVar = setTimeout(startTimer, 1000);
+         checkTime(m, s, myVar);
+         if (m < 0 && s > 0) {
+            document.getElementById('timerChangeRequest').innerHTML = "0:00";
+            return false;
+         }
+      }
+       // getDataAfterNegotiation(@Model.NegotiationFirstStageModel.ReductionPercent)
+
+      function CheckReason(sender) {
+         if (parseInt($(sender).val()) ==  @((int)Enums.enNegotiationFirstStageRejectionReasons.HighPriceThanBudget)) {
+            $('#divProjectNumber').show().removeAttr('hidden');
+         }
+         else {
+
+            $('#divProjectNumber').hide();
+         }
+      }
+      function GetNTISValue() {
+         var projNumber = $('#txtProjectNumber').val();
+
+         if (projNumber == '') {
+
+            $('#projectValue').html('');
+            $('#spnVProjectNumber').show().removeAttr('hidden');
+         }
+         else {
+            $('#LoadingSite').fadeIn();
+            var IsGfs = $('input[name=rideoProjectName]:checked').val() == "1" ? true : false;
+            var message = $('input[name=rideoProjectName]:checked').val() == "1" ? "رقم البند غير صحيح" : "رقم المشروع غير صحيح";
+            $.ajax({
+               type: "GET",
+               url: '@Url.Action("AgencyProjectBudget", "Tender")',
+               data: { ProjectNumber: projNumber, IsGfs: IsGfs },
+               success: function (data) {
+                  
+                  if (data.statusCode == "Error") {
+                     $('#LoadingSite').fadeOut();
+                     AlertFun(message, alertMessageType.Danger);
+                  } else {
+
+                     $('#projectValue').text(data.cash + ' ريال')
+                     $('#LoadingSite').fadeOut();
+
+                  }
+               },
+               error: function () {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ExpiredActivationCode)', alertMessageType.Danger);
+               }
+            });
+
+
+         }
+      }
+
+      $('#frmreject').submit(function (e) {
+         
+
+         if ($('#RejectionReason').val().trim() == '') {
+            $('#spnRejectionReason').show();
+            e.preventDefault();
+            return false;
+         }
+         else {
+            $('#LoadingSite').fadeIn();
+
+            $('#spnRejectionReason').hide();
+            $('#frmreject').submit();
+         }
+      })
+      $('#frmCreate').submit(function (e) {
+         
+
+         if ($('#txtActivationNo').val().trim() == '') {
+            $('#txtActivationNoValidation').show();
+            e.preventDefault();
+            return false;
+         }
+         else {
+            $('#LoadingSite').fadeIn();
+
+            $('#txtActivationNoValidation').hide();
+            $('#frmCreate').submit();
+         }
+      })
+      function CheckProjectValue(e) {
+         
+         
+         if (true) {
+            e.preventDefault();
+            return false;
+         }
+      }
+      function ResendCode() {
+         document.getElementById('timer').innerHTML = 05 + ":" + 00;
+         startTimer();
+         CreateCode();
+      }
+      function StartLoader() {
+         $('#LoadingSite').fadeIn();
+      }
+
+      function StopLoader() {
+         $('#LoadingSite').fadeOut();
+      }
+
+      function RedirectURL(ids, names) {
+         window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+      }
+
+      //function failManagerAction(error) {
+      //   AlertFun(error.responseJSON.message, alertMessageType.Danger)
+      //}
+
+      function successManagerAction(result) {
+         
+       $("#rejectModal").modal("hide");
+         $("#confirmApproveModal").modal("hide");
+         if (result.success == true) {
+           // location.reload();
+            AlertFun(result.message, alertMessageType.Success);
+            location.reload();
+            $('#LoadingSite').fadeOut();
+
+         } else if (result.success == false) {
+            AlertFun(result.message, alertMessageType.Danger);
+            $('#LoadingSite').fadeOut();
+
+         }
+
+      }
+      function ViewFinancialDetails(offerid) {
+         
+         var prev = '@Context.Request.Path'
+                 //alert(prev);
+                 location.href= '/Offer/FinancialOfferDetailsN?offerIdString=' + offerid +'&PreviusAction='+prev ;
+              }
+      function failManagerAction(data) {
+         
+         if (data.status == 401) {
+            window.location = '@Url.Action("Index","Acount")';
+         }
+         else {
+        // consol.log(data);
+         $('#LoadingSite').fadeOut();
+        AlertFun(data.responseJSON.message, alertMessageType.Danger);
+         }
+      }
+      function GetProjectBudjetFromNIS(_sender) {
+         var _rejectioReason = $(_sender).attr('Id');
+         if (_rejectioReason ==@((int)MOF.Etimad.Monafasat.SharedKernel.Enums.enNegotiationFirstStageRejectionReasons.HighPriceThanBudget)) {
+            $.getJSON("", null
+               ,
+               function (data) {
+                  alert("NTIS Data")
+               }, "");
+         }
+      }
+      function getDataAfterNegotiation(discountAmount) {
+         $('#LoadingSite').fadeIn();
+         var url = "/CommunicationRequest/PreviewOffersAfterDiscount/";
+         url = url + discountAmount + "/";
+         url = url + '@Model.NegotiationFirstStageModel.TenderIdString'
+         $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "html",
+            success: function (data) {
+               $('#LoadingSite').fadeOut();
+               $('#divPreview').html(data);
+            },
+            error:function(error) {
+            if (error.responseText != "Logout") {
+               AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.UnexpectedError', alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+
+         }
+         });
+      }
+      function Preview() {
+         $('#LoadingSite').fadeIn();
+         var discountAmount = $('#txtDiscount').val();
+         getDataAfterNegotiation(discountAmount);
+      }
+      $('#btnPreview').on('click', function (evt) {
+         evt.preventDefault();
+         evt.stopPropagation();
+         $('#LoadingSite').fadeIn();
+         var discountAmount = $('#txtDiscount').val();
+         var url = "/CommunicationRequest/PreviewOffersAfterDiscount/";
+         url = url + '@Model.NegotiationTenderModel.TenderIdString' + "/";
+         url = url + discountAmount;
+         $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "html",
+            data: json,
+            success: function (data) {
+               $('#LoadingSite').fadeOut();
+               $('#divPreview').html(data);
+            }
+         });
+      });
+      $('#txtDiscount').on('change', function (event) {
+         if (event.keyCode == 8) {
+            event.returnValue = true;
+            return true;
+         }
+         if ($(this).val() > 100) {
+            $(this).val(100);
+            return false;
+         }
+      });
+      function LoadNegotiationData(_id) {
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            url: '../../../CommunicationRequest/LoadNegotiationFirstStageDataAsync/' + _id,
+            type: "GET",
+            dataType: "html",
+            success: function (data) {
+               console.log(data);
+               $('#NegotiationData').html('');
+               $('#NegotiationData').html(data);
+            }
+         });
+         $('#LoadingSite').fadeOut();
+      }
+      $('#btnApproveNegotiation').click(function () {
+
+         CreateCode();
+      });
+
+      function CreateCode()
+      {
+            document.getElementById('timer').innerHTML = 05 + ":" + 00;
+         startTimer();
+         $("#btnResendVerificationCode").prop("disabled", true);
+
+         var token = $('#detailsForm input[name=__RequestVerificationToken]').val();
+         $.post('/CommunicationRequest/CreateNegotiationVerificationCode', { tenderIdString: "@Model.NegotiationTenderModel.TenderIdString", __RequestVerificationToken: token }).fail(function (error) {
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+            $("#changeRequestModal").modal('hide');
+            $("#myModal").modal('hide');
+         });
+
+
+      }
+
+  
+
+      var negotiation = new Vue({
+         el: '#divPreview',
+         data: {
+            resource_url: '/CommunicationRequest/GetOffersListForFirstStageNegotiation?pagesize=7&DiscountValue='+@(Model.NegotiationFirstStageModel.ReductionPercent)+'&TenderIdString=@Model.NegotiationTenderModel.TenderIdString',
+            offers: [],
+            totalCount: 0,
+            currentPage: 0,
+            pageSize: 7
+         },
+         methods: {
+            updateResource: function (data) {
+                 
+               this.offers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            }  , viewOfferFiles: function (id) {
+                 return '/CommunicationRequest/OfferNegotiationFiles/' + id;
+              },
+              viewFinancialOffer: function (id) {
+                 
+                 var prev = '@Context.Request.Path'
+                 //alert(prev);
+                 return '/Offer/FinancialOfferDetailsN?offerIdString=' + id +'&PreviusAction='+prev;
+            }, getSupplierInfo: function (CommericalNumber) {
+                 getSupplierInfo(CommericalNumber);
+            },
+               formatMoney: function (number, decPlaces, decSep, thouSep) {
+                  decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+                     decSep = typeof decSep === "undefined" ? "." : decSep;
+                  thouSep = typeof thouSep === "undefined" ? "," : thouSep;
+                  var sign = number < 0 ? "-" : "";
+                  var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
+                  var j = (j = i.length) > 3 ? j % 3 : 0;
+
+                  return sign +
+                     (j ? i.substr(0, j) + thouSep : "") +
+                     i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+                     (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
+               }
+
+         }
+      });
+
+   </script>
+}

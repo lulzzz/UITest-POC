@@ -1,0 +1,65 @@
+  
+<div class="table-responsive">
+   <table class="table table-striped" id="PrePlanningTable" aria-describedby="pre planning grid">
+      <thead>
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ProjectName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agencies</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.YearQuarter</th>
+            <th scope="col" class="text-center">السنه</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ExecutionPlace</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ProjectNature</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ProjectDescription</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.Status</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.Duration (@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.DurationInDays)</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.Duration (@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.DurationInMonths)</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.Duration (@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.DurationInYears)</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Actions</th>
+         </tr>
+      </thead>
+      <tbody v-if="PrePlannings && PrePlannings.length > 0">
+         <tr v-for="(obj, $index) in PrePlannings">
+            <td data-label="#" class="text-center"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ProjectName"> {{obj.projectName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agencies"> {{obj.agencyName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ProjectName"> {{obj.yearQuarterName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ProjectName"> {{obj.year}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ExecutionPlace"> {{obj.insideKSAString}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ProjectNature"> {{obj.projectNature}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ProjectDescription"> {{obj.projectDescription}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.ProjectDescription">
+               {{obj.statusName}}
+               @if (User.IsInRole(RoleNames.PrePlanningCreator) || User.IsInRole(RoleNames.PrePlanningAuditor))
+               {
+                  <span class="badge badge-warning" v-if="obj.isDeleteRequested==true">
+                     بانتظار اعتماد طلب الحذف
+                  </span>
+                  <span class="badge badge-danger" v-if="obj.isDeleteRequested==false&&obj.deleteRejectionReason!=null">
+                     تم رفض طلب الحذف
+                  </span>
+               }
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.DurationInDays"> {{obj.durationInDays}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.DurationInMonths"> {{obj.durationInMonths}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.DurationInYears"> {{obj.durationInYears}} </td>
+
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               <div class="col p-0 text-right">
+                  @Html.Partial("_PrePlanningListActions.cshtml")
+               </div>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="12" class="text-center">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i>
+               <br />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   @*<pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>*@
+</div>

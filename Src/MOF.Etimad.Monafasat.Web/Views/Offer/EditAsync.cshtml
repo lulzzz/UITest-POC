@@ -1,0 +1,44 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailsModel
+
+
+@{
+   ViewData["Title"] = @res.OfferResources.DisplayInputs.AddOffer;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@res.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@res.OfferResources.DisplayInputs.AddOffer</li>
+      </ol>
+   </nav>
+
+}
+@Html.AntiForgeryToken()
+<form method="Post" action="" class="my-form">
+   <div class="row">
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="TableQuantityName" class="label bmd-label-static">@res.TenderResources.DisplayInputs.TablesName<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="TableQuantityName" name="TableQuantityName" value="" required>
+            <input type="hidden" id="OfferId" name="OfferId" value="@(ViewData["OfferId"])">
+            <span class="bmd-help">@res.OfferResources.ErrorMessages.EnterTableName</span>
+         </div>
+      </div>
+   </div>
+   <div class="col-12 ">
+      <button class="btn btn-primary" id="btnSave" type="submit">@res.SharedResources.DisplayInputs.Save</button>
+      <button class="btn btn-danger" type="reset" onclick="window.location = '/AddOffer?offerId=@(ViewData["OfferId"])'">@res.SharedResources.DisplayInputs.Cancel</button>
+   </div>
+   </div>
+</form>
+@section scripts{
+   <script>
+      $(document).ready(function () {
+         $("#btnSave").click(function () {
+            $('#LoadingSite').fadeIn();
+         });
+      });
+   </script>
+}

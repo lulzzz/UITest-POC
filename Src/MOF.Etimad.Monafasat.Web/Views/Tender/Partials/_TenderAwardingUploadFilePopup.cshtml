@@ -1,0 +1,32 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+@using res = MOF.Etimad.Monafasat.Resources
+<div class="modal fade" id="UploadFile" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.UploadFile</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="form-group bmd-form-group">
+               <form>
+                  @Html.AntiForgeryToken()
+                  @Html.FileUploader("AwardingReportUploader", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                  <div><span id="vdBankGuaranteeReference" class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.EnterFile</span></div>
+                  <span id="vdBankGuaranteeReference2" class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.TarsiaReportFile</span>
+               </form>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button"
+                    onclick="saveFiles('@ViewBag.tenderIdEncrypt');"
+                    value="">
+               @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Save
+            </button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,10 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using res = MOF.Etimad.Monafasat.Resources
+
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailModel
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+   ViewData["Title"] = @res.OfferResources.DisplayInputs.OfferDataDetails;
+}
+
+@await Component.InvokeAsync("OfferAttachmentsDetails", new { combinedId = Model.CombinedIdString })

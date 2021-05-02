@@ -1,0 +1,105 @@
+pipeline{
+     agent none 
+     
+     parameters{
+         choice(name: 'env_type', choices: 'Please select\ndev\nsit\nuat\nprd', description: 'Environment type')
+         booleanParam(name: 'executeTests',defaultValue: true )
+
+      }
+     environment {      
+        dotnet ='C:\\Program Files (x86)\\dotnet\\'
+        }
+
+     stages{
+      stage ('Clone') {
+              agent {label 'build-agent'}   
+            steps {
+                git  branch:'develop', credentialsId: 'bitbucket-auth', url: 'http://10.14.8.82:7990/scm/tenders/tenders.git'
+            }
+        }
+
+        stage('Code Analysis ') {
+           agent {label 'build-agent'}   
+          when{
+            expression{
+              params.executeTests
+            }
+          }
+          steps {
+                bat "C:/JetBrains/dotCover.exe dotnet --output=D:\\output-2\\sample.html --reportType=HTML -- test ${WORKSPACE}/Tests/MOF.Etimad.Monafasat.UnitTests/MOF.Etimad.Monafasat.UnitTests.csproj"
+
+                withSonarQubeEnv('sonar-test') {
+                          bat "dotnet-sonarscanner begin /k:Monafasat-01 /d:sonar.host.url=http://10.13.85.50:9000 /d:sonar.login=c0636949a24262d507657b4966992edb8f0ddbd8 /d:sonar.sources=${WORKSPACE}/Src/MOF.Etimad.Monafasat.Web/MOF.Etimad.Monafasat.Web.csproj /d:sonar.cs.dotcover.reportsPaths=D:\\output-2\\sample.html"
+                          bat "dotnet build ${WORKSPACE}/Src/MOF.Etimad.Monafasat.Web/MOF.Etimad.Monafasat.Web.csproj"
+                          bat "dotnet-sonarscanner end /d:sonar.login=c0636949a24262d507657b4966992edb8f0ddbd8"
+                    }     
+                                
+                }
+            }
+        
+
+        stage("Quality Gate") {
+           agent {label 'build-agent'}   
+          when{
+            expression{
+              params.executeTests
+            }
+          }
+          steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+              }
+            }
+          }
+           
+           stage('Build') {
+            agent {label 'build-agent'}    
+              steps {
+                
+                      bat "dotnet publish ${WORKSPACE}/Src/MOF.Etimad.Monafasat.Web/MOF.Etimad.Monafasat.Web.csproj  --output C:/monafasat-publish"                  
+                    }
+        }
+
+        stage('publish artifact') {
+           agent {label 'build-agent'}   
+          
+		      	steps {
+                // script {
+                //      zip archive: true, dir: 'C:/monafasat-publish', exclude: '', glob: '', zipFile: "C:/publish-test/for-publish-${BUILD_NUMBER}.zip"
+                //  }
+                powershell "Compress-Archive C:/monafasat-publish/* C:/publish-test/for-publish-${BUILD_NUMBER}.zip"
+
+               nexusArtifactUploader artifacts: [[artifactId: 'publish', classifier: '', file: "C:/publish-test/for-publish-${BUILD_NUMBER}.zip", type: 'zip']], credentialsId: 'nexus-auth', groupId: 'Releases', nexusUrl: '10.13.86.10:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'Monafasat-Releases', version: "${BUILD_NUMBER}"
+            }
+        }
+
+         stage('Deploy') {
+            agent {label 'publish-agent'} 
+                    
+		       steps {
+                      bat """
+                      del /q C:\\MonafasatCI\\Dev\\MonafasatWeb\\*"
+                      wget -P C:/MonafasatCI/Dev/MonafasatWeb --user admin --password Nexus@mofTest http://10.13.86.10:8081/repository/Monafasat-Releases/Releases/publish/${BUILD_NUMBER}/publish-${BUILD_NUMBER}.zip
+                      %windir%/system32/inetsrv/appcmd stop site "Default Web Site"
+                      """ 
+                      //  script {    
+                                  
+                      //  unzip dir: 'C:/MonafasatCI/Dev/MonafasatWeb', glob: '', zipFile: "C:/MonafasatCI/Dev/MonafasatWeb/publish-${BUILD_NUMBER}.zip" 
+                      //    }
+
+                     powershell "Expand-Archive  C:/MonafasatCI/Dev/MonafasatWeb/publish-${BUILD_NUMBER}.zip C:/MonafasatCI/Dev/MonafasatWeb"
+
+                         bat """
+                         
+                         %windir%/system32/inetsrv/appcmd start site "Default Web Site"
+                         """
+            }
+        }
+          
+    }
+
+}
+        
+  //    input{
+  //   message "Do you want to proceed for production deployment?"
+  // }

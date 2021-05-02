@@ -1,0 +1,94 @@
+<div class="col-12">
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="">
+                     <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.CategoryField</h4>
+                  </div>
+                  <div class="">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EstablishingActions
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <ol>
+                                    @if (Model.ConstructionWorks != null)
+                                    {
+                                       @foreach (var constructionWorkItem in Model.ConstructionWorks)
+                                       {
+                                          <li> @constructionWorkItem.Name</li>
+                                       }
+                                    }
+                                 </ol>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MaintenanceOperationActions
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <ol>
+                                    @if (Model.MaintenanceOperationActions != null)
+                                    {
+                                       @foreach (var maintenanceWorkItem in Model.MaintenanceOperationActions)
+                                       {
+                                          <li> @maintenanceWorkItem.Name</li>
+                                       }
+                                    }
+                                 </ol>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="">
+                     <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.TenderActivities</h4>
+                  </div>
+                  <div class="">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderActivity
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <ol>
+                                    @if (Model.TenderActivities != null)
+                                    {
+                                       @foreach (var activityItem in Model.TenderActivities)
+                                       {
+                                          <li>@activityItem.Name</li>
+                                       }
+                                    }
+                                 </ol>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.ActivityDescription
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @Model.ActivityDescription
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

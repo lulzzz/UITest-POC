@@ -1,0 +1,151 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderSamplesAddressModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditSamplesAddress;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="#@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditSamplesAddress</li>
+      </ol>
+   </nav>
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+</style>
+   @Html.AntiForgeryToken()
+
+   @section modalTitle{
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+   }
+   @section modalContent{
+      <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditSamplesAddress
+      </div>
+   }
+   @section modalButtons{
+      <button type="submit" class="btn btn-primary btn-sm" name="submit" id="btnApproveConfirmation">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</button>
+      <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+   }
+      <form id="basicStepForm" method="POST" asp-controller="Tender" asp-action="EditSamplesDeliveryAddress" autocomplete="off">
+
+         <div class="card">
+            <div class="card-body">
+               <input asp-for="TenderIdString" type="hidden" />
+               <div class="row">
+
+                  <div class="col col-11 pull-right">
+                     <div class="row" id="divBasicStep">
+                        <div class="col-lg-4 col-sm-6 col-xs-12" id="SamplesDeliveryAddressDiv">
+                           <div class="form-group bmd-form-group">
+                              <label asp-for="SamplesDeliveryAddress" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                              <input type="text" onchange="return blockSpecialChar(event)" asp-for="SamplesDeliveryAddress" name="SamplesDeliveryAddress" class="noSpecial form-control" id="tb_SamplesDeliveryAddress" />
+                           </div>
+                           <span class="text-danger" id="addressValidation" style="display:none;">@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.SamplesDeliveryAddressRequired)</span>
+
+                        </div>
+                     </div>
+
+                  </div>
+               </div>
+               <div class="clearfix"></div>
+
+            </div>
+         </div>
+         <div class="">
+            <button type="button" id="btnSaveUpdates" class="btn btn-primary etd-search-btn" data-toggle="modal">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveUpdates
+
+            </button>
+            <a asp-action="Index" asp-controller="Tender" class="btn btn-outline-primary btn-link pull-right">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+            </a>
+            
+         </div>
+             
+       
+      </form>
+
+@section scripts{
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script type="text/javascript">
+   $(document).ready(function () {
+      $('#basicStepForm').validate({
+         ignore: '',
+         rules: {
+            SamplesDeliveryAddress: {
+               requiredSamplesDeliveryAddress: true
+            },
+         },
+         messages: {
+            SamplesDeliveryAddress: {
+               requiredSamplesDeliveryAddress: '@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.InvalidValue)'
+            },
+         },
+         errorPlacement: function (error, element) {
+            error.css({ 'color': 'red' });
+            error.insertAfter(element);
+         }
+      });
+      $.validator.addMethod("requiredSamplesDeliveryAddress", function (value, element) {
+         return requiredSamplesDeliveryAddress(value);
+      });
+      function validateNames(v) {
+         if (v.trim() == "")
+            return false;
+         else
+            return true;
+      }
+      function requiredSamplesDeliveryAddress(v) {
+            if (v.trim() == "") { return false; }
+            else { return true; }
+         }
+   })
+   
+   $("#btnSaveUpdates").on("click", function () {
+      if ($("#tb_SamplesDeliveryAddress").val().trim() == "") {
+         $("#addressValidation").show();
+         return false;
+      }
+      $("#myModal").modal("show");
+   });
+
+   var fixing = false;
+   function blockSpecialChar(e) {
+      if (fixing)
+         return;
+      fixing = true;
+      var newString = "";
+      var stringValue = $(e.currentTarget).val();
+      for (var i = 0; i < stringValue.length; i++) {
+         var k = stringValue[i];
+         var iChars = "!@@#$%^&*()+=-[]\\\';,./{}|\":<>?_×÷،ٍِِِِِ’َ؟?‘ًَُ~ٍِـ`";
+         if (iChars.indexOf(k) == -1)
+            newString = newString + k;
+      }
+      $(e.currentTarget).val(newString);
+      fixing = false;
+   }
+   jQuery(function ($) {
+      $('#basicStepForm').bind('submit', function () {
+
+         if ($('#basicStepForm').valid())
+            $('#LoadingSite').fadeIn();
+      })
+   })
+   $("#btnApproveConfirmation").on("click", function () {
+      
+      if (!$('#basicStepForm').valid())
+         return false;
+      $('#LoadingSite').fadeIn();
+      $('#basicStepForm').submit();
+   });
+</script>

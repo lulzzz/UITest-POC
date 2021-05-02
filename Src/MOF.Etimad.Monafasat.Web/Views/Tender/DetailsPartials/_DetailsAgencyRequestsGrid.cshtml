@@ -1,0 +1,63 @@
+<div id="agencyRequestsGrid" v-cloak>
+   <div class="table-responsive" style="min-height:100px">
+      <table id="AgencyRequestsTable" class="table table-striped text-center" summary="desc">
+         <thead class="text-center">
+            <tr>
+               <th scope="col" class="text-center">#</th>
+               <th scope="col" class="text-center">@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.AgencyRequestType)</th>
+               <th scope="col" class="text-center">@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.AgencyRequestStatus)</th>
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+            </tr>
+         </thead>
+         <tbody class="text-center" v-if="AgencyRequests && AgencyRequests.length > 0">
+
+            <tr v-for="(agencyRequest, $index) in AgencyRequests">
+               <td class="text-center" data-label="#">{{ (currentPage -1) * (pageSize) +  $index + 1}}</td>
+               <td class="text-center" data-label="@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.AgencyRequestType)"> {{agencyRequest.agencyRequestType}} </td>
+               <td class="text-center" data-label="@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.AgencyRequestStatus)"> {{agencyRequest.status}} </td>
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+
+                  @{
+
+
+                     if (User.IsInRole(RoleNames.ApproveTenderAward))
+                     {
+
+                     }
+                     else if (User.IsInRole(RoleNames.supplier))
+                     {
+                        <span v-if="agencyRequest.agencyRequestTypeId == @((int)Enums.AgencyCommunicationRequestType.ExtendOfferValidtiy)">
+
+                           <a :href="viewRequestDetails(agencyRequest.agencyRequestTypeId, agencyRequest.negotiationRequests, agencyRequest.agencyRequestIdString)" v-if="agencyRequest.extevdOfferSupplierStatusId != @((int)Enums.SupplierExtendOffersValidityStatus.Rejected) || agencyRequest.extevdOfferSupplierStatusId!=@((int)Enums.SupplierExtendOffersValidityStatus.Accepted)" class="btn btn-primary btn-link"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.RequestDetails</a>
+
+                        </span>
+
+                        <span v-else>
+                           <a :href="viewRequestDetails(agencyRequest.agencyRequestTypeId, agencyRequest.negotiationRequests, agencyRequest.agencyRequestIdString,agencyRequest.isNewNegotiation)" v-if="agencyRequest.statusId!=@((int)Enums.AgencyCommunicationRequestStatus.Ended) || agencyRequest.statusId != @((int)Enums.AgencyCommunicationRequestStatus.Ended)" class="btn btn-primary btn-link"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.RequestDetails</a>
+                        </span>
+                     }
+                     else
+                     {
+                        <a :href="viewRequestDetails(agencyRequest.agencyRequestTypeId, agencyRequest.negotiationRequests, agencyRequest.agencyRequestIdString,agencyRequest.isNewNegotiation)" class="btn btn-primary btn-link"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.RequestDetails</a>
+                     }
+                     <br />
+                  }
+               </td>
+            </tr>
+         </tbody>
+         <tbody v-else>
+            <tr>
+               <td colspan="4">
+                  <div class=" text-center">
+                     <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                     <br />
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                  </div>
+
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+</div>

@@ -1,0 +1,167 @@
+@model MOF.Etimad.Monafasat.ViewModel.OfferModel
+@{
+   var tableIndex = 0;
+}
+<div class="tab-pane" id="quantity-tables">
+   @foreach (var table in Model.QuantityTable)
+   {
+      tableIndex++;
+      <input type="hidden" name="TenderQuantityTableId" value="@table.TableQuantityId" />
+      <div class="col-12">
+         <div class="row">
+            <div data-label=" Deliverable" style="width:100%">
+               <a class="btn btn-block" :class="{'btn-primary':@tableIndex == 1, 'btn-white':@tableIndex != 1}" :data-toggle="isEdit? '' : 'collapse'" href="#@tableIndex" role="button" aria-expanded="false" aria-controls="collapseExample"> @table.TableQuantityName</a>
+            </div>
+            <div class="table-responsive">
+               <table class="table">
+                  <thead>
+                     <tr>
+                        <td hidden></td>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr :class="{collapse:true, 'show':@tableIndex == 1}" class="animated  delay-0.5s animated  delay-2s fadeInDown" id="@tableIndex">
+                        <td class="text-center padd0" style="padding:0;" colspan="6">
+                           <form class="tableForm" id="TableQuantity_@tableIndex">
+                              <div class="card">
+                                 <div class="card-body padd0">
+                                    <table class="table" id="quantatyTable_@tableIndex">
+                                       <thead style="background-color: #e0efe8;">
+                                          <tr>
+                                             @if (@table.QuantityTableItem.Count() > 0)
+                                             {
+                                                <th>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ItemName  </th>
+                                                <th>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Quantity</th>
+                                                <th>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Unit</th>
+                                                <th>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Price</th>
+                                                <th>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DiscountPercent</th>
+                                                <th>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FileName </th>
+                                             }
+                                             else
+                                             {
+                                                <th> </th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                             }
+                                             <th>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TotalPrice</th>
+                                             <th>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TotalPriceAfterDiscount</th>
+                                          </tr>
+                                       </thead>
+                                       <tbody>
+                                          @foreach (var item in table.QuantityTableItem)
+                                          {
+                                             <tr class="ItemsGrid">
+                                                <td data-label=" Milestone">
+                                                   <input type="hidden" name="Id" value="@item.Id" />
+                                                   <span> @item.TenderQuantityTableItem.Name</span>
+                                                </td>
+                                                <td data-label=" Quantity">
+                                                   <span id="spanQuantity"> @item.TenderQuantityTableItem.Quantity</span>
+                                                </td>
+                                                <td data-label="Unit">
+                                                   <span> @item.TenderQuantityTableItem.Unit</span>
+                                                </td>
+                                                <td data-label="Details">
+                                                   <input class="form-control" type="number" min="0" id="txtPrice" name="price" value="@item.Price" disabled />
+                                                </td>
+                                                <td data-label="Price">
+                                                   <div class="input-group">
+                                                      <input class="form-control txtDiscount" type="number" id="txtDiscount" min="0" max="100" name="discount" value="@item.Discount" pattern="[0-9]+([\.,][0-9]+)?" />
+                                                   </div>
+                                                </td>
+                                                <td data-label=" Milestone">
+                                                   <a href="#" onclick="RedirectURL2('@item.TenderQuantityTableItem.ItemAttachmentId','@item.TenderQuantityTableItem.ItemAttachmentName');return false;" target="_blank">@item.TenderQuantityTableItem.ItemAttachmentName </a>
+                                                </td>
+                                                <td data-label="Details" style="text-align:center">
+                                                   <input class="form-control" id="txtTotPriceItem" name="itemtotalprice" value="@(item.TenderQuantityTableItem.Quantity * item.Price)" disabled />
+                                                </td>
+                                                <td style="text-align:center">
+                                                   <input class="form-control" id="txtTotalAfter" name="itemTotaldiscount" value="@(item.Price * item.TenderQuantityTableItem.Quantity - (item.Price * item.TenderQuantityTableItem.Quantity) * (item.Discount / 100))" disabled />
+                                                </td>
+                                             </tr>
+                                          }
+                                       </tbody>
+                                       <tfoot>
+                                          <tr>
+                                             <td colspan="5"></td>
+                                             <td style="text-align:center"><b>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Total</b> </td>
+                                             <td style="text-align:center">
+                                                <input class="form-control" id="tblTotalPrice" name="tblTotalPricename" value="@table.TotalPrice" disabled />
+                                             </td>
+                                             <td style="text-align:center">
+                                                @{
+                                                   var total = table.TotalPrice - (table.Discount);
+                                                }
+                                                <input class="form-control" id="tblTotalAfterDiscount" name="tbltotafterdiscountname" value="@total.ToString(".000")" disabled />
+                                             </td>
+                                          </tr>
+                                       </tfoot>
+                                    </table>
+                                    @if (User.IsInRole(RoleNames.supplier) && Model.OfferStatusId != (int)Enums.OfferStatus.Received)
+                                    {
+                                       <button type="button" class="btn btn-warning btn-sm etd-edit-btn" @@click="editmode($event)">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</button>
+                                       <button type="button" value="save" class="btn btn-primary btn-sm d-none etd-save-btn" @@click="saveTable('TableQuantity_@tableIndex','@table.TableQuantityId','@table.OfferId','@ViewBag.tenderIdEncrypt',$event);">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+                                    }
+                                 </div>
+                              </div>
+                           </form>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+   }
+   <div class="row">
+      <div class="col-6">
+         <div class="card">
+            <div class="card-body">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-12 etd-item-title text-center">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TotalPrice
+                        </div>
+                        <div class="col-12 etd-item-info text-center h4">
+                           <span id="txtTotPrice" name="totPrice"></span>
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="col-6">
+         <div class="card">
+            <div class="card-body">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-12 etd-item-title  text-center">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TotalPriceAfterDiscount
+                        </div>
+                        <div class="col-12 etd-item-info  text-center h4">
+                           <span id="txtTotAfterDiscount" name="totPrice"></span>
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div>
+      <button type="button" class="btn btn-default  prev-tab" @@click="prevTab">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+      <button type="button" class="btn btn-primary  next-tab" @@click="nextTab" :disabled="isEdit">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+      @if (User.IsInRole(RoleNames.supplier))
+      {
+         <a class="btn btn-outline-primary btn-link pull-right" id="btnback" asp-controller="Tender" asp-action="SupplierTenders">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+            <div class="ripple-container"></div>
+         </a>
+      }
+   </div>
+</div>

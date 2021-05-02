@@ -1,0 +1,177 @@
+@model IEnumerable<MOF.Etimad.Monafasat.Web.Models.Tender.BasicTenderModel>
+
+@{
+   Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+   <meta name="viewport" content="width=device-width" />
+   <title>Index</title>
+</head>
+<body>
+   <p>
+      <a asp-action="CreateAsync">Create New</a>
+      @* <a href="@Url.Action("CreateAsync","Tender")">Create New</a>*@
+   </p>
+   <table class="table" border="1">
+      <thead>
+         <tr>
+            @*<th>
+                   @Html.DisplayNameFor(model => model.TechnicalOrganizationID)
+               </th>
+               <th>
+                   @Html.DisplayNameFor(model => model.OffersOpeningCommitteeID)
+               </th>
+               <th>
+                   @Html.DisplayNameFor(model => model.OffersCheckingCommitteeID)
+               </th>
+               <th>
+                   @Html.DisplayNameFor(model => model.OfferPresentationWay)
+               </th>
+               <th>
+                   @Html.DisplayNameFor(model => model.OfferPresentationPlace)
+               </th>
+               <th>
+                   @Html.DisplayNameFor(model => model.OffersOpeningAddress)
+               </th>
+               <th>
+                   @Html.DisplayNameFor(model => model.ConditionsBookletDeliveryAddress)
+               </th>
+               <th>
+                   @Html.DisplayNameFor(model => model.LastEnqueriesDate)
+               </th>
+               <th>
+                   @Html.DisplayNameFor(model => model.LastOfferPresentationDate)
+               </th>
+               <th>
+                   @Html.DisplayNameFor(model => model.LastOfferPresentationTime)
+               </th>
+               <th>
+                   @Html.DisplayNameFor(model => model.OffersOpeningDate)
+               </th>
+               <th>
+                   @Html.DisplayNameFor(model => model.OffersOpeningTime)
+               </th>*@
+            <th>
+               @Html.DisplayNameFor(model => model.TenderId)
+            </th>
+            <th>
+               @Html.DisplayNameFor(model => model.TenderTypeId)
+            </th>
+            <th>
+               @Html.DisplayNameFor(model => model.InvetationTypeId)
+            </th>
+            <th>
+               @Html.DisplayNameFor(model => model.InitiatorName)
+            </th>
+            <th>
+               @Html.DisplayNameFor(model => model.TenderName)
+            </th>
+            <th>
+               @Html.DisplayNameFor(model => model.TenderNumber)
+            </th>
+            <th>
+               @Html.DisplayNameFor(model => model.TenderStatusId)
+            </th>
+            <th>
+               @Html.DisplayNameFor(model => model.Purpose)
+            </th>
+            <th>
+               @Html.DisplayNameFor(model => model.ConditionsBookletPrice)
+            </th>
+            <th>
+               @Html.DisplayNameFor(model => model.InsideKSA)
+            </th>
+            <th>
+               @Html.DisplayNameFor(model => model.Details)
+            </th>
+            <th></th>
+         </tr>
+      </thead>
+      <tbody>
+         @foreach (var item in Model)
+         {
+            <tr>
+               @*<td>
+                      @Html.DisplayFor(modelItem => item.TechnicalOrganizationID)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.OffersOpeningCommitteeID)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.OffersCheckingCommitteeID)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.OfferPresentationWay)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.OfferPresentationPlace)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.OffersOpeningAddress)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.ConditionsBookletDeliveryAddress)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.LastEnqueriesDate)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.LastOfferPresentationDate)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.LastOfferPresentationTime)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.OffersOpeningDate)
+                  </td>
+                  <td>
+                      @Html.DisplayFor(modelItem => item.OffersOpeningTime)
+                  </td>*@
+               <td>
+                  @Html.DisplayFor(modelItem => item.TenderId)
+               </td>
+               <td>
+                  @Html.DisplayFor(modelItem => item.TenderTypeId)
+               </td>
+               <td>
+                  @Html.DisplayFor(modelItem => item.InvetationTypeId)
+               </td>
+               <td>
+                  @Html.DisplayFor(modelItem => item.InitiatorName)
+               </td>
+               <td>
+                  @Html.DisplayFor(modelItem => item.TenderName)
+               </td>
+               <td>
+                  @Html.DisplayFor(modelItem => item.TenderNumber)
+               </td>
+               <td>
+                  @Html.DisplayFor(modelItem => item.TenderStatusId)
+               </td>
+               <td>
+                  @Html.DisplayFor(modelItem => item.Purpose)
+               </td>
+               <td>
+                  @Html.DisplayFor(modelItem => item.ConditionsBookletPrice)
+               </td>
+               <td>
+                  @Html.DisplayFor(modelItem => item.InsideKSA)
+               </td>
+               <td>
+                  @Html.DisplayFor(modelItem => item.Details)
+               </td>
+               <td>
+                  @Html.ActionLink("Edit", "Edit", new { id = item.TenderId }) |
+                  @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                  @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+               </td>
+            </tr>
+         }
+      </tbody>
+   </table>
+</body>
+</html>

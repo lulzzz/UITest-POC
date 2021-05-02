@@ -1,0 +1,72 @@
+@model MOF.Etimad.Monafasat.ViewModel.AdminSupplierBlockModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.AddToBlockList;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockedListRequest</li>
+      </ol>
+   </nav>
+}
+
+@Html.AntiForgeryToken()
+<form method="Post" action="" class="my-form">
+   <input type="hidden" id="ModuleType" value="4" />
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label for="CommercialSupplierName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.SupplierType<span class="text-danger">*</span></label>
+                  <input type="text" disabled class="form-control" value="يملك سجل تجاري">
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label for="CommercialRegistrationNo" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialRegistrationNo<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="CommercialRegistrationNo" readonly asp-for="CommercialRegistrationNo" value="@(Model.CommercialRegistrationNo)">
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label for="CommercialSupplierName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="CommercialSupplierName" readonly asp-for="CommercialSupplierName" value="@(Model.CommercialSupplierName)">
+                  <span asp-validation-for="CommercialSupplierName" class="text-danger"></span>
+               </div>
+            </div>
+
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label for="BlockDetails" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockReason<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="BlockDetails" asp-for="BlockDetails" value="@(Model.BlockDetails)">
+                  <span asp-validation-for="BlockDetails" class="text-danger"></span>
+               </div>
+            </div>
+            <div class="col-lg-5 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label for="AttachmentId" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.AttachmentRefAdmin <span class="text-danger">*</span></label>
+                  <div class="row">
+                     @Html.FileUploaderFor(m => m.AdminFileNetReferenceId, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 4, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                  </div>
+                  <span asp-validation-for="AdminFileNetReferenceId" class="text-danger"></span>
+               </div>
+            </div>
+
+         </div>
+      </div>
+   </div>
+   <div class="col-12 ">
+      <button class="btn btn-primary" type="submit" id="createAsync">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Send</button>
+      <button class="btn btn-danger" type="reset" onclick="window.location = '/Block/Index'">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Cancel</button>
+   </div>
+</form>
+
+@section scripts {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

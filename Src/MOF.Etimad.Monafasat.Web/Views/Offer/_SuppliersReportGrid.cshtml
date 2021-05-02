@@ -1,0 +1,95 @@
+@using res = MOF.Etimad.Monafasat.Resources;
+
+<div class="table-responsive ">
+   <table class="table table-striped" id="OfferTable" aria-describedby="Suppliers Report">
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col">@res.TenderResources.DisplayInputs.CommercialName</th>
+            <th scope="col">@res.TenderResources.DisplayInputs.CommercialNumber</th>
+            <th scope="col">@res.InvitationResources.DisplayInputs.InvitationSendingDate</th>
+            <th scope="col">@res.OfferResources.DisplayInputs.PurshaseDate</th>
+            <th scope="col">@res.TenderResources.DisplayInputs.InvitationStatus</th>
+            <th scope="col">@res.OfferResources.DisplayInputs.PurshaseStatus</th>
+            <th scope="col">@res.OfferResources.DisplayInputs.OfferStatus</th>
+            <th scope="col">@res.InvitationResources.DisplayInputs.InvitationAcceptanceDate</th>
+            <th scope="col">@res.InvitationResources.DisplayInputs.InvitationRejectionDate</th>
+            <th scope="col">@res.OfferResources.DisplayInputs.WithdrawalDate </th>
+            <th scope="col">@res.OfferResources.DisplayInputs.OfferWithdrwalDate </th>
+            <th scope="col">@res.OfferResources.DisplayInputs.OfferDataDetails </th>
+         </tr>
+      </thead>
+      <tbody v-if="Offers && Offers.length > 0">
+         <tr v-for="(offer, $index) in Offers">
+            <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td data-label="@res.TenderResources.DisplayInputs.CommercialName" style="cursor:pointer" @@click="getSupplierInfo(offer.commericalRegisterNo)"> {{offer.companyName}} </td>
+            <td data-label="@res.TenderResources.DisplayInputs.CommercialNumber"> {{offer.commericalRegisterNo}} </td>
+            <template v-if="offer.invitationSendingDate">
+               <td data-label="@res.InvitationResources.DisplayInputs.InvitationSendingDate">{{offer.invitationSendingDate.split('T')[0]}} </td>
+            </template>
+            <template v-else>
+               <td data-label="@res.InvitationResources.DisplayInputs.InvitationSendingDate">@res.SharedResources.DisplayInputs.NotExist</td>
+            </template>
+            <template v-if="offer.purchaseDate">
+               <td data-label="@res.OfferResources.DisplayInputs.PurshaseDate">{{offer.purchaseDate.split('T')[0]}} </td>
+            </template>
+            <template v-else>
+               <td data-label="@res.OfferResources.DisplayInputs.PurshaseDate">@res.SharedResources.DisplayInputs.NotExist</td>
+            </template>
+            <td data-label="@res.TenderResources.DisplayInputs.InvitationStatus">{{offer.invitationStatusName}}</td>
+            <td data-label="@res.OfferResources.DisplayInputs.PurshaseStatus">{{offer.purchaseStatusName}}</td>
+            <template v-if="offer.offerStatusId == @((int)Enums.OfferStatus.Received)">
+               <td data-label="@res.OfferResources.DisplayInputs.WithdrawalDate"> @res.OfferResources.DisplayInputs.Recieved</td>
+            </template>
+            <template v-else-if="offer.offerStatusId == @((int)Enums.OfferStatus.Excluded)">
+               <td data-label="@res.OfferResources.DisplayInputs.WithdrawalDate"> @res.TenderResources.DisplayInputs.Excluded</td>
+            </template>
+            <template v-else>
+               <td data-label="@res.OfferResources.DisplayInputs.WithdrawalDate"> @res.OfferResources.DisplayInputs.NotRecieved</td>
+            </template>
+            <template v-if="offer.invitationAcceptanceDate">
+               <td data-label="@res.InvitationResources.DisplayInputs.InvitationAcceptanceDate"> {{offer.invitationAcceptanceDate.split('T')[0]}} </td>
+            </template>
+            <template v-else>
+               <td data-label="@res.InvitationResources.DisplayInputs.InvitationAcceptanceDate">@res.SharedResources.DisplayInputs.NotExist</td>
+            </template>
+            <template v-if="offer.invitationRejectionDate">
+               <td data-label="@res.InvitationResources.DisplayInputs.InvitationRejectionDate"> {{offer.invitationRejectionDate.split('T')[0]}} </td>
+            </template>
+            <template v-else>
+               <td data-label="@res.InvitationResources.DisplayInputs.InvitationRejectionDate">@res.SharedResources.DisplayInputs.NotExist</td>
+            </template>
+            <template v-if="offer.invitationWithdrawalDate">
+               <td data-label="@res.OfferResources.DisplayInputs.WithdrawalDate"> {{offer.invitationWithdrawalDate.split('T')[0]}} </td>
+            </template>
+            <template v-else>
+               <td data-label="@res.OfferResources.DisplayInputs.WithdrawalDate"> @res.SharedResources.DisplayInputs.NotExist</td>
+            </template>
+            <template v-if="offer.offerWithdrawalDate">
+               <td data-label="@res.OfferResources.DisplayInputs.OfferWithdrwalDate"> {{offer.offerWithdrawalDate.split('T')[0]}} </td>
+            </template>
+            <template v-else>
+               <td data-label="@res.OfferResources.DisplayInputs.OfferWithdrwalDate"> @res.SharedResources.DisplayInputs.NotExist</td>
+            </template>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               <div class="dropdown" v-if="offer.offerId!=0 && offer.canSeeDetails==true">
+                  <button class="btn btn-primary btn-link btn-just-icon" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i><div class="ripple-container"></div></button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                     <a :href="ApplyOffer(offer.offerIdString, offer.offerPresentationWay, offer.combinedCount)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferFiles</a>
+                  </div>
+               </div>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="13"class="text-center">
+               @res.SharedResources.ErrorMessages.NoDataFound
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>
+
+

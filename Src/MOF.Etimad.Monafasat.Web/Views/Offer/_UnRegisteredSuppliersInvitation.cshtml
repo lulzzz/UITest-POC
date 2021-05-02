@@ -1,0 +1,103 @@
+@using MOF.Etimad.Monafasat.ViewModel
+@model OfferSolidarityModel
+<div>
+   <div class="card card-body">
+      <div class="row">
+         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="form-group has-success bmd-form-group p-0">
+               <label class="label bmd-label-static">نوع الكيان</label>
+               <select data-live-search="false" id="slctype" class="selectpicker" @@change="onInvitationTypeChange($event)" name="tb_InvitationType" data-style="select-with-transition" title="نوع الكيان" data-size="7">
+                  <option value="@((int)Enums.UnRegisteredSuppliersInvitationType.HasCR)" data-tokens="ketchup mustard">مورد يملك سجل تجارى </option>
+                  <option value="@((int)Enums.UnRegisteredSuppliersInvitationType.Foriegn)" data-tokens="mustard"> مورد اجنبى</option>
+                  <option value="@((int)Enums.UnRegisteredSuppliersInvitationType.HasLicience)" data-tokens="mustard">  كيان يملك رخصة مزاولة مهنة</option>
+                  @*<option value="@((int)Enums.UnRegisteredSuppliersInvitationType.Other)" data-tokens="frosting">اخرى</option>*@
+               </select>
+            </div>
+         </div>
+         <div class="col-md-8 col-sm-12 col-xs-12">
+            <div class="row">
+               <div class="col-12" id="divRegisteredSupplier" v-show="showRegistred">
+                  <h5 class="text-primary">  مورد يملك سجل تجارى</h5>
+                  <div class="form-group has-success  bmd-form-group p-0">
+                     <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CommercialNumber</label>
+                     <div class="input-group-prepend">
+                        <input type="number" class="form-control" v-model="crNumber" id="txtCrNumber" placeholder="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CommercialNumber" />
+                        <button type="button" id="btnCheckForCR" @@click="CheckForCrNumber(crNumber)" class="btn btn-primary">تحقق</button>
+                     </div>
+
+                     <span style="color:red" v-show="crNameLength !='' "> الرجاء ادخال رقم سجل تجارى صحيح  </span>
+
+                     <span id="spanvalidCr" class="hide" style="color:red"> الرجاء ادخال رقم سجل تجارى صحيح  </span>
+                     <span v-show="checkName" class="badge h6 badge-info">
+                        <span class="p-1 d-inline-block" style="font-size: 1.1em;">
+                           {{crName}}
+                        </span>
+                     </span>
+                  </div>
+               </div>
+               <div class=" col-12" id="divForiegnSupplier" v-show="showForiegn">
+                  <h5 class="text-primary"><span id="hForienTitle"></span></h5>
+                  <div class="form-group has-success bmd-form-group p-0">
+                     <label id="labForienTitle" class="label bmd-label-static"></label>
+                     <input type="number" class="form-control" v-model="crNumberForeign" id="txtCrNumberOrIdintity" />
+                     <span id="spanvalidForiegn" class="hide" style="color:red"></span>
+                  </div>
+               </div>
+
+               <div class="col-12" v-show="showComunication" id="divComunication">
+                  <div class="row">
+
+
+                     <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label for="name" class="label bmd-label-static"> طريقة الدعوة  </label><span class="text-danger">*</span>
+                           <div class="form-check">
+                              <label class="form-check-label">
+                                 <input name="IsOldSystem" requierd="true" type="radio" value="true"  class="form-check-input" v-model="isEmailContact">
+                                 الإيميل
+
+                                 <span class="circle"><span class="check"></span></span> <!---->
+                              </label>
+                              <label class="form-check-label">
+                                 <input name="IsOldSystem" requierd="true" type="radio" value="false"  class="form-check-input" v-model="isEmailContact">
+                                 الجوال
+
+                                 <span class="circle"><span class="check"></span></span> <!---->
+                              </label>
+                           </div>
+                        </div>
+                    
+                     </div>
+
+
+
+                     <div class=" col-md-8 col-sm-12 col-xs-12" v-if="isEmailContact=='true'">
+                        <div class="form-group has-success  bmd-form-group p-0">
+                           <label class="label bmd-label-static">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Email)</label>
+                           <input type="email" class="form-control" id="txtCrEmail" v-model="email" placeholder="@Html.Raw(MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.EnterEmail)" />
+                           <div class="col-12" style="height:23px">
+                              <span id="spanvalidSend" style="color:red"></span>
+                           </div>
+                        </div>
+                     </div>
+                     <div class=" col-md-8 col-sm-12 col-xs-12" v-show="isEmailContact=='false'">
+                        <div class="form-group has-success  bmd-form-group p-0">
+                           <label class="label bmd-label-static">الجوال</label>
+                           <input type="tel" class="form-control" id="txtCrMobile" v-model="mobile" placeholder="الرجاء ادخال رقم الجوال" />
+                           <span id="valid-msg" class="hide" style="color:#44e400">الرقم صحيح </span>
+                           <span id="error-msg" class="hide" style="color:red">الرقم غير صحيح </span>
+                        </div>
+                     </div>
+                   
+                  </div>
+
+
+                  <button type="button" class="btn btn-primary" @@click="SendInvitationsForUnRegisteredSupplierAsync(crNumber,crName,email,@((int)Enums.UnRegisteredSuppliersInvitationType.HasCR))">إرسال</button>
+
+                  <span v-show="showOther" class="badge badge-warning m-1 h6">أنت بحاجة الى ارسال الدعوه عند تسجيل المورد بالمنصة</span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

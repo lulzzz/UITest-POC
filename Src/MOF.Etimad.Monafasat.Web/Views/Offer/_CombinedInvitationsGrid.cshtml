@@ -1,0 +1,39 @@
+<div class="table-responsive ">
+   <table class="table table-striped" id="TenderTable" aria-describedby="Combined Invitions">
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName</th>
+            <th scope="col" style="width:130px">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+         </tr>
+      </thead>
+      <tbody v-if="Tenders && Tenders.length > 0">
+         <tr v-for="(tender, $index) in Tenders">
+            <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName"> {{tender.tenderName}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber"> {{tender.tenderReferenceNo}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{tender.combinedLeaderCR}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName"> {{tender.combinedLeaderCommericalName}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               <div class="dropdown">
+                  <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i><div class="ripple-container"></div></button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                     <a :href="detailsUrl(tender.offerIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details</a>
+                  </div>
+               </div>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td class="text-center" colspan="9">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>

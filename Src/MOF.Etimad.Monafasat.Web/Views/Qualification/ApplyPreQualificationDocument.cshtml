@@ -1,0 +1,649 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration _config
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationApplyDocumentsModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PageTitle;
+}
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+
+   ul.pagination.pagination-primary {
+      width: auto;
+      display: contents;
+   }
+
+      ul.pagination.pagination-primary li {
+         display: inline-block;
+      }
+
+         ul.pagination.pagination-primary li a {
+            color: #636262;
+         }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.BreadCrumb</li>
+      </ol>
+   </nav>
+}
+
+
+<form method="POST" autocomplete="off" id="frmApplyQualification">
+   <input type="hidden" asp-for="@Model.EditMode" />
+   <input type="hidden" asp-for="@Model.QualificationTypeId" />
+   <input type="hidden"id="qualificationStatusId" asp-for="@Model.QualificationStatusId" />
+   <div class="modal fade" id="myModal1" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p class="text-dark-green">
+                  @MOF.Etimad.Monafasat.Resources.QualificationResources.Messages.ConfirmSendSupplierDocs
+               </p>
+            </div>
+            <div class="modal-footer">
+               <button type="submit" class="btn btn-primary btn-sm m-1" onclick="submitForm()">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Send
+               </button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="card">
+      <div class="card-body">
+         <input type="hidden" id="ModuleType" value="@((int)Enums.DeleteModule.Qualification)" />
+         <div id="dvPreQualificationDetail">
+            @*@await Component.InvokeAsync("PreQualificationPartialDetail", new { qualificationId = @Model.PreQualificationIdString })*@
+         </div>
+
+         @if (Model.PreQualificationResult == (int?)Enums.OfferStatus.Received && User.IsInRole(RoleNames.supplier))
+         {
+            <div class="row">
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.QualificationResources.Messages.Status
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span class="badge badge-success h6 d-inline-block" style="margin: 0px 5px;">@MOF.Etimad.Monafasat.Resources.QualificationResources.Messages.Recieved</span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         }
+         @Html.AntiForgeryToken()
+         <input type="hidden" asp-for="PreQualificationIdString" />
+         @if (Model.SupplierPreQualificationDocumentId == 0)
+         {
+            <div class="col-12">
+               <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ApplyingDocuments</h4>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+               <div class="form-group bmd-form-group p-0">
+                  <label asp-for="AttachmentRefrences" class="label bmd-label-static"></label>
+                  @Html.FileUploaderFor(m => m.AttachmentRefrences, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+               </div>
+            </div>
+         }
+         else
+         {
+            if (Model.PreQualificationResult == (int)Enums.OfferStatus.Rejected)
+            {
+               <div class="row">
+                  <div class="col-md-6 col-sm-12 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.RejectionReason
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span asp-for="RejectionReason">@Model.RejectionReason</span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            }
+            @await Component.InvokeAsync(typeof(MOF.Etimad.Monafasat.Web.ViewComponents.QualificationSupplierDocument.QualificationSupplierDocumentAttachmentViewComponent), new { PreQSupDocID = Model.SupplierPreQualificationDocumentIdString })
+         }
+
+      </div>
+   </div>
+   <div class="card">
+      <div class="card-body">
+         <div class="" id="dvSupplierIDMInfo">
+         </div>
+      </div>
+   </div>
+   <div class="card">
+      <div class="card-body">
+         <div class="">
+
+
+            @if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Small)
+            {
+            @Html.Partial("~/Views/Qualification/Partials/_SmallSupplierConfigData.cshtml", Model)
+            }
+            else if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Medium)
+            {
+            @Html.Partial("~/Views/Qualification/Partials/_MediumSupplierConfigData.cshtml", Model)
+
+            }
+            else if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Large)
+            {
+            @Html.Partial("~/Views/Qualification/Partials/_LargeSupplierConfigData.cshtml", Model)
+            }
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-12">
+         @if (Model.QualificationStatusId != (int)Enums.QualificationStatus.Received)
+         {
+         <button class="btn btn-primary" type="button" id="btnSaveAsDraft" onclick="submitSupplierConfigDataAsDraft()">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SaveDraft
+         </button>
+         }
+         <button class="btn btn-primary" type="button" id="btnSave">
+            @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ApproveSendQualificationDocument
+         </button>
+         <a asp-action="Index" asp-controller="Qualification" class="btn btn-outline-primary btn-link pull-right">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+            <div class="ripple-container"></div>
+         </a>
+      </div>
+   </div>
+</form>
+<div class="modal fade" id="supplierEvaluationModel" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">تأكيد </h5>
+         </div>
+         <div class="modal-body">
+            <span id="spConfirmMsg">  </span>
+            <p class="text-dark-green">
+               @MOF.Etimad.Monafasat.Resources.QualificationResources.Messages.ConfirmSendSupplier
+            </p>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm m-1" name="button" style="display:none" onclick="ConfirmSupplierConfigData()" id="btnConfirmFinancial">نـعم</button>
+            <button type="button" class="btn btn-primary btn-sm m-1" name="button" style="display:none" onclick="submitSupplierConfigData()" id="btnSubmitSupllierForm">نـعم</button>
+            <button type="button" class="btn btn-danger  btn-link btn-sm m-1" data-dismiss="modal"> لا</button>
+         </div>
+      </div>
+   </div>
+</div>
+<script>
+
+   $(document).ready(function () {
+      $('a[onclick^="RedirectURL"]').on('mousedown', SessionExpireAlert());
+   })
+
+
+    $(function () {
+       getPreQualificationDetailsViewComponent();
+       getSupplierIDMInfoViewComponent();
+       SessionExpireAlert();
+
+      //$('.Financialinput').on('input propertychange paste', function (e) {
+      //   var reg = /^0+/gi;
+      //   if (this.value.match(reg)) {
+      //      this.value = this.value.replace(reg, '');
+      //   }
+      //});
+
+       $("#dvLargeSupplierConfigData input:text").bind("paste", function (e) {
+          //e.preventDefault();
+          allowNumeric(e);
+          allowDecimalWithCustomLength(e, 15);
+       });
+
+       $("#dvMediumSupplierConfigData input:text").bind("paste", function (e) {
+          allowNumeric(e);
+          allowDecimalWithCustomLength(e, 15);
+       });
+
+
+       $("#dvSmallSupplierConfigData input:text").bind("paste", function (e) {
+          allowNumeric(e);
+          allowDecimalWithCustomLength(e, 15);
+       });
+
+
+       $("#btnSave").on("click", function () {
+
+
+
+           if (@Model.QualificationTypeId == @((Int32) Enums.PreQualificationType.Large))
+          {
+             if (!validInsuranceDate())
+             {
+                AlertFun('@MOF.Etimad.Monafasat.Resources.QualificationResources.ErrorMessages.InvalidInsuranceDate', alertMessageType.Danger);
+                return false;
+             }
+           }
+
+
+
+
+          $("#spConfirmMsg").html('');
+         var frmValid =  $("#frmApplyQualification").valid();
+          $("#spEmployeeValidation").html('');
+          if (frmValid) {
+             var totalEmployee = $("#txtNumberOfTotalEmployee").val();
+             var saudiEmployee = $("#txtSaudiaEmployeeNumber").val();
+             if (totalEmployee != '' && saudiEmployee != '') {
+                if (Number(saudiEmployee) > Number(totalEmployee)) {
+                   $("#spEmployeeValidation").html('@MOF.Etimad.Monafasat.Resources.QualificationResources.ErrorMessages.SaudiPercentagErrorMsg');
+                   return false;
+                } else {
+                   $("#txtSaudiaEmployeePercentage").val((totalEmployee == 0 || totalEmployee == 0.0 ? 0 : parseFloat(parseFloat(saudiEmployee) / parseFloat(totalEmployee) * 100).toFixed(2)));
+                }
+             }
+             else {
+                $("#txtSaudiaEmployeePercentage").val('');
+                return false;
+             }
+
+             if (@Model.QualificationTypeId == @((Int32) Enums.PreQualificationType.Medium) || @Model.QualificationTypeId == @((Int32) Enums.PreQualificationType.Large) ) {
+
+                if (!ValidqualityAssurance())
+                   return false;
+
+
+                if (!ValidEnvironmentalHealth())
+                   return false;
+
+             }
+
+             confirmFinancialQualificationValueDefault();
+          } else {
+
+           var supplierFiles = $("#AttachmentRefrences").val();
+          if (supplierFiles == '')
+          {
+             $(window).scrollTop(0);
+             return false;
+             }
+          }
+       });
+   });
+
+
+   function allowDecimalWithCustomLength(event, inputlength) {
+      var _isTextSelected = isTextSelected(document.getElementById(event.target.id));
+      if (_isTextSelected) {
+         $("#" + event.target.id).val('');
+      }
+
+      event.target.value = event.target.value.replace(/[^0-9\.]/g, '');
+
+      if ((event.which != 46 || event.target.value.indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+         event.preventDefault();
+      }
+
+      if (checkInputLength(event.target.value, inputlength, event.key) == true) {
+         event.preventDefault();
+      }
+
+      if (hasDecimalPlace(event.target.value, 2) == true) {
+         event.preventDefault();
+      }
+   }
+
+   function checkInputLength(value , length , key) {
+
+      var inputLength = value.length + 1 ;
+      if (inputLength > length && key != '.') {
+         // check point
+         if (value.indexOf('.') != -1) {
+            inputLength = value.split('.')[0].length;
+            if (inputLength == length  ) {
+             return   hasDecimalPlace(value, 2);
+            } else {
+               if (inputLength > length) {
+               return true;
+            } else {
+               return false;
+            }
+            }
+         }
+         return true;
+      } else {
+         if (key == ".") {
+          return  hasDecimalPlace(value, 2);
+         } else {
+         return   hasDecimalPlace(value, 2);
+         }
+      }
+      return false;
+   }
+
+     function validInsuranceDate() {
+
+        var checkingDate = new Date(convertUmmalquraToGregorian('@Model.OffersCheckingDateHijri'));
+
+        var insuranceOfProfessionalInsurance = $("#txtInsuranceOfProfessionalInsuranceCoverageEndDate").val();
+        var liabilityInsuranceCoverageEndDate = $("#txtLiabilityInsuranceCoverageEndDate").val();
+        var commercialResponsibilityInsuranceCoverageEndDate = $("#txtCommercialResponsibilityInsuranceCoverageEndDate").val();
+
+        if ($("#dllInsuranceOfProfessional").val() == @((Int32)Enums.QualificationAvailibleNotAvailibleLookup.Availible) ) {
+           if ($('#cb_txtInsuranceOfProfessionalInsuranceCoverageEndDate').is(':checked')) {
+              var i = insuranceOfProfessionalInsurance.split('/');
+              insuranceOfProfessionalInsurance = i[1] + '/' + i[0] + '/' + i[2];
+           }
+           else {
+              insuranceOfProfessionalInsurance = convertUmmalquraToGregorian(insuranceOfProfessionalInsurance);
+           }
+        } else {
+           insuranceOfProfessionalInsurance = '';
+        }
+
+        if ($("#dllLiabilityInsurance").val() == @((Int32)Enums.QualificationAvailibleNotAvailibleLookup.Availible) ) {
+           if ($('#cb_txtLiabilityInsuranceCoverageEndDate').is(':checked')) {
+              var i = liabilityInsuranceCoverageEndDate.split('/');
+              liabilityInsuranceCoverageEndDate = i[1] + '/' + i[0] + '/' + i[2];
+           }
+           else {
+              liabilityInsuranceCoverageEndDate = convertUmmalquraToGregorian(liabilityInsuranceCoverageEndDate);
+           }
+        } else {
+           liabilityInsuranceCoverageEndDate = '';
+        }
+
+        if (  $("#dllCommercialResponsibility").val() == @((Int32)Enums.QualificationAvailibleNotAvailibleLookup.Availible) )
+        {
+           if ($('#cb_txtCommercialResponsibilityInsuranceCoverageEndDate').is(':checked'))
+           {
+
+              var i = commercialResponsibilityInsuranceCoverageEndDate.split('/');
+              commercialResponsibilityInsuranceCoverageEndDate = i[1] + '/' + i[0] + '/' + i[2];
+           }
+           else
+           {
+              commercialResponsibilityInsuranceCoverageEndDate = convertUmmalquraToGregorian(commercialResponsibilityInsuranceCoverageEndDate);
+           }
+        } else {
+           commercialResponsibilityInsuranceCoverageEndDate = '';
+        }
+
+        insuranceOfProfessionalInsurance = new Date(insuranceOfProfessionalInsurance);
+        liabilityInsuranceCoverageEndDate = new Date(liabilityInsuranceCoverageEndDate);
+        commercialResponsibilityInsuranceCoverageEndDate = new Date(commercialResponsibilityInsuranceCoverageEndDate);
+
+        if (insuranceOfProfessionalInsurance <= checkingDate || commercialResponsibilityInsuranceCoverageEndDate <= checkingDate || liabilityInsuranceCoverageEndDate <= checkingDate) {
+           return false;
+        }
+        return true;
+     }
+
+
+
+     function ValidqualityAssurance() {
+
+        var qualityAssurance =  $("#dllQualityAssurance").val();
+        if (qualityAssurance != '-99') {
+           if (qualityAssurance == @((Int32)Enums.QualificationQualityGuaranteeLookup.GuaranteeNotAvailible)) {
+              $('#FileReferenceForQualityAssuranceStandards').rules("remove", "required");
+              return true;
+           } else {
+              var filePath = $("#FileReferenceForQualityAssuranceStandards").val();
+              if (filePath == '') {
+                 return false;
+              }
+           }
+        } else {
+           requireInput('FileReferenceForQualityAssuranceStandards', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+           return false;
+        }
+        return true;
+     }
+
+     function ValidEnvironmentalHealth() {
+
+        var environmentalHealth =  $("#dllEnvironmentalHealth").val();
+        if (environmentalHealth != '-99') {
+           if (environmentalHealth == @((Int32)Enums.QualificationEnvironmentStandardsLookup.EnvironmentGuideNotAvailible)) {
+              $('#FileReferenceForEnvironmentalHealthSafetyStandards').rules("remove", "required");
+              return true;
+           } else {
+              var filePath = $("#FileReferenceForEnvironmentalHealthSafetyStandards").val();
+              if (filePath == '') {
+                 return false;
+              }
+           }
+        } else {
+           requireInput('FileReferenceForEnvironmentalHealthSafetyStandards', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+           return false;
+        }
+        return true;
+     }
+
+
+      function getPreQualificationDetailsViewComponent() {
+        $('#LoadingSite').fadeIn();
+      $.get('/Qualification/GetPreQualificationPartialDetailViewComponenet?qualificationId=' + '@Html.Raw(Model.PreQualificationIdString)', function (data) {
+         $("#dvPreQualificationDetail").html(data);
+
+         $('#LoadingSite').fadeOut();
+         $('#dvPreQualificationDetail a[onclick^="RedirectURL"]').on('click', function () {
+            SessionExpireAlert();
+         })
+       });
+      }
+
+     function getSupplierIDMInfoViewComponent() {
+        $('#LoadingSite').fadeIn();
+      $.get('/Qualification/GetQualificationSupplierIDMInfoViewComponenet?SupplierId=' + '@Model.SupplierId', function (data) {
+         $("#dvSupplierIDMInfo").html(data);
+         $('#LoadingSite').fadeOut();
+         $('#dvSupplierIDMInfo a[target="_blank"]').on('click', function () {
+            SessionExpireAlert();click         } )
+       });
+   }
+
+
+
+
+   function confirmFinancialQualificationValueDefault() {
+       var Res = false;
+      var checkFinancialQualificationinputs = $("#bdySupplierConfigData :input[type='text']");
+      checkFinancialQualificationinputs.each(function () {
+         if (this.value == 0 || this.value == 0.0 ) {
+            Res = true; return false;
+         }
+      });
+
+        if (!Res) {
+           $("#spConfirmMsg").html('@MOF.Etimad.Monafasat.Resources.QualificationResources.Messages.ApplyQualificationConfirmMsg');
+           $("#btnSubmitSupllierForm").css('display', 'block')
+           $("#btnConfirmFinancial").css('display', 'none')
+
+        } else {
+           $("#spConfirmMsg").html('@MOF.Etimad.Monafasat.Resources.QualificationResources.Messages.FinancialCapacityConfirmMsg');
+           $("#btnSubmitSupllierForm").css('display', 'none')
+           $("#btnConfirmFinancial").css('display', 'block')
+        }
+
+       $("#supplierEvaluationModel").modal('show');
+   }
+
+
+   function ConfirmSupplierConfigData() {
+
+
+      $("#spConfirmMsg").html('@MOF.Etimad.Monafasat.Resources.QualificationResources.Messages.ApplyQualificationConfirmMsg');
+      $("#btnSubmitSupllierForm").css('display', 'block')
+      $("#btnConfirmFinancial").css('display', 'none')
+      $("#supplierEvaluationModel").modal('show');
+   }
+
+   function submitSupplierConfigData() {
+
+      $('#loader').show();
+      $("#qualificationStatusId").val(4);
+      $("#frmApplyQualification").submit();
+   }
+
+   function submitSupplierConfigDataAsDraft() {
+      debugger
+      $('#loader').show();
+      if ('@Model.QualificationTypeId' == '@((int)Enums.PreQualificationType.Small)') {
+         $("#dvSmallSupplierConfigData input:text").each(function () {
+            if (this.value == '') {
+               this.value = 0.0
+            }
+         });
+      }
+      else if ('@Model.QualificationTypeId' == '@((int)Enums.PreQualificationType.Medium)') {
+         $("#dvMediumSupplierConfigData input:text").each(function () {
+            if (this.value == '' && this.type == "text") {
+               this.value = 0.0
+            }
+         });
+         $("#dvMediumSupplierConfigData select").each(function () {
+            $('#' + this.id).rules("remove", "required");
+            $('#' + this.id).rules("remove", "range");
+         });
+         //$('#dllQualityAssurance').rules("remove", "required");
+         //$('#dllQualityAssurance').rules("remove", "range");
+         //$('#dllEnvironmentalHealth').rules("remove", "required");
+         //$('#dllEnvironmentalHealth').rules("remove", "range");
+      }
+      else if ('@Model.QualificationTypeId' == '@((int)Enums.PreQualificationType.Large)') {
+         $("#dvLargeSupplierConfigData input").each(function () {
+            if (this.value == '' && this.type == "text") {
+               this.value = 0.0
+            }
+         });
+         $("#dvLargeSupplierConfigData select").each(function () {
+            $('#' + this.id).rules("remove", "required");
+            $('#' + this.id).rules("remove", "range");
+         });
+      }
+      $("#qualificationStatusId").val(@((int)Enums.QualificationStatus.Draft));
+      $("#frmApplyQualification").submit();
+     // $('#loader').hide();
+   };
+
+   function calculateSaudiEmployeePercentage() {
+
+      $("#spEmployeeValidation").html('');
+      var totalEmployee = $("#txtNumberOfTotalEmployee").val();
+      var saudiEmployee = $("#txtSaudiaEmployeeNumber").val();
+      if (totalEmployee != '' && saudiEmployee != '') {
+         if (Number(saudiEmployee) > Number(totalEmployee)) {
+            $("#spEmployeeValidation").html('@MOF.Etimad.Monafasat.Resources.QualificationResources.ErrorMessages.SaudiPercentagErrorMsg');
+            return false;
+         } else {
+            $("#txtSaudiaEmployeePercentage").val((totalEmployee == 0 || totalEmployee == 0.0 ? 0 : parseFloat(parseFloat(saudiEmployee) / parseFloat(totalEmployee) * 100).toFixed(2)));
+         }
+      } else {
+         $("#txtSaudiaEmployeePercentage").val('');
+         return false;
+      }
+   }
+
+    function allowNumericWithDecimal(event) {
+
+
+       var _isTextSelected = isTextSelected(document.getElementById(event.target.id));
+      if (_isTextSelected)
+      {
+         $("#" +  event.target.id).val('');
+      }
+
+      event.target.value = event.target.value.replace(/[^0-9\.]/g, '');
+
+      if ((event.which != 46 || event.target.value.indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+         event.preventDefault();
+      }
+
+      if (hasDecimalPlace(event.target.value, 2) == true) {
+                  event.preventDefault();
+      }
+    }
+
+
+   function hasDecimalPlace(value, x)
+   {
+
+    var pointIndex = value.indexOf('.');
+      return pointIndex >= 0 && pointIndex < value.length - x;
+   }
+
+
+   function isTextSelected(input) {
+
+    if (typeof input.selectionStart == "number") {
+        return input.selectionStart == 0 && input.selectionEnd == input.value.length;
+    } else if (typeof document.selection != "undefined") {
+        input.focus();
+        return document.selection.createRange().text == input.value;
+    }
+}
+
+   function allowNumeric(event) {
+      event.target.value = event.target.value.replace(/[^\d].+/, "");
+      if ((event.which < 48 || event.which > 57)) {
+         event.preventDefault();
+      }
+   }
+
+    function ValidQualityAssuranceFiles(element) {
+
+      if (element.value == '@((Int16)Enums.QualificationQualityGuaranteeLookup.GuaranteeNotAvailible )') {
+         $('#FileReferenceForQualityAssuranceStandards').rules("remove", "required");
+      } else {
+         requireInput('FileReferenceForQualityAssuranceStandards', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+      }
+   }
+
+   function ValidEnvironmentalHealthSafetyFiles(element) {
+
+      if (element.value == '@((Int16)Enums.QualificationEnvironmentStandardsLookup.EnvironmentGuideNotAvailible )') {
+         $('#FileReferenceForEnvironmentalHealthSafetyStandards').rules("remove", "required");
+      } else {
+         requireInput('FileReferenceForEnvironmentalHealthSafetyStandards', '@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required');
+      }
+   }
+
+   function requireInput(inputId, message) {
+
+      $("#" + inputId).rules("add", {
+         required: true,
+         messages: { required: message }
+      });
+   }
+
+</script>
+@section scripts
+   {
+
+   <script src="~/Etimad-UI/assets/js/paginathing.js"></script>
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/ViewsScripts/Qualification/ApplyPreQualificationDocument.js"></script>
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+}

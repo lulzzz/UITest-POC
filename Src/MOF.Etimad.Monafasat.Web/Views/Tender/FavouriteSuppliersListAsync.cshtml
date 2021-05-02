@@ -1,0 +1,438 @@
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FavouriteSuppliersList;
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FavouriteSuppliersList</li>
+      </ol>
+   </nav>
+}
+@section pagecontrols{
+   <div class="dropdown">
+   </div>
+}
+
+<form>
+   @Html.AntiForgeryToken()
+</form>
+<form id="searchCriteriaForm" class="form" autocomplete="off">
+   <div class="clearfix"></div>
+   <div class="row" id="SuppliersGrid" v-cloak>
+      <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm  </h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <div class="row" id="divSpecification">
+                     <div class="col-xs-12">
+
+                        <h5 class="modal-title"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmDeleteFavouriteList  </h5>
+                     </div>
+                  </div>
+               </div>
+               <div class="modal-footer">
+                  <button class="btn btn-primary btn-sm"
+                          type="button"
+                          id="confirmDeleteBtn"
+                          @@click="removeFavouritesList"
+                          value="">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+                  </button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div class="modal fade" id="confirmAdd" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  @*@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddSupplierToFavouriteList*@
+                  <h5 class="modal-title"> نقل مورد إلى قائمة مفضلة أخرى  </h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <div class="row" id="divSpecification">
+                     <div class="col-12">
+                        <div class="form-group bmd-form-group  p-0">
+                           <div id="SelectExistList" class="input-group-append">
+                              <select data-live-search="true" id="ExistLists" class="selectpicker" data-style="select-with-transition" data-size="7">
+                                 <option value="0">>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose</option>
+                                 <option v-for="item in FavouriteLists" :value="item.favouriteSupplierListId">{{item.name}}</option>
+                              </select>
+                              <button type="button" class="btn p-2 btn-primary btn-sm" id="SwitchToAddNew"><i class="material-icons">add</i>إضافة قائمة جديدة<div class="ripple-container"></div></button>
+                           </div>
+                           <div id="AddNewList" class="d-none input-group-append">
+                              <input type="text" class="form-control" placeholder="عنوان القائمة"  id="NewListName" >
+                              <button type="button" class="btn p-2 btn-primary"  @@click="addNewItemToFavouriteListTransfer" id="SaveNewList">حفظ</button>
+                              <button type="button" class="btn p-2 btn-danger " id="SwitchToSelectExist">إلغاء</button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="modal-footer">
+                  <button class="btn btn-primary btn-sm" type="button"
+                          id="addToFavouritesBtn" @@click="addToFavourites"
+                          value="">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+                  </button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div class="modal fade" id="addNewItemToFavoutite" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">إضافة قائمة جديدة </h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <div class="row" id="divSpecification">
+                     <div class="col-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <div class="input-group-append">
+                              <input type="text" placeholder="عنوان القائمة" style="display:initial;" class="form-control" id="FavouriteName">
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="modal-footer">
+                  <button class="btn btn-primary btn-sm" type="button"
+                          id="addToFavouritesBtn" @@click="addNewItemToFavourites"
+                          value="">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+                  </button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div class="col-md-12 col-sm-12 col-xs-12" id="FavouriteSuppliersGrid" v-cloak>
+         <div class="card">
+            <div class="card-body">
+               <h5>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FavouriteSuppliersList
+               </h5>
+               <div class="col-md-8 col-sm-12 col-xs-12 input-group-append">
+                  <select data-live-search="true" id="FavouriteListsSelect" @@change="FavouriteListChange()" class="selectpicker " data-style="select-with-transition" data-size="7">
+                     <option value="0">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                     <option v-for="item in FavouriteLists" :value="item.favouriteSupplierListId">{{item.name}}</option>
+                  </select>
+                  <button type="button"
+                          data-toggle="modal"
+                          data-target="#addNewItemToFavoutite"
+                          class="btn btn-primary btn-sm p-1"  >
+                     <i class="material-icons">add</i>
+                     إضافة قائمة جديدة
+                  </button>
+                  <button type="button"
+                          data-toggle="modal"
+                          data-target="#confirmDelete"
+                          class="btn btn-outline-danger btn-sm btn-link p-2">
+                     <i class="material-icons">close</i>
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete
+                  </button>
+               </div>
+
+            </div><div class="table-responsive">
+               <table id="FavouriteSuppliersTable" class="table table-striped text-center" aria-describedby="favourite Suppliers">
+                  <thead class="text-center">
+                     <tr>
+                        <th scope="col" class="text-center">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName
+                        </th>
+                        <th scope="col" class="text-center">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber
+                        </th>
+                        <th scope="col" class="text-center">
+                           القائمة
+                        </th>
+                        <th scope="col" class="text-center">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Options
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody class="text-center" v-if="FavouriteSuppliers && FavouriteSuppliers.length > 0">
+                     <tr v-for="(Supplier, $index) in FavouriteSuppliers" v-bind:id='Supplier.commericalRegisterNo+"_"+Supplier.favouriteSupplierListId'>
+
+                        <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName">
+                           {{Supplier.commericalRegisterName}}
+                        </td>
+                        <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber">
+                           {{Supplier.commericalRegisterNo}}
+                        </td>
+                        <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber">
+                           {{Supplier.favouriteName}}
+
+                        </td>
+                        <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Options">
+                           <a class="btn btn-just-icon btn-link btn-danger"
+                              accesskey="" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemoveFromFavorite"
+                              @@click="removeFromFavourites(Supplier.commericalRegisterNo,Supplier.favouriteSupplierListId)">
+                              <i class="material-icons">favorite</i><div class="ripple-container"></div>
+                           </a>
+                           <button class="btn btn-sm btn-primary"
+                              title="نقل إلي مفضله أخرى"
+                              type="button"
+                              @@click="setFaouriteUserId(Supplier.commericalRegisterNo, Supplier.commericalRegisterName,Supplier.favouriteSupplierListId)"
+                              data-toggle="modal"
+                              data-target="#confirmAdd">نقل إلي مفضله أخرى 
+                           </button>
+
+                        </td>
+                     </tr>
+                  </tbody>
+                  <tbody v-else>
+                     <tr>
+                        <td colspan="9" class="text-center">
+                           <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                           <br />
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+               <pagination :visible_pages="3" ref="vpaginator2" :resource_url="FavouriteResource_url" @@update="updateFavouriteResource"></pagination>
+            </div>
+         </div>
+      </div>
+   </div>
+</form>
+@section scripts{
+   <script>
+      $(document).ready(function () {
+         $('li#menuLists').addClass('active');
+         $('li#menuLists a#menuFavouriteSuppliersListAsync').addClass('active');
+
+      });
+      var commericalRegisterNo = 0;
+      var commericalRegisterName = "";
+      var FavouriteListId = 0;
+      var OldFavouriteListId = 0;
+      var newFavouriteListIdTransfer = 0;
+      var NebObj = new Vue({
+         el: '#SuppliersGrid',
+         data: {
+            Suppliers: [],
+            FavouriteLists:[],
+            FavouriteSuppliers:[],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/Tender/GetActiveAllSuppliersAsync?pageSize=10',
+            FavouriteResource_url: '/Tender/GetAllFavouriteSuppliers?pageSize=10',
+            queryString: '',
+         },
+         methods: {
+            updateFavouriteResource: function (data) {
+               if (!data)
+                  return;
+               this.FavouriteSuppliers = data;
+               this.totalCount = this.$refs.vpaginator2.totalCount;
+               this.currentPage = this.$refs.vpaginator2.currentPage;
+               this.pageSize = this.$refs.vpaginator2.pageSize;
+            },
+            setFaouriteUserId: function (commericalRegisterNumber, commericalName, favouriteSupplierId) {
+               commericalRegisterNo = commericalRegisterNumber;
+               commericalRegisterName = commericalName;
+               OldFavouriteListId = favouriteSupplierId;
+               $("#ExistLists").val('0').change();
+               $("#FavouriteListsSelect").val('0').change();
+            },
+            FavouriteListChange: function () {
+               this.FavouriteResource_url = "/Tender/GetAllFavouriteSuppliers?pageSize=10&FavouriteSupplierListId=" + $("#FavouriteListsSelect").val();
+            },
+            addToFavourites: function () {
+               
+               if (FavouriteListId === -1) {
+                  if ($("#NewListName").val().trim() == "") {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterListName)', alertMessageType.Danger);
+                     return;
+                  }
+                  $.get("/Tender/AddFavouriteSupplierList?Name=" + $("#NewListName").val(), function (data, status, response) {
+                     if (data.status === "error") {
+                     AlertFun(data.message, alertMessageType.Danger);
+                     }
+                     else {
+                        newFavouriteListIdTransfer = data.favouriteSupplierListId;
+                        FavouriteListId = data.favouriteSupplierListId;
+                        AddSupplierToFavouriteList(true);
+                     }
+                  });
+               }
+               else {
+                  if (FavouriteListId === 0) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.PleseSelectAList)', alertMessageType.Danger);
+                     return;
+                  }
+                  $("#addToFavouritesBtn").attr("disabled", "disabled");
+                  AddSupplierToFavouriteList(true);
+                  $("#addToFavouritesBtn").removeAttr("disabled");
+               }
+            },
+            addNewItemToFavourites: function () {
+               if ($("#FavouriteName").val().trim() == "") {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterListName)', alertMessageType.Danger);
+                     return;
+                  }
+               $.get("/Tender/AddFavouriteSupplierList?Name=" + $("#FavouriteName").val(), function (data, status, response) {
+                  if (data.status === "error") {
+                     AlertFun(data.message, alertMessageType.Danger);
+                     }
+                     else {
+                           window.location = '@Url.Action("FavouriteSuppliersListAsync", "Tender")';
+                     }
+                  });
+            },
+            addNewItemToFavouriteListTransfer: function () {
+               
+               if ($("#NewListName").val().trim() == "") {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterListName)', alertMessageType.Danger);
+                  return;
+               }
+               $.get("/Tender/AddFavouriteSupplierList?Name=" + $("#NewListName").val(), function (data, status, response) {
+                  if (data.status === "error") {
+                     AlertFun(data.message, alertMessageType.Danger);
+                     }
+                     else {
+                        newFavouriteListIdTransfer = data.favouriteSupplierListId;
+                        FavouriteListId = data.favouriteSupplierListId;
+                        reloadNewList(data.favouriteSupplierListId);
+                     }
+                  });
+            },
+            removeFromFavourites: function (commericalRegisterNo,listid) {
+               $('#LoadingSite').fadeIn();
+               $.ajax({
+                  type: "GET",
+                  url: '@Url.Action("DeleteSupplierFromFavouriteList", "Tender")',
+                  data: { CommericalRegisterNo: commericalRegisterNo, FavouriteSupplierListId: listid},
+                  success: function () {
+                     $('#LoadingSite').fadeOut();
+                     var rowId = commericalRegisterNo + "_" + listid;
+                     $("#" + rowId).closest('tr').remove();
+                  },
+                  error: function () {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ExpiredActivationCode)', alertMessageType.Danger);
+                     $('#LoadingSite').fadeOut();
+                  }
+               });
+            },
+            removeFavouritesList: function () {
+               
+               var FavouriteListsItemIndex = $("#FavouriteListsSelect").val();
+               if (FavouriteListsItemIndex <= 0) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.PleseSelectAList)', alertMessageType.Danger);
+                  return;
+               }
+               $('#LoadingSite').fadeIn();
+               $.ajax({
+                  type: "GET",
+                  url: '@Url.Action("DeleteFavouriteSupplierList", "Tender")',
+                  data: { FavouriteSupplierListId: FavouriteListsItemIndex},
+                  success: function () {
+                     @*alertMessage('@MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved');*@
+                     window.location = '@Url.Action("FavouriteSuppliersListAsync", "Tender")';
+                     $('#LoadingSite').fadeOut();
+                  },
+                  error: function () {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ExpiredActivationCode)', alertMessageType.Danger);
+                     $('#LoadingSite').fadeOut();
+                  }
+               });
+            },
+            findFavelist: function () {
+               $.get("/Tender/GetFavouriteLists", function (data, status) {
+                  
+                  NebObj.FavouriteLists = data;
+                  setTimeout(function () {
+                     $('#ExistLists').selectpicker('refresh');
+                     $('#FavouriteListsSelect').selectpicker('refresh');
+                  }, 1000);
+               });
+            }
+         },
+         created: function () {
+            this.findFavelist();
+         }
+      });
+      function AddSupplierToFavouriteList(refreshPage) {
+         if (commericalRegisterNo <= 0) {
+              AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.PleseSelectASupplier)', alertMessageType.Danger);
+            return;
+         }
+         if (commericalRegisterName === "") {
+              AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.PleseSelectASupplier)', alertMessageType.Danger);
+            return;
+         }
+         if (FavouriteListId <= 0) {
+              AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.PleseSelectAList)', alertMessageType.Danger);
+            return;
+         }
+         var token = $('input[name=__RequestVerificationToken]').val();
+         var obj = { commericalRegisterNo: commericalRegisterNo, commericalRegisterName: commericalRegisterName, FavouriteSupplierListId: newFavouriteListIdTransfer, __RequestVerificationToken: token, isTransfer: "1", OldFavouriteSupplierListId: OldFavouriteListId  };
+
+         $.post('@Url.Action("AddSupplierToFavouriteSuppliersListAsync", "Tender")', obj)
+            .done(function (res) {
+                  if (res.status == 'success') {
+                  $("#confirmAdd").modal('hide');
+                     $("#ExistLists").val('0');
+                     $("#FavouriteListsSelect").val('0');
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SuccessfulyDone)', alertMessageType.Success);
+                   window.location = '@Url.Action("FavouriteSuppliersListAsync", "Tender")';
+               } else {
+                  AlertFun(res.message, alertMessageType.Danger);
+               }
+            })
+            .fail(function (data, e, f) {
+                 console.log(data,e,f);
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.ErrorMessage)', alertMessageType.Danger);
+             });
+      }
+      $("#ExistLists").change(function () {
+         newFavouriteListIdTransfer = $("#ExistLists").val();
+         FavouriteListId = $("#ExistLists").val();
+      });
+
+      $('#SwitchToAddNew, #SwitchToSelectExist').click(function () {
+         $('#SelectExistList').toggleClass('d-none');
+         $('#AddNewList').toggleClass('d-none');
+
+      });
+      function reloadNewList(favouriteSupplierListId) {
+         var listName = $('#NewListName').val();
+         $('#ExistLists').append('<option value=\"' + favouriteSupplierListId + '\">' + listName + '</option>');
+         $('#ExistLists').val(favouriteSupplierListId);
+         $('#ExistLists').selectpicker('refresh');
+         $('#SelectExistList').toggleClass('d-none');
+         $('#AddNewList').toggleClass('d-none');
+         $('#NewListName').val('');
+      }
+   </script>
+}

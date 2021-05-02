@@ -1,0 +1,42 @@
+<div class="table-responsive">
+   <table id="OffersExtendValidityTable" class="table table-striped text-center">
+      <caption>تفاصيل العروض</caption>
+      <thead class="text-center">
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue</th>
+            <th scope="col" class="text-center" v-if="Response.data.newOffersCompareGrid && Response.data.newOffersCompareGrid.length > 0 && Response.data.newOffersCompareGrid[0].isTawreed">قيمة العرض بعد التفضيل</th>
+            @*<th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseStatus</th>*@
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOffer</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TechnicalEvaluation</th>
+         </tr>
+      </thead>
+      <tbody class="text-center" v-if="Response.data.newOffersCompareGrid && Response.data.newOffersCompareGrid.length > 0">
+         <tr v-for="(offers, $index) in Response.data.newOffersCompareGrid">
+            <td class="text-center" data-label="#"> {{   $index + 1}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName"> {{offers.commericalRegisterName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{offers.commericalRegisterNo}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue"> {{formatPrice(offers.offerPriceNP)}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue" v-if="Response.data.newOffersCompareGrid && Response.data.newOffersCompareGrid.length > 0 && Response.data.newOffersCompareGrid[0].isTawreed"> {{offers.offerPriceNP}} </td>
+            @*<td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseStatus">{{offers.invitationPurchaseStatus }}</td>*@
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue"> {{offers.offerAcceptanceStatus}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseStatus">{{offers.offerTechnicalEvaluationStatus}}</td>
+
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td class="text-center" colspan="9">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+               <br />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   @*<pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>*@
+</div>
+
+

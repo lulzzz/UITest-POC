@@ -1,0 +1,176 @@
+@{ var supplierSubscriptionType = (int)Enums.SubscriptionType.Full; }
+   <div class="card card-body">
+      <div class="text-right">
+         <button id="closeSearch" type="button" class="btn btn-sm btn-link btn-default pull-right p-1">
+            <i class="material-icons">close</i> 
+
+         </button>
+      </div>
+      <div class="row">
+         <div class="col-12">
+            <a class="search-expand d-block" data-toggle="collapse" href="#basicInfo" role="button" aria-expanded="false" aria-controls="basicInfo">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation <i class="material-icons pull-right">keyboard_arrow_up</i> </a>
+            <div class="collapse multi-collapse" id="basicInfo">
+               <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="name" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType </label>
+                        <select data-live-search="false" id="TenderTypeId" class="selectpicker" name="TenderTypeId" data-search="TenderTypeId" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType" data-style="select-with-transition" v-model="selectedTypeList">
+                           <option :value="item.tenderTypeId" v-for="item in typeList">{{item.tenderTypeName}}</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group has-success bmd-form-group">
+                        <label for="activitiesList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainActivity</label>
+                        <select data-live-search="true" id="activitiesList" class="selectpicker" name="activityId" data-search="activityId" data-style="select-with-transition" v-model="selectedActivity">
+                           <option :value="0">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose)</option>
+                           <option :value="item.value" v-for="item in activitiesList">{{item.text}}</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group has-success bmd-form-group">
+                        <label for="subActivitiesList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SubActivity</label>
+                        <select data-live-search="true" id="subActivitiesList" class="selectpicker" disabled="disabled" data-style="select-with-transition" v-model="selectedSubActivity">
+                           <option :value="0">@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseChooseActivity)</option>
+                           <option :value="item.value" v-for="item in subActivitiesList">{{item.text}}</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group has-success bmd-form-group">
+                        <label for="agency" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency</label>
+                        <select data-live-search="true" id="agency" name="AgencyCode" data-search="AgencyCode" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectAgency" data-style="select-with-transition" v-model="selectedAgency">
+                           <option :value="item.agencyCode" v-for="item in agencyList">{{item.nameArabic}}</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group has-success bmd-form-group">
+                        <label for="areaList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Areas</label>
+                        <select data-live-search="true" id="areaList" name="AreaId" data-search="AreaId" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose" data-style="select-with-transition" v-model="selectedAreaList">
+                           <option :value="item.id" v-for="item in areasList">{{item.name}}</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="ConditionaBookletRange" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BookletPrice</label>
+                        <select id="ConditionaBookletRange" name="ConditionaBookletRange" data-live-search="false" data-search="ConditionaBookletRange" class="selectpicker" data-style="select-with-transition" data-size="7">
+                           <option value="">
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose
+                           </option>
+                           <option value="0">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Free
+                           </option>
+                           <option value="1">
+                              1 - 1,000
+                           </option>
+                           <option value="2">
+                              1,001 - 10,000
+                           </option>
+                           <option value="3">
+                              10,001 - 20,000
+                           </option>
+                           <option value="4">
+                              20,001 - 40,000
+                           </option>
+                           <option value="5">
+                              40,001 - 50,000
+                           </option>
+                           <option value="6">
+                              > 50,000
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      @if (supplierSubscriptionType == (int)Enums.SubscriptionType.Full || supplierSubscriptionType == (int)Enums.SubscriptionType.Partial2000)
+      {
+         <div class="" style="  ">
+            <a class="search-expand d-block collapsed" data-toggle="collapse" href="#dates" role="button" aria-expanded="false" aria-controls="dates">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AdvancedSearch <i class="material-icons pull-right">keyboard_arrow_up</i> </a>
+            <div class="collapse multi-collapse" id="dates">
+               <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName </label>
+                        <input type="text" class="form-control" id="txtTenderName" data-search="TenderName" name="TenderName" maxlength="50" />
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="TenderNumber" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber </label>
+                        <input type="text" class="form-control" id="txtTenderNumber" data-search="TenderNumber" name="TenderNumber" maxlength="50" />
+                     </div>
+                  </div>
+
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="PublishDate" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SubmtionDate</label>
+                        <select id="PublishDate" name="PublishDate" data-live-search="false" data-search="PublishDate" class="selectpicker" data-style="select-with-transition" data-size="7">
+                           <option value="">
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose
+                           </option>
+                           <option value="">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AnyTime
+                           </option>
+                           <option value="2">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TwoDaysAgo
+                           </option>
+                           <option value="7">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WeekAgo
+                           </option>
+                           <option value="30">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MonthAgo
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group form-check etd-calendar-group">
+                        <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate</label>
+                        <div class="input-group-prepend">
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="LastOfferPresentationDate" data-search="LastOfferPresentationDate" id="fromLastOfferPresentationDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.From">
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="LastOfferPresentationDate" data-search="LastOfferPresentationDate" id="toLastOfferPresentationDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.To">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="TenderCategory" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DisplayTendersOption</label>
+                        <select id="TenderCategory" name="TenderCategory" data-live-search="false" data-search="TenderCategory" class="selectpicker" data-style="select-with-transition" data-size="7">
+                           <option value="0">
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose
+                           </option>
+                           <option value="1">
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All
+                           </option>
+                           <option value="2">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ActiveTenders
+                           </option>
+                           <option value="3">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndedTenders
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      }
+      else
+      {
+         <a class="btn btn-primary btn-link btn-block text-center" data-toggle="modal" data-target="#advancedModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AdvancedSearch<i class="material-icons">more_horiz</i> </a>
+      }
+      <div class="input-group-prepend pull-left etd-search-btn">
+         <button type="button" class="btn btn-primary btn-block text-center btn-sm" id="searchBtn" name="button" @@click="search">
+            <i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+         </button>
+         <button type="reset" class="btn btn-block text-center btn-sm" name="button" @@click="clear">
+            <i class="material-icons">close</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+         </button>
+      </div>
+   </div>

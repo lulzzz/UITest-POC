@@ -1,0 +1,178 @@
+@model MOF.Etimad.Monafasat.ViewModel.Offer.OfferDetailsForAcceptingSolidarityInviationsModel
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails;
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+}
+@Html.AntiForgeryToken()
+<div class="" id="TenderDetials" v-cloak>
+   <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+      <li class="nav-item">
+         <a class="nav-link active show" href="#monafasa-info" role="tab" data-toggle="tab">
+            <i class="material-icons">assignment</i>
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails
+         </a>
+      </li>
+      @{if (!(Model.TenderTypeId == (int)Enums.TenderType.Competition || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender) && Model.InvitaionStatusId == ((int)Enums.SupplierSolidarityStatus.Approved))
+         {
+            <li class="nav-item">
+               <a class="nav-link " href="#quantity-tables" role="tab" data-toggle="tab">
+                  <i class="material-icons">table_chart</i>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantityTables
+               </a>
+            </li>
+         }
+      }
+      @{ if (Model.InvitaionStatusId == ((int)Enums.SupplierSolidarityStatus.Approved))
+         {
+            <li class="nav-item">
+               <a class="nav-link" href="#attachments" role="tab" data-toggle="tab">
+                  <i class="material-icons">attach_file</i>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Atachementes
+               </a>
+            </li>
+         }
+      }
+   </ul>
+   <div class="tab-content tab-space">
+      <div class="tab-pane active show" id="monafasa-info">
+         <div class="col-12">
+            <div class="row">
+               <div class="card">
+                  <div class="card-body">
+                     @await Component.InvokeAsync("BasicTenderInfo", new { TenderId = MOF.Etimad.Monafasat.SharedKernal.Util.Decrypt(Model.tenderIdString) })
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      @{if (!(Model.TenderTypeId == (int)Enums.TenderType.Competition || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender) && Model.InvitaionStatusId == ((int)Enums.SupplierSolidarityStatus.Approved))
+         {
+            <div class="tab-pane" id="quantity-tables">
+               <div class="col-12">
+                  <div class="row">
+                     <div class="card">
+                        <div class="card-body">
+                        </div>
+                        <div class="" id="divQuantityTable">
+                           @*@{await Html.RenderPartialAsync("~/Views/Offer/Partial/OpenningOffers/_QuantityTable.cshtml", Model.QuantityTableModels);}*@
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         }
+      }
+      @{ if (Model.InvitaionStatusId == ((int)Enums.SupplierSolidarityStatus.Approved))
+         {
+            <div class="tab-pane" id="attachments">
+               <div class="col-12">
+                  <div class="row">
+                     <div class="card">
+                        <div class="card-body">
+                           @{await Html.RenderPartialAsync("~/Views/Offer/Partial/_AttachmentViewer.cshtml", Model.OfferAttachmentModels);}
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         } }
+   </div>
+   @{
+      if (Model.InvitaionStatusId == ((int)Enums.SupplierSolidarityStatus.ToBeSent))
+      {
+         <div id="actionCard" class="card">
+            <div class="card-body">
+               <div class="form-check">
+                  <label class="form-check-label">
+                     <input class="form-check-input" id="checkAccept" type="checkbox" value="">
+                     @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AgreeForAcceptingCombinedRequest
+                     <span class="form-check-sign">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+                  <br />
+                  <span class="text-danger" hidden id="spanAcceptCheck">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.YouHaveToApproveAcceptingCombinedInvitation</span>
+               </div>
+               <button type="button" class="btn btn-primary" id="btnAcceptCombined">
+                  @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AcceptRequest
+                  <div class="ripple-container"></div>
+               </button>
+               <a :href="BackToCombinedDetails()" class="btn btn-outline-primary btn-link pull-right">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+                  <div class="ripple-container"></div>
+               </a>
+            </div>
+         </div>
+      }
+      else
+      {
+         <div id="actionCard" class="card">
+            <div class="card-body">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>@(Model.InvitaionStatusName)</span>
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      }
+   }
+</div>
+@section scripts{
+   <script>
+      var Tender = new Vue({
+         el: '#actionCard',
+         methods: {
+            BackToCombinedDetails: function () {
+               return '/Offer/CombinedInvitationDetails?offerIdString= @Model.OfferIdString';
+            },
+         }
+      });
+      function RedirectURL(ids, names) {
+         window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+      }
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $("#btnAcceptCombined").on("click", function ()
+      {
+         if (!$("#checkAccept").prop("checked")) {
+            $("#spanAcceptCheck").prop('hidden', false)
+            return false;
+         }
+      $('#LoadingSite').fadeIn();
+      $.post('@Url.Action("AcceptCombinedInvitation", "Offer")',
+         {
+            combinedIdString: '@Model.SolidarityIdString',
+            __RequestVerificationToken: token
+         }).done(function () {
+            $("#myModal").modal("hide");
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+               window.location ='@Url.Action("CombinedInvitationsForSupplier", "Offer")';
+            }, 2000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                setTimeout(function () {
+                     window.location ='@Url.Action("CombinedInvitationsForSupplier", "Offer")';
+                }, 3000);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '@Url.Action("Logout", "Account")'; return;
+            }
+         });
+      });
+       @{if (!(Model.TenderTypeId == (int)Enums.TenderType.Competition || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender) && Model.InvitaionStatusId == ((int)Enums.SupplierSolidarityStatus.Approved))
+          {
+        @:$('#divQuantityTable').load("/Offer/GetQuantityTablesReadOnlyComponent?OfferIdString=@(Model.OfferIdString)");
+          } }
+   </script>
+}

@@ -1,0 +1,922 @@
+@model MOF.Etimad.Monafasat.ViewModel.DashboardIndexModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.Dashboard;
+}
+@section pagecontrols{
+   @if (!(User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.MonafasatAccountManager)))
+   {
+      <div class="dropdown">
+         <a class="btn p-2 btn-outline-primary" data-toggle="tooltip" asp-action="NotificationSetting" asp-controller="account"
+            data-placement="top" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProfileSettings" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProfileSettings">
+            <i class="material-icons">assignment_ind</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Settings
+         </a>
+      </div>
+   }
+}
+<div class="clearfix"></div>
+<div class="row dashbord-num-cards">
+   @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PurshaseSpecialist))
+   {
+      <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+         <div class="card bg-secondary overflowhide">
+            <div class="card-body p-md-3">
+               <i class="fa fa-folder-open-o fa-2x card-icon"></i>
+               <h5 class=" "> @MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.TendersUnderConstruction</h5>
+               <h1 class="counter pull-left" id="underEstablishingTenders">0</h1>
+            </div>
+         </div>
+      </div>
+   }
+   @if (User.IsInRole(RoleNames.ManagerGrievanceCommittee) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.PrePlanningAuditor) || User.IsInRole(RoleNames.MonafasatBlockListSecritary) || User.IsInRole(RoleNames.OffersPurchaseManager)
+|| User.IsInRole(RoleNames.MonafasatBlackListCommittee) || User.IsInRole(RoleNames.PreQualificationCommitteeManager) || User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.EtimadOfficer) || User.IsInRole(RoleNames.ApproveTenderAward) || User.IsInRole(RoleNames.OffersOpeningAndCheckManager))
+   {
+      <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+         <div class="card bg-success overflowhide">
+            <div class="card-body p-md-3">
+               <i class="fa fa-certificate fa-2x card-icon"></i>
+               <h5 class=" ">  @MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.TendersNeedApproval</h5>
+               <h1 class="counter pull-left" id="processNeedsActionCount">0</h1>
+            </div>
+         </div>
+      </div>
+   }
+   @if (User.IsInRole(RoleNames.DataEntry))
+   {
+      <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+         <div class="card bg-warning overflowhide">
+            <div class="card-body p-md-3">
+               <i class="fa fa-id-card-o fa-2x card-icon" aria-hidden="true"></i>
+               <h5 class=""> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.JoiningRequests</h5>
+               <h1 class="counter pull-left" id="joiningRequestsCount">0</h1>
+            </div>
+         </div>
+      </div>
+   }
+   @if (User.IsInRole(RoleNames.TechnicalCommitteeUser))
+   {
+      <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+         <div class="card bg-warning overflowhide">
+            <div class="card-body p-md-3">
+               <i class="fa fa-id-card-o fa-2x card-icon"></i>
+               <h5 class=""> @MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.PendingReplyEnquiries</h5>
+               <h1 class="counter pull-left" id="enquiriesCount">0</h1>
+            </div>
+         </div>
+      </div>
+   }
+
+   @if (!(User.IsInRole(RoleNames.MonafasatBlockListSecritary) || User.IsInRole(RoleNames.PrePlanningAuditor) || User.IsInRole(RoleNames.PrePlanningCreator) ||
+    User.IsInRole(RoleNames.MonafasatBlackListCommittee) || User.IsInRole(RoleNames.ApproveTenderAward) || User.IsInRole(RoleNames.supplier) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.EtimadOfficer)
+    || User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) || User.IsInRole(RoleNames.OffersOpeningAndCheckManager) || User.IsInRole(RoleNames.ManagerGrievanceCommittee) || User.IsInRole(RoleNames.SecretaryGrievanceCommittee) || User.IsInRole(RoleNames.PreQualificationCommitteeManager)))
+   {
+      <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+         <div class="card bg-info overflowhide">
+            <div class="card-body p-md-3">
+               <i class="fa fa-list-alt fa-2x card-icon"></i>
+               <h5 class=" ">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.PurchasesCount</h5>
+               <h1 class="counter pull-left" id="lastTenPurchase">0</h1>
+            </div>
+         </div>
+      </div>
+   }
+   @if (User.IsInRole(RoleNames.SecretaryGrievanceCommittee) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.PrePlanningCreator) || User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.MonafasatBlockListSecritary) || User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager))
+   {
+      <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+         <div class="card bg-danger overflowhide">
+            <div class="card-body p-md-3">
+               <i class="fa fa-ban fa-2x card-icon"></i>
+               <h5 class=" "> @MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.RefusedOperations</h5>
+               <h1 class="counter pull-left" id="rejectedTenderProcessesCount">0</h1>
+            </div>
+         </div>
+      </div>
+   }
+</div>
+<div class="row">
+   <div class="col-12">
+      <ul class="nav nav-pills">
+         @if (!(User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService)))
+         {
+
+            <li class="nav-item"><a class="nav-link text-center" href="#notificationsPill" onclick="LoadNotificationsData()" data-toggle="tab" active show>@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.Notifications </a></li>
+         }
+         @if (User.IsInRole(RoleNames.TechnicalCommitteeUser))
+         {
+            <li class="nav-item"><a class="nav-link text-center" href="#enquiries" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.PendingReplyEnquiries</a></li>
+         }
+         @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.PrePlanningCreator) || User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersCheckSecretary)
+    || User.IsInRole(RoleNames.PreQualificationCommitteeSecretary) || User.IsInRole(RoleNames.SecretaryGrievanceCommittee) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.MonafasatBlockListSecritary) || User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary)||User.IsInRole(RoleNames.OffersPurchaseManager))
+         {
+            <li class="nav-item "><a id="rejectedTendersTab" class="nav-link text-center" onclick="LoadRejectedTenderData()" href="#rejectedTendersPill" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.RefusedOperations</a></li>
+         }
+         @if (User.IsInRole(RoleNames.ManagerGrievanceCommittee) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.PrePlanningAuditor) || User.IsInRole(RoleNames.MonafasatBlockListSecritary) || User.IsInRole(RoleNames.MonafasatBlackListCommittee) || User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.ApproveTenderAward) || User.IsInRole(RoleNames.OffersOpeningAndCheckManager) || User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.PreQualificationCommitteeManager) || User.IsInRole(RoleNames.EtimadOfficer))
+         {
+            <li class="nav-item"><a onclick="LoadprocessNeedsActionPillData()" class="nav-link text-center" href="#processNeedsActionPill" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.TendersNeedApproval</a></li>
+         }
+         @if (User.IsInRole(RoleNames.DataEntry))
+         {
+            <li class="nav-item"><a class="nav-link text-center " href="#joiningRequestPill" onclick="LoadJoiningRequestInvitationData()" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.JoiningRequests</a></li>
+         }
+         @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PurshaseSpecialist))
+         {
+            <li class="nav-item"><a class="nav-link text-center" href="#underConstructionPill" onclick="LoadunderEstablishedTenderData()" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.TendersUnderConstruction</a></li>
+         }
+         @if (User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.EtimadOfficer))
+         {
+            <li class="nav-item"><a class="nav-link text-center" href="#suppliersInquiriesPill" onclick="LoadsuppliersEnquiersData()" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.SuppliersInquiries </a></li>
+         }
+
+         @if (!(User.IsInRole(RoleNames.ApproveTenderAward) || User.IsInRole(RoleNames.supplier) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.EtimadOfficer) || User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) || User.IsInRole(RoleNames.OffersOpeningAndCheckManager) || User.IsInRole(RoleNames.ManagerGrievanceCommittee) || User.IsInRole(RoleNames.SecretaryGrievanceCommittee) || User.IsInRole(RoleNames.PrePlanningAuditor) || User.IsInRole(RoleNames.PrePlanningCreator) || User.IsInRole(RoleNames.PreQualificationCommitteeManager)))
+         {
+            <li class="nav-item"><a class="nav-link text-center" href="#lastPurchasesPill" onclick="LoadlastTenPurshaseData()" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.LastPurchases</a></li>
+         }
+         @if (User.IsInRole(RoleNames.MonafasatAdmin))
+         {
+            <li class="nav-item"><a class="nav-link text-center" href="#salesSummaryPill" onclick="LoadSalesSummaryGridData()" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.SalesSummary</a></li>
+            <li class="nav-item"><a class="nav-link text-center" href="#summaryofCompetitionsPill" onclick="LoadTendersData()" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.SummaryofCompetitions</a></li>
+            <li class="nav-item"><a class="nav-link text-center" href="#summaryofDirectInvitationsPill" onclick="LoadInviteData()" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.SummaryofDirectInvitations</a></li>
+            <li class="nav-item"><a class="nav-link text-center" href="#supplierSummaryPill" onclick="LoadSupplierData()" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.SupplierSummary</a></li>
+         }
+         @if (User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.OffersOppeningManager))
+         {
+            <li class="nav-item"><a class="nav-link text-center" href="#alertsOpenOffersPill" onclick="LoadOpeningNotificationsData()" data-toggle="tab">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.AlertsOpenOffers</a></li>
+         }
+
+
+      </ul>
+      <div class="card">
+         <div class="">
+            <div class="tab-content tab-space p-0">
+               @if (!(User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.MonafasatAccountManager)))
+               {
+                  <div class="tab-pane" id="notificationsPill" active show>
+                     <div id="NotificationsGrid">
+                        <div class="card-body">
+                           <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.Notifications</h4>
+
+                           <div id="NotificationsGridDiv">
+                              @Html.Partial("~/Views/Dashboard/_NotificationPanel.cshtml")
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               }
+
+               @if (User.IsInRole(RoleNames.SecretaryGrievanceCommittee) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PrePlanningCreator)
+               || User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseSecretary) ||
+               User.IsInRole(RoleNames.PreQualificationCommitteeSecretary) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.MonafasatBlockListSecritary) || User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager))
+               {
+               <div class="tab-pane" id="rejectedTendersPill">
+                  <div class="card-body">
+                     <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.RefusedOperations</h4>
+                  </div>
+                  <div id="RejectedTenderGrid">
+                     <div class="table-responsive ">
+                        @Html.Partial("_RejectedTendersGrid")
+                     </div>
+                  </div>
+               </div>
+               }
+               @if (User.IsInRole(RoleNames.ManagerGrievanceCommittee) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.ApproveTenderAward)
+              || User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.OffersOpeningAndCheckManager) || User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.PrePlanningAuditor) || User.IsInRole(RoleNames.MonafasatBlockListSecritary)
+              || User.IsInRole(RoleNames.MonafasatBlackListCommittee) || User.IsInRole(RoleNames.PreQualificationCommitteeManager) || User.IsInRole(RoleNames.PreQualificationCommitteeSecretary) || User.IsInRole(RoleNames.EtimadOfficer))
+               {
+                  <div class="tab-pane" id="processNeedsActionPill">
+                     <div class="card-body">
+                        <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.TendersNeedApproval</h4>
+                     </div>
+                     <div id="ProcessNeedsActionGrid">
+                        @Html.Partial("_ProcessNeedsActionGrid")
+                     </div>
+                  </div>
+               }
+
+               @if (User.IsInRole(RoleNames.DataEntry))
+               {
+                  <div class="tab-pane " id="joiningRequestPill">
+                     <div class="card-body">
+                        <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.JoiningRequests</h4>
+                     </div>
+                     <div id="JoiningRequestInvitationGrid">
+                        @Html.Partial("_SuppliersJoiningRequestInvitations")
+                     </div>
+                  </div>
+               }
+               @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PurshaseSpecialist))
+               {
+                  <div class="tab-pane" id="underConstructionPill">
+                     <div class="card-body">
+                        <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.TendersUnderConstruction</h4>
+                     </div>
+                     <div id="underEstablishedTender">
+                        @Html.Partial("_UnderEstablishedTenders")
+                     </div>
+                  </div>
+               }
+               @if (User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.EtimadOfficer))
+               {
+                  <div class="tab-pane" id="suppliersInquiriesPill">
+                     <div class="card-body">
+                        <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.SuppliersInquiries</h4>
+                     </div>
+                     <div id="suppliersEnquiers">
+                        @Html.Partial("_SuppliersEnquiry")
+                     </div>
+                  </div>
+               }
+               @if (User.IsInRole(RoleNames.TechnicalCommitteeUser))
+               {
+                  <div class="tab-pane" id="enquiries">
+                     <div class="card-body">
+                        <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.PendingReplyEnquiries</h4>
+                     </div>
+                     <div id="pendingEnquiriesGrid">
+                        @Html.Partial("~/Views/Dashboard/_PendingEnquiriesGrid.cshtml")
+                     </div>
+                  </div>
+               }
+               @if (!User.IsInRole(RoleNames.supplier) && !User.IsInRole(RoleNames.PreQualificationCommitteeManager))
+               {
+                  <div class="tab-pane" id="lastPurchasesPill">
+                     <div class="card-body">
+                        <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.LastPurchases</h4>
+                     </div>
+                     <div id="lastTenPurshase">
+                        @Html.Partial("_LastTenPurshase")
+                     </div>
+                  </div>
+               }
+
+               @if (User.IsInRole(RoleNames.MonafasatAdmin))
+               {
+                  <div class="tab-pane" id="salesSummaryPill">
+                     <form id="salesForm">
+                        <div id="SalesGrid" v-cloak>
+                           <div class="card-body">
+                              <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.SalesSummary <a data-toggle="collapse" href="#SalesResult" role="button" aria-expanded="false" aria-controls="SalesResult" class="btn p-2 btn-outline-primary pull-right" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</a></h4>
+                              <div class="clearfix"></div>
+                              @Html.Partial("_SalesSummaryGrid")
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+                  <div class="tab-pane " id="summaryofCompetitionsPill">
+                     <form id="tendersForm">
+                        <div id="TendersGrid">
+                           <div class="card-body">
+                              <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.SummaryofCompetitions <a data-toggle="collapse" href="#TenderResult" role="button" aria-expanded="false" aria-controls="TenderResult" class="btn p-2 btn-outline-primary pull-right" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</a></h4>
+                              <div class="clearfix"></div>
+                              @Html.Partial("_TendersSummaryGrid")
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+                  <div class="tab-pane" id="summaryofDirectInvitationsPill">
+                     <form id="inviteForm">
+                        <div id="InviteGrid" v-cloak>
+                           <div class="card-body">
+                              <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.SummaryofDirectInvitations <a data-toggle="collapse" href="#inviteResult" role="button" aria-expanded="false" aria-controls="inviteResult" class="btn p-2 btn-outline-primary pull-right" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</a></h4>
+                              <div class="clearfix"></div>
+                              @Html.Partial("_DirectInvitationsSummaryGrid")
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+                  <div class="tab-pane" id="supplierSummaryPill">
+                     <form id="supplierForm">
+                        @Html.Partial("~/Views/Dashboard/_SupplierSummaryPill.cshtml")
+                     </form>
+                  </div>
+               }
+               @if (User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.OffersOppeningManager))
+               {
+                  <div class="tab-pane" id="alertsOpenOffersPill">
+                     <div id="OpeningNotificationsGrid" v-cloak>
+                        @Html.Partial("~/Views/Dashboard/_OpenOffersAlert.cshtml")
+                     </div>
+                  </div>
+               }
+
+
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+@section scripts{
+   <script src="~/Etimad-UI/assets/js/counter/waypoints.min.js"></script>
+   <script src="~/Etimad-UI/assets/js/counter/jquery.counterup.js"></script>
+   <script>
+      // we set numbers after ajax request so this counter need to be called after dom change
+      function callCounters() {
+         $('.counter').counterUp({
+            delay: 1000,
+            time: 500
+         });
+      }
+      jQuery(document).ready(function ($) {
+         LoadTotalCounts();
+         $('.nav.nav-pills > li:first-child >a ').addClass('active show');
+         $('.nav.nav-pills > li:first-child >a ').trigger('click');
+         $('.tab-content.tab-space > div.tab-pane:first-child ').addClass('active show');
+         $(".counter").change(function () {
+            //callCounters();
+            //$('.document').bind("DOMSubtreeModified", callCounters);
+         });
+      });
+      //$(document).ready(function () {
+
+      //   var activeTab = window.location.href.split('#')[1];
+      //   $('a[href=#' + activeTab + ']').click();
+      //});
+
+      if ($('#ProcessNeedsActionGrid').length) {
+         var ProcessNeedsAction = new Vue(   {
+            el: '#ProcessNeedsActionGrid',
+            data: {
+               ProcessNeedsAction: [],
+               totalCount: 0,
+               auto_reload: false,
+               currentPage: 1,
+               pageSize: @((int)Enums.PageSize.Ten),
+               resource_url: '',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+
+                  this.ProcessNeedsAction = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+                  //$("#processNeedsActionCount").text(this.$refs.vpaginator.totalCount);
+               },
+               preplanningDetailsUrl: function (id) {
+                  return '/PrePlanning/Details?id=' + id;
+               },
+               plaintDetailsUrl: function () {
+
+               },
+               approveExtendOfferValidity: function (agencyRequestIdString, tenderIdString) {
+
+                  return '/CommunicationRequest/ExtendOffersValidity/' + agencyRequestIdString + '/' + tenderIdString;
+               },
+               announcementDetailsUrl: function (id) {
+                  return '/Announcement/GetAnnouncementDetails?AnnouncementIdString=' + id;
+               },
+               detailsUrl: function (id, changeRequestTypeId, ApprovalType) {
+                  if (ApprovalType == '@Enums.OperationsNeedsApproval.Escalation') {
+                     return '/CommunicationRequest/checkEscalationrequests/' + id;
+                  }
+
+                  else if (ApprovalType == @((int)Enums.OperationsNeedsApproval.PlaintRequest)) {
+
+                     return '/CommunicationRequest/checkplaintrequests/' + id;
+                  }
+
+                   else if (ApprovalType == '@Enums.OperationsNeedsApproval.Negotiation') {
+
+                     return '/CommunicationRequest/checkplaintrequests/' + id;
+                  }
+                    else if (changeRequestTypeId == @((int)Enums.ChangeRequestType.Canceling)) {
+                     return '/Tender/CancelTender?STenderId=' + id;
+                  }
+                  else if (changeRequestTypeId == @((int)Enums.ChangeRequestType.ExtendDates)) {
+                     return '/Tender/TenderExtendDateApprovement?tenderIdString=' + id;
+                  }
+                  else if (changeRequestTypeId == @((int)Enums.ChangeRequestType.QuantitiesTables)) {
+                     return '/Tender/TenderQuantityTableChangesApprovement?tenderIdString=' + id;
+                  }
+                  else if (changeRequestTypeId == @((int)Enums.ChangeRequestType.Attachments)) {
+                     return '/Tender/TenderAttachmentsChangesApprovement?tenderIdString=' + id ;
+                  }
+                  else if (changeRequestTypeId == @((int)Enums.enNegotiationType.FirstStage)) {
+                     return '/CommunicationRequest/CreateNegotiation/' + id + '/' + changeRequestIdString;
+                  }
+                  else if (changeRequestTypeId == @((int)Enums.enNegotiationType.SecondStage)) {
+                     return '/CommunicationRequest/CreateSecondStageNegotiation/' + changeRequestIdString;
+                  }
+                  else if (changeRequestTypeId == 80) {
+                     return '/CommunicationRequest/checkplaintrequests/' + id;
+                  }
+                  else if (changeRequestTypeId == 90) {
+                     return '/CommunicationRequest/checkEscalationrequests/' + id;
+                  }
+                  else if (changeRequestTypeId == 95) {
+                        return '/PrePlanning/Details/' + id;
+                  }
+                  else if (changeRequestTypeId == 96) {
+                     return '/Block/ManagerBlockDetails/' + id;
+                  }
+                  else if (changeRequestTypeId == 97) {
+                     return '/Block/SecretaryBlockDetails/' + id;
+                  }
+                  else {
+                     return '/Tender/Details?STenderId=' + id;
+                  }
+
+               },
+               ApproveNegotiation: function (tenderid, id, isNewNegotiation) {
+                  if (isNewNegotiation == true) {
+                     return '/CommunicationRequest/NewNegotiation/' + tenderid + '/' + id;
+                  }
+                  else {
+                     return '/CommunicationRequest/Negotiation/' + tenderid + '/' + id;
+                  }
+               },
+
+               ApproveSecondStageNegotiation: function (id) {
+
+
+                  return '/CommunicationRequest/CreateSecondNegotiationRequest/' + id;
+
+               },
+                confirmDelete: function () {
+                    $('#DeleteConfirmationModal').modal('hide');
+
+                  var data_id = $(".modal-body #hiddenValue").val();
+                  $(".modal-body #hiddenValue").val("");
+
+                  window.location = '/PrePlanning/Deactivate?id=' + data_id;
+                  AlertFun("@MOF.Etimad.Monafasat.Resources.BlockResources.Messages.DataRemoved", 'success');
+               },
+               checkDirectPurchaseTenderOffers: function (tenderId) {
+                  return '/Tender/CheckDirectPurchaseOffers?tenderIdString=' + tenderId;
+               },
+               awardTenderOffers: function (tenderId) {
+                  return '/Tender/TenderAwarding?tenderIdString=' + tenderId;
+               },
+               checkTenderOffers: function (tenderId) {
+                  return '/Tender/CheckTenderOffers?tenderIdString=' + tenderId;
+               },
+               approveTenderCancel: function (tenderId) {
+                  return '/Tender/CancelTender?STenderId=' + tenderId;
+               },
+               approveTenderOffersOpening: function (tenderId) {
+                  return '/Tender/OpenTenderOffers?tenderIdString=' + tenderId + "&actionName=review";
+               },
+               approvePreQualificationChecking: function (tenderId) {
+                  return '/Qualification/CheckPreQualification?tenderIdString=' + tenderId;
+               },
+                PostQualificationApprovementAction: function (id) {
+                   return '/Qualification/PreQualificationApproval?qualificationIdString=' + id;
+               },
+               PreQualificationApprovementAction: function (id) {
+                  return '/Qualification/PreQualificationApproval?qualificationIdString=' + id;
+               },
+                approvePostQualificationChecking: function (id) {
+                  return '/Qualification/CheckPostQualification?tenderIdString=' + id;
+               },
+               VROOffersTechnicalChecking: function (id) {
+                  return '/Tender/VROTenderChecking?tenderIdString=' + id;
+               },
+
+            }
+         });
+      }
+      function LoadRejectedTenderData() {
+         LoadTotalCounts();
+         RejectedTender.resource_url = '/Dashboard/RejectedTendersPagingAsync';
+      }
+
+      function LoadprocessNeedsActionPillData() {
+         LoadTotalCounts();
+         ProcessNeedsAction.resource_url = '/Dashboard/ProcessNeedsActionPagingAsync';
+      }
+
+      if ($('#RejectedTenderGrid').length) {
+         var RejectedTender = new Vue({
+            el: '#RejectedTenderGrid',
+            data: {
+               RejectedTenders: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: @((int)Enums.PageSize.Ten),
+               resource_url: '',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+
+                  this.RejectedTenders = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+                 // $("#rejectedTenderProcessesCount").text(this.$refs.vpaginator.totalCount);
+               },
+               reOpenTenderOffers: function (tenderId) {
+                  return '/Tender/OpenTenderOffers?tenderIdString=' + tenderId + "&actionName=reopen";
+               },
+               checkTenderOffers: function (tenderId) {
+                  return '/Tender/checkTenderOffers?tenderIdString=' + tenderId + "&actionName=reopen";
+               },
+               preplanningDetailsUrl: function (id) {
+                  return '/PrePlanning/Details?id=' + id;
+               },
+               detailsUrl: function (id, changeRequestTypeId) {
+                  debugger;
+                 if (changeRequestTypeId == @((int)Enums.ChangeRequestType.Canceling)) {
+                     return '/Tender/CancelTender?STenderId=' + id;
+                  }
+                  else if (changeRequestTypeId == @((int)Enums.ChangeRequestType.ExtendDates)) {
+                     return '/Tender/TenderExtendDateApprovement?tenderIdString=' + id;
+                  }
+                  else if (changeRequestTypeId == @((int)Enums.ChangeRequestType.QuantitiesTables)) {
+                     return '/Tender/TenderQuantityTableChangesApprovement?tenderIdString=' + id;
+                  }
+                  else if (changeRequestTypeId == 90) {
+                    return '/CommunicationRequest/checkEscalationrequests/' + id ;
+                 }
+                 else if (changeRequestTypeId == @((int)Enums.ChangeRequestType.Attachments)) {
+                     return '/Tender/TenderAttachmentsChangesApprovement?tenderIdString=' + id ;
+                 }
+                 else if (changeRequestTypeId == 103) {
+                    return '/Block/SecretaryBlockDetails/' + id;
+                 }
+                  else {
+                     return '/Tender/Details?STenderId=' + id;
+                  }
+               },
+
+               ReopenNegotiation: function (tenderid, id, isNewNegotiation) {
+                  if (isNewNegotiation == true) {
+                     return '/CommunicationRequest/NewNegotiation/' + tenderid + '/' + id;
+                  }
+                  else {
+                     return '/CommunicationRequest/Negotiation/' + tenderid + '/' + id;
+                  }
+               },
+               ReopenExtendOffer: function (tenderid, id) {
+
+                  return '/CommunicationRequest/ExtendOffersValidity/' + id + '/' + tenderid;
+               },
+               ReopenPlaint: function (tenderid, id) {
+                  return '/CommunicationRequest/CheckPlaintRequests/' + id ;
+               },
+            ReopenSecondStageNegotiation: function (id) {
+               return '/CommunicationRequest/CreateSecondNegotiationRequest/' + id;
+            },
+               awardTenderOffers: function (tenderId) {
+                  return '/Tender/AwardTenderOffers?tenderIdString=' + tenderId;
+               },
+               checkTenderOffers: function (tenderId) {
+                  return '/Tender/CheckTenderOffers?tenderIdString=' + tenderId;
+               },
+               checkDirectPurchaseTenderOffers: function (tenderId) {
+                  return '/Tender/CheckDirectPurchaseOffers?tenderIdString=' + tenderId;
+               },
+               reopenTenderCancel: function (tenderId) {
+                  return '/Tender/CancelTender?STenderId=' + tenderId;
+               },
+               PostQualificationApprovementAction: function (id) {
+                  return '/Qualification/PreQualificationApproval?qualificationIdString=' + id;
+               },
+               approvePostQualificationChecking: function (id) {
+                  return '/Qualification/CheckPostQualification?tenderIdString=' + id;
+               },
+               reOpenRejecterdTenderAwarding: function (tenderId) {
+                  return '/Tender/TenderAwarding?tenderIdString=' + tenderId;
+               },
+               ReopenVROOffersTechnicalChecking: function (tenderId) {
+                  return '/Tender/VROTenderChecking?tenderIdString=' + tenderId;
+               },
+               reopenVROTenderAwarding: function (tenderId) {
+                  return '/Tender/TenderAwarding?tenderIdString=' + tenderId;
+               },
+               approvePreQualificationChecking: function (tenderId) {
+                  return '/Qualification/CheckPreQualification?tenderIdString=' + tenderId;
+               },
+               PostQualificationApprovementAction: function (id) {
+                  return '/Qualification/PreQualificationApproval?qualificationIdString=' + id;
+               },
+               approvePostQualificationChecking: function (id) {
+                  return '/Qualification/CheckPostQualification?tenderIdString=' + id;
+               }
+
+            }
+         });
+      }
+      function LoadJoiningRequestInvitationData() {
+         JoiningRequestInvitation.resource_url = '/Dashboard/JoiningRequestInvitationsPagingAsync';
+      }
+      if ($('#JoiningRequestInvitationGrid').length) {
+         var JoiningRequestInvitation = new Vue({
+            el: '#JoiningRequestInvitationGrid',
+            data: {
+               JoiningRequestInvitations: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '',
+               queryString: ''
+            },
+            methods: {
+               requestFinish: function (res) {
+                  var count = 0;
+                  for (var i = 0; i < res.data.length; i++) {
+                     count += res.data[i].joiningRequestInvitationNumber;
+                  }
+               },
+               updateResource: function (data) {
+                  this.JoiningRequestInvitations = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+               },
+               joiningRequest: function (tenderId) {
+                  return '/Tender/SuppliersJoiningRequest?tenderIdString=' + tenderId;
+               }
+            }
+         });
+      }
+      function LoadOpeningNotificationsData() {
+         OpeningNotification.resource_url = '/Dashboard/OpeningNotificationsPagingAsync';
+      }
+      if ($('#OpeningNotificationsGrid').length) {
+         var OpeningNotification = new Vue({
+            el: '#OpeningNotificationsGrid',
+            data: {
+               OpeningNotifications: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.OpeningNotifications = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+                  //$("#openingNotificationsCount").text(this.$refs.vpaginator.totalCount);
+               }
+            }
+         });
+      }
+      function LoadPendingEnquiriesData() {
+         enquiry.resource_url = '/Dashboard/LoadPendingEnquiriesDataAsync';
+      }
+     if ($('#enquiries').length) {
+      var enquiry = new Vue({
+         el: '#pendingEnquiriesGrid',
+         data: {
+            pendingEnquiries: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '',
+            queryString: ''
+         },
+         methods: {
+            updateResource: function (data) {
+
+               this.pendingEnquiries = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            reviewEnquiries: function (id) {
+               return '/Enquiry/SupplierEnquiriesOnTender/' + id;
+            },
+         }
+      });
+      }
+      function LoadNotificationsData() {
+         AllNotification.resource_url = '/account/GetAllNotificationsAsync';
+      }
+      if ($('#NotificationsGridDiv').length) {
+         var AllNotification = new Vue({
+            el: '#NotificationsGridDiv',
+            data: {
+               notifications: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.notifications = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+                  $("#openingNotificationsCount").text(this.$refs.vpaginator.totalCount);
+               }
+            }
+         });
+      }
+      function LoadlastTenPurshaseData() {
+         LastTenPurshase.resource_url = '/Dashboard/GetLastTenPurshaseAsync';
+      }
+      if ($('#lastTenPurshase').length) {
+         var LastTenPurshase = new Vue({
+            el: '#lastTenPurshase',
+            data: {
+               LastTenPurshase: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '',
+               queryString: '',
+               HasDate: false,
+            },
+            methods: {
+               getSupplierInfo: function (CR) {
+                  getSupplierInfo(CR);
+               },
+               updateResource: function (data) {
+                  this.LastTenPurshase = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+                  //$("#lastTenPurchase").text(this.$refs.vpaginator.totalCount);
+               }
+            }
+         });
+      }
+      function LoadunderEstablishedTenderData() {
+         UnderEstablishedTender.resource_url = '/Dashboard/ProcessNeedsActionPagingAsync';
+      }
+      if ($('#underEstablishedTender').length) {
+         var UnderEstablishedTender = new Vue({
+            el: '#underEstablishedTender',
+            data: {
+               UnderEstablished: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.UnderEstablished = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+                  //$("#underEstablishingTenders").text(this.$refs.vpaginator.totalCount);
+               }
+            }
+         });
+      }
+      function LoadsuppliersEnquiersData() {
+         SuppliersEnquires.resource_url = '/Dashboard/GetSuppliersEnquiryAsync';
+      }
+      if ($('#suppliersEnquiers').length) {
+         var SuppliersEnquires = new Vue({
+            el: '#suppliersEnquiers',
+            data: {
+               Enquires: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.Enquires = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+               }
+            }
+         });
+      }
+      function LoadSalesSummaryGridData() {
+         SalesSummaryGrid.resource_url = '/Dashboard/SalesSummaryPagingAsync';
+      }
+      if ($('#SalesGrid').length) {
+         var SalesSummaryGrid = new Vue({
+            el: '#SalesGrid',
+            data: {
+               SalesSummary: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.SalesSummary = data.sales.items;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+                  $("#salesPriceTotal").text(data.priceTotal);
+                  $("#salesTotal").text(data.total);
+               },
+               salesResult: function () {
+                  this.resource_url = '/Dashboard/SalesSummaryPagingAsync' + '?' + $('#salesForm').serialize();
+               }
+            }
+         });
+      }
+      function LoadTendersData() {
+         TendersSummary.resource_url = '/Dashboard/TendersSummaryPagingAsync';
+      }
+      if ($('#TendersGrid').length) {
+         var TendersSummary = new Vue({
+            el: '#TendersGrid',
+            data: {
+               TendersSummary: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.TendersSummary = data.tenders.items;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+                  $("#tendersTotal").text(data.total);
+               },
+               tenderResult: function () {
+
+                  var ddlTimePeriod = $("#ddlTimePeriod").val();
+                  //tendersForm
+                  this.resource_url = '/Dashboard/TendersSummaryPagingAsync' + '?' + $('#tendersForm').serialize();
+               }
+            }
+         });
+      }
+      function LoadInviteData() {
+         DirectInvitationsSummary.resource_url = '/Dashboard/DirectInvitationsSummaryPagingAsync';
+      }
+      if ($('#InviteGrid').length) {
+         var DirectInvitationsSummary = new Vue({
+            el: '#InviteGrid',
+            data: {
+               DirectInvitationsSummary: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.DirectInvitationsSummary = data.directInvitations.items;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+                  $("#directInvitationsTotal").text(data.total);
+                  $("#directInvitationsSuppliersTotal").text(data.invitedSuppliers);
+               },
+               inviteSearch: function () {
+                  this.resource_url = '/Dashboard/DirectInvitationsSummaryPagingAsync' + '?' + $('#inviteForm').serialize();
+               }
+            }
+         });
+      }
+      function LoadSupplierData() {
+         SuppliersInDurationCount.resource_url = '/Dashboard/SuppliersCountPagingAsync';
+      }
+      if ($('#SupplierGrid').length) {
+         var SuppliersInDurationCount = new Vue({
+            el: '#SupplierGrid',
+            data: {
+               SuppliersInDurationCount: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.SuppliersInDurationCount = data;
+                  $("#suppliersInDurationCount").text(data);
+               },
+               supplierResult: function () {
+                  this.resource_url = '/Dashboard/SuppliersCountPagingAsync' + '?' + $('#supplierForm').serialize();
+               }
+            }
+         });
+      }
+      function LoadTotalCounts() {
+         var url = '/Dashboard/GetTotalCountsAsync';
+         $.get(url).done(function (res) {
+
+            $("#processNeedsActionCount").text(res.processNeedAction);
+            $("#joiningRequestsCount").text(res.tenderInvitationCount);
+            $("#enquiriesCount").text(res.pendingEnquiriesCount);
+            $("#lastTenPurchase").text(res.lastTenPurshaseCount);
+            $("#underEstablishingTenders").text(res.processNeedAction);
+            $("#rejectedTenderProcessesCount").text(res.rejectedTendersCount);
+         });
+      }
+   </script>
+   @if (User.IsInRole(RoleNames.TechnicalCommitteeUser))
+   {
+      <script>
+         $(document).ready(function () { LoadPendingEnquiriesData(); });
+      </script>
+   }
+}

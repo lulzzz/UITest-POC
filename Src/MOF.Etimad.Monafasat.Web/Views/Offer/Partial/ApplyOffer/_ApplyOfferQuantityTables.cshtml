@@ -1,0 +1,513 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+@using res = MOF.Etimad.Monafasat.Resources
+
+@model MOF.Etimad.Monafasat.ViewModel.OfferModel
+@if (Model.HasAlternativeOffer)
+{
+   <form>
+      @Html.AntiForgeryToken()
+      <div class="modal fade" id="myModalAddItem" tabindex="-1" role="dialog">
+         <div class="modal-dialog  modal-lg" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">
+                     @res.OfferResources.DisplayInputs.AddAlternative
+                  </h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons"></i> 
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <div class="row">
+                     <div class="col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <input type="hidden" v-model="alternativeItemDataModel.OriginalItemId" />
+                           <label for="publisher" class="label bmd-label-static">@res.TenderResources.DisplayInputs.ItemName  <span class="text-danger">*</span></label>
+                           <input type="email" class="form-control" id="ItemName" v-model="alternativeItemDataModel.Name" required>
+                           <span class="text-danger" v-if="(isValidate && alternativeItemDataModel.Name=='') ">@res.SharedResources.ErrorMessages.Required</span>
+                        </div>
+                     </div>
+                     <div class="col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label for="publisher" class="label bmd-label-static">@res.TenderResources.DisplayInputs.Quantity <span class="text-danger">*</span></label>
+                           <input type="number" class="form-control" id="Quantity" v-model="alternativeItemDataModel.Quantity" required>
+                           <span class="text-danger" v-if="(isValidate && alternativeItemDataModel.Quantity=='') ">@res.SharedResources.ErrorMessages.Required</span>
+                        </div>
+                     </div>
+                     <div class="col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label for="publisher" class="label bmd-label-static">@res.TenderResources.DisplayInputs.Unit <span class="text-danger">*</span></label>
+                           <input type="text" class="form-control" id="Unit" v-model="alternativeItemDataModel.Unit" required>
+                           <span class="text-danger" v-if="(isValidate && alternativeItemDataModel.Unit=='') ">@res.SharedResources.ErrorMessages.Required</span>
+                        </div>
+                     </div>
+                     <div class="col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label for="publisher" class="label bmd-label-static">@res.TenderResources.DisplayInputs.DiscountPercent<span class="text-danger">*</span></label>
+                           <input type="number" class="form-control Percent" min="0" max="100" pattern="[0-9]+([\.,][0-9]+)?" id="Discount" v-model="alternativeItemDataModel.Discount" required>
+                           <span class="text-danger" v-if="(isValidate && (alternativeItemDataModel.Discount=='' || alternativeItemDataModel.Discount  > 100) )">@res.SharedResources.ErrorMessages.Required</span>
+                        </div>
+                     </div>
+                     <div class="col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label for="publisher" class="label bmd-label-static">@res.OfferResources.DisplayInputs.ItemPrice <span class="text-danger">*</span></label>
+                           <input type="number" class="form-control" id="Discount" min="0" max="100" pattern="[0-9]+([\.,][0-9]+)?" v-model="alternativeItemDataModel.Price" required>
+                           <span class="text-danger" v-if="(isValidate && alternativeItemDataModel.Price=='') ">@res.SharedResources.ErrorMessages.Required</span>
+                        </div>
+                     </div>
+
+                     <div class="col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group p-0">
+                           <label for="publisher" class="label bmd-label-static">@res.OfferResources.DisplayInputs.vat <span class="text-danger">*</span></label>
+                           <input type="number" class="form-control" id="vat" v-model="alternativeItemDataModel.VAT" min="0" max="100" pattern="[0-9]+([\.,][0-9]+)?" required>
+                           <span class="text-danger" v-if="(isValidate && (alternativeItemDataModel.VAT=='' || alternativeItemDataModel.VAT > 100)) ">@res.SharedResources.ErrorMessages.Required</span>
+                        </div>
+                     </div>
+                     <div class="col-sm-6 col-xs-12" id="divFileUpload">
+                        <div class="form-group bmd-form-group p-0">
+                           <label for="publisher" class="label bmd-label-static">@res.SharedResources.DisplayInputs.Attachments <span class="text-danger">*</span></label>
+                           @Html.FileUploader("attachAlternative", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 4, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                           <span class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.EnterFile</span>
+                           @*<span class="text-danger" v-if="(isValidate && alternativeItemDataModel.ItemAttachmentId=='') ">@res.SharedResources.ErrorMessages.Required</span>*@
+                        </div>
+                     </div>
+                     <div class="col-sm-6 col-xs-12" id="divFileUploadlist">
+                        <div class="form-group bmd-form-group p-0">
+                           <a href="`/Upload/getfile/${alternativeItemDataModel.ItemAttachmentId}`" target="_blank">{{alternativeItemDataModel.ItemAttachmentName  }}</a>
+                           <div onclick="DeleteFile()">
+                              <span class="qq-deletebtn glyphicon glyphicon-trash" title="حذف الملف" alt="حذف الملف"><i class="material-icons">delete</i> </span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="modal-footer">
+
+                  <button type="button" class="btn btn-sm m-1 btn-primary" @@click="SaveQuantityTableItem()">@res.SharedResources.DisplayInputs.Save</button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.SharedResources.DisplayInputs.Cancel</button>
+
+
+               </div>
+            </div>
+         </div>
+      </div>
+   </form>
+}
+
+@{
+   var tableIndex = 0;
+}
+<div  id="DivQuantityTable">
+
+
+
+   @foreach (var table in Model.QuantityTable)
+   {
+      tableIndex++;
+      <div class="card card-collapse" style="border-radius: 5px;overflow: hidden;">
+         <div class="card-header" role="tab" id="@tableIndex+0">
+            <h5 class="p-1 m-0">
+               <a :data-toggle="isEdit? '' : 'collapse'" href="#@tableIndex" aria-expanded="true" aria-controls="@tableIndex">
+                  @table.TableQuantityName
+                  <i class="material-icons pull-right">keyboard_arrow_down</i> 
+               </a>
+            </h5>
+         </div>
+         <div id="@tableIndex" class="collapse show" role="tabpanel" aria-labelledby="@tableIndex+0">
+            <div class="">
+               <form class="tableForm" id="TableQuantity_@tableIndex">
+
+                  <table class="table" id="quantatyTable_@tableIndex">
+                     <caption>الاصناف</caption>
+                     <thead style="background-color: #e0efe8;">
+                        <tr>
+                           @if (@table.QuantityTableItem.Count() > 0)
+                           {
+                              <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ItemName  </th>
+                              <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Quantity</th>
+                              <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Unit</th>
+                              <th scope="col">@res.TenderResources.DisplayInputs.Price</th>
+                              <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Attachment</th>
+                              <th scope="col">@res.TenderResources.DisplayInputs.DiscountPercent</th>
+                              <th scope="col">@res.OfferResources.DisplayInputs.vat</th>
+
+                           }
+                           else
+                           {
+                              <th scope="col"> </th>
+                              <th scope="col"></th>
+                              <th scope="col"></th>
+                              <th scope="col"></th>
+                              <th scope="col"></th>
+
+
+
+                           }
+                           <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TotalPrice</th>
+                           <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TotalPriceAfterDiscount</th>
+                           <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Actions</th>
+
+
+                        </tr>
+                     </thead>
+                     <tbody>
+                        @{
+
+                           int Rowindex = 0;
+                           var items = table.QuantityTableItem.OrderBy(x =>
+                           {
+                              if (string.IsNullOrEmpty(x.OriginalItemId))
+                                 return x.Id;
+                              else
+                                 return MOF.Etimad.Monafasat.SharedKernal.Util.Decrypt(x.OriginalItemId);
+                           }).ThenBy(x => x.Id).ToList();
+                           // table.QuantityTableItem.OrderBy(x => MOF.Etimad.Monafasat.SharedKernal.Util.DecryptNew(x.OriginalItemId) ?? x.Id).ThenBy(x => x.id);
+
+                           foreach (var item in items)
+                           {
+                              <tr class="ItemsGrid @(string.IsNullOrEmpty(item.OriginalItemId)?"":"alternative")">
+                                 <td data-label=" Milestone">
+                                    @{
+                                       if (!string.IsNullOrEmpty(item.OriginalItemId))
+                                       {
+                                          <i class="material-icons text-dark-green pull-left">
+                                             keyboard_return
+                                          </i> 
+
+                                          @*@(string.Concat("(", item.Name, ")"))*@
+
+                                       }
+
+
+                                    }
+                                    <input type="hidden" name="OriginalItemId" value="@item.OriginalItemId" />
+
+                                    <input type="hidden" name="TenderQuantityTableItemId" value="@item.TenderQuantityTableItemId" />
+                                    <input type="hidden" name="SupplierTableQuantityId" value="@item.SupplierTableQuantityId" />
+                                    <input type="hidden" name="AttachmentId" value="@(item.ItemAttachmentId+":"+item.ItemAttachmentName)" />
+                                    <input type="hidden" name="Id" value="@item.Id" />
+                                    <input type="hidden" name="Quantity" value="@item.Quantity" />
+                                    <span id="spnName"> @item.Name</span>
+                                 </td>
+                                 <td data-label=" Quantity">
+                                    <span id="spanQuantity"> @item.Quantity</span>
+
+                                 </td>
+                                 <td data-label="Unit">
+                                    <span id="spnUnit"> @item.Unit</span>
+                                 </td>
+                                 <td data-label="Details">
+                                    <input class="form-control" type="number" min="0" id="txtPrice" name="price" value="@item.Price.ToString("#,##0.00")" disabled />
+                                 </td>
+                                 <td style="text-align:center">
+                                    <div class="input-group">
+                                       @if (item.ItemAttachmentId != null)
+                                       {
+                                          <a href="/Upload/getfile/@item.ItemAttachmentId:@item.ItemAttachmentName" target="_blank"> @item.ItemAttachmentName  </a>}
+                                       else
+                                       {
+                                          <span> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotAvailable</span>
+                                       }
+
+                                    </div>
+
+                                 </td>
+
+                                 <td data-label="Discount">
+
+                                    <div class="input-group">
+                                       <input class="form-control txtDiscount" type="number" id="txtDiscount" min="0" max="100" name="discount" value="@item.Discount" pattern="[0-9]+([\.,][0-9]+)?" />
+                                    </div>
+                                 </td>
+                                 <td data-label="VAT">
+
+                                    <div class="input-group">
+                                       <input class="form-control txtDiscount" type="number" id="txtVAT" name="VAT" value="@item.VAT" min="0" max="100" pattern="[0-9]+([\.,][0-9]+)?" />
+                                    </div>
+                                 </td>
+
+                                 <td data-label="Details" style="text-align:center">
+                                    <input class="form-control" id="txtTotPriceItem" name="itemtotalprice" value="@((item.Quantity * item.Price).ToString("#,##0.00"))" disabled />
+                                 </td>
+                                 <td style="text-align:center">
+                                    <input class="form-control" id="txtTotalAfter" name="itemTotaldiscount" value="@(((item.Price * item.Quantity - ((item.Price * item.Quantity) * (item.Discount / 100)))+((item.Price * item.Quantity - ((item.Price * item.Quantity) * (item.Discount / 100)))*(item.VAT/100))).ToString("#,##0.00"))" disabled />
+                                 </td>
+
+
+                                 <td style="text-align:center">
+                                    @{
+                                       if (Model.HasAlternativeOffer)
+                                       {
+
+                                          if (item.isAlternative)
+                                          {
+                                             <button id="btnEdit" class="btn btn-xs btn-primary" type="button" v-if="isEdit " data-toggle="modal" data-target="#myModalAddItem" @@click="EditQuantityTableItem($event)">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit </button>
+                                             <button id="btnDelete" class="btn btn-xs btn-danger" type="button" v-if="isEdit " @@click="DeleteQuantityTableItem($event)">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete </button>
+
+
+
+                                          }
+
+                                          if (!item.hasAlternative && !item.isAlternative)
+                                          {
+                                             <button id="btnSave" class="btn btn-sm btn-primary" type="button" v-if="isEdit" data-toggle="modal" data-target="#myModalAddItem" @@click="AddQuantityTableItem($event)">إظافة بديل</button>
+                                          }
+                                       }
+                                    }
+                                 </td>
+                              </tr>
+                              Rowindex++;
+                           }
+                        }
+
+                     </tbody>
+                     <tfoot>
+                        <tr>
+                           <td colspan="6"></td>
+                           <td style="text-align:center"><strong>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OriginalOfferTotal</strong> </td>
+                           <td style="text-align:center">
+                              <input class="form-control" id="tblTotalPrice" name="tblTotalPricename" value="@table.TotalPrice.ToString("#,##0.00")" disabled />
+                           </td>
+                           <td style="text-align:center">
+                              @{
+                                 var total = table.TotalPriceAfterDiscount.ToString("#,##0.00");
+                              }
+                              <input class="form-control" id="tblTotalAfterDiscount" name="tbltotafterdiscountname" value="@total" disabled />
+                           </td>
+                        </tr>
+                        @if (Model.HasAlternativeOffer)
+                        {
+                           <tr>
+                              <td colspan="6"></td>
+                              <td style="text-align:center"><strong>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AlternativeOfferTotal</strong> </td>
+                              <td style="text-align:center">
+                                 <input class="form-control" id="tblTotalPrice" name="tblTotalPricename" value="@table.TotalAlternativePrice.ToString("#,##0.00")" disabled />
+                              </td>
+                              <td style="text-align:center">
+
+                                 <input class="form-control" id="tblTotalAfterDiscount" name="tbltotafterdiscountname" value="@table.TotalAlternativePriceAfterDiscount.ToString("#,##0.00")" disabled />
+                              </td>
+                           </tr>}
+                     </tfoot>
+                  </table>
+                  <div class="p-3">
+                     @if (User.IsInRole(RoleNames.supplier) && (Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established || Model.OfferStatusId == (int)Enums.OfferStatus.Canceled))
+                     {
+                        <button type="button" class="btn btn-warning btn-sm etd-edit-btn" @@click="editmode($event)">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.EditQuantityTables</button>
+                        <button type="button" value="save" class="btn btn-primary btn-sm d-none etd-save-btn" @@click="saveTable('TableQuantity_@tableIndex','@table.TableQuantityId','@table.OfferId','@ViewBag.tenderIdEncrypt',$event);">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+                     }
+                  </div>
+               </form>
+            </div>
+         </div>
+
+      </div>
+
+
+      <div style="display:none">
+         <table>
+            <caption>جداول الكميات</caption>
+            <thead>
+               <tr><th scope="col"></th></tr>
+            </thead>
+            <tbody>
+               <tr class="ItemsGrid alternative" id="divTemplate">
+                  <td data-label=" Milestone">
+
+                     <i class="material-icons text-dark-green pull-left">
+                        keyboard_return
+                     </i> 
+                     <span id="spnName"></span>
+
+
+                     <input type="hidden" name="OriginalItemId" />
+
+                     <input type="hidden" name="TenderQuantityTableItemId" />
+                     <input type="hidden" name="SupplierTableQuantityId" />
+                     <input type="hidden" name="Id" />
+                     <input type="hidden" name="AttachmentId" />
+                     <input type="hidden" name="Quantity" />
+                     <span id="spnName"> </span>
+                  </td>
+                  <td data-label=" Quantity">
+                     <span id="spanQuantity"></span>
+
+                  </td>
+                  <td data-label="Unit">
+                     <span id="spnUnit"></span>
+                  </td>
+                  <td data-label="Details">
+                     <input class="form-control" type="number" min="0" id="txtPrice" name="price" disabled />
+                  </td>
+                  <td style="text-align:center">
+                     <span id="spnAttachment"></span>
+                  </td>
+
+                  <td data-label="Discount">
+
+                     <div class="input-group">
+                        <input class="form-control txtDiscount" type="number" id="txtDiscount" min="0" max="100" name="discount" pattern="[0-9]+([\.,][0-9]+)?" />
+                     </div>
+                  </td>
+                  <td data-label="VAT">
+
+                     <div class="input-group">
+                        <input class="form-control txtDiscount" type="number" id="txtVAT" name="VAT" min="0" max="100" pattern="[0-9]+([\.,][0-9]+)?" />
+                     </div>
+                  </td>
+
+                  <td data-label="Details" style="text-align:center">
+                     <input class="form-control " type="number" id="txtTotal" name="VAT" min="0" max="100" pattern="[0-9]+([\.,][0-9]+)?" />
+                  </td>
+                  <td style="text-align:center">
+                     <input class="form-control " type="number" id="txtTotalAfterDiscount" name="VAT" min="0" max="100" pattern="[0-9]+([\.,][0-9]+)?" />
+                  </td>
+
+
+                  <td style="text-align:center">
+
+                     <button class="btn btn-sm btn-primary" type="button" v-if="isEdit " data-toggle="modal" data-target="#myModalAddItem" onclick="EditQuantityTableItem(this)"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</button>
+                     <button id="btnDelete" class="btn btn-sm btn-danger" type="button" v-if="isEdit " onclick="DeleteQuantityTableItem(this)">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete </button>
+
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+   }
+</div>
+@if (User.IsInRole(RoleNames.OffersOppeningSecretary) && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles)
+{
+   <div class="row">
+      <div class="col-6">
+         <div class="card">
+            <div class="card-body">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-12 etd-item-title text-center">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TotalPrice
+                        </div>
+                        <div class="col-12 etd-item-info text-center h4">
+                           <span id="txtTotPrice" name="totPrice"></span>
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="col-6">
+         <div class="card">
+            <div class="card-body">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-12 etd-item-title  text-center">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TotalPriceAfterDiscount
+                        </div>
+                        <div class="col-12 etd-item-info  text-center h4">
+                           <span id="txtTotAfterDiscount" name="totPrice"></span>
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </div>
+   </div>
+}
+@if (User.IsInRole(RoleNames.OffersOppeningSecretary) && @Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppening)
+{
+   <h5>MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AddStatement</h5>
+   <div class="card-collapse" v-for="(tbl,indexD) in QuantitiesTables">
+      <table class="table">
+         <caption>الاصناف</caption>
+         <tr>
+            <th scope="col">
+               MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Statement
+            </th>
+            <th scope="col">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Price
+            </th>
+            <th scope="col">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DiscountPercent
+            </th>
+            <th scope="col">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TotalAmountWithDiscout
+            </th>
+            <th scope="col">
+            </th>
+         </tr>
+
+         <tr>
+            <td>
+               <h5 class="mb-0">
+                  <a data-toggle="collapse" :href="'#'+indexD" aria-expanded="true" aria-controls="collapseOne" class="">
+                     {{tbl.name}}
+                  </a>
+               </h5>
+            </td>
+            <td>
+               <h5 class="mb-0">
+                  <a data-toggle="collapse" :href="'#'+indexD" aria-expanded="true" aria-controls="collapseOne" class="">
+                     {{tbl.totalPrice}}
+                  </a>
+               </h5>
+            </td>
+            <td>
+               <h5 class="mb-0">
+                  <a data-toggle="collapse" :href="'#'+indexD" aria-expanded="true" aria-controls="collapseOne" class="">
+                     {{tbl.discount}}
+                  </a>
+               </h5>
+            </td>
+            <td>
+               <h5 class="mb-0">
+                  <a data-toggle="collapse" :href="'#'+indexD" aria-expanded="true" aria-controls="collapseOne" class="">
+                     {{tbl.totalPrice-(tbl.totalPrice*tbl.discount/100)}}
+                  </a>
+               </h5>
+            </td>
+            <td><button type="button" class="btn btn-round btn-just-icon deletBtn btn-danger pull-right btn-sm" @@click="deleteQuantityTable(indexD)" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DeleteTable" data-original-title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DeleteTable"> <i class="material-icons">delete</i> </button></td>
+         </tr>
+      </table>
+
+   </div>
+
+   <div class="" id="divSendTables">
+      <button type="button" class="btn btn-primary" name="buttonsend" id="btnSend" @@click="sendTables()" style="margin-top:30px">
+         @res.SharedResources.DisplayInputs.Send
+      </button>
+   </div>
+
+   <table class="table">
+      <caption>الاصناف</caption>
+      <tr>
+         <th scope="col">res.TenderResources.DisplayInputs.Statement</th>
+         <th scope="col">@res.TenderResources.DisplayInputs.Price</th>
+         <th scope="col">@res.TenderResources.DisplayInputs.DiscountPercent</th>
+         <th scope="col"></th>
+      </tr>
+      <tr>
+         <td>
+            <input type="text" id="txtNDName" name="txtNDName" maxlength="50" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TableName" class="form-control">
+            <span class="bmd-help text-danger" id="txtTableNameValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterTableName</span>
+         </td>
+         <td><input class="form-control" type="number" min="0" id="OpenTxtPrice" name="OpenTxtPrice" />
+
+         <td><input class="form-control txtDiscount" type="number" id="OpenTxtDiscount" min="0" max="100" name="discount" />
+
+         <td>
+            <button type="button" name="buttonadd" id="btnadd" @@click="AddQuantityTable()" class="btn btn-primary btn-just-icon" rel="tooltip" data-placement="top" title="" data-original-title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddTable">
+               <i class="material-icons">add</i> <div class="ripple-container"></div>
+            </button>
+         </td>
+      </tr>
+   </table>
+}
+
+<div>
+   <button type="button" class="btn btn-default  prev-tab" @@click="prevTab">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+   <button type="button" class="btn btn-primary  next-tab" @@click="nextTab" :disabled="isEdit">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+</div>

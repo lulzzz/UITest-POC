@@ -1,0 +1,71 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+<div class=" collapse" id="TenderResult">
+   <div class="row">
+      <div class="col-md-6 col-sm-6 col-xs-12">
+         <div class="form-group">
+            <label id="duration" for="publisher" class="label bmd-label-static" title="@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.ChoosePeriod" data-style="select-with-transition">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.TimePeriod<span class="text-danger">*</span></label>
+            <select data-live-search="false" name="Duration"  id="ddlTimePeriod" class="selectpicker" data-style="select-with-transition" title="MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.ChoosePeriod" data-size="7">
+               <option class="bs-title-option" value="">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.ChoosePeriod</option>
+               <option value="day"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Day</option>
+               <option value="month"> @MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.Month </option>
+               <option value="sixmonths">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.SixMonth</option>
+               <option value=""> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+            </select>
+         </div>
+      </div>
+      <div class="input-group-prepend pull-left etd-search-btn">
+         <button type="button" class="btn btn-primary btn-just-icon text-center" id="tenderResultBtn" name="button" @@click="tenderResult">
+            <i class="material-icons">search</i>
+         </button>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+      <div id="TendersSummaryGrid" class="table-responsive">
+         <table class="table  table-striped" id="TenderSummaryTable" aria-describedby="Tender Summary Grid">
+            <thead>
+               <tr>
+                  <th scope="col">#</th>
+                  <th scope="col"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.BranchName</th>
+                  <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Count</th>
+                  @*<th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Total</th>*@
+               </tr>
+            </thead>
+            <tbody v-if="TendersSummary && TendersSummary.length > 0">
+               <tr v-for="(item, $index) in TendersSummary">
+                  <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+                  <td data-label="@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.BranchOrAgencyName"> {{item.agencyName}} </td>
+                  <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Count"> {{item.count}} </td>
+                  @*<td data-label="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Total"> {{item.total}} </td>*@
+               </tr>
+            </tbody>
+            <tbody v-else>
+               <tr>
+                  <td align="center" style="text-align:center !important" colspan="5">
+                     <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                     <br>
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NoRecordsFound
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+         <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+      </div>
+   </div>
+   <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+      <ul class="list-group form-details-list">
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-12 etd-item-title text-center">
+                  @MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.TotalCount
+               </div>
+               <div class="col-12 etd-item-info text-center">
+                  <span id="tendersTotal">0</span>
+               </div>
+            </div>
+         </li>
+      </ul>
+   </div>
+</div>
+

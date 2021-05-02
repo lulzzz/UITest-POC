@@ -1,0 +1,129 @@
+@model InputMandatoryListProductViewModel
+
+<div v-if="products && products.length > 0">
+   <div v-for="(product, index) in products">
+      <div class="card-collapse" style="border: 1px solid #ccc;border-radius: 6px;overflow: hidden;">
+         <div class="card-header" role="tab" id="headingOne1">
+            <button type="button" class="btn btn-warning btn-sm pull-right m-2" @@click="editProduct(product)">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</button>
+            <button type="button" class="btn btn-danger btn-sm pull-right m-2" @@click="showDeleteModal(product.listId)">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</button>
+            <h4 class="m-0 p-2">
+               <a data-toggle="collapse" name="collapseHeader" v-bind:href="'#collapse' + product.listId" aria-expanded="false" aria-controls="collapse{{product.listId}}" class="collapsed">
+                  (<b>{{divisionCode}}-{{product.csiCode}}</b>) - {{product.nameAr}}
+                  <i class="material-icons pull-left">keyboard_arrow_down</i>
+               </a>
+            </h4>
+         </div>
+         <div v-bind:id="'collapse' + product.listId" class="collapse" role="tabpanel" v-bind:aria-labelledby="'collapse' + product.listId" data-parent="#accordion" style="">
+            <input type="hidden" :name="'Products[' + index + '][@nameof(Model.Id)]'" :value="product.id == '0' ? '' : product.id" />
+            <div class="col-12">
+               <div class="row">
+                  <div class="col-md-6 col-sm-12 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.CSICode
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>{{product.csiCode}}</span>
+                                 <span>({{divisionCode}})</span>
+                                 <input type="hidden" :name="'Products[' + index + '][@nameof(Model.CSICode)]'" :value='product.csiCode' />
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.NameAr
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>{{product.nameAr}}</span>
+                                 <input type="hidden" :name="'Products[' + index + '][@nameof(Model.NameAr)]'" :value='product.nameAr' />
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DescriptionAr
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>{{product.descriptionAr}}</span>
+                                 <input type="hidden" :name="'Products[' + index + '][@nameof(Model.DescriptionAr)]'" :value='product.descriptionAr' />
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+                  <div class="col-md-6 col-sm-12 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.PriceCelling
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>{{product.priceCelling}}</span>
+                                 <input type="hidden" :name="'Products[' + index + '][@nameof(Model.PriceCelling)]'" :value='product.priceCelling' />
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.NameEn
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>{{product.nameEn}}</span>
+                                 <input type="hidden" :name="'Products[' + index + '][@nameof(Model.NameEn)]'" :value='product.nameEn' />
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DescriptionEn
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>{{product.descriptionEn}}</span>
+                                 <input type="hidden" :name="'Products[' + index + '][@nameof(Model.DescriptionEn)]'" :value='product.descriptionEn' />
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      @* Delete Product Confirmation *@
+      <div class="modal fade" :id="'deleteProductModal'+product.listId" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body" id="rejectionMsg">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AreYouSure
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-primary btn-sm" name="button" @@click="deleteProduct(product.listId)">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+                  </button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div v-else>
+   <div class="card-body text-center">
+      <i class="text-primary material-icons" style="font-size:3rem">report</i>
+      <br />
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+   </div>
+</div>

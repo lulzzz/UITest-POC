@@ -1,0 +1,37 @@
+@using resDisplayInputs = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs
+
+<a :href="detailsUrl(tender.tenderIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details</a>
+
+<a :href="openAwardOffersReport(tender.tenderIdString)"
+   v-if="tender.canShowAwardingReport"
+   target="_blank" class="dropdown-item">
+   <i class="material-icons">library_books</i>  @resDisplayInputs.AwardingReport
+</a>
+
+<a :href="suppliersReport(tender.tenderIdString)" :id="tender.tenderId" class="dropdown-item">
+   <i class="material-icons">library_books</i>  @resDisplayInputs.AppliedSuppliersReport
+</a>
+
+@if (!User.IsInRole(RoleNames.ApproveTenderAward) && !User.IsInRole(RoleNames.OffersPurchaseManager) && !User.IsInRole(RoleNames.OffersPurchaseSecretary))
+{
+   <a target="_blank"
+      :href="openOffersReports(tender.tenderIdString)"
+      v-if="showOpenOffersReport(tender.tenderStatusId, tender.tenderTypeId)"
+      class="dropdown-item">
+      <i class="material-icons">library_books</i> @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OffersRegisteryReport
+   </a>
+}
+
+<a :href="cancelLink(tender.tenderIdString)"
+   v-if="(tender.isValidStatusToCancelAwardingingStageTenders
+         && ((tender.changeRequestedBy != purchaseSecretry && tender.changeRequestedBy != purchaseManager)
+         || ((tender.changeRequestedBy == purchaseSecretry || tender.changeRequestedBy == purchaseManager) && tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Rejected) && tender.cancelRequestStatus != @((int)Enums.ChangeStatusType.Pending))))" class="dropdown-item">
+   <i class="material-icons">delete</i>  @resDisplayInputs.CancelTender
+</a>
+
+<a :href="cancelLink(tender.tenderIdString)"
+   v-if="(tender.isValidStatusToCancelAwardingingStageTenders
+         && tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending) && (tender.changeRequestedBy == purchaseSecretry || tender.changeRequestedBy == purchaseManager)) " class="dropdown-item">
+   <i class="material-icons">delete_forever</i>  @resDisplayInputs.CancelTenderAudit
+</a>
+

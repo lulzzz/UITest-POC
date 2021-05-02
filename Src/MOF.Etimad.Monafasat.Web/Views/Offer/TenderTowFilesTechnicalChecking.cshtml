@@ -1,0 +1,141 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@using System
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailsForCheckingModel
+
+@{
+    Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+    ViewData["Title"] ="فحص العرض الفنى" /*@res.TenderResources.DisplayInputs.OffersTechnicalCheck*/;
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+</style>
+@using res = MOF.Etimad.Monafasat.Resources
+<div id="app">
+
+   @*@Html.Partial("~/Views/Offer/CheckOffer/Partials/_TwoFilesOfferTechnicalDetails.cshtml")*@
+   <form asp-controller="Offer"
+         asp-action="TenderTowFilesTechnicalChecking"
+         data-ajax-begin="$('#LoadingSite').fadeIn();"
+         data-ajax-complete="$('#LoadingSite').fadeOut();"
+         data-ajax="true"
+         data-ajax-method="POST"
+         data-ajax-mode="replace"
+         data-ajax-success="ajaxSuccess"
+         data-ajax-failure="ajaxFailure"
+         data-ajax-update="#CheckingDive">
+
+      <input type="hidden" id="hdnisNewBank" value="1" />
+      <input type="hidden" id="hdnisNewClassification" value="1" />
+      <input asp-for="OfferIdString" type="hidden" name="OfferIdString" id="hdOfferId" />
+      @if (!((Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedConfirmed) && User.IsInRole(RoleNames.OffersCheckManager)))
+      {
+         <div id="CheckingDive">
+            @Html.Partial("~/Views/Offer/CheckOffer/Partials/_TwoFilesOffersTechnicalChecking.cshtml", Model.CheckingTwoFilesModel)
+         </div>
+      }
+      <div class="clearfix"></div>
+
+   </form>
+</div>
+
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   <script>
+
+      var isClassEdit = 0;
+      var classEditIndex ;
+
+      var isGuaranteeEdit = 0;
+      var GuaranteeEditIndex ;
+
+      var guaranteesList = [];
+      var classificationsList = [];
+
+      @if (Model != null && Model.BankGuaranteeFiles != null)
+      {
+         @:guaranteesList = @Html.Raw(Json.Serialize(Model.BankGuaranteeFiles));
+         @: classificationsList = @Html.Raw(Json.Serialize(Model.SpecificationsFiles));
+      }
+
+      var vueObj = new Vue({
+         el: "#app",
+         data: {
+            BankGuarantees: guaranteesList,
+            Specifications: classificationsList,
+         }
+      });
+
+      function validateForm() {
+          if ($('#technicalOfferStatusId').val() == "") {
+               $("#spanTechnicalResult").show()
+               return false;
+            }
+            if ($('#technicalOfferStatusId').val() == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer) && $('#txtRejectionReason').val() == "") {
+               $("#RejectionReasonSpan").show()
+               return false;
+            }
+            if ($('#technicalOfferStatusId').val() == "" && $('#txtRejectionReason').val() == "") {
+               $("#RejectionReasonSpan").show()
+               $("#spanTechnicalResult").show()
+               return false;
+            }
+         return true;
+      }
+
+      function ajaxSuccess() {
+         $("#CheckingDive").hide();
+         $('#LoadingSite').fadeOut();
+         AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', 'success');
+         setTimeout(function () {
+            window.location = "@Url.Action("TenderIndexCheckingStage", "Tender")";
+         }, 2000);
+      }
+
+      function ajaxFailure(xhr) {
+         console.log(xhr);
+         $('#LoadingSite').fadeOut();
+         if (xhr.responseText != "Logout") {
+            AlertFun(xhr.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (xhr.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      }
+
+      $(document).ready(function () {
+         $('#divRejectionReason').attr('hidden', true);
+         if ('@Model.TechnicalOfferStatusId' == '@Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)') {
+            $('#divRejectionReason').attr('hidden', false);
+         }
+
+         $('.selectpicker').selectpicker('refresh');
+
+         if ('@User.IsInRole(RoleNames.OffersCheckSecretary)'  == 'True' && (@Model.TenderStatusId == @((int)Enums.TenderStatus.OffersChecking) || @Model.TenderStatusId == @((int)Enums.TenderStatus.OffersOppenedConfirmed)))
+         {
+            $('#txtRejectionReason').attr("disabled", false);
+            $('#txtNotes').attr("disabled", false);
+            $('#technicalOfferStatusId').attr("disabled", false);
+            $('#hdOfferId').attr("disabled", false);
+         }
+
+         $("#technicalOfferStatusId").change(function () {
+            var selectedValue = $('#technicalOfferStatusId option:selected').val();
+            if (selectedValue == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)) {
+               $('#divRejectionReason').attr('hidden', false);
+               $("#spanTechnicalResult").hide()
+            }
+            if (selectedValue == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer) || selectedValue == "") {
+               $('#divRejectionReason').attr('hidden', true);
+               $('#txtRejectionReason').val(null);
+               $("#spanTechnicalResult").hide()
+            }
+         });
+   });
+   </script>
+}

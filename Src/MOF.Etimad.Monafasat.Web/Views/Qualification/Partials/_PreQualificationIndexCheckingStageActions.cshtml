@@ -1,0 +1,10 @@
+@using resDisplayInputs = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs
+@using MOF.Etimad.Monafasat.SharedKernel
+
+@if (User.IsInRole(RoleNames.OffersCheckSecretary))
+{
+   <a :href="editUrl(tender.tenderIdString)" class="dropdown-item" v-if="((tender.tenderStatusId ==  @((int)Enums.TenderStatus.UnderEstablishing)) || (tender.tenderStatusId ==  @((int)Enums.TenderStatus.Established)))"><i class="material-icons">edit</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</a>
+   <a href="" :id="tender.tenderId" @@click="fillHiddenIdForDelete(tender.tenderIdString)" class="dropdown-item" data-toggle="modal" data-placement="top" data-target="#myModal"><i class="material-icons">clear</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</a>
+
+}
+<a :href="detailsUrl(tender.tenderIdString, tender.tenderStatusIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details</a>

@@ -1,0 +1,107 @@
+@model MOF.Etimad.Monafasat.ViewModel.Offer.OfferQuantityTableModel
+@{
+   ViewData["Title"] = "جداول الكميات";
+}
+<style>
+   .modal {
+      z-index: 9999999;
+   }
+</style>
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">جداول الكميات</li>
+      </ol>
+   </nav>
+}
+
+
+<div class="card">
+   @*@if (Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects)
+      {*@
+   <div class="card-body">
+
+      <ul class="list-group form-details-list">
+
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  القائمة الإلزامية
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     <a target="_blank" href="/Tender/GetAllMandatoryListProductsForExport" rel="lightbox" alt="عرض الملف" title="عرض الملف">تحميل الملف</a><br />
+                  </span>
+               </div>
+            </div>
+         </li>
+      </ul>
+      @*}*@
+      </div>
+      <div style="z-index : 1" class="alert alert-warning p-1">
+         <i class="material-icons pull-left p-2">
+            warning
+         </i>
+         <span class="d-inline-block p-2">
+            فى حالة عدم تعبئة قيم الجداول تعتبر القيمة صفر
+         </span>
+
+      </div>
+      <div class="card-body">
+
+         <div id="divQuantityTable" class="card-collapse" style="border:1px solid #ccc;border-radius:6px;overflow:hidden;">
+
+            @Html.Partial("~/Views/Offer/Partial/_ApplyOfferQuantityTables.cshtml", Model.QuantitiesTemplateModel)
+
+            @*<h1>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Loading</h1>*@
+         </div>
+
+      </div>
+
+   </div>
+   <div class="row">
+      <div class="col-12">
+         @{
+            <a asp-action="OfferFilesAsync" class="btn btn-default pull-left" asp-controller="Offer" asp-route-OfferIdString="@Model.OfferIdString"> السابق</a>
+
+            if (Model.IsSolidarity)
+            {
+               <a asp-action="OfferSolidarityAsync" class="btn btn-primary pull-left" asp-controller="Offer" asp-route-OfferIdString="@Model.OfferIdString"> التالى</a>
+
+            }
+            else
+            {
+               <a asp-action="OfferSummary" class="btn btn-primary pull-left" asp-controller="Offer" asp-route-OfferIdString="@Model.OfferIdString"> التالى</a>
+            }
+            <a asp-action="OfferFilesAsync" class="btn btn-outline-primary pull-right" asp-controller="Offer" asp-route-OfferIdString="@Model.OfferIdString"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToMyTenders</a>
+         }
+      </div>
+   </div>
+   @section scripts
+   {
+      <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+      <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+      @*<script src="~/Etimad-UI/assets/js/vue-app/pagination.js"></script>*@
+      <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+
+      <script>
+         function submitForm(event, formId) {
+            var _cur = Tender.currentPage;
+            debugger;
+            $("#tableContainDiv_" + formId).find("#form0").find('[type=submit]').click();
+            var testcount = $("#tableContainDiv_" + formId).find("#form0").find('.validation-error:not(:empty)');
+            if (testcount.length != 0) {
+               event.stopPropagation();
+               Tender.currentPage = _cur;
+               return false;
+               AlertFun("رجاءا مراجعة البيانات المدخلة", alertMessageType.Danger)
+            }
+
+         }
+
+
+      </script>
+   }

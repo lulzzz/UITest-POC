@@ -1,0 +1,59 @@
+@model MOF.Etimad.Monafasat.ViewModel.QualificationSupplierDataReviewViewModel
+
+<div class="card">
+   <div class="card-body">
+      <div class="col-12">
+         <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.EnteredCapacities</h4>
+      </div>
+      <div class="row">
+         <div class="col-12">
+            @if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Small)
+            {
+               @Html.Partial("~/Views/Qualification/Partials/_SmallQualificationSupplierData.cshtml", Model)
+            }
+            else if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Medium)
+            {
+               @Html.Partial("~/Views/Qualification/Partials/_MediumQualificationSupplierData.cshtml", Model)
+            }
+            else if (Model.QualificationTypeId == (int)Enums.PreQualificationType.Large)
+            {
+               @Html.Partial("~/Views/Qualification/Partials/_LargeQualificationSupplierData.cshtml", Model)
+            }
+         </div>
+      </div>
+   </div>
+</div>
+
+
+
+<script>
+      $(document).ready(function () {
+
+         if (@Model.QualificationTypeId == @((int)Enums.PreQualificationType.Large) ) {
+             new Vue({
+            el: '#supplierConfigDataProject',
+            data: {
+               supplierProject: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '/Qualification/IndexPagingForSupplierProject?TenderIdStr=@Model.TenderIdStr&SupplierCr='+'@Model.SupplierCR',
+               queryString: ''
+            },
+            methods: {
+               updateResource: function (data) {
+
+                  this.supplierProject = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+               }
+            }
+         });
+         }
+      });
+
+
+
+</script>
+

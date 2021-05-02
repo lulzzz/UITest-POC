@@ -1,0 +1,135 @@
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationDetailsModel
+<div class="tab-pane active animated bounceInLeft  delay-1s show" id="d-1">
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <div class="">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationName
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>@(Model.TenderName)</span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @(Model.ReferenceNumber)
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.GovAgencyName
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span id="subPurposSapn" style="display:block">
+                                 @(Model.AgencyName)
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     @if (!User.IsInRole(MOF.Etimad.Monafasat.SharedKernel.RoleNames.supplier))
+                     {
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PublishedBy
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @(Model.CreatedBy)
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CheckingCommitteeName
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span id="subPurposSapn" style="display:block">
+                                    @(Model.CheckingCommitteeName)
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.TechnicalOrganizationName
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span id="subPurposSapn" style="display:block">
+                                    @(Model.TechnicalOrganizationName)
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                     }
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainingTime
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <div class="col-8 etd-item-info">
+                                 @if (Model.RemainingMins > 0 || Model.RemainingHours > 0 || Model.RemainingDays > 0)
+                                 {
+                                    <span>
+                                       <span class="badge badge-primary days">
+                                          @(Model.RemainingMins)
+                                          @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Minutes
+                                       </span>
+                                       :<span class="badge badge-primary hours">
+                                          @(Model.RemainingHours)
+                                          @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Hour
+                                       </span>
+                                       :<span class="badge badge-primary minute">
+                                          @(Model.RemainingDays)
+                                          @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Day
+                                       </span>
+                                    </span>
+                                 }
+                                 else
+                                 {
+                                    <span>
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Ended
+                                    </span>
+                                 }
+                              </div>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   @if (Model.TenderTypeId == (int)Enums.TenderType.TenderInTwoStages_firstStage
+      && Model.TenderStatusId == (int)MOF.Etimad.Monafasat.SharedKernel.Enums.TenderStatus.OffersCheckedConfirmed)
+   {
+      <div class="col-12">
+         <div class="row">
+            <div class="card">
+               <div class="card-body">
+                  @await Component.InvokeAsync("SuppliersWithIdenticalOffersViewComponent", new { tenderId = Model.TenderId })
+               </div>
+            </div>
+         </div>
+      </div>
+   }
+</div>

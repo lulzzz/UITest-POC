@@ -1,0 +1,147 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>MOF.Etimad.Monafasat.Core</AssemblyName>
+    <RootNamespace>MOF.Etimad.Monafasat.Core</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entities\Identity\**" />
+    <Compile Remove="Entities\Offer\**" />
+    <Compile Remove="Entities\Qualifications\**" />
+    <Compile Remove="Extensions\**" />
+    <Compile Remove="SearchCriterias\Branch\**" />
+    <Compile Remove="SearchCriterias\Committee\**" />
+    <Compile Remove="SearchCriterias\Report\**" />
+    <EmbeddedResource Remove="Entities\Identity\**" />
+    <EmbeddedResource Remove="Entities\Offer\**" />
+    <EmbeddedResource Remove="Entities\Qualifications\**" />
+    <EmbeddedResource Remove="Extensions\**" />
+    <EmbeddedResource Remove="SearchCriterias\Branch\**" />
+    <EmbeddedResource Remove="SearchCriterias\Committee\**" />
+    <EmbeddedResource Remove="SearchCriterias\Report\**" />
+    <None Remove="Entities\Identity\**" />
+    <None Remove="Entities\Offer\**" />
+    <None Remove="Entities\Qualifications\**" />
+    <None Remove="Extensions\**" />
+    <None Remove="SearchCriterias\Branch\**" />
+    <None Remove="SearchCriterias\Committee\**" />
+    <None Remove="SearchCriterias\Report\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Constants\RoleNames.cs" />
+    <Compile Remove="Entities\Attachments\Attachment.cs" />
+    <Compile Remove="Entities\Attachments\AttachmentBlob.cs" />
+    <Compile Remove="Entities\Committee\AssignUserCommittee.cs" />
+    <Compile Remove="Entities\Committee\BranchCommittee.cs" />
+    <Compile Remove="Entities\IDM\User.cs" />
+    <Compile Remove="Entities\Lookups\BillStatus.cs" />
+    <Compile Remove="Entities\Lookups\PlaintStatus.cs" />
+    <Compile Remove="Entities\Lookups\TenderApplyType.cs" />
+    <Compile Remove="Entities\Negotiations\NegotiationQuantityTable.cs" />
+    <Compile Remove="Entities\Negotiations\NegotiationQuantityTableItem.cs" />
+    <Compile Remove="Entities\Negotiations\NegotiationSecondStageSupplier.cs" />
+    <Compile Remove="Entities\Notifications\AuditerNotificationSetting.cs" />
+    <Compile Remove="Entities\Notifications\BaseNotificationSetting.cs" />
+    <Compile Remove="Entities\Notifications\DataEntryNotificationSetting.cs" />
+    <Compile Remove="Entities\Notifications\NotificationOperationCode.cs" />
+    <Compile Remove="Entities\Notifications\OffersCheckManagerNotificationSetting.cs" />
+    <Compile Remove="Entities\Notifications\OffersCheckSecretaryNotificationSetting.cs" />
+    <Compile Remove="Entities\Notifications\OffersManagerNotificationSeting.cs" />
+    <Compile Remove="Entities\Notifications\OffersOppeningManagerNotificationSetting.cs" />
+    <Compile Remove="Entities\Notifications\OffersOppeningSecretaryNotificationSetting.cs" />
+    <Compile Remove="Entities\Notifications\SupplierNotificationSetting.cs" />
+    <Compile Remove="Entities\Offers\Solidarity\SolidarityForignSupplier.cs" />
+    <Compile Remove="Entities\Offers\Solidarity\SolidarityLeader.cs" />
+    <Compile Remove="Entities\Offers\Solidarity\SolidarityRegisteredSupplier.cs" />
+    <Compile Remove="Entities\Offers\Solidarity\SolidarityUnregisteredHasCR.cs" />
+    <Compile Remove="Entities\Offers\Solidarity\SolidarityUnregisteredHasLicience.cs" />
+    <Compile Remove="Entities\Offers\Solidarity\SolidarityUnregisteredOtherSupplier.cs" />
+    <Compile Remove="Entities\Offers\Solidarity\SolidarityUnRegisteredSupplier.cs" />
+    <Compile Remove="Entities\Offers\SupplierAttachmentBlob.cs" />
+    <Compile Remove="Entities\Offers\SupplierChamberJoiningAttachment.cs" />
+    <Compile Remove="Entities\Offers\SupplierCommercialRegisterAttachment.cs" />
+    <Compile Remove="Entities\Offers\SupplierOfferCopyAttachment.cs" />
+    <Compile Remove="Entities\Offers\SupplierOfferLetterAttachment.cs" />
+    <Compile Remove="Entities\Offers\SupplierOriginalAttachment.cs" />
+    <Compile Remove="Entities\Offers\SupplierPurchaseBillAttachment.cs" />
+    <Compile Remove="Entities\Offers\SupplierQuantityTable.cs" />
+    <Compile Remove="Entities\Offers\SupplierQuantityTableItem.cs" />
+    <Compile Remove="Entities\Offers\SupplierQuantityTableItemsTemp.cs" />
+    <Compile Remove="Entities\Offers\SupplierQuantityTableTemp.cs" />
+    <Compile Remove="Entities\Offers\SupplierSaudizationAttachment.cs" />
+    <Compile Remove="Entities\Offers\SupplierSocialInsuranceAttachment.cs" />
+    <Compile Remove="Entities\Offers\SupplierVisitationAttachment.cs" />
+    <Compile Remove="Entities\Offers\SupplierZakatAttachment.cs" />
+    <Compile Remove="Entities\QualificationDocuments\SupplierPreQualificationAttachment.Constructors.cs" />
+    <Compile Remove="Entities\QualificationDocuments\SupplierPreQualificationAttachment.Methods.cs" />
+    <Compile Remove="Entities\Tender\AgencyParentPlaintRequest.cs" />
+    <Compile Remove="Entities\Tender\QuantitiesTable.cs" />
+    <Compile Remove="Entities\Tender\QuantitiesTableChanges.cs" />
+    <Compile Remove="Entities\Tender\QuantitiesTableItemsChanges.cs" />
+    <Compile Remove="Entities\Tender\QuantityTableItem.cs" />
+    <Compile Remove="Entities\Tender\Tender.cs" />
+    <Compile Remove="Entities\Tender\TenderDetails.cs" />
+    <Compile Remove="Entities\Tender\TenderRelationDetails.cs" />
+    <Compile Remove="Entities\Tender\TenderRevisionCancel.cs" />
+    <Compile Remove="Enum\Enums.cs" />
+    <Compile Remove="Helpers\RoleHelper.cs" />
+    <Compile Remove="SearchCriterias\Offer\SupplierQuantityTableItemsSearchCrateria.cs" />
+    <Compile Remove="SearchCriterias\Offer\SupplierQuantityTableSearchCriteria.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="MOF.Etimad.Monafasat.Core.csproj.vspscc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="Selenium.Support" Version="3.141.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.identity.entityframeworkcore\2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.EntityFrameworkCore">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.entityframeworkcore\2.0.1\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Identity.Stores">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.identity.stores\2.0.1\lib\netstandard2.0\Microsoft.Extensions.Identity.Stores.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MOF.Etimad.Monafasat.SharedKernel\MOF.Etimad.Monafasat.SharedKernel.csproj" />
+    <ProjectReference Include="..\MOF.Etimad.Monafasat.ViewModel\MOF.Etimad.Monafasat.ViewModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Constants\" />
+    <Folder Include="Entities\Attachments\" />
+    <Folder Include="Enum\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="SearchCriterias\Revision\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Entities\QualificationDocuments\SupplierPreQualificationAttachment.Constructors.cs" />
+    <None Include="Entities\QualificationDocuments\SupplierPreQualificationAttachment.Methods.cs" />
+  </ItemGroup>
+
+</Project>

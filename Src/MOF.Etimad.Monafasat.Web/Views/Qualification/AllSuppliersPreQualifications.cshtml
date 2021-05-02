@@ -1,0 +1,679 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@*@using System.IO;
+@using Microsoft.Extensions.Configuration;*@
+@using Microsoft.Extensions.Options;
+@inject IOptionsSnapshot<RootConfiguration> rootConfiguration;
+@{
+    ViewData["Title"] = MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AllQualifications;
+    int supplierSubscriptionType = ViewBag.SupplierSubscriptionType;
+    var _rootConfiguration = rootConfiguration.Value;
+    //IConfiguration _configuration = _configuration = ConfigurationHelper.GetConfiguration(Directory.GetCurrentDirectory());
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AllQualifications</li>
+      </ol>
+   </nav>
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <span class="d-block pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search"><button id="searchBtnColaps" class="btn btn-outline-primary btn-link btn-just-icon" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search"><i class="material-icons">search</i> </button></span>
+
+   </div>
+}
+@section modalTitle{
+   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Withdraw
+}
+@section modalContent{
+   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AreYouSureYouWantWithdraw
+}
+@section modalButtons{
+   <button type="button" class="btn btn-link btn-success">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Withdraw</button>
+   <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+}
+<div class="modal fade" id="advancedModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AdvancedSearch</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+            <p>  @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.AdvancedSearchMessage</p>
+            <p class="text-center">
+               <span class="badge badge-green-bule h6 m-1">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationName</span>
+               <span class="badge badge-green-bule h6 m-1">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationNumber</span>
+               <span class="badge badge-green-bule h6 m-1">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SubmtionDate</span>
+               <span class="badge badge-green-bule h6 m-1">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.LastDocumentApplyingDate</span>
+            </p>
+            <p class="text-center">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.FullSubscribtion
+               <br />
+               <a href="" class="btn btn-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Subscribtion</a>
+            </p>
+         </div>
+      </div>
+   </div>
+</div>
+
+<form class="form">
+   @Html.AntiForgeryToken()
+   <div id="SuppliersGrid" class="etd-cards" v-cloak>
+      <div class="clearfix"></div>
+      <div class="row tendar-navigation position-relative" style="min-height:0px;">
+         <ul class="nav nav-pills nav-pills-teal col-12">
+            <li class="nav-item active" @@click="getAllSupplierQualificationsList()"><a class="nav-link active" href="#pill1" data-toggle="tab"><i class="material-icons pull-left" style="padding:0 3px">layers</i> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AllQualifications</a></li>
+            @if (supplierSubscriptionType == (int)Enums.SubscriptionType.Full || supplierSubscriptionType == (int)Enums.SubscriptionType.Partial2000)
+            {
+               <li class="nav-item" @@click="getFavouriteQualificationsList()"><a class="nav-link" href="#pill4" data-toggle="tab"><i class="material-icons pull-left" style="padding:0 3px">favorite</i> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.FavoriteQualifications</a></li>
+            }
+            <li class="nav-item active" @@click="getSupplierMyQualificationsList()"><a class="nav-link" href="#pill3" data-toggle="tab"><i class="material-icons pull-left" style="padding:0 3px">account_circle</i> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.MyQualifications</a></li>
+         </ul>
+         <div class="etd-sorting-cont">
+            @Html.Partial("~/Views/Qualification/Partials/_PreQualificationGridSorts.cshtml")
+         </div>
+      </div>
+      <div class="row" style="position:relative">
+         <div class="collapse col-lg-4 col-md-4 col-sm-12 col-xs-12 " id="Search">
+            <div class="card card-body">
+               <div class="row">
+                  <div class="col-12" style="    ">
+                     <a class="search-expand d-block" data-toggle="collapse" href="#basicInfo" role="button" aria-expanded="false" aria-controls="basicInfo">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation <i class="material-icons pull-right">keyboard_arrow_up</i> </a>
+                     <div class=" multi-collapse" id="basicInfo">
+                        <div class="row">
+
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label for="name" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationType </label>
+                                 <div class="form-check">
+                                    <label class="form-check-label">
+                                       <input name="TenderTypeId" requierd="true" type="radio" class="form-check-input" checked value="0">
+                                       @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All
+                                       <span class="circle"><span class="check"></span></span> <!---->
+                                    </label>
+                                    <label class="form-check-label">
+                                       <input name="TenderTypeId" requierd="true" type="radio" class="form-check-input" value="3">
+                                       @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualification
+                                       <span class="circle"><span class="check"></span></span> <!---->
+                                    </label>
+                                    <label class="form-check-label">
+                                       <input name="TenderTypeId" requierd="true" type="radio" class="form-check-input" value="8">
+                                       @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PostQualification
+                                       <span class="circle"><span class="check"></span></span> <!---->
+                                    </label>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationName </label>
+                                 <input type="text" class="form-control" id="txtTenderName" name="TenderName" maxlength="50" />
+                              </div>
+                           </div>
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label for="ReferenceNumber" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationNumber </label>
+                                 <input type="text" class="form-control" id="ReferenceNumber" name="ReferenceNumber" maxlength="50" />
+                              </div>
+                           </div>
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group has-success bmd-form-group">
+                                 <label for="activitiesList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Activity</label>
+                                 <select data-live-search="true" id="activitiesList" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose" data-style="select-with-transition" v-model="selectedActivity">
+                                    <option :value="item.value" v-for="item in activitiesList">{{item.text}}</option>
+                                 </select>
+                              </div>
+                           </div>
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group has-success bmd-form-group">
+                                 <label for="areaList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Area</label>
+                                 <select data-live-search="true" id="areaList" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose" data-style="select-with-transition" multiple v-model="selectedAreaList">
+                                    <option :value="item.id" v-for="item in areasList">{{item.name}}</option>
+                                 </select>
+                              </div>
+                           </div>
+
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group has-success bmd-form-group">
+                                 <label for="agency" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency</label>
+                                 <select data-live-search="true" id="agency" name="agency" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectAgency" data-style="select-with-transition" v-model="selectedAgency">
+                                    <option :value="item.agencyCode" v-for="item in agencyList">{{item.nameArabic}}</option>
+                                 </select>
+                              </div>
+                           </div>
+
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label for="PublishDate" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.SubmtionDate</label>
+                                 <select id="PublishDate" name="PublishDate" data-live-search="false" class="selectpicker" data-style="select-with-transition" data-size="7">
+                                    <option value="">
+                                       @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose
+                                    </option>
+                                    <option value="">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AnyTime
+                                    </option>
+                                    <option value="2">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TwoDaysAgo
+                                    </option>
+                                    <option value="3">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WeekAgo
+                                    </option>
+                                    <option value="4">
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MonthAgo
+                                    </option>
+                                 </select>
+                              </div>
+                           </div>
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group form-check etd-calendar-group">
+                                 <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.LastOfferPresentationDate</label>
+                                 <div class="input-group-prepend">
+                                    <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="LastOfferPresentationDate" id="fromLastOfferPresentationDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.From">
+                                    <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="LastOfferPresentationDate" id="toLastOfferPresentationDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.To">
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label for="TenderCategory" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.DisplayQualificationsOption</label>
+                                 <select id="TenderCategory" name="TenderCategory" data-live-search="false" class="selectpicker" data-style="select-with-transition" data-size="7">
+                                    <option value="">
+                                       @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose
+                                    </option>
+                                    <option value="">
+                                       @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All
+                                    </option>
+                                    <option value="2">
+                                       @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ActiveQualifications
+                                    </option>
+                                    <option value="3">
+                                       @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.EndedQualifications
+                                    </option>
+                                 </select>
+                              </div>
+                           </div>
+
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               @if (supplierSubscriptionType == (int)Enums.SubscriptionType.Full || supplierSubscriptionType == (int)Enums.SubscriptionType.Partial2000)
+               {
+                  @*<div class=""  >
+                        <a class="search-expand d-block collapsed" data-toggle="collapse" href="#dates" role="button" aria-expanded="false" aria-controls="dates">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AdvancedSearch <i class="material-icons pull-right">keyboard_arrow_up</i> </a>
+                        <div class="collapse multi-collapse" id="dates">
+                           <div class="row">
+                              <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12" hidden>
+                                 <div class="form-group has-success bmd-form-group">
+                                    <label for="activitiesList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Activity</label>
+                                    <select data-live-search="true" id="activitiesList" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose" data-style="select-with-transition" v-model="selectedActivity">
+                                       <option :value="item.value" v-for="item in activitiesList">{{item.text}}</option>
+                                    </select>
+                                 </div>
+                              </div>
+                              <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12" hidden>
+                                 <div class="form-group bmd-form-group">
+                                    <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationName </label>
+                                    <input type="text" class="form-control" id="txtTenderName" name="TenderName" maxlength="50" />
+                                 </div>
+                              </div>
+                              <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12" hidden>
+                                 <div class="form-group bmd-form-group">
+                                    <label for="ReferenceNumber" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationNumber </label>
+                                    <input type="text" class="form-control" id="ReferenceNumber" name="ReferenceNumber" maxlength="50" />
+                                 </div>
+                              </div>                           </div>
+                        </div>
+                     </div>*@
+               }
+               else
+               {
+                  <a hidden class="btn btn-primary btn-link btn-block text-center" data-toggle="modal" data-target="#advancedModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AdvancedSearch<i class="material-icons">more_horiz</i> </a>
+               }
+               <div class="input-group-prepend pull-left etd-search-btn">
+                  <button type="button" class="btn btn-primary btn-block text-center btn-sm" id="searchBtn" name="button" @@click="search">
+                     <i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+                  </button>
+                  <button type="reset" class="btn btn-block text-center btn-sm" name="button" @@click="clear">
+                     <i class="material-icons">close</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+                  </button>
+               </div>
+            </div>
+         </div>
+         @Html.Partial("_SupplierPreQualificationCardContent.cshtml")
+      </div>
+      <input type="hidden" id="hdnfromLastOfferPresentationDate" />
+      <input type="hidden" id="hdntoLastOfferPresentationDate" />
+   </div>
+   <div class="clearfix"></div>
+</form>
+@section scripts{
+   <script src="~/Etimad-UI/assets/vendor/calendar/javascriptUtils/DateConverterUtil.js"></script>
+   <script>
+      $(document).ready(function () {
+         $('li#menuAllSuppliersPreQualifications a').addClass('active');
+      });
+      var cardsCont = document.getElementById('cardsresult');
+      var updatefavouriteFlag = true;
+      var isResourceUrlForFavouriteTenders = false;
+      $(function () {
+         $("input").keypress(function (event) {
+            if (event.which === 13) {
+               event.preventDefault();
+               $("#searchBtn").click();
+            }
+         });
+         $('#searchBtnColaps').click(function () {
+            var _cards = $('#cardsresult');
+            var _grid = $('#gridresult');
+            if (_cards.hasClass('col-md-12')) {
+               _cards.removeClass('col-md-12');
+               _cards.addClass('col-md-8');
+               _cards.find('.monafasa-item').removeClass('col-md-6');
+               _cards.find('.monafasa-item').addClass('col-md-12');
+               _cards.find('.monafasa-item').removeClass('col-lg-6');
+               _cards.find('.monafasa-item').addClass('col-lg-12');
+               _cards.find('.monafasa-item').removeClass('col-xl-4');
+               _cards.find('.monafasa-item').addClass('col-xl-6');
+            } else if (_cards.hasClass('col-md-8')) {
+               _cards.addClass('col-md-12');
+               _cards.removeClass('col-md-8 ');
+               _cards.find('.monafasa-item').addClass('col-md-6');
+               _cards.find('.monafasa-item').removeClass('col-md-12');
+               _cards.find('.monafasa-item').addClass('col-lg-6');
+               _cards.find('.monafasa-item').removeClass('col-lg-12');
+               _cards.find('.monafasa-item').addClass('col-xl-4');
+               _cards.find('.monafasa-item').removeClass('col-xl-6');
+            }
+              $('#closeSearch').on("click",function () {
+              
+              $('#searchBtnColaps').click()
+            });
+         });
+      });
+      var Tender = new Vue({
+         el: '#SuppliersGrid',
+         data: {
+            URL: '@_rootConfiguration.MonafasatURLConfiguration.MonafasatURLValue@*@_configuration.GetSection("MonafasatURL:MonafasatURL").Value*@',
+            Tenders: [],
+            activitiesList: [],
+            selectedActivity: '',
+            selectedAgency: '',
+            selectedTenderType: 0,
+            qualificationStatusList: [],
+            financialYearList: [],
+            areasList: [],
+            selectedCreatedByUser: '',
+            selectedAreaList: [],
+            agencyList: [],
+            selectedTenderId: 0,
+            selectedRowStatus: '',
+            selectedFinancialYear: '',
+            selectedTypeId: 0,
+            publishDate: '',
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: @((int)Enums.PageSize.TwentyFour),
+            resource_url: '/Qualification/AllSupplierPreQualificationsAsync?pageSize=' +@((int)Enums.PageSize.Six),
+            queryString: '',
+            searchState: 'off',
+            sort: "SubmitionDate",
+            sortDirection: "DESC",
+            type: "All",
+            isFavourite: false
+         },
+         created: function () {
+            this.getTenderAreas();
+         },
+         methods: {
+            toggleFavourite: function (index) {
+               if (this.Tenders[index].isFavouriteQualification == true)
+                  this.removeFromFavourites(this.Tenders[index].tenderIdString);
+               else
+                  this.addFromFavourites(this.Tenders[index].tenderIdString);
+               this.Tenders[index].isFavouriteQualification = !this.Tenders[index].isFavouriteQualification;
+            },
+            getTitle: function (isFavourite) {
+               if (isFavourite) {
+                  return '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemoveFromFavourite)';
+               }
+               return '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddToFavourite)';
+            },
+            showOpenOffersReport: function (tenderStatus, isPurchased, invitationStatusId) {
+               return (tenderStatus != @Html.Raw((int)Enums.TenderStatus.UnderEstablishing) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Established)&&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Pending) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Rejected)&&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Canceled) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Approved) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.OffersOppening) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.OffersOppenedPending) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.OffersOppenedRejected) &&
+                  (invitationStatusId ==  @Html.Raw((int)Enums.InvitationStatus.Approved)  || isPurchased == true));
+            },
+            showopenAwardOffersReport: function (tenderStatus, isPurchased, invitationStatusId) {
+               return (tenderStatus == @Html.Raw((int)Enums.TenderStatus.OffersAwardedConfirmed) &&
+                  (invitationStatusId ==  @Html.Raw((int)Enums.InvitationStatus.Approved)  || isPurchased == true));
+            },
+            removeFromFavourites: function (tenderIdString) {
+               var that = this;
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $('#LoadingSite').fadeIn();
+               $.post('@Url.Action("DeleteTenderFromSupplierTendersFavouriteList", "Tender")', { TenderIdString: tenderIdString, __RequestVerificationToken: token })
+                  .done(function () {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', 'success');
+                     $('#LoadingSite').fadeOut();
+                     if (that.resource_url.includes('Favourit')) {
+                        this.queryString = this.queryString + '&OnlyGetFavouriteQualifications=' + true;
+                        $.get('/Qualification/AllSupplierPreQualificationsAsync?' + this.queryString).done(function (result) {
+                           that.Tenders = result.data;
+                           that.totalCount = that.$refs.vpaginator.totalCount;
+                           that.currentPage = that.$refs.vpaginator.currentPage;
+                           that.pageSize = that.$refs.vpaginator.pageSize;
+                        }).fail(function (error) {
+                           console.log(error.statusText);
+                        });
+                     }
+                  }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     if (error.responseText != "Logout") {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                  });
+            },
+            addFromFavourites: function (tenderIdString) {
+               $('#LoadingSite').fadeIn();
+               $.ajax({
+                  type: "GET",
+                  url: '@Url.Action("AddQualificationToSupplierFavouriteListAsync", "Qualification")',
+                  data: { TenderIdString: tenderIdString },
+                  success: function () {
+                     AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', 'success');
+                     $('#LoadingSite').fadeOut();
+                  },
+                  error: function () {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ExpiredActivationCode)', 'danger');
+                  }
+               });
+            },
+            openAwardOffersReport: function (tenderId) {
+               return '/Tender/AwardingReport?tenderIdString=' + tenderId;
+            },
+            percentageLeft: function (pubDate, lastDate, remainingDays, remainingHours) {
+               return calculateCardPercentage(pubDate, lastDate, remainingDays, remainingHours);
+            },
+            updateResource: function (data) {
+               data.forEach(function (item) {
+                  if (item.submitionDate) {
+                     item.submitionDate = item.submitionDate.slice(0, 10); //.split('T')[0]
+                     item.submitionDate = item.submitionDate == "0001-01-01" ? false : (item.tenderStatusId == 1 ? " " : item.submitionDate);
+                  }
+               });
+               this.Tenders = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+               setTimeout(function () {
+                  updateAgencyLogos();
+               }, 1000);
+            },
+            openOffersReports: function (tenderId) {
+               return '/Offer/OpenOffersReport?tenderIdString=' + tenderId;
+            },
+            detailsUrl: function (id, invitationId, invitationStatusId) {
+
+               return '/Qualification/PreQualificationDetails?QualificationId=' + id + '&STenderStatusId=' + statusId + '&displayOnlyMode=' + displayOnlyMode;
+            },
+            tenderDetailsUrl: function (id, statusId, displayOnlyMode) {
+               return '/Qualification/PreQualificationDetails?QualificationId=' + id + '&STenderStatusId=' + statusId + '&displayOnlyMode=' + displayOnlyMode;
+            },
+            updatequalification: function (id) {
+               return '/Qualification/ApplyPreQualificationDocument?qualificationId=' + id + '&editMode=true';
+            },
+            applyOffer: function (id) {
+               return '/Qualification/ApplyPreQualificationDocument?qualificationId=' + id;
+            },
+            //applyPostQualificationDoc: function (id) {
+            //   return '/Qualification/ApplyPostQualificationDocument?qualificationId=' + id;
+            //},
+            PreQualificationDetails: function (id) {
+               return '/Qualification/PreQualificationSupplierDetails?qualificationId=' + id;
+            },
+            sendEnquiry: function (tenderIdString) {
+               return '/Qualification/PreQualificationDetails?QualificationId=' + tenderIdString + '#d-9';
+            },
+            isPassed: function (isFavourite, LastOfferApplydate) {
+               var endingDate = new Date(LastOfferApplydate);
+               var today = new Date();
+               if (isFavourite && today > endingDate) {
+                  return true;
+               }
+               else {
+                  return false;
+               }
+            },
+            ShareTwitter: function (tenderIdString) {
+
+               window.open('http://twitter.com/share?url=' + this.URL + '/Tender/DetailsForVisitor?STenderId=' + tenderIdString, '_blank');
+            },
+            ShareFaceBook: function (tenderIdString) {
+               window.open('https://www.facebook.com/sharer.php?u=' + this.URL + '/Tender/DetailsForVisitor?STenderId=' + tenderIdString);
+            },
+            ShareLinkedIn: function (tenderIdString) {
+               //https://www.linkedin.com/sharing/share-offsite/?url=your-url-here.com
+               window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + this.URL + '/Tender/DetailsForVisitor?STenderId=' + tenderIdString);
+            },
+            ShareWhatUp: function (tenderIdString) {
+               window.open('https://wa.me/?text=' + this.URL + '/Tender/DetailsForVisitor?STenderId=' + tenderIdString);
+            },
+            ShareMail: function (tenderIdString, qualificationName) {
+               // alert(qualificationName);
+               window.open('mailto:?subject=' + qualificationName + '&body=' + this.URL + '/Tender/DetailsForVisitor?STenderId=' + tenderIdString);
+            }
+            , getTenderAreas: function () {
+               $.get('/Tender/GetAreasAsync').done(function (result) {
+                  Tender.areasList = result;
+                  setTimeout(function () {
+                     $('#areaList').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+               $.get('/Tender/GetActivitiesAsync').done(function (result) {
+                  Tender.activitiesList = result;
+                  setTimeout(function () {
+                     $('#activitiesList').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+               $.get('/Tender/GetAllAgenciesAsync').done(function (result) {
+                  Tender.agencyList = result;
+                  setTimeout(function () {
+                     $('#agency').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+            },
+            getAllSupplierQualificationsList: function () {
+               this.isFavourite = false;
+               $(document).prop('title', '@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AllQualifications)');
+               $(".title").children().first().text('@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AllQualifications)');
+               isResourceUrlForFavouriteTenders = false;
+               this.type = "All";
+               this.search();
+            },
+            getSupplierMyQualificationsList: function () {
+               this.isFavourite = false;
+               $(document).prop('title', '@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.MyQualifications)');
+               $(".title").children().first().text('@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.MyQualifications)');
+               isResourceUrlForFavouriteTenders = false;
+               this.type = "Personal";
+               this.search();
+            },
+            getFavouriteQualificationsList: function () {
+               this.isFavourite = true;
+               $(document).prop('title', '@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.FavoriteQualifications)');
+               $(".title").children().first().text('@Html.Raw(MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.FavoriteQualifications)');
+               isResourceUrlForFavouriteTenders = true;
+               updatefavouriteFlag = !updatefavouriteFlag;
+               this.type = "Favourite";
+               this.search();
+            },
+            SortBySubmissionDate: function () {
+               if (this.sort = "SubmitionDate") {
+                  if (this.sortDirection == "DESC")
+                     this.sortDirection = "ASC";
+                  else
+                     this.sortDirection = "DESC"
+               }
+               else {
+                  this.sort = "SubmitionDate";
+                  this.sortDirection = "ASC";
+               }
+               this.search();
+            },
+            SortByOfferOpeningDate: function () {
+               if (this.sort = "OffersOpeningDate") {
+                  if (this.sortDirection == "DESC")
+                     this.sortDirection = "ASC";
+                  else
+                     this.sortDirection = "DESC"
+               }
+               else {
+                  this.sort = "OffersOpeningDate";
+                  this.sortDirection = "ASC";
+               }
+               this.search();
+            },
+            getPreQualificationsBySelectedPageSize: function () {
+               this.pageSize = $('#itemsPerPage').val();
+               this.search();
+            },
+            search: function () {
+               this.queryString = $('form').serialize();
+               $("#hdnfromLastOfferPresentationDate").val('');
+               $("#hdntoLastOfferPresentationDate").val('');
+               //
+               if (@supplierSubscriptionType == @((int)Enums.SubscriptionType.Full) || @supplierSubscriptionType == @((int)Enums.SubscriptionType.Partial2000)) {
+                  var startDate = "";
+                  var endDate = "";
+                  if ($("#fromLastOfferPresentationDate").val() != "") {
+                     var i = $("#fromLastOfferPresentationDate").val().split('/');
+                     if ($('input[name="cb_LastOfferPresentationDate"]').is(':checked')) {
+                        $("#hdnfromLastOfferPresentationDate").val(i[0] + ',' + i[1] + ',' + i[2] + ',' + 'G');
+                        var i = $("#fromLastOfferPresentationDate").val().split('/');
+                        startDate = i[1] + '/' + i[0] + '/' + i[2];
+                        //startDate = $("#fromLastOfferPresentationDate").val();
+                     }
+                     else {
+                        $("#hdnfromLastOfferPresentationDate").val(i[0] + ',' + i[1] + ',' + i[2] + ',' + 'H');
+                        startDate = convertUmmalquraToGregorian($("#fromLastOfferPresentationDate").val());
+                     }
+                  }
+                  startDate = new Date(startDate);
+                  if ($("#toLastOfferPresentationDate").val() != "") {
+                     var x = $("#toLastOfferPresentationDate").val().split('/');
+                     if ($('input[name="cb_LastOfferPresentationDate"]').is(':checked')) {
+                        $("#hdntoLastOfferPresentationDate").val(x[0] + ',' + x[1] + ',' + x[2] + ',' + 'G');
+                        var i = $("#toLastOfferPresentationDate").val().split('/');
+                        endDate = i[1] + '/' + i[0] + '/' + i[2];
+                        //endDate = $("#toLastOfferPresentationDate").val();
+                     }
+                     else {
+                        $("#hdntoLastOfferPresentationDate").val(x[0] + ',' + x[1] + ',' + x[2] + ',' + 'H');
+                        endDate = convertUmmalquraToGregorian($("#toLastOfferPresentationDate").val());
+                     }
+                     endDate = new Date(endDate);
+                  }
+                  if (startDate != "" && endDate != "") {
+                     if (startDate > endDate) {
+                        AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDateBiggerStart)', 'danger');
+                        return false;
+                     }
+                  }
+                  this.queryString = this.queryString + '&TenderStatusId=' + this.selectedStatus + '&TenderActivityId=' + this.selectedActivity + '&AgencyCode=' + this.selectedAgency + '&TenderTypeId=' + ($("input:radio[name=TenderTypeId]:checked").val() == 'undefined' || '' ? 0 : $("input:radio[name=TenderTypeId]:checked").val()) + '&TenderName=' + $('#txtTenderName').val()
+                     + '&ReferenceNumber=' + $('#ReferenceNumber').val() + '&TenderTypeString=' + $('#hdnTenderTypeString').val() + '&FinancialYear=' + this.selectedFinancialYear
+                     + this.selectedCreatedByUser + '&ApprovedBy=' + this.selectedApprovedByUser + '&TenderAreasIdString=' + this.selectedAreaList
+                     + '&FromLastOfferPresentationDateString=' + $("#hdnfromLastOfferPresentationDate").val() + '&ToLastOfferPresentationDateString=' + $("#hdntoLastOfferPresentationDate").val()
+                     + '&Sort=' + this.sort + '&SortDirection=' + this.sortDirection + '&PageSize=' + this.pageSize;
+                  //this.resource_url = '/Qualification/GetPreQualificationForUnderOperationsStageIndexAsync' + '?' + this.queryString;
+               } else {
+                  //this.queryString = this.queryString + '&TenderAreasIdString=' + this.selectedAreaList + '&TenderActivityId=' + this.selectedActivity + '&AgencyCode=' + this.selectedAgency;
+               }
+               if (this.type == "Favourite") {
+                  //
+                  this.queryString = this.queryString + '&OnlyGetFavouriteQualifications=' + true;
+                  this.resource_url = '/Qualification/AllSupplierPreQualificationsAsync' + '?' + this.queryString;
+               }
+               else if (this.type == "All") {
+                  //
+                  this.resource_url = '/Qualification/AllSupplierPreQualificationsAsync' + '?' + this.queryString;
+               }
+               else if (this.type == "Personal") {
+                  //
+                  this.queryString = this.queryString + '&OnlyPersonalQualifications=' + true;
+                  this.resource_url = '/Qualification/AllSupplierPreQualificationsAsync' + '?' + this.queryString;
+               }
+            },
+            clear: function () {
+               $("#statusList, #areaList, #agency ,  #financialYear, #PublishDate, #TenderCategory, #activitiesList").val('default');
+               $("#statusList, #areaList, #agency , #financialYear, #PublishDate, #TenderCategory, #activitiesList").selectpicker("refresh");
+               this.queryString = '';
+               this.selectedTypeId = 0;
+               this.selectedTypeId = '';
+               $('input:radio[name=TenderTypeId]').prop('checked', false);
+               this.selectedAgency = '';
+               this.selectedStatus = '';
+               this.selectedFinancialYear = '';
+               this.selectedAreaList = [];
+               this.selectedActivity = '';
+               $("#fromLastOfferPresentationDate").val("");
+               $("#toLastOfferPresentationDate").val("");
+               $("#hdnfromLastOfferPresentationDate").val('');
+               $("#hdntoLastOfferPresentationDate").val('');
+               //$("#TenderTypeId").val("");
+               $("#txtTenderName").val("");
+               $("#ReferenceNumber").val("");
+               $("#PublishDate").val("");
+               $("#TenderCategory").val("");
+               this.search();
+            },
+            toggleSarch: function () {
+               this.searchState == 'off' ? searchState = 'on' : searchState = 'off'
+            }
+         },
+         updated: function () {
+            //$("#activitiesList, #agency, #areaList, #ConditionaBookletRange, #TenderTypeId, #PublishDate, #TenderCategory").val(null);
+            var _cards = $('#cardsresult');
+            if (_cards.hasClass('col-md-12')) {
+               _cards.find('.monafasa-item').addClass('col-md-6');
+               _cards.find('.monafasa-item').removeClass('col-md-12');
+               _cards.find('.monafasa-item').addClass('col-lg-6');
+               _cards.find('.monafasa-item').removeClass('col-lg-12');
+               _cards.find('.monafasa-item').addClass('col-xl-4');
+               _cards.find('.monafasa-item').removeClass('col-xl-6');
+            } else if (_cards.hasClass('col-md-8')) {
+               _cards.find('.monafasa-item').removeClass('col-md-6');
+               _cards.find('.monafasa-item').addClass('col-md-12');
+               _cards.find('.monafasa-item').removeClass('col-lg-6');
+               _cards.find('.monafasa-item').addClass('col-lg-12');
+               _cards.find('.monafasa-item').removeClass('col-xl-4');
+               _cards.find('.monafasa-item').addClass('col-xl-6');
+            }
+            $('[data-toggle="tooltip"]').tooltip();
+         }
+      });
+   </script>
+}
+

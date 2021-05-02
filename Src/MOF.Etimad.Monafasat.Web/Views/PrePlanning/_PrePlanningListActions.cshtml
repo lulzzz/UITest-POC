@@ -1,0 +1,57 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using MOF.Etimad.Monafasat.SharedKernal;
+
+<div class="dropdown pull-right">
+   <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i><div class="ripple-container"></div></button>
+   <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+      <a :href="detailsUrl(obj.encyptedPrePlanningId )" class="dropdown-item">
+         <i class="material-icons">format_list_bulleted</i>
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details
+      </a>
+
+      @if (User.IsInRole(RoleNames.PrePlanningCreator))
+      {
+         <a :href="editUrl(obj.encyptedPrePlanningId)" v-if="(obj.statusId != @((int)Enums.PrePlanningStatus.Approved) && obj.statusId != @((int)Enums.PrePlanningStatus.Pending)  && obj.statusId != @((int)Enums.PrePlanningStatus.Rejected))" class="dropdown-item">
+            <i class="material-icons">
+               edit
+            </i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit
+         </a>
+
+         <a :href="detailsUrl(obj.encyptedPrePlanningId)" class="dropdown-item" v-if="(obj.statusId == @((int)Enums.PrePlanningStatus.UnderUpdate))">
+            <i class="material-icons">
+               send
+            </i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+         </a>
+         <a :href="reOpenUrl(obj.encyptedPrePlanningId)" class="dropdown-item" v-if="obj.statusId == @((int)Enums.PrePlanningStatus.Rejected)">
+            <i class="material-icons">
+               send
+            </i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+         </a>
+         <a href="#" @@click="deleteUrl(obj.encyptedPrePlanningId)" v-if="(obj.isDeleteRequested==false && obj.deleteRejectionReason==null && obj.statusId != @((int)Enums.PrePlanningStatus.Pending))" class="dropdown-item">
+            <i class="material-icons">
+               delete
+            </i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Delete
+         </a>
+            <a :href="reOpenUrl(obj.encyptedPrePlanningId)" class="dropdown-item" v-if="obj.statusId == @((int)Enums.PrePlanningStatus.Approved) && obj.isDeleteRequested==false&&obj.deleteRejectionReason!=null">
+            <i class="material-icons">
+               send
+            </i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+         </a>
+
+      }
+      @if (User.IsInRole(RoleNames.PrePlanningAuditor))
+      {
+         <a :href="detailsUrl(obj.encyptedPrePlanningId)" class="dropdown-item" v-if="(obj.statusId == @((int)Enums.PrePlanningStatus.Pending))">
+            <i class="material-icons">
+               send
+            </i>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve
+         </a>
+         <a :href="reOpenUrl(obj.encyptedPrePlanningId)" class="dropdown-item" v-if="obj.isDeleteRequested == true">
+            <i class="material-icons">
+               send
+            </i>     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmDelete
+         </a>
+      }
+   </div>
+</div>
+

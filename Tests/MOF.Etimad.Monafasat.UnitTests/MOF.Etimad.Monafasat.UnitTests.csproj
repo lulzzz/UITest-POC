@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.7" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="Moq" Version="4.14.5" />
+    <PackageReference Include="Shouldly" Version="3.0.2" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+	<PackageReference Include="Xunit.Priority" Version="1.0.10" />
+	<PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <PackageReference Include="coverlet.collector" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Src\MOF.Etimad.Monafasat.Core\MOF.Etimad.Monafasat.Core.csproj" />
+    <ProjectReference Include="..\..\Src\MOF.Etimad.Monafasat.Data\MOF.Etimad.Monafasat.Data.csproj" />
+    <ProjectReference Include="..\..\Src\MOF.Etimad.Monafasat.Services\MOF.Etimad.Monafasat.Services.csproj" />
+    <ProjectReference Include="..\..\Src\MOF.Etimad.Monafasat.WebApi\MOF.Etimad.Monafasat.WebApi.csproj" />
+    <ProjectReference Include="..\..\Src\MOF.Etimad.Monafasat.Web\MOF.Etimad.Monafasat.Web.csproj" />
+    <ProjectReference Include="..\MOF.Etimad.Monafasat.TestsBuilders\MOF.Etimad.Monafasat.TestsBuilders.csproj" />
+  </ItemGroup>
+	<ItemGroup>
+		<None Update="xunit.runner.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+</Project>

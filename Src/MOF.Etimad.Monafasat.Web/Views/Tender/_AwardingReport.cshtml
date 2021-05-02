@@ -1,0 +1,203 @@
+@model MOF.Etimad.Monafasat.ViewModel.AwardingReportModel
+
+<link rel="icon" href="~/Etimad-UI/assets/imgs/favicon.ico">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script src="~/Etimad-UI/assets/js/jquery-3.4.1.min.js"></script>
+
+<script>
+
+   document.title = "محضر التوصية بالترسية";
+   (function () {
+      var link = document.createElement('link'),
+         oldLink = document.getElementById('dynamic-favicon');
+      link.id = 'dynamic-favicon';
+      link.rel = 'shortcut icon';
+
+      link.href = '~/Etimad-UI/assets/imgs/favicon.ico';
+      document.getElementsByTagName('head')[0].appendChild(link);
+   })();
+   function printData() {
+
+      window.print();
+      // window.close();
+   }
+   function CloseWindow() {
+
+      window.close();
+
+   }
+   function saveData() {
+      var sourceHTML = document.getElementById("printDiv").innerHTML;
+
+      var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      var fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = 'document.doc';
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+   }
+</script>
+
+<style type="text/css">
+   #dataTable tr td {
+      width: 25% !important;
+   }
+</style>
+<button id="printButton" onclick="printData();" class="btn btn-success d-print-none" style="margin:20px;">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Print</button>
+<button id="saveButton" onclick="saveData();" class="btn btn-success d-save-none d-print-none" style="margin:20px;">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+
+<button id="printButton" onclick="CloseWindow();" class="btn btn-danger d-print-none" style="margin:20px;">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Close</button>
+
+<div id="printDiv" class="row" dir="rtl" style="margin:20px;">
+
+   <h2 class="col-12 text-center" style="color:#00665e; ">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingReport</h2>
+   <div class="col-sm-6 text-left">
+      <h6 class="text-right">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency</h6>
+      <h5 class="col-sm-12 text-right text-dark-green" style="color:#28a745"> @Model?.AgencyName</h5>
+      <h6 class="text-right">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</h6>
+      <h5 class="col-sm-12 text-right text-dark-green" style="color:#28a745"> @Model?.TenderName</h5>
+   </div>
+   <div class="col-sm-6 text-right">
+      @*<img height="100" class="float-left" src="@ViewBag.AgencyLogo" alt="title" />*@
+      <span class="pull-right">
+         <img alt="" src="~/Etimad-UI/assets/imgs/logo-loading.gif" :data-logo="tender.agencyCode" name="agencylogo" style="width: 56px;height:56px" onerror="this.src='/Etimad-UI/assets/imgs/capitol-building.png'" />
+      </span>
+   </div>
+
+   <hr class="col-sm-12" />
+
+   <h6 class="col-sm-12 text-right">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingReportTitle</h6>
+   <h6 class="col-sm-12 text-right">
+      @string.Format(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingReportHeader, Convert.ToDateTime(Model?.OffersOpeningDate).ToString("dddd"), Model?.OffersOpeningDate);
+   </h6>
+   <ol class="col-sm-12 text-right">
+      @if (Model?.Suppliers != null)
+      {
+         @foreach (var suplier in Model?.Suppliers)
+         {
+            <li>@suplier?.CommericalRegisterName</li>
+         }
+      }
+   </ol>
+
+   <h6 class="col-sm-12 text-right">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingReportBody</h6>
+
+   <table class="col-sm-12 table text-center table-bordered MsoNormalTable"
+          dir=rtl border=1 cellspacing=3 cellpadding=0
+          width="100%" style='width:100.0%;border:solid windowtext 1.0pt;' summary="desc">
+      <tr>
+         <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierName</th>
+         <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingValue</th>
+         <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingType</th>
+         <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingReasons</th>
+      </tr>
+      @if (Model?.Suppliers != null)
+      {
+         @foreach (var suplier in Model?.Suppliers.Where(x => x.Amount != null))
+         {
+            <tr>
+               <td>@suplier.CommericalRegisterName</td>
+               <td>@suplier.Amount</td>
+               <td>@Model?.AwardingType</td>
+               <td>@suplier.AwardingReasons</td>
+            </tr>
+         }
+      }
+   </table>
+
+   <h6 class="col-sm-12 text-right">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingReportFooter</h6>
+
+   <div class="col-sm-12">
+      <br />
+   </div>
+
+   <div id="report" class="col-sm-12 d-none d-print-block">
+      @*mso-table-dir*@
+      <table class="table table-borderless text-center MsoNormalTable"
+             aria-describedby="Awarding details report"
+             role="presentation"
+             dir=rtl border=0 cellspacing=3 cellpadding=0>
+         <tr>
+            <td style='padding:.75pt .75pt .75pt .75pt'>
+            </td>
+         </tr>
+         <tr>
+            <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.TechnicalSpecialist </td>
+            <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DirectorOfTheSection</td>
+            <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DirectorOfTheDepartment</td>
+         </tr>
+         <tr>
+            <td>………………………………….</td>
+            <td>………………………………….</td>
+            <td>………………………………….</td>
+         </tr>
+         <tr>
+            <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Name </td>
+            <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Name</td>
+            <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Name </td>
+         </tr>
+         <tr>
+            <td>………………………………….</td>
+            <td>………………………………….</td>
+            <td>………………………………….</td>
+         </tr>
+         <tr>
+            <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date :&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;/ &nbsp;&nbsp;&nbsp;&nbsp; 14هـ</td>
+            <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date :&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;/ &nbsp;&nbsp;&nbsp;&nbsp; 14هـ</td>
+            <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date :&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;/ &nbsp;&nbsp;&nbsp;&nbsp; 14هـ</td>
+         </tr>
+         <tr>
+            <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date : </td>
+            <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date :</td>
+            <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date : </td>
+         </tr>
+         <tr>
+            <td>………………………………….</td>
+            <td>………………………………….</td>
+            <td>………………………………….</td>
+         </tr>
+      </table>
+   </div>
+</div>
+<script>
+   $(document).ready(function () {
+      setTimeout(function () {
+         updateAgencyLogos('@Model.AgencyCode');
+      }, 1000);
+   });
+
+   function updateAgencyLogos(agencyCode) {
+      logoLoaded = true;
+      var agencycodes = '?';
+      agencyCodeList = [];
+      $('[name=agencylogo]').each(function () {
+         if (agencycodes.indexOf(this.dataset['logo']) < 0) {
+            if (!agencyCode || (this.dataset['logo'] && agencyCode != this.dataset['logo']))
+               agencyCode = this.dataset['logo'];
+            agencyCodeList.push(agencyCode);
+            agencycodes += 'agencyCodes=' + agencyCode + '&';
+         }
+      });
+      agencycodes = agencycodes.substr(0, agencycodes.length - 1);
+      if (agencycodes != '' && agencycodes != '?') {
+         $.get('/Account/GetAgenciesLogoes' + agencycodes).done(function (result) {
+            $(agencyCodeList).each(function (i, e) {
+               if (result[e] && result[e] != '') {
+                  $('[data-logo=' + e + "]").attr('src', result[e]);
+                  if ($('[name=agencylogo]').length == 1)
+                     $('[name=agencylogo]').attr('src', result[e]);
+               }
+               else {
+                  $('[data-logo=' + e + "]").attr('src', '/Etimad-UI/assets/imgs/capitol-building.png');
+                  if ($('[name=agencylogo]').length == 1)
+                     $('[name=agencylogo]').attr('src', '/Etimad-UI/assets/imgs/capitol-building.png');
+               }
+            })
+         }).fail(function (e) {
+         });
+      }
+   }
+
+</script>

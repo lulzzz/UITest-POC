@@ -1,0 +1,397 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderAttachmentModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   string tenderIdString =  MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(Model.TenderId);
+   int tenderId = Model.TenderId;
+}
+<div class="row" id="TenderDetials">
+   <div class="col-12">
+      <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Attachment</h4>
+   </div>
+   @if (!User.IsInRole(RoleNames.supplier) && User.UserRoles().Count != 0 || (User.IsInRole(RoleNames.supplier) && (Model.InvitationStatusId == (int)Enums.InvitationStatus.Approved || Model.IsPurchased == true)))
+   {
+      @if (Model.TenderTypeId != (int)Enums.TenderType.PreQualification && Model.TenderTypeId != (int)Enums.TenderType.PostQualification)
+      {
+         <div class="col-md-6 col-sm-12 col-xs-12">
+
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletAndAttachments
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        @foreach (var item in Model.OldAttachments.Where(a => a.AttachmentTypeId == (int)Enums.AttachmentType.TenderBookletAttachment).ToList())
+                        {
+                           <a href="#" onclick="RedirectURL('@item.FileNetReferenceId','@item.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                              @item.Name
+                           </a>
+                        }
+                     </div>
+
+                  </div>
+               </li>
+            </ul>
+         </div>
+      }
+}
+
+
+   <div class="col-md-6 col-sm-12 col-xs-12" style="padding-left:10px;">
+      <ul class="list-group form-details-list">
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.SupportingDocuments
+               </div>
+               <div class="col-8 etd-item-info">
+                  @foreach (var item in Model.OldAttachments.Where(a => a.AttachmentTypeId == (int)Enums.AttachmentType.TenderOtherFile).ToList())
+                  {
+                     <a href="#" onclick="RedirectURL('@item.FileNetReferenceId','@item.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                        @item.Name
+                     </a>
+                  }
+               </div>
+            </div>
+         </li>
+      </ul>
+   </div>
+</div>
+
+
+
+@if ((User.IsInRole(RoleNames.PreQualificationCommitteeSecretary) ||
+  User.IsInRole(RoleNames.PreQualificationCommitteeManager)
+  ) && Model.AttachmentsChanges.Count > 0)
+{
+   <div class="row" id="TenderDetials">
+
+      @if (Model.ChangeRequestTypeId == (int)Enums.ChangeRequestType.Attachments && Model.ChangeRequestStatusId == (int)Enums.ChangeStatusType.New &&
+        (User.IsInRole(RoleNames.PreQualificationCommitteeSecretary)))
+      {
+         @Html.Partial("~/Views/Tender/Partials/_TenderAttachmentChange.cshtml", Model)
+
+         <div class="col-md-6 col-sm-12 col-xs-12" style="padding-left:10px;">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.SupportingDocuments
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        @foreach (var item in Model.AttachmentsChanges.Where(a => a.AttachmentTypeId == (int)Enums.AttachmentType.TenderOtherFile).ToList())
+                        {
+                           <a href="#" onclick="RedirectURL('@item.FileNetReferenceId','@item.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                              @item.Name
+                              @if (User.IsInRole(RoleNames.PreQualificationCommitteeSecretary) || User.IsInRole(RoleNames.PreQualificationCommitteeManager))
+                              {
+
+                                 @if (item.DeletedAttachmentId == null)
+                                 {
+                                    <span class="badge badge-primary pull-right  m-1"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddAction</span>
+                                 }
+                                 else
+                                 {
+                                    <span class="badge badge-danger pull-right  m-1"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DelteAction</span>
+                                 }
+                              }
+                           </a>
+                        }
+                     </div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+         <div class="col-12 ">
+            <div class="form-group bmd-form-group">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendChangeToApprove">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendChangeForApprovement</button>
+
+            </div>
+         </div>
+      }
+
+      @if (Model.ChangeRequestTypeId == (int)Enums.ChangeRequestType.Attachments && Model.ChangeRequestStatusId == (int)Enums.ChangeStatusType.Pending
+        && (User.IsInRole(RoleNames.PreQualificationCommitteeManager)))
+      {
+         @Html.Partial("~/Views/Tender/Partials/_TenderAttachmentChange.cshtml", Model)
+
+         <div class="col-md-6 col-sm-12 col-xs-12" style="padding-left:10px;">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.SupportingDocuments
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        @foreach (var item in Model.AttachmentsChanges.Where(a => a.AttachmentTypeId == (int)Enums.AttachmentType.TenderOtherFile).ToList())
+                        {
+                           <a href="#" onclick="RedirectURL('@item.FileNetReferenceId','@item.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                              @item.Name
+                              
+
+                                 @if (item.DeletedAttachmentId == null)
+                                 {
+                                    <span class="badge badge-primary pull-right  m-1"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddAction</span>
+                                 }
+                                 else
+                                 {
+                                    <span class="badge badge-danger pull-right  m-1"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DelteAction</span>
+                                 }
+                              
+                           </a>
+                        }
+                     </div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+         <div class="col-12 ">
+            <div class="form-group bmd-form-group">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnAttachmentsApprrove" data-toggle="modal" data-target="#changeRequestModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ApproveChange</button>
+               <button type="button" class="btn btn-danger pull-left" name="button" id="btnAttachmentsReject" data-toggle="modal" data-target="#changeRequestModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectChange</button>
+            </div>
+         </div>
+
+      }
+
+      @if (Model.ChangeRequestTypeId == (int)Enums.ChangeRequestType.Attachments && Model.ChangeRequestStatusId == (int)Enums.ChangeStatusType.Rejected
+        && (User.IsInRole(RoleNames.PreQualificationCommitteeSecretary)))
+      {
+         @Html.Partial("~/Views/Tender/Partials/_TenderAttachmentChange.cshtml", Model)
+         <div class="col-md-6 col-sm-12 col-xs-12" style="padding-left:10px;">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.SupportingDocuments
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        @foreach (var item in Model.AttachmentsChanges.Where(a => a.AttachmentTypeId == (int)Enums.AttachmentType.TenderOtherFile).ToList())
+                        {
+                           <a href="#" onclick="RedirectURL('@item.FileNetReferenceId','@item.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                              @item.Name
+                              @if (User.IsInRole(RoleNames.PreQualificationCommitteeSecretary) || User.IsInRole(RoleNames.PreQualificationCommitteeManager))
+                              {
+
+                                 @if (item.DeletedAttachmentId == null)
+                                 {
+                                    <span class="badge badge-primary pull-right  m-1"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddAction</span>
+                                 }
+                                 else
+                                 {
+                                    <span class="badge badge-danger pull-right  m-1"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DelteAction</span>
+                                 }
+                              }
+                           </a>
+                        }
+                     </div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+         <div class="col-12 ">
+            <h3>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</h3>
+            <p>@(Model.RejectionReason)</p>
+            <div class="form-group bmd-form-group">
+               <button type="button" id="btnCancelAttachmentsUpdate" class="btn btn-danger" style="margin-top:30px">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CloseChange
+               </button>
+            </div>
+         </div>
+      }
+   </div>
+}
+
+<script>
+   $(document).ready(function () {
+
+   });
+   function RedirectURL(ids, names) {
+      window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+   }
+     var token = $('input[name=__RequestVerificationToken]').val();
+
+    $("#btnSendChangeToApprove").on("click", function () {
+      $('#LoadingSite').fadeIn();
+      $.post('@Url.Action("SendUpdateAttachmentsToApproveAsync", "Tender")',
+         {
+            tenderid: '@tenderId',
+            __RequestVerificationToken: token
+         }).done(function () {
+            $('#LoadingSite').fadeOut();
+            $('#btnSendChangeToApprove').attr('disabled', true);
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ChangeRequestSentToApproval)', alertMessageType.Success);             
+            (@Model.TenderTypeId == @((int)Enums.TenderType.PostQualification) || @Model.TenderTypeId == @((int)Enums.TenderType.PreQualification)  ?  setTimeout(function () {window.location = '@Url.Action("Index", "Qualification")';}, 3000) : setTimeout(function () {window.location = '@Url.Action("Index", "Tender")';}, 3000));
+         }).fail(function (error) {
+           $('#LoadingSite').fadeOut();
+           if (error.responseText != "Logout") {
+              AlertFun(error.responseJSON.message, alertMessageType.Danger);
+           }
+           else if (error.responseText == "Logout") {
+              window.location = '/account/logout'; return;
+           }
+         });
+    });
+        // ------------------ Attachments -----------------------
+      $("#btnAttachmentsApprrove").on("click", function () {
+         document.getElementById('timerChangeRequest').innerHTML = 05 + ":" + 00;
+         startTimerChangeRequest();
+         $("#btnResendVerificationCodeChangeRequest").prop("disabled", true);
+         createVerificationCode();
+         $("#divVerficationCodeChangeRequest").show();
+         $("#divChangeRequestRejectReason").hide();
+         $("#btnAttachmentsApprovalConfirm").show();
+         $("#btnAttachmentsRejectConfirm").hide();
+      });
+      $("#btnAttachmentsReject").on("click", function () {
+         $("#btnResendVerificationCodeChangeRequest").hide();
+         $("#divVerficationCodeChangeRequest").hide();
+         $("#divChangeRequestRejectReason").show();
+
+         $("#btnAttachmentsApprovalConfirm").hide();
+         $("#btnAttachmentsRejectConfirm").show();
+      });
+   $("#btnAttachmentsApprovalConfirm").on("click", function () {
+      
+            $("#btnResendVerificationCodeChangeRequest").show();
+            $("#txtActiveNoValidChangeRequest").hide();
+            var verificationCode = $("#txtActivationNoChangeRequest").val();
+            if (verificationCode == '') {
+               $("#txtActiveNoValidChangeRequest").show();
+               return false;
+            }
+            $('#LoadingSite').fadeIn();
+             $.post('@Url.Action("ApproveTenderAttachmentsChangeRequestAsync", "Tender")',
+                {
+                   tenderIdString: '@Html.Raw(@tenderIdString)',
+                   verificationCode: verificationCode,
+                   __RequestVerificationToken: token
+                }).done(function () {
+                   $('#LoadingSite').fadeOut();
+                   $('#changeRequestModal').modal('hide');
+                   $('#btnAttachmentsApprrove').prop("disabled", true);
+                   
+                   $('#btnAttachmentsReject').prop("disabled", true);
+                   AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ChangeRequestApproved)', alertMessageType.Success); 
+                   (@Model.TenderTypeId == @((int)Enums.TenderType.PostQualification) || @Model.TenderTypeId == @((int)Enums.TenderType.PreQualification)  ?  setTimeout(function () {window.location = '@Url.Action("Index", "Qualification")';}, 3000) : setTimeout(function () {window.location = '@Url.Action("Index", "Tender")';}, 3000));                   
+                }).fail(function (error) {
+                   $('#LoadingSite').fadeOut();
+                   $("#changeRequestModal").modal('hide');
+                   if (error.responseText != "Logout") {
+                      AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                   }
+                   else if (error.responseText == "Logout") {
+                      window.location = '/account/logout'; return;
+                   }
+                });
+         });
+
+      $("#btnAttachmentsRejectConfirm").on("click", function () {
+         $("#txtActiveNoValidChangeRequest").hide()
+         var rejectionReasonValue = $("#txtRejectionReasonChangeRequest").val();
+         $("#txtRejectionReasonValidation").hide()
+         if (rejectionReasonValue == '') {
+            $("#txtChangeRequestRejectionReasonValidation").show()
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("RejectTenderUpdateAttachmentAsync", "Tender")',
+            {
+               tenderIdString: '@Html.Raw(@tenderIdString)',
+               rejectionReason: rejectionReasonValue,
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $('#changeRequestModal').modal('hide');
+               $('#btnAttachmentsReject').prop("disabled", true);
+               $('#btnAttachmentsApprrove').prop("disabled", true);
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ChangeRequestRejected)', alertMessageType.Success);             
+               (@Model.TenderTypeId == @((int)Enums.TenderType.PostQualification) || @Model.TenderTypeId == @((int)Enums.TenderType.PreQualification)  ?  setTimeout(function () {window.location = '@Url.Action("Index", "Qualification")';}, 3000) : setTimeout(function () {window.location = '@Url.Action("Index", "Tender")';}, 3000));
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               $("#changeRequestModal").modal('hide');
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+         $('#btnCancelAttachmentsUpdate').click(function () {
+         // sam sam at Qtable :D
+            $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("CancelAttachmentsUpdateAsync", "Tender")',
+            {
+               tenderIdString: '@Html.Raw(@tenderIdString)',
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $('#btnCancelAttachmentsUpdate').attr('disabled', true);
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ChangeRequestCanceled)', alertMessageType.Success);               
+               (@Model.TenderTypeId == @((int)Enums.TenderType.PostQualification) || @Model.TenderTypeId == @((int)Enums.TenderType.PreQualification)  ?  setTimeout(function () {window.location = '@Url.Action("Index", "Qualification")';}, 3000) : setTimeout(function () {window.location = '@Url.Action("Index", "Tender")';}, 3000));
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+         });
+
+         $("#btnResendVerificationCodeChangeRequest").on("click", function () {
+         $("#btnResendVerificationCodeChangeRequest").prop("disabled", true);
+            document.getElementById('timerChangeRequest').innerHTML = 05 + ":" + 00;
+         createVerificationCode();
+            startTimerChangeRequest();
+      });
+      function checkSecond(sec) {
+         if (sec < 10 && sec >= 0) { sec = "0" + sec }; // add zero in front of numbers < 10
+         if (sec < 0) { sec = "59" };
+         return sec;
+      }
+      function checkTime(min, sec, myVar) {
+         if (min <= 0 && sec <= 0) {
+            $("#btnResendVerificationCode").prop("disabled", false);
+            clearTimeout(myVar)
+         }; // add zero in front of numbers < 10
+         return sec;
+      }
+      function startTimerChangeRequest() {
+         var presentTime = document.getElementById('timerChangeRequest').innerHTML;
+         var timeArray = presentTime.split(/[:]+/);
+         var m = timeArray[0];
+         var s = checkSecond((timeArray[1] - 1));
+         if (s == 59) { m = m - 1 }
+         document.getElementById('timerChangeRequest').innerHTML = m + ":" + s;
+         var myVar = setTimeout(startTimerChangeRequest, 1000);
+         checkTimeChangeRequest(m, s, myVar);
+         if (m < 0 && s > 0) {
+            document.getElementById('timerChangeRequest').innerHTML = "0:00";
+            return false;
+         }
+      }
+   function checkTimeChangeRequest(min, sec, myVar) {
+      if (min <= 0 && sec <= 0) {
+         $("#btnResendVerificationCodeChangeRequest").prop("disabled", false);
+
+         clearTimeout(myVar)
+      }; // add zero in front of numbers < 10
+      return sec;
+   }
+         function createVerificationCode() {
+         $.post('/Tender/CreateVerificationCode', { tenderIdString: '@Html.Raw(@tenderIdString)', __RequestVerificationToken: token }).fail(function (error) {
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+            $("#changeRequestModal").modal('hide');
+            $("#myModal").modal('hide');
+         });
+      }
+</script>

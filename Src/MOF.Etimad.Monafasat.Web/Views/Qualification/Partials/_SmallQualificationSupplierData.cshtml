@@ -1,0 +1,98 @@
+@model MOF.Etimad.Monafasat.ViewModel.QualificationSupplierDataReviewViewModel
+
+
+
+<div class="">
+   <ul class="nav nav-pills">
+      <li class="nav-item "><a class="nav-link text-center active show" href="#section1" data-toggle="tab">القدرات الفنية والإدارية</a></li>
+      <li class="nav-item"><a class="nav-link text-center " href="#section2" data-toggle="tab">القدرات المالية</a></li>
+   </ul>
+</div>
+<div class="tab-content tab-space p-0">
+   <div class="tab-pane active show" id="section1">
+      <div class="row">
+
+         @if (Model.lstQualificationSupplierTechDataModel != null)
+         {
+            @for (int i = 0; i < Model.lstQualificationSupplierTechDataModel.Count; i++)
+            {
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <ul class="list-group form-details-list p-0">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @Model.lstQualificationSupplierTechDataModel[i].QualificationItemName
+                           </div>
+
+                           <div class="col-8 etd-item-info">
+                              @Model.lstQualificationSupplierTechDataModel[i].SupplierValueString
+                              @if ((Model.TenderStatusId != (int)Enums.TenderStatus.Approved
+                            && Model.TenderStatusId != (int)Enums.TenderStatus.DocumentChecking
+                            && Model.TenderStatusId != (int)Enums.TenderStatus.DocumentCheckPending
+                            && Model.TenderStatusId != (int)Enums.TenderStatus.DocumentCheckRejected) && Model.lstQualificationSupplierTechDataModel[i].QualificationItemId != (int)Enums.QualificationEvaluationItems.NumberOfSaudiEmployees)
+                              {
+                                 <div>
+                                    <br />
+                                    @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AcquiredPoints: @Model.lstQualificationSupplierTechDataModel[i].PointValue
+                                 </div>
+                              }
+                           </div>
+
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            }
+         }
+      </div>
+
+   </div>
+   <div class="tab-pane" id="section2">
+
+      <div class="row">
+         <div class="col">
+            <h5 class="text-primary">البيانات المالية</h5>
+            <div class="table-responsive">
+               <table class="table  table-bordered table-striped">
+                  <thead style="background: #29ad6f38;">
+                     <tr>
+                        <th>
+                           البيانات المالية لآخر سنة مالية
+                        </th>
+                        <th>
+                           @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CurrentYear
+                        </th>
+
+                     </tr>
+                     <tr>
+                        <th colspan="4">
+                           بيان الميزانية العمومية
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     @if (Model.QualificationSupplierDataYearly != null)
+                     {
+                        @foreach (var item in Model.QualificationSupplierDataYearly)
+                        {
+                           <tr>
+                              <th>
+                                 <label class="label bmd-label-static">@item.Name</label>
+                              </th>
+                              <th>
+                                 <label>@item.CurrentYear</label>
+                              </th>
+                           </tr>
+                        }
+                     }
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+
+   </div>
+</div>
+
+
+

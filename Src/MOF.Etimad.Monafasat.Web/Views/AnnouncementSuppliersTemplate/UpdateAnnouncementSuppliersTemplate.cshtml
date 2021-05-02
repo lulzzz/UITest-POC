@@ -1,0 +1,237 @@
+@using res = MOF.Etimad.Monafasat.Resources;
+@using  MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.UpdateAnnouncementSupplierTemplateModel
+@{
+   ViewData["Title"] = res.AnnouncementResources.DisplayInputs.UpdateAnnouncementSupplierTemplate;
+   var announcementTemplateSuppliersListTypeId = Html.Raw(Json.Serialize(Model.AnnouncementTemplateSuppliersListTypeId));
+   var isEffectiveList = Html.Raw(Json.Serialize(Model.IsEffectiveList));
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.CreateAnnouncementTemplate</li>
+      </ol>
+   </nav>
+}
+<style>
+   .tab-content > .tab-pane {
+      display: block;
+      height: 0;
+      overflow: hidden;
+   }
+
+   .tab-content > .active {
+      display: block;
+      height: auto;
+      overflow: visible;
+   }
+</style>
+<form id="basicStepForm" method="POST" asp-controller="AnnouncementSuppliersTemplate" asp-action="UpdateAnnouncementSuppliersTemplate" autocomplete="off">
+   @Html.AntiForgeryToken()
+
+   <div class="modal fade" id="updateAnnouncementTemplateModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Confirm</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+           
+               <div class="modal-body">
+                  <div class="form-group bmd-form-group" style="padding-top:0">
+                     <div class="pull-left">
+                        <p>@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.UpdateAnnouncementSupplierTemplateConfirmationMessage</p>
+                     </div>
+                  </div>
+               </div>
+         
+            <div class="modal-footer">
+               <button type="submit" class="btn btn-primary btn-sm" name="button">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div id="app" v-cloak>
+      <input type="hidden" asp-for="AnnouncementIdString" name="announcementIdString" />
+      <div class="tab-content tab-space p-0">
+         <div class="tab-pane active" id="monafasa-info">
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="AnnouncementTemplateSuppliersListTypeId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <div class="form-check">
+                                    <label class="form-check-label">
+                                       <input asp-for="AnnouncementTemplateSuppliersListTypeId" id="AnnouncementTemplateSuppliersListTypeIdGeneral" name="AnnouncementTemplateSuppliersListTypeId" checked="checked" v-model="announcementTemplateSuppliersListTypeId" class="form-check-input" type="radio" value="1">
+                                       @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.GeneralList
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                    <label class="form-check-label">
+                                       <input class="form-check-input" type="radio" id="AnnouncementTemplateSuppliersListTypeIdPrivate" asp-for="AnnouncementTemplateSuppliersListTypeId" v-model="announcementTemplateSuppliersListTypeId" name="AnnouncementTemplateSuppliersListTypeId" value="2">
+                                       @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.PrivateList
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                 </div>
+                                 <span asp-validation-for="AnnouncementTemplateSuppliersListTypeId" id="AnnouncementTemplateSuppliersListTypeSpan" class="text-danger"></span>
+                              </div>
+                           </div>
+
+                           <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="IsEffectiveList" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <div class="form-check">
+                                    <label class="form-check-label">
+                                       <input asp-for="IsEffectiveList" id="IsEffectiveList1" name="IsEffectiveList" checked="checked" v-model="isEffectiveList" class="form-check-input" type="radio" value="true">
+                                       @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.Yes
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                    <label class="form-check-label">
+                                       <input class="form-check-input" type="radio" id="IsEffectiveList2" asp-for="IsEffectiveList" v-model="isEffectiveList" name="IsEffectiveList" value="false">
+                                       @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.No
+                                       <span class="circle">
+                                          <span class="check"></span>
+                                       </span>
+                                    </label>
+                                 </div>
+                                 <span asp-validation-for="IsEffectiveList" id="IsEffectiveListSpan" class="text-danger"></span>
+                              </div>
+                           </div>
+
+                           <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12" id="divEffectiveListDate" v-show="isEffectiveListShow==='true'">
+                              <div class="form-group form-check etd-calendar-group">
+                                 <label asp-for="IsEffectiveList" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                                 <input asp-for="EffectiveListDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="effectiveListDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+                                 <span class="form-control-feedback">
+                                    <i class="material-icons">calendar_today</i>
+                                 </span>
+                              </div>
+                              <span class="badge badge-warning" id="lastEnquiesDateVac" style="display:none">@res.TenderResources.ErrorMessages.WeekendDate </span>
+                              <span asp-validation-for="EffectiveListDate" class="text-danger"></span>
+                           </div>
+                        </div>
+
+                        <div class="row">
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label class="label bmd-label-static noSpecial">
+                                    @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.GovAgencyName
+                                 </label>
+                                 <input type="text" class="form-control" readonly value="@User.UserAgencyName()">
+
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="AgencyPhone" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="AgencyPhone" maxlength="15" class="form-control" />
+                                 <span asp-validation-for="AgencyPhone" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="AgencyFax" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="AgencyFax" maxlength="15" class="form-control" />
+                                 <span asp-validation-for="AgencyFax" class="text-danger"></span>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div class="row">
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="AgencyEmail" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="AgencyEmail" maxlength="1000" class="form-control" />
+                                 <span asp-validation-for="AgencyEmail" class="text-danger"></span>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label asp-for="AgencyAddress" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                                 <input asp-for="AgencyAddress" maxlength="500" class="form-control" />
+                                 <span asp-validation-for="AgencyAddress" class="text-danger"></span>
+                              </div>
+                           </div>
+                        </div>
+
+
+                        <div class="row">
+                           <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                              <div class="form-group bmd-form-group p-0">
+                                 <label asp-for="AttachmentReference" class="label bmd-label-static"></label>
+                                 @Html.FileUploaderFor(m => m.AttachmentReference, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                              </div>
+                           </div>
+                        </div>
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            <div class="row">
+               <button  @@click="btnShowUpdateAnnouncementConfirmation()" id="btnShowUpdateAnnouncementConfirmation" type="button" class="btn btn-primary pull-left">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+               </button>
+            </div>
+         </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row">
+         <div class="col">
+            <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("AllAgencyAnnouncementSupplierTemplates", "AnnouncementSuppliersTemplate")'">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButtonToMain
+            </button>
+         </div>
+      </div>
+   </div>
+
+</form>
+   @section scripts{
+      <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+      <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+      @{
+
+         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+      }
+      <script>
+         var obj = new Vue({
+            el: '#app',
+            data() {
+               return {
+                  isEffectiveListShow: '@Model.IsEffectiveList' == 'True' ? "true" : "false",
+                  announcementTemplateSuppliersListTypeId: '@Model.AnnouncementTemplateSuppliersListTypeId' == '@((int)Enums.AnnouncementTemplateSuppliersListTypeId.Private)' ? '@((int)Enums.AnnouncementTemplateSuppliersListTypeId.Private)' : '@((int)Enums.AnnouncementTemplateSuppliersListTypeId.Public)',
+                  isEffectiveList: '@isEffectiveList',
+               }
+            },
+            methods: {
+               btnShowUpdateAnnouncementConfirmation: function () {
+                    $("#updateAnnouncementTemplateModal").modal('show');
+               }
+            },
+            components: {
+            }
+         });
+      $('input[type=radio][name=IsEffectiveList]').change(function () {
+         if ($(this).val() == true || $(this).val() == 'true'  ) {
+            $('#divEffectiveListDate').show();
+         }
+         else
+            $('#divEffectiveListDate').hide();
+      });
+      </script>
+   }

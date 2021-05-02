@@ -1,0 +1,105 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer))
+{
+   <template v-if="tender.attachmentsStatus == @((int)Enums.ChangeStatusType.New)">
+      <span class="badge badge-default d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UnderUpdateForAttachments
+      </span>
+   </template>
+   <template v-if="tender.quantitiesTableStatus == @((int)Enums.ChangeStatusType.New)">
+      <span class="badge badge-default d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UnderUpdateForQuantityTables
+      </span>
+   </template>
+   <template v-if="tender.extendDatesStatus  == @((int)Enums.ChangeStatusType.New)">
+
+      <span class="badge badge-default d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UnderUpdateForExtendDates
+      </span>
+   </template>
+   <template v-if="tender.attachmentsStatus == @((int)Enums.ChangeStatusType.Pending)">
+      <span class="badge badge-info d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PendingAttachmentsUpdate
+      </span>
+   </template>
+   <template v-if="tender.quantitiesTableStatus == @((int)Enums.ChangeStatusType.Pending)">
+      <span class="badge badge-info d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PendingQuantityTableUpdate
+      </span>
+   </template>
+   <template v-if="tender.extendDatesStatus == @((int)Enums.ChangeStatusType.Pending)">
+      <span class="badge badge-info d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PendingExtendDatesUpdate
+      </span>
+   </template>
+   <template v-if="tender.attachmentsStatus == @((int)Enums.ChangeStatusType.Rejected)">
+      <span class="badge badge-danger d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectAttachmentUpdate
+      </span>
+   </template>
+   <template v-if="tender.quantitiesTableStatus == @((int)Enums.ChangeStatusType.Rejected)">
+      <span class="badge badge-danger d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectQuantityTableUpdate
+      </span>
+   </template>
+   <template v-if="tender.extendDatesStatus == @((int)Enums.ChangeStatusType.Rejected)">
+      <span class="badge badge-danger d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectExtendDateUpdate
+      </span>
+   </template>
+   
+   <template v-if="tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending) && tender.changeRequestedBy == dataEntry">
+      <span class="badge badge-info d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelRequestPending
+      </span>
+   </template>
+   <template v-if="tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestedBy == dataEntry || (tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestedBy == auditor && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved))">
+      <span class="badge badge-danger d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelRequestRejected
+      </span>
+   </template>
+   <template v-if="tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Approved) && tender.changeRequestedBy == dataEntry || (tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Approved) && tender.changeRequestedBy == auditor && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved))">
+      <span class="badge badge-primary d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelRequestAccepted
+      </span>
+   </template>
+
+}
+@if (User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.OffersOppeningManager))
+{
+   <template v-if="tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending) && tender.changeRequestedBy == oppeningSecretry || (tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending) && tender.changeRequestedBy == oppeningManger)">
+      <span class="badge badge-info d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelRequestPending
+      </span>
+   </template>
+   <template v-if="tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestedBy == oppeningSecretry || (tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestedBy == oppeningManger)">
+      <span class="badge badge-danger d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelRequestRejected
+      </span>
+   </template>
+   <template v-if="tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Approved) && tender.changeRequestedBy == oppeningSecretry || (tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Approved) && tender.changeRequestedBy == oppeningManger)">
+      <span class="badge badge-primary d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelRequestAccepted
+      </span>
+   </template>
+}
+@if (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersCheckManager))
+{
+   <template v-if="tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending) && tender.changeRequestedBy == checkSecretry || (tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Pending) && tender.changeRequestedBy == checkManger)">
+      <span class="badge badge-info d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelRequestPending
+      </span>
+   </template>
+   <template v-if="tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestedBy == checkSecretry || (tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Rejected) && tender.changeRequestedBy == checkManger)">
+      <span class="badge badge-danger d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelRequestRejected
+      </span>
+   </template>
+   <template v-if="tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Approved) && tender.changeRequestedBy == checkSecretry || (tender.cancelRequestStatus == @((int)Enums.ChangeStatusType.Approved) && tender.changeRequestedBy == checkManger)">
+      <span class="badge badge-primary d-inline-block" style="margin: 0 5px;">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CancelRequestAccepted
+      </span>
+   </template>
+}
+

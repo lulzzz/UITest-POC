@@ -1,0 +1,163 @@
+@model MOF.Etimad.Monafasat.ViewModel.CommitteeUserModel
+
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.UsersAssign;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.UsersAssign</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.UsersAssign</li>
+      </ol>
+   </nav>
+}
+<form method="POST">
+   @*<input type="hidden" id="RoleName" name="RoleName" value="@Model.RoleName" />*@
+   <input type="hidden" id="CommitteeId" name="CommitteeId" value="@Model.CommitteeId" />
+   <div class="">
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.CommitteeInfo</h4>
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.CommitteeName
+                           </div> <div class="col-8 etd-item-info"><span>@(Model.CommitteeModel.CommitteeName)</span></div>
+                        </div>
+                     </li>
+                  
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.Address
+
+                           </div> <div class="col-8 etd-item-info"><span>@(Model.CommitteeModel.Address)</span></div>
+                        </div>
+                     </li>
+
+                  </ul>
+               </div>
+
+            </div>
+            <div class="row">
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label class="label bmd-label-static"></label>@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.RoleName<span class="text-danger">*</span>
+                     <input asp-for="RoleName" type="radio" value="@(RoleNames.OffersPurchaseSecretary)" /> @(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.OffersOppeningSecretary)
+                     <input asp-for="RoleName" type="radio" value="@(RoleNames.OffersPurchaseManager)" /> @(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.OffersOppeningManager)
+                  </div>
+                  <div class="" id="divTechnicalCommittee">
+                     <div class="form-group bmd-form-group">
+                        <label asp-for="UserName" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                        <select data-live-search="true" asp-for="UserId" name="UserId"
+                                asp-items="@(new SelectList(Model.Users,"UserId","Name"))" class="selectpicker" data-style="select-with-transition" data-size="7">
+                           <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseChoose </option>
+                        </select>
+                        <span asp-validation-for="UserIds" class="text-danger"></span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-md-6 col-sm-12 col-xs-12 text-right">
+                  <button type="submit" class=" btn btn-primary btn-sm">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+                  </button>
+               </div>
+            </div>
+            <br/>
+            <div class="row" id="divInvitedcommittees">
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="card">
+                     <table id="CommitteeTable" class="table table-striped text-center" aria-describedby="assign users to committee grid">
+                        <thead class="text-center">
+                           <tr>
+                              <th scope="col" class="text-center">#</th>
+                              <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.UserName </th>
+                              <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.RoleName </th>
+                              <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Operations </th>
+                           </tr>
+                        </thead>
+                        <tbody class="text-center" v-if="invitedcommittees && invitedcommittees.length > 0">
+                           <tr v-for="(commettee, index) in invitedcommittees">
+                              <td class="text-center">
+                                 {{index + 1}}
+                              </td>
+                              <td class="text-center">
+                                 {{commettee.userName}}
+                              </td>
+                              <td class="text-center">
+                                 {{commettee.roleName}}
+                              </td>
+                              <td class="text-center">
+                                 <div style="text-align: center;">
+                                    <button type="button" @@click="removeCommittee(commettee.id,index)" class="btn-sm btn btn-outline-primary btn-link btn-just-icon col-md-1"><i class="material-icons">remove</i><div class="ripple-container"></div></button>
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                        <tbody v-else>
+                           <tr>
+                              <td colspan="9" class="text-center">
+                                 <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                                 <br />
+                                 @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                     <pagination :visible_pages="3" ref="vpaginator" :resource_url="committeeresource_url" @@update="updateCommitteeResource"></pagination>
+                  </div>
+               </div>
+            </div>
+            </div>
+      </div>
+      <div>
+         @*@Html.ActionLink(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton, "Index", new { committeeTypeId = MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(Model.CommitteeTypeId) }, new { @class = "btn btn-outline-primary btn-link pull-right" })*@
+         <div class="clearfix"></div>
+      </div>
+   </div>
+
+
+</form>
+@section scripts {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+   var Join = new Vue({
+      el: '#divInvitedcommittees',
+      data: {
+
+         invitedcommittees: [],
+         totalCount: 0,
+         currentPage: 1,
+         enquiryIdString: '',
+         pageSize: 10,
+            committeeresource_url: "/Committee/GetCommitteeUsersAsync?committeeId=@Model.CommitteeId",
+      },
+      methods: {
+         updateCommitteeResource: function (data) {
+            this.invitedcommittees = data;
+            //this.enquiryIdString = data.length > 0 ? data[0].enquiryIdString : 'enquiryIdString';
+            this.totalCount = this.totalCount;
+            this.currentPage = this.$refs.vpaginator.currentPage;
+            this.pageSize = this.$refs.vpaginator.pageSize;
+         },
+         removeCommittee: function (userid, index) {
+            
+            this.invitedcommittees.splice(index, 1);
+            var token = $('input[name=__RequestVerificationToken]').val();
+            $.post('/Committee/RemoveAssignedUserAsync', { userId: userid, committeeId: @Model.CommitteeId, __RequestVerificationToken: token }).done(function (result) {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.UserDeletedSuccessfully)', alertMessageType.Success)
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+            });
+         },
+      }
+   })
+   </script>
+}

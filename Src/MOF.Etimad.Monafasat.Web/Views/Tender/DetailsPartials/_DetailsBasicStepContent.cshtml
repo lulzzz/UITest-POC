@@ -1,0 +1,695 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.TenderDetailsModel
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails;
+   var subPurpose = Model != null && Model.Purpose != null ? (Model.Purpose.Length > 30 ? Model.Purpose.Substring(0, 30) + "<i class='readMore'> ...عرض المزيد...</i> " : Model.Purpose) : "";
+   var purpose = Model.Purpose + "<i class='readLess'> ...عرض الأقل...</i> ";
+}
+<style>
+   .agencyLogo {
+      border-radius: 100%;
+      border: 2px solid #ccc;
+      padding: 5px;
+      width: 56px;
+   }
+</style>
+<div class="row" id="basicDetials">
+   <div class="col-12">
+      <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation <span class="pull-right">@Html.Partial("_AgencyLogo")</span> </h4>
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <ul class="list-group form-details-list">
+         @if (!User.IsInRole(RoleNames.supplier) && User.UserRoles().Count != 0)
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>@(Model.CreatedBy)</span>
+                  </div>
+               </div>
+            </li>
+            @if (Model.TenderStatusId == (int)Enums.TenderStatus.Approved)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ApprovedBy
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(string.IsNullOrEmpty(Model.ApprovedBy) ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotFound : Model.ApprovedBy)</span>
+
+                     </div>
+                  </div>
+               </li>
+            }
+            else if (Model.TenderStatusId == (int)Enums.TenderStatus.Rejected)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectedBy
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(string.IsNullOrEmpty(Model.RejectedBy) ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotFound : Model.RejectedBy)</span>
+
+                     </div>
+                  </div>
+               </li>
+            }
+         }
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>@(Model.TenderName)</span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>@(string.IsNullOrEmpty(Model.TenderNumber) ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotFound : Model.TenderNumber)</span>
+               </div>
+            </div>
+         </li>
+         @if ((Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase))
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>@(string.IsNullOrEmpty(Model.ReferenceNumber) ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotFound : Model.ReferenceNumber)</span>
+                  </div>
+               </div>
+            </li>
+         }
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderPurpose
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span id="subPurposSapn" style="display:block">
+                     @Html.Raw(subPurpose)
+                  </span>
+                  <span id="purposeSpan" hidden="hidden" style="display:block">
+                     @Html.Raw(purpose)
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletPrice
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @if ((Model.ConditionsBookletPrice + Model.FinancialFees) > 0)
+                     {
+                        @if (User.IsInRole(RoleNames.supplier) || User.UserRole() == "")
+                        {
+                           @(Model.ConditionsBookletPrice + Model.FinancialFees) @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Riyal
+                        }
+                        else
+                        {
+                           @(Model.ConditionsBookletPrice) @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Riyal
+                        }
+                     }
+                     else
+                     {
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Free
+                     }
+                  </span>
+               </div>
+            </div>
+         </li>
+         @if (!User.IsInRole(RoleNames.supplier) && User.UserRoles().Count != 0)
+         {
+            @if (
+(Model.EstimatedValue.HasValue &&
+(!User.IsInRole(RoleNames.OffersOppeningSecretary) && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase
+&& Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender
+&& (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppening || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedPending
+|| Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedRejected)
+)
+
+|| (!User.IsInRole(RoleNames.OffersOppeningSecretary) && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderStatusId != (int)Enums.TenderStatus.UnderEstablishing
+&& Model.TenderStatusId != (int)Enums.TenderStatus.Established && Model.TenderStatusId != (int)Enums.TenderStatus.Pending && Model.TenderStatusId != (int)Enums.TenderStatus.Approved
+&& Model.TenderStatusId != (int)Enums.TenderStatus.Rejected
+&& Model.TenderStatusId != (int)Enums.TenderStatus.UnitStaging && Model.TenderStatusId != (int)Enums.TenderStatus.RejectedFromUnit && Model.TenderStatusId != (int)Enums.TenderStatus.ReturnedFromUnitToAgencyForEdit
+&& Model.TenderStatusId != (int)Enums.TenderStatus.OffersOppening && Model.TenderStatusId != (int)Enums.TenderStatus.OffersOppenedPending
+&& Model.TenderStatusId != (int)Enums.TenderStatus.OffersOppenedRejected /*&& Model.TenderStatusId != (int)Enums.TenderStatus.OffersOppenedConfirmed*/
+)
+|| (User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2) || User.IsInRole(RoleNames.UnitManagerUser))
+) && (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile || !(Model.OfferPresentationWayId == (int?)Enums.OfferPresentationWayId.TwoSepratedFiles && new List<int>()
+   {
+          (int)Enums.TenderStatus.OffersChecking,
+          (int)Enums.TenderStatus.OffersTechnicalCheckingPending,
+          //(int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed,
+          (int)Enums.TenderStatus.OffersTechnicalCheckingRejected
+}.Contains(Model.TenderStatusId)))
+)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EvaluationValue
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.EstimatedValue)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            }
+         }
+         @if (!string.IsNullOrEmpty(Model.PreQualificationName))
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PreQualification
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.PreQualificationName)
+                     </span>
+                  </div>
+               </div>
+            </li>
+         }
+         @if (!string.IsNullOrEmpty(Model.InvitationTypeIdString))
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationType
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.InvitationTypeIdString)
+                     </span>
+                  </div>
+               </div>
+            </li>
+         }
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.TenderStatusName)
+                  </span>
+               </div>
+            </div>
+         </li>
+      </ul>
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <ul class="list-group form-details-list">
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType
+               </div>
+               <div class="col-8 etd-item-info">
+                  @if (User.UserRole() == RoleNames.supplier && (Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase))
+                  {
+                     <span>
+                        شراء مباشر
+                     </span>
+                  }
+                  else if (User.UserRole() == RoleNames.supplier && (Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.NewTender))
+                  {
+                     <span>
+                        منافسة عامة
+                     </span>
+                  }
+                  else
+                  {
+                     <span>
+                        @(Model.TenderTypeName)
+                     </span>
+                  }
+               </div>
+            </div>
+         </li>
+         @if (Model.TenderTypeId == (int)Enums.TenderType.LimitedTender)
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.IsLinkedToAnnouncement
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.IsLinkedToAnnouncement == true ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Yes : MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.No)
+                     </span>
+                  </div>
+               </div>
+            </li>
+         }
+         @if (Model.IsLinkedToAnnouncement == true && (Model.TenderTypeId == (int)Enums.TenderType.LimitedTender || Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase))
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PreAnnouncement
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(string.IsNullOrEmpty(Model.PreAnnouncementName) ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist : Model.PreAnnouncementName)
+                     </span>
+                  </div>
+               </div>
+            </li>
+         }
+
+         @if (User.IsInRole(RoleNames.supplier))
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferStatus
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @if (Model.OfferStatusId == (int)Enums.OfferStatus.Received)
+                        {
+                           @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Recieved
+                        }
+                        else if (Model.OfferStatusId == (int)Enums.OfferStatus.Canceled)
+                        {
+                           @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.NotRecieved
+                        }
+                        else if (Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing)
+                        {
+                           <span> تحت الانشاء</span>
+                        }
+                        else if (Model.IsPurchased)
+                        {
+                           <span>تم شراء الكراسة</span>
+                        }
+                        else if (Model.TenderTypeMustPurchase)
+                        {
+                           <span> لم يتم شراء الكراسة </span>
+
+                        }
+                        else if (Model.InvitationStatusId == (int)Enums.InvitationStatus.Approved)
+                        {
+                           <span>تم القبول</span>
+
+                        }
+
+                        else if (Model.InvitationStatusId == (int)Enums.InvitationStatus.Rejected)
+                        {
+                           <span>تم الرفض</span>
+
+                        }
+                        else if (Model.InvitationStatusId == (int)Enums.InvitationStatus.Withdrawal)
+                        {
+                           <span>تم الانسحاب</span>
+
+                        }
+                        else
+                        {
+                           <span>لم يتم الرد</span>
+
+                        }
+                     </span>
+                  </div>
+               </div>
+            </li>
+         }
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.AgencyName)
+                  </span>
+               </div>
+            </div>
+         </li>
+         @if (!User.IsInRole(RoleNames.supplier) && User.UserRoles().Count != 0)
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TechnicalCommittee
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(string.IsNullOrEmpty(Model.TechnicalOrganizationName) ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist : Model.TechnicalOrganizationName)
+                     </span>
+                  </div>
+               </div>
+            </li>
+            @if (Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase && (!Model.IsLowBudgetPurchase.HasValue || !Model.IsLowBudgetPurchase.Value))
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PurchaseOffersCommittee
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.DirectPurchaseCommitteeName) </span>
+                     </div>
+                  </div>
+               </li>
+            }
+            @if (Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase && Model.IsLowBudgetPurchase.HasValue && Model.IsLowBudgetPurchase.Value)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DirectPurchaseMemberName
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.PurchaseMemberName) </span>
+                     </div>
+                  </div>
+               </li>
+            }
+            @if (Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.VROCommittee
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.VROCommitteeName) </span>
+                     </div>
+                  </div>
+               </li>
+            }
+            @if (Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OpenOffersCommittee
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(string.IsNullOrEmpty(Model.OffersOpeningCommitteeName) ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist : Model.OffersOpeningCommitteeName)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            }
+            @if (Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOffersCommittee
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(string.IsNullOrEmpty(Model.OffersCheckingCommitteeName) ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist : Model.OffersCheckingCommitteeName)
+                        </span>
+
+                     </div>
+                  </div>
+               </li>
+            }
+
+         }
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainingTime
+               </div>
+               <div class="col-8 etd-item-info">
+
+                  @if (Model.RemainingMins > 0 || Model.RemainingHours > 0 || Model.RemainingDays > 0)
+                  {
+                     <span>
+                        <span class="badge badge-primary days">
+                           @(Model.RemainingMins)
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Minutes
+                        </span>
+                        :<span class="badge badge-primary hours">
+                           @(Model.RemainingHours)
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Hour
+                        </span>
+                        :<span class="badge badge-primary minute">
+                           @(Model.RemainingDays)
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Day
+                        </span>
+                     </span>
+                  }
+                  else
+                  {
+                     @if (Model.LastOfferPresentationDate.HasValue)
+                     {
+                        <span>
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Ended
+                        </span>
+                     }
+                  }
+
+               </div>
+            </div>
+         </li>
+         @if (User.IsInRole(RoleNames.supplier) && Model.SupplierNeedSample.HasValue && Model.SupplierNeedSample.Value)
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SamplesDeliveryAddress
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <div style="color:gray!important">يوجد عينة من الجهة و يتطلب زيارة الجهة للحصول عليها . بعد عملية الشراء والدفع قم بطباعة وصل الفاتورة وتسليمه لإدارة المشتريات لإستلام هذه العينة على العنوان التالي:</div>
+                     <span class="badge badge-info">@(Model.SamplesDeliveryAddress) </span>
+                  </div>
+               </div>
+            </li>
+            @if (!string.IsNullOrEmpty(Model.DeliveryDate))
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DeliveryDate
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span class="badge badge-info">@(Model.DeliveryDate) </span>
+                     </div>
+                  </div>
+               </li>
+            }
+         }
+         @if (!User.IsInRole(RoleNames.supplier) && User.UserRoles().Count != 0)
+         {
+            if (Model.TenderTypeId == (int)Enums.TenderType.LimitedTender)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReasonForTenderTypeSelection
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.ReasonForLimitedTenderTypeName) </span>
+                     </div>
+                  </div>
+               </li>
+            }
+            if (Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReasonForTenderTypeSelection
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.ReasonForPurchaseTenderTypeName) </span>
+                     </div>
+                  </div>
+               </li>
+            }
+         }
+         @if ((Model.ReasonForLimitedTenderTypeId == (int)Enums.ReasonForLimitedTenderType.Other && Model.TenderTypeId == (int)Enums.TenderType.LimitedTender) || (Model.ReasonForPurchaseTenderTypeId == (int)Enums.ReasonForPurchaseTenderType.Other && Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase))
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReasonForTenderTypeSelection
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.TenderTypeOtherSelectionReason)
+                     </span>
+                  </div>
+               </div>
+            </li>
+         }
+
+         @if (Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender)
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferPresentationWay
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.OfferPresentationWay)
+                     </span>
+                  </div>
+               </div>
+            </li>
+         }
+         @if (!Model.IsOldTender)
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NeddedInitialGurantee
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.NeededInitialGurantee)
+                     </span>
+                  </div>
+               </div>
+            </li>
+            @if (Model.NeededInitialGurantee == MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PrimaryGuarantee)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InitialGuaranteeAddress
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.InitialGuaranteeAddress)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            }
+
+            @if (!Model.IsOldTender && Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.VersionId >= (int)Enums.ActivityVersions.Sprint7Activities)
+            {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FinalGuaranteePercentage
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.FinalGuaranteePercentage)
+                     </span>
+                  </div>
+               </div>
+            </li>
+               }
+            }
+         @if (Model.TenderTypeId == (int)Enums.TenderType.FrameworkAgreement)
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgreementType
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.AgreementTypeName)
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgreementPeriod
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.AgreementYears) @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgreementYears @(Model.AgreementMonthes) @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Month  @(Model.AgreementDays) @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgreementDays
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderAgreementAgencies
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <ol>
+                                 @if (Model.GovAgencies != null)
+                                 {
+                                    @foreach (var govAgency in Model.GovAgencies)
+                                    {
+                                       <li> @govAgency.NameArabic </li>
+                                    }
+                                 }
+                              </ol>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </li>
+         }
+         @if (Model.TenderTypeId == (int)Enums.TenderType.Competition)
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NumberOfWinners
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.NumberOfWinners)
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BonusValue
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.BonusValue)
+                     </span>
+                  </div>
+               </div>
+            </li>
+         }
+          
+      </ul>
+      <input type="hidden" id="lastOfferPresentationDate" value="@(Model.LastOfferPresentationDate.HasValue ? @Model.LastOfferPresentationDate.Value.ToString("yyyy-MM-dd", new System.Globalization.CultureInfo("en-US")) : "")" />
+   </div>
+</div>
+<script>
+   $(document).ready(function () {
+      setTimeout(function () {
+         updateAgencyLogos('@Model.AgencyCode');
+      }, 1000);
+   });
+</script>

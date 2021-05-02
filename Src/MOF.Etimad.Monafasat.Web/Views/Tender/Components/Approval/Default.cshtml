@@ -1,0 +1,88 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderHistoryModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@{
+   int tenderId = Model.TenderId;
+   int tenderStatus = Model.StatusId;
+}
+
+
+
+<div class="row" id="approval">
+   <input id="tenderIdHidden" hidden type="number" value="@tenderId" />
+   @if ((tenderStatus == (int)Enums.TenderStatus.Established) && User.IsInRole(RoleNames.DataEntry))
+   {
+      <div class="col-12 ">
+         <div class="card">
+            <div class="card-body">
+               @if (!string.IsNullOrEmpty(Model.RejectionReason))
+               {
+                  <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</h4>
+                  <p>@Model.RejectionReason</p>
+               }
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApprove" data-toggle="modal" data-target="#ApproveModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove</button>
+            </div>
+         </div>
+      </div>
+   }
+
+   //pending for approval
+   else if ((tenderStatus == (int)Enums.TenderStatus.Pending) && User.IsInRole(RoleNames.Auditer))
+   {
+      <div class="col-12 ">
+         <div class="form-group bmd-form-group">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnApprove" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve</button>
+            <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+         </div>
+      </div>
+   }
+   else if (tenderStatus == (int)Enums.TenderStatus.Rejected && User.IsInRole(RoleNames.DataEntry))
+   {
+      <div class="col-12 ">
+         <div class="card">
+            <div class="card-body">
+               <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</h4>
+               <p>@Model.RejectionReason</p>
+
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnReOpen">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen</button>
+            </div>
+         </div>
+      </div>
+   }
+   else if ((Model.StatusId == (int)Enums.TenderStatus.Rejected || Model.StatusId == (int)Enums.TenderStatus.RejectedFromUnit) && User.IsInRole(RoleNames.DataEntry))
+   {
+      <div class="card">
+         <div class="card-body">
+            <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</h4>
+            <p>@Model.RejectionReason</p>
+         </div>
+      </div>
+      <button type="button" class="btn btn-primary pull-left" name="button" id="btnReOpen">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen</button>
+
+   }
+   else if (Model.StatusId == (int)Enums.TenderStatus.ReturnedFromUnitToAgencyForEdit && User.IsInRole(RoleNames.DataEntry))
+   {
+      <div class="card">
+         <div class="card-body">
+            <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</h4>
+            <p>@Model.UnitRejectionReason</p>
+            <br />
+            @{
+               if (Model.UnitModificatationsFiles.Count() > 0)
+               {
+                  <div class="col-6">
+                     <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DownloadFile</label>
+                     @foreach (var file in Model.UnitModificatationsFiles)
+                     {
+                        <br />
+                        <a href="#" onclick="return RedirectURL('@file.FileNetReferenceId'+':'+'@file.Name');" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">@file.Name</a>
+                     }
+                  </div>
+               }
+            }
+         </div>
+      </div>
+      <button type="button" class="btn btn-primary pull-left" name="button" id="btnReOpen">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen</button>
+
+   }
+</div>

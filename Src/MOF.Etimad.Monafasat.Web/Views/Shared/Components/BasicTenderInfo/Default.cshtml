@@ -1,0 +1,58 @@
+
+@model MOF.Etimad.Monafasat.ViewModel.TenderInformationModel
+
+
+@{
+    ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails;
+    var executionPlace = Model.InsideKSA != null ? (Model.InsideKSA == true ? MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InsideKSA
+       : MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OutsideKSA) : MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InsideKSA;
+}
+
+<div class="row" id="basicDetials">
+   <div class="col-12">
+      <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</h4>
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+
+      <ul class="list-group form-details-list">
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>@(Model.TenderName)</span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.TenderNumber)
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExecutionPlace
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(executionPlace)
+                  </span>
+               </div>
+            </div>
+         </li> 
+      </ul>
+   </div> 
+</div>
+

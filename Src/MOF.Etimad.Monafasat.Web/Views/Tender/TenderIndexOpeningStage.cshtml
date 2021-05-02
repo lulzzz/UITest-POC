@@ -1,0 +1,443 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OpenStageTenders;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Tenders</li>
+         <li class="breadcrumb-item active" aria-current="page">@((string)ViewBag.Title)</li>
+      </ol>
+   </nav>
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <button type="button" id="toglGrid" onclick="toggleViewGrid('TenderGrid')" class="btn p-2 btn-outline-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsMenu"><i class="material-icons">view_column</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsMenu</button>
+      <button type="button" id="toglCards" onclick="toggleViewCards('TenderGrid')" class="btn p-2 btn-outline-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsCards"><i class="material-icons">view_quilt</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsCards</button>
+      <span class="d-block pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search"><button id="searchBtnColaps" class="btn p-2 btn-outline-primary" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</button></span>
+   </div>
+}
+
+<style>
+   .main {
+      background: #f7f7f7;
+   }
+
+   .monafasa-item > div.card {
+      height: calc(100% - 30px);
+   }
+
+   .search-expand {
+      font-size: 1rem;
+      border-bottom: 1px solid #29ad6f;
+      padding: 6px 2px;
+      margin: 12px 0;
+   }
+
+      .search-expand i {
+         transition: all .15s ease 0s;
+         transform: rotate(-180deg);
+      }
+
+      .search-expand.collapsed i {
+         transform: rotate(-0deg);
+      }
+</style>
+<form class="form" id="frmSearch">
+   @Html.AntiForgeryToken()
+   <div id="TenderGrid" class="etd-cards" v-cloak>
+      <div class="clearfix"></div>
+      <div class="row tendar-navigation position-relative" style="min-height:0px;">
+         <div class="etd-sorting-cont">
+            @Html.Partial("~/Views/Tender/Partials/_TendersGridSorts.cshtml")
+         </div>
+      </div>
+      <div class="row" style="position:relative">
+         <div class="collapse col-lg-4 col-md-4 col-sm-12 col-xs-12 " id="Search">
+            @Html.Partial("~/Views/Tender/Search/_SearchForm.cshtml")
+         </div>
+         <div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="cardsresult">
+            <div class="row" v-if="Tenders && Tenders.length > 0">
+               <div class="monafasa-item col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12" v-for="(tender, $index) in Tenders">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="agncy_logo col-12">
+                              <div class="dropdown pull-right">
+                                 <button class="btn btn-primary btn-link btn-just-icon" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i><div class="ripple-container"></div></button>
+                                 <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                                    @Html.Partial("_TenderIndexOpeningStageActions.cshtml")
+                                 </div>
+                              </div>
+                              <h5 class="text-dark-green m-0">
+                                 <span>
+                                    @Html.Partial("_AgencyLogo")
+                                 </span>
+                                 <span>{{tender.agencyName}} - {{tender.branchName}}</span>
+                              </h5>
+                              <h6 class="m-3">
+                                 <br />
+                                 <template v-if="tender.submitionDate">
+                                    <span class="">
+                                       <i class="material-icons pull-left text-gray">date_range</i>
+                                       {{tender.submitionDate.split('T')[0]}}
+                                    </span>
+                                 </template>
+                                 @Html.Partial("_TenderStatuses.cshtml")
+                                 @if (User.IsInRole(RoleNames.OffersOppeningSecretary))
+                                 {
+                                    <button v-if="tender.tenderChangeRequestIdsForOpeningSecretary.length > 0 && tender.changeRequestedBy == oppeningSecretry" type="button" class="btn btn-sm btn-info btn-link btn-just-icon popover-status m-0" data-container="body" data-toggle="popover" data-placement="left" data-content='@Html.Partial("_TenderChangeRequestStatus.cshtml")'>
+                                       <i class="material-icons">info</i>
+                                       <div class="popover-content d-none">
+                                          @Html.Partial("_TenderChangeRequestStatus.cshtml")
+                                       </div>
+                                    </button>
+                                 }
+                                 @if (User.IsInRole(RoleNames.OffersOppeningManager))
+                                 {
+                                    <button v-if="tender.tenderChangeRequestIdsForOpeningManager.length > 0 && tender.changeRequestedBy == oppeningSecretry" type="button" class="btn btn-sm btn-info btn-link btn-just-icon popover-status m-0" data-container="body" data-toggle="popover" data-placement="left" data-content='@Html.Partial("_TenderChangeRequestStatus.cshtml")'>
+                                       <i class="material-icons">info</i>
+                                       <div class="popover-content d-none">
+                                          @Html.Partial("_TenderChangeRequestStatus.cshtml")
+                                       </div>
+                                    </button>
+                                 }
+                              </h6>
+                           </div>
+                           <div class="clearfix"></div>
+                           @Html.Partial("_TenderCardContent.cshtml")
+                        </div>
+                     </div>
+                     @Html.Partial("~/Views/Tender/Partials/_OppeningOperationStageFooterActions.cshtml")
+                  </div>
+               </div>
+            </div>
+            <div class="col-12" v-else>
+               @Html.Partial("~/Views/Shared/_NoData.cshtml")
+            </div>
+         </div>
+         <div class="tableDiv col-md-12 col-sm-12 col-xs-12 animated delay-2s" id="gridresult">
+            <div class="card">
+               @Html.Partial("_TenderGridOpenStage")
+            </div>
+         </div>
+      </div>
+      <div class="clearfix"></div>
+   </div>
+</form>
+<!--endtBody-->
+@section scripts{
+   <script>
+      $(document).ready(function () {
+         $('li#menuTenderIndexOpeningStage a').addClass('active');
+      });
+      var cardsCont = document.getElementById('cardsresult');
+      $('button[type="reset"]').click(function () {
+         $(".selectpicker").val('default');
+         $(".selectpicker").selectpicker("refresh");
+      });
+      $(function () {
+         $("input").keypress(function (event) {
+            if (event.which === 13) {
+               event.preventDefault();
+               $("#searchBtn").click();
+            }
+         });
+         toggleViewGrid('TenderGrid');
+         $('#searchBtnColaps').click(function () {
+            var _grid = $('#gridresult');
+            var _cards = $('#cardsresult');
+            if (_cards.hasClass('col-md-12')) {
+               _cards.removeClass('col-md-12');
+               _cards.addClass('col-md-8');
+               _grid.removeClass('col-md-12');
+               _grid.addClass('col-md-8');
+               _cards.find('.monafasa-item').removeClass('col-md-6');
+               _cards.find('.monafasa-item').addClass('col-md-12');
+               _cards.find('.monafasa-item').removeClass('col-lg-6');
+               _cards.find('.monafasa-item').addClass('col-lg-12');
+               _cards.find('.monafasa-item').removeClass('col-xl-4');
+               _cards.find('.monafasa-item').addClass('col-xl-6');
+            } else if (_cards.hasClass('col-md-8')) {
+               _cards.addClass('col-md-12');
+               _cards.removeClass('col-md-8 ');
+               _grid.addClass('col-md-12');
+               _grid.removeClass('col-md-8');
+               _cards.find('.monafasa-item').addClass('col-md-6');
+               _cards.find('.monafasa-item').removeClass('col-md-12');
+               _cards.find('.monafasa-item').addClass('col-lg-6');
+               _cards.find('.monafasa-item').removeClass('col-lg-12');
+               _cards.find('.monafasa-item').addClass('col-xl-4');
+               _cards.find('.monafasa-item').removeClass('col-xl-6');
+            }
+              $('#closeSearch').on("click",function () {
+
+              $('#searchBtnColaps').click()
+            });
+         });
+      });
+      $("#btnApproveConfirmation").on("click", function () {
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ApproveTenderCheckingAsync", "Tender")',
+            {
+               tenderIdString: $("#hftenderId").val(),
+               __RequestVerificationToken: token
+            }).done(function () {
+               $("#myModal2").hide();
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.CheckingSentToApproval)', alertMessageType.Success);
+            }).fail(function (error) {
+               $("#myModal2").hide();
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      var Tender = new Vue({
+         el: '#TenderGrid',
+         data: {
+            Tenders: [], selectedTypeList: [], typeList: [],
+            tenderStatusList: [],
+            areasList: [],
+            selectedStatus: '',
+            selectedAreaList: [],
+            selectedTenderId: 0,
+            selectedRowStatus: '',
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: @((int)Enums.PageSize.Ten),
+            resource_url: '/Tender/GetTendersForOpeningStageIndexAsync',
+            queryString: '',
+            sort: "CreatedAt",
+            sortDirection: "DESC",
+            oppeningSecretry: '@(RoleNames.OffersOppeningSecretary)',
+            oppeningManger: '@(RoleNames.OffersOppeningManager)',
+            currentRole: '@User.IsInRole(RoleNames.OffersOppeningSecretary)' == "True" ? this.oppeningSecretry : this.oppeningManger
+         },
+         created: function () {
+            this.resource_url = decodeURI(decodeURI(this.resource_url + "?" + window.location.href.split('?')[1]));
+            this.getUrlVars();
+         },
+         methods: {
+            getUrlVars: function () {
+               $(document).ready(function () {
+                  var vars = [], hash;
+                  var hashes = decodeURI(decodeURI(window.location.href.slice(window.location.href.indexOf('?') + 1).split('&')));
+                  if (hashes) {
+                     var url_string = decodeURI(decodeURI(window.location.href))
+                     var url = new URL(url_string);
+                     if (url.searchParams.get('PageSize') != null) {
+                        $('#itemsPerPage').val(url.searchParams.get('PageSize'))
+                     }
+                     hashes = hashes.split(',');
+                     for (var i = 0; i < hashes.length; i++) {
+                        hash = hashes[i].split('=');
+                        console.log(hash[0] + '-' + url.searchParams.get(hash[0]))
+                        vars[hash[0]] = hash[1];
+                        if (url.searchParams.get(hash[0])) {
+                           var Tag = $('#Search [data-search=' + hash[0] + ']')[0];
+                           if (Tag) {
+                              var tagName = $('#Search [data-search=' + hash[0] + ']')[0].tagName;
+                              if (tagName == 'SELECT') {
+                              }
+                              else {
+                                 $('#Search  [ data-search=' + hash[0] + ']').val(url.searchParams.get(hash[0]))
+                              }
+                           }
+                        }
+                     }
+                     $("#TenderTypeId").val(url.searchParams.get('TenderTypeId'));
+                     $("#TenderTypeId").selectpicker("refresh");
+                  }
+               })
+            },
+            addToURL: function () {
+               var _encodedurl = encodeURI(((this.resource_url.split('?')[1]) ? "?" + (this.resource_url.split('?')[1]) : ''));
+               var _requestToken = '__RequestVerificationToken=' + $('input[name=__RequestVerificationToken]').val() + '&';
+               _encodedurl = _encodedurl.replace(_requestToken, '')
+               window.history.pushState({ urlPath: "" }, "Search Results", "/Tender/TenderIndexOpeningStage" + _encodedurl)
+            },
+            updateResource: function (data) {
+               data.forEach(function (item) {
+                  if (item.submitionDate) {
+                     item.submitionDate = item.submitionDate.slice(0, 10);
+                     item.submitionDate = item.submitionDate == "0001-01-01" ? false : (item.tenderStatusId == 1 ? " " : item.submitionDate);
+                  }
+               });
+               this.Tenders = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+               toggleViewOnLoad()
+               $('[data-toggle="tooltip"]').tooltip();
+               if (isCard) {
+                  setTimeout(function () {
+                     updateAgencyLogos();
+                  }, 1000);
+               }
+            },
+            percentageLeft: function (pubDate, lastDate, remainingDays, remainingHours) {
+               return calculateCardPercentage(pubDate, lastDate, remainingDays, remainingHours);
+            },
+            detailsUrl: function (id) {
+               return '/Tender/Details?STenderId=' + id;
+            },
+            openTenderOffers: function (tenderId) {
+               return '/Tender/OpenTenderOffers?tenderIdString=' + tenderId;
+            },
+            reOpenTenderOffers: function (tenderId) {
+               return '/Tender/OpenTenderOffers?tenderIdString=' + tenderId;
+            },
+             checkTenderOffers: function (tenderId) {
+               return '/Tender/CheckTenderOffers?tenderIdString=' + tenderId;
+            },
+            viewTenderOffersDetails: function (tenderId) {
+               return '/Tender/OpenTenderOffers?tenderIdString=' + tenderId;
+            },
+            confirmOffersOpening: function (tenderId) {
+               return '/Tender/OpenTenderOffers?tenderIdString=' + tenderId;
+            },
+            cancelLink: function (STenderId) {
+               return '/Tender/CancelTender?STenderId=' + STenderId;
+            },
+            openCountAndCloseOffersReports: function (tenderId) {
+               return '/Tender/CountAndCloseAppliedOffers?tenderIdString=' + tenderId;
+            },
+            openOffersRegistry: function (tenderId) {
+               return '/Offer/OpenOffersReport?tenderIdString=' + tenderId + '&IsRegistry='+ true;
+            },
+            openOffersReport: function (tenderId) {
+               return '/Offer/OpenOffersReport?tenderIdString=' + tenderId + '&IsRegistry=' + false;
+            },
+            showOpenOffersReport: function(tenderStatus) {
+               return (tenderStatus != @Html.Raw((int)Enums.TenderStatus.UnderEstablishing) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Established) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Rejected) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Canceled) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Pending) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Approved) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.OffersOppening) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.OffersOppenedRejected) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.OffersOppenedPending) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.OffersTechnicalOppening) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.OffersTechnicalOppeningPending) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.OffersTechnicalOppeningRejected));
+            },
+            getTenderStatus: function () {
+               $.get('/Tender/GetStatusAsync').done(function (result) {
+                  console.log(result);
+                  Tender.tenderStatusList = result;
+                  setTimeout(function () {
+                     $('#statusList').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+               $.get('/Tender/GetAreasAsync').done(function (result) {
+                  Tender.areasList = result;
+                  setTimeout(function () {
+                     $('#areaList').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+               $.get('/Tender/GetFinancialYear', null, function (result) {
+                  Tender.financialYearList = result;
+                  setTimeout(function () {
+                     $('#financialYear').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+            },
+            suppliersReport: function (tenderId) {
+               return '/Offer/SuppliersReport?tenderIdString=' + tenderId;
+            },
+            SortBySubmissionDate: function () {
+               if (this.sort = "CreatedAt") {
+                  if (this.sortDirection == "DESC")
+                     this.sortDirection = "ASC";
+                  else
+                     this.sortDirection = "DESC"
+               }
+               else {
+                  this.sort = "CreatedAt";
+                  this.sortDirection = "ASC";
+               }
+               this.search();
+            },
+            SortByOfferOpeningDate: function () {
+               if (this.sort = "OffersOpeningDate") {
+                  if (this.sortDirection == "DESC")
+                     this.sortDirection = "ASC";
+                  else
+                     this.sortDirection = "DESC"
+               }
+               else {
+                  this.sort = "OffersOpeningDate";
+                  this.sortDirection = "ASC";
+               }
+               this.search();
+            },
+             getTendersBySelectedPageSize: function () {
+                this.pageSize = $('#itemsPerPage').val();
+               this.search();
+            },
+            search: function () {
+               this.queryString = $('form#frmSearch').serialize();
+               var createdDate = "";
+               var lastEnqueriesDatelastEnqueriesDate = "";
+               this.queryString = this.queryString + '&TenderStatusId=' + this.selectedStatus + '&AgencyCode=' + this.selectedAgency + '&TenderTypeId=' + $('#tenderType').val() + '&TenderName=' + $('#TenderName').val()
+                  + '&TenderNumber=' + $('#TenderNumber').val() + "&ReferenceNumber=" + $('#ReferenceNumber').val() + '&TenderTypeString=' + $('#hdnTenderTypeString').val()
+                  + '&Sort=' + this.sort + '&SortDirection=' + this.sortDirection + '&PageSize=' + this.pageSize;
+               this.resource_url = '/Tender/GetTendersForOpeningStageIndexAsync' + '?' + this.queryString;
+               this.addToURL();
+            },
+            clear: function (event) {
+
+               $("#TenderTypeId").val("0");
+               $("#TenderTypeId").selectpicker("refresh");
+               $("#TenderName, #TenderNumber, #ReferenceNumber").val('');
+               this.searchAfterClear();
+            }
+            ,
+            searchAfterClear: function () {
+               this.resource_url = '/Tender/GetTendersForOpeningStageIndexAsync';
+               this.addToURL();
+            }
+         },
+         updated: function () {
+            $("#statusList, #areaList,#AgencyCode , #CreatedBy, #UserId").val(null);
+            toggleViewOnLoad();
+            $('.popover-status').each(function () {
+               var content = $(this).find('.popover-content').html();
+               $(this).attr('data-content', content);
+            });
+            $(function () {
+               $('[data-toggle="popover"]').popover({
+                  trigger: 'hover',
+                  html: true
+               })
+            })
+            $('[data-toggle="tooltip"]').tooltip();
+         }
+      });
+      var url_string = decodeURI(window.location.href)
+      var url = new URL(url_string);
+               $.get('/Qualification/GetTenderTypes').done(function (result) {
+                  Tender.typeList = result;
+                  setTimeout(function () {
+                     if (url.searchParams.get('TenderTypeId')) {
+                        $('#TenderTypeId').selectpicker('val', url.searchParams.get('TenderTypeId'));
+                     }
+                     $('#TenderTypeId').selectpicker('refresh');
+                  }, 1000);
+               });
+   </script>
+}

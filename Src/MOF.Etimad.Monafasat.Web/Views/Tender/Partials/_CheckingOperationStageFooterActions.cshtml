@@ -1,0 +1,62 @@
+
+<div class="text-center">
+   @if (User.IsInRole(RoleNames.OffersCheckSecretary))
+   {
+      <a :href="checkTenderOffers(tender.tenderIdString)" v-if="tender.canStartTechnicalEvaluation" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckTechnicalEvaluation
+      </a>
+      <a :href="checkTenderOffers(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialChecking)|| tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOpenFinancialStageApproved))&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_OffersCheckSecretary))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckFinancialOffers
+      </a>
+      <a :href="checkTenderOffers(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersOpenFinancialStage))&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_OffersCheckSecretary))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OpenFinancialOffers
+      </a>
+      <a :href="checkTenderOffers(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected) ||tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedRejected)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingRejected)|| tender.tenderStatusId == @((int)Enums.TenderStatus.BackForCheckingFromPlaint) || tender.tenderStatusId == @((int)Enums.TenderStatus.BiddingOffersCheckedRejected))
+         && tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_OffersCheckSecretary))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenCheck
+      </a>
+      <a :href="openBiddingPage(tender.tenderIdString)" v-if="tender.canOpenBiddingPage" class="btn btn-info pull-right btn-sm">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingPage
+      </a>
+   }
+   @if (User.IsInRole(RoleNames.OffersCheckManager))
+   {
+      <a :href="confirmCheckOffersCheck(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingPending) ||tender.tenderStatusId == @((int)Enums.TenderStatus.OffersCheckedPending)
+         || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingPending) || tender.tenderStatusId == @((int)Enums.TenderStatus.BiddingOffersCheckedPending))
+         && tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_OffersCheckManager))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReviewData
+      </a>
+   }
+   @if (User.IsInRole(RoleNames.UnitSpecialistLevel1))
+   {
+      <a :href="getTenderDetailsUrl(tender.tenderIdString)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && (tender.unitStatusId == @((int)Enums.TenderUnitStatus.WaitingUnitSecretaryReview) || tender.unitStatusId == @((int)Enums.TenderUnitStatus.UnderUnitReviewLevelOne))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReviewData
+      </a>
+      <a :href="getTenderDetailsUrl(tender.tenderIdString)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && tender.unitStatusId == @((int)Enums.TenderUnitStatus.UnderReviewing)" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+      </a>
+      <a :href="getTenderDetailsUrl(tender.tenderIdString)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && tender.unitStatusId == @((int)Enums.TenderUnitStatus.RejectedByManager)" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+      </a>
+   }
+   @if (User.IsInRole(RoleNames.UnitSpecialistLevel2))
+   {
+      <a :href="getTenderDetailsUrl(tender.tenderIdString)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && (tender.unitStatusId == @((int)Enums.TenderUnitStatus.TenderTransferdToLevelTwo)|| tender.unitStatusId == @((int)Enums.TenderUnitStatus.UnderUnitReviewLevelTwo))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReviewData
+      </a>
+      <a :href="getTenderDetailsUrl(tender.tenderIdString)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && tender.unitStatusId == @((int)Enums.TenderUnitStatus.UnderReviewing)" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+      </a>
+      <a :href="getTenderDetailsUrl(tender.tenderIdString)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && tender.unitStatusId == @((int)Enums.TenderUnitStatus.RejectedByManager)" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+      </a>
+   }
+   @if (User.IsInRole(RoleNames.UnitManagerUser))
+   {
+      <a :href="getTenderDetailsUrl(tender.tenderIdString)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && (tender.unitStatusId == @((int)Enums.TenderUnitStatus.WaitingManagerApprove) || tender.unitStatusId == @((int)Enums.TenderUnitStatus.UnderManagerReviewing))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve
+      </a>
+   }
+</div>
+

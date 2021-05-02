@@ -1,0 +1,33 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderHistoryModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+ 
+@{
+   //int tenderId = ViewBag.TenderId;
+   //int tenderStatus = ViewBag.TenderStatusId;
+
+   int tenderId = Model.TenderId;
+   int invitationStatus = Model.StatusId;
+}
+
+<div class="row" id="approval">
+   <input id="tenderIdHidden" hidden type="number" value="@tenderId" />
+
+   @if (invitationStatus == (int)Enums.InvitationStatus.New)
+   {
+      <div class="col-12 form-group">
+         <button type="button" class="btn btn-primary" name="button" id="btnInvitationSendToAccept">أوافق على إعتماد الدعوة</button>
+         <button type="button" class="btn btn-danger" name="button" id="btnInvitationReject">لا أوافق</button>
+         <button type="button" class="btn btn-default" name="button" id="btnInvitationRejectCancellation">إلغاء</button>
+      </div>
+   }
+   else if (invitationStatus != (int)Enums.InvitationStatus.New)
+   {
+      <div class="col-lg-4 col-sm-6 col-xs-12" id="divRejectReason">
+         <div class="form-group bmd-form-group">
+            <button type="button" class="btn btn-primary" name="button" id="btnClose">اغلاق</button>
+         </div>
+      </div>
+   }
+
+</div>
+

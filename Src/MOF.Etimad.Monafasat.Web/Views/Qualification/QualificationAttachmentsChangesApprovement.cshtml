@@ -1,0 +1,96 @@
+@model string
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+    Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+    string TenderId = Model;
+}
+@{
+    ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QualificationDocuments;
+}
+<div class="modal fade" id="changeRequestModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@res.EnquiryResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="col-12" id="divChangeRequestRejectReason">
+               <div class="form-group bmd-form-group" style="padding-top:0">
+                  <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+                  <textarea class="form-control" rows="5" id="txtRejectionReasonChangeRequest" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason"></textarea>
+                  <div class="pull-left">
+                     <span class="bmd-help text-danger" id="txtChangeRequestRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+                  </div>
+               </div>
+            </div>
+            <div class="form-group bmd-form-group" id="divVerficationCodeChangeRequest">
+               <input type="text" class="form-control col-md-12" id="txtActivationNoChangeRequest" name="ActivationCodeChangeRequest" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+               <span class="bmd-help text-danger position-relative" id="txtActiveNoValidChangeRequest">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+               <br />
+               <p class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainingTime<span class=" text-danger" id="timerChangeRequest"></span></p>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm" name="button" id="btnAttachmentsApprovalConfirm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmApprovingChange</button>
+            <button type="button" class="btn btn-primary btn-sm" name="button" id="btnAttachmentsRejectConfirm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmRejectingChange</button>
+            <button type="button" class="btn btn-primary btn-sm" name="button" id="btnResendVerificationCodeChangeRequest"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+<form id="detailsForm">
+   @Html.AntiForgeryToken()
+   @section breadcrumb
+      {
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+            <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PreQualification</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QualificationDocuments</li>
+         </ol>
+      </nav>
+   }
+   <div class="row">
+      <div class="col-12">
+         <div class="card">
+            <div class="card-body" id="attachmentsTableDiv">
+               @await Component.InvokeAsync("QualificationAttachments", new { TenderId = TenderId })
+            </div>
+
+         </div>
+
+         <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("Index", "Qualification")'">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+
+         </button>
+      </div>
+      <div class="clearfix"></div>
+
+   </div>
+   @*@await Component.InvokeAsync("RelatedTendersViewComponent", new { tenderId = tenderId })*@
+
+</form>
+@section scripts{
+<script>
+      @*$(document).ready(function () {
+         
+         $(document).ajaxStart(function () {
+            $('#LoadingSite').fadeIn();
+         });
+         $(document).ajaxStop(function () {
+            $('#LoadingSite').fadeOut();
+         });
+      $.get('/Qualification/GetAttachmentsChangesViewComponenet?tenderIdStr=' + '@TenderId', function (data) {
+
+
+         $("#attachmentsTableDiv").html(data);
+      });
+
+      })*@
+</script>
+}

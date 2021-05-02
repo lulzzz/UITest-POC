@@ -1,0 +1,18 @@
+<div class="row">
+   <div class="col-12 form-group">
+      <button type="button" class="btn btn-primary" name="button" onclick="send">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+         <div class="ripple-container"></div>
+      </button>
+   </div>
+</div>
+@section scripts{
+
+   <script>
+      var send = function () {
+         $.post('/Tender/UpdateStatusAsync').done(function (result) {
+
+         });
+      }
+   </script>
+}

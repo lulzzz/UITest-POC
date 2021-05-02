@@ -1,0 +1,69 @@
+<div class="card-footer row">
+   <div class="col-md-3 text-right">
+      @if (5 == (int)Enums.SubscriptionType.Full || 5 == (int)Enums.SubscriptionType.Partial2000)
+      {
+         <a v-if="tender.isPurchased == false && tender.isFavouriteShow == true" class="btn btn-just-icon btn-link pull-left" v-bind:class="{'btn-danger': tender.isFavouriteTender, 'btn-default' : !tender.isFavouriteTender}" v-bind:id="tender.tenderIdString" v-bind:title="getTitle(tender.isFavouriteTender)" @@click="toggleFavourite($index)">
+            <i class="material-icons">favorite</i> 
+            <div class="ripple-container"></div>
+         </a>
+         <div class="dropup" v-if="tender.invitationTypeId == @((int)Enums.InvitationType.Public)">
+            <a href="" class="btn btn-just-icon btn-link  pull-left" data-toggle="dropdown" title="Share">
+               <i class="material-icons">share</i> 
+            </a>
+            <div class="dropdown-menu dropdown-menu-left">
+               <a href="#" @@click="ShareMail(tender.tenderIdString,tender.tenderName)" class="btn btn-link btn-just-icon btn-success btn-sm text-center">
+                  <i class="material-icons">mail</i> 
+                  <div class="ripple-container"></div>
+               </a>
+               <a href="#" @@click="ShareWhatUp(tender.tenderIdString)" data-action="share/whatsapp/share" class="btn btn-link btn-just-icon btn-success btn-sm text-center"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
+               <a href="#" @@click="ShareTwitter(tender.tenderIdString)" class="btn  btn-just-icon btn-success btn-sm text-center">
+                  <i class="fa fa-twitter-square" aria-hidden="true"></i> 
+               </a>
+               <a href="#" @@click="ShareFaceBook(tender.tenderIdString)" class="btn  btn-just-icon btn-success btn-sm text-center">
+                  <i class="fa fa-facebook-square" aria-hidden="true"></i> 
+               </a>
+               <a href="#" @@click="ShareLinkedIn(tender.tenderIdString)" class="btn  btn-just-icon btn-success btn-sm text-center">
+                  <i class="fa fa-linkedin-square" aria-hidden="true"></i> 
+               </a>
+            </div>
+         </div>
+      }
+   </div>
+   <div class="col-md-9 text-left">
+      @if (5 == (int)Enums.SubscriptionType.Full || 5 == (int)Enums.SubscriptionType.Partial150)
+      {
+         <a :href="offerSolidarity(tender.offerIdString)" class="btn btn-info pull-right btn-sm"
+            v-if="(tender.supplierHasOffer == true && tender.lastOfferPresentationDate >= tender.currentDateTime && tender.isOfferWithSolidarity
+         && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)
+         && tender.tenderTypeId != @((int)Enums.TenderType.CurrentDirectPurchase)
+         && tender.tenderTypeId != @((int)Enums.TenderType.CurrentTender)
+         && tender.tenderTypeId != @((int)Enums.TenderType.NationalTransformationProjects))">
+            إرسال دعوة تضامن<div class="ripple-container"></div>
+         </a>
+         <a :href="applyMainOffer(tender.offerIdString, tender.tenderIdString)" v-if="tender.isAvailabletoApplyOffer" class="btn btn-primary pull-right btn-sm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ApplyOffer<div class="ripple-container"></div></a>
+         <button type="button" data-toggle="modal" id="btnCancel" data-target="#checkmodal" @@click="SetOfferId(tender.offerId)" v-if="(tender.supplierHasOffer == true && tender.lastOfferPresentationDate >= tender.currentDateTime && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved))" class="btn btn-danger pull-right btn-sm">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.WithdrawOffer<div class="ripple-container"></div></button>
+         <p v-if="isFavourite && isPassed(tender.isFavouriteTender,tender.lastOfferPresentationDate.split('T')[0])" class="text-danger label"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferingApplyingDatePassed</p>
+         <p v-if="isFavourite && tender.tenderStatusId == @((int)Enums.TenderStatus.Canceled) && tender.isFavouriteTender" class="text-danger label"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderWasCanceled</p>
+      }
+      <a :href="joiningToTender(tender.tenderIdString)" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && tender.invitationTypeId == @((int)Enums.InvitationType.Public) && tender.invitationStatusId == 0 && tender.lastOfferPresentationDate >= tender.currentDate   && tender.tenderTypeId== @((int)Enums.TenderType.CurrentDirectPurchase) && tender.isBlocked == false && tender.isTenderOwner == false" class="btn btn-primary pull-right btn-sm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Joining<div class="ripple-container"></div></a>
+      <a :href="detailsUrl(tender.tenderIdString)" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && tender.invitationTypeId == @((int)Enums.InvitationType.Public) && tender.invitationStatusId == 0 && tender.lastOfferPresentationDate >= tender.currentDate   && tender.tenderTypeId== @((int)Enums.TenderType.NewDirectPurchase) && tender.isBlocked == false && tender.isTenderOwner == false" class="btn btn-primary pull-right btn-sm">انضمام للمنافسة<div class="ripple-container"></div></a>
+      <a :href="purchaseTenderBook(tender.tenderIdString, tender.tenderStatusIdString)" v-if="tender.isAvailabletoBuy && (tender.tenderTypeId == @((int)Enums.TenderType.Competition) && tender.invitationTypeId == @((int)Enums.InvitationType.Public))" class="btn btn-primary pull-right btn-sm">سداد المقابل المالى لكراسة الشروط<div class="ripple-container"></div></a>
+      <a :href="purchaseTenderBook(tender.tenderIdString, tender.tenderStatusIdString)" v-if="tender.isAvailabletoBuy && !(tender.tenderTypeId == @((int)Enums.TenderType.Competition) && tender.invitationTypeId == @((int)Enums.InvitationType.Public))" class="btn btn-primary pull-right btn-sm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PurchaseConditionsBooklet<div class="ripple-container"></div></a>
+      <template v-if="tender.invitationRequistTypeId==@((int)Enums.InvitationRequestType.Invitation)">
+         <a :href="detailsUrl(tender.tenderIdString)" v-if="!tender.isTenderOwner && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) &&     tender.invitationStatusId == @((int)Enums.InvitationStatus.New)  && tender.lastOfferPresentationDate >= tender.currentDateTime  " class="btn btn-info pull-right btn-sm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AcceptOrRejectTheInvetation</a>
+         <a v-else-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)  && tender.invitationStatusId == @((int)Enums.InvitationStatus.Approved) && !tender.isPurchased && tender.lastOfferPresentationDate >= tender.currentDateTime  " :href="detailsUrl(tender.tenderIdString)" class="btn btn-danger pull-right btn-sm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WithdrawFromInvitation<div class="ripple-container"></div></a>
+      </template>
+      <template v-if="tender.tenderTypeId == @((int)Enums.TenderType.NationalTransformationProjects)">
+         <a :href="sendEnquiry(tender.tenderIdString)" v-if="tender.lastEnqueriesDate >= tender.currentDate && tender.invitationStatusId == @((int)Enums.InvitationStatus.Approved) && tender.technicalOrganizationId != null && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)" class="btn btn-primary pull-right btn-sm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AskSupervisor<div class="ripple-container"></div></a>
+      </template>
+      <template v-else-if="tender.tenderTypeId == @((int)Enums.TenderType.LimitedTender)">
+         <a :href="sendEnquiry(tender.tenderIdString)" v-if="tender.lastEnqueriesDate >= tender.currentDate && tender.isPurchased == true && tender.technicalOrganizationId != null" class="btn btn-primary pull-right btn-sm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AskSupervisor<div class="ripple-container"></div></a>
+      </template>
+      <template v-else>
+         <a :href="sendEnquiry(tender.tenderIdString)" v-if="tender.lastEnqueriesDate >= tender.currentDate && tender.technicalOrganizationId != null && ((tender.invitationStatusId == @((int)Enums.InvitationStatus.Approved) && tender.tenderTypeId == @((int)Enums.TenderType.CurrentDirectPurchase)) || tender.isPurchased == true || (tender.tenderTypeId == @((int)Enums.TenderType.Competition) && tender.invitationTypeId == @((int)Enums.InvitationType.Public)))" class="btn btn-primary pull-right btn-sm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AskSupervisor<div class="ripple-container"></div></a>
+      </template>
+      <a :href="openBiddingPage(tender.tenderIdString)" v-if="tender.canOpenBiddingPage" class="btn btn-info pull-right btn-sm">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingPage
+      </a>
+   </div>
+</div>

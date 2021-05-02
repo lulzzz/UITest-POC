@@ -1,0 +1,43 @@
+@{ 
+   string tenderNameResString = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName + "/ " + MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualificaton;   
+}
+<div class="table-responsive ">
+   <table class="table  table-striped" id="UnderEstablishedTable" aria-describedby="Under Established Table">
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col">@Html.Raw(tenderNameResString)</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.LastDateToReciveOffers</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.OffersOpeningAppointment</th>
+         </tr>
+      </thead>
+      <tbody v-if="UnderEstablished && UnderEstablished.length > 0">
+         <tr v-for="(tender, $index) in UnderEstablished">
+            <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName"> {{tender.tenderName}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber"> {{tender.tenderNumber}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber"> {{tender.tenderReferenceNumber}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate">
+               <span v-if="tender.lastEnqueriesDate"> {{tender.lastEnqueriesDate.split('T')[0]}} </span>
+            </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate">
+               <span v-if="tender.offersOpeningDate"> {{tender.offersOpeningDate.split('T')[0]}} <br /></span>
+               <span v-if="tender.offersOpeningDateHijri && tender.offersOpeningDate"> {{tender.offersOpeningDateHijri}}       <br /> {{tender.offersOpeningDate.split('T')[1].substring(0,5)}}  </span>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td align="center" style="text-align:center !important" colspan="6">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i>
+               <br>
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NoRecordsFound
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>
+

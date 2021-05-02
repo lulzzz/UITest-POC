@@ -1,0 +1,615 @@
+@model MOF.Etimad.Monafasat.ViewModel.EditUserViewModel
+
+@{
+   ViewData["Title"] = (MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.EditUser);
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"> <a href="@Url.Action("Index", "ManageUsersAssignation")">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.ManageUsersAssignation</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.EditUser</li>
+      </ol>
+   </nav>
+}
+
+<form method="Post" action="" class="my-form">
+
+   @Html.AntiForgeryToken()
+
+   <div class="row" id="CommitteeBranchManagment">
+
+      <div class="modal fade" id="DeleteConfirmationModal" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">
+                     @MOF.Etimad.Monafasat.Resources.BranchResources.Messages.ConfirmDeletion
+                  </h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <p>
+                     @MOF.Etimad.Monafasat.Resources.BranchResources.Messages.ConfirmSupplierDeletion
+                     <input type="hidden" name="hiddenValueCommittee" id="hiddenValueCommittee" value="" />
+                  </p>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-primary btn-sm" id="SaveModel" v-on:click="removeUser()">    @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Deleted    </button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Cancel</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+         <div class="card">
+            <div class="card-body">
+               <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.UserDetails</h4>
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.UserName
+                        </div> <div class="col-8 etd-item-info"><span>@(Model.UserName)</span></div>
+                     </div>
+                  </li>
+                  @*<li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency
+                           </div> <div class="col-8 etd-item-info"><span>@(Model.agencyNames)</span></div>
+                        </div>
+                     </li>*@
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.MobileNumber
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @(Model.MobileNumber)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Email
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @(Model.Email)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.NationalId
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @(Model.NationalId)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item" v-if="roles && roles.length > 0">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Roles
+                        </div>
+                        <div class="col-8 etd-item-info">
+
+                           <div class="row">
+                              <span class="badge badge-primary m-1" v-for="(role, $index) in roles" v-if="$index < 5">
+                                 {{ role.roleNameAr != null ? role.roleNameAr : '' }}
+                              </span>
+                              <br />
+                              <button id="showmorerolesBtn" class="btn btn-link btn-sm btn-primary" type="button" v-if="roles.length >= 5" v-on:click="toggleRolesText(true)" style="display:block">@MOF.Etimad.Monafasat.Resources.UsersResources.Messages.ViewMore</button>
+                              <div class="row" id="showmoreroles" v-if="roles.length >=5" style="display:none">
+                                 <span class="badge badge-primary m-1" v-for="(role, $index) in roles" v-if="$index >= 5">
+                                    {{ role.roleNameAr != null ? role.roleNameAr : '' }}
+                                 </span>
+                              </div>
+                           </div>
+                           <button id="showlessrolesBtn" class="btn btn-link btn-sm btn-primary" type="button" v-if="roles.length >= 5" v-on:click="toggleRolesText(false)" style="display:none">@MOF.Etimad.Monafasat.Resources.UsersResources.Messages.ViewLess</button>
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+               <br />
+               <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                  <li class="nav-item">
+                     <a class="nav-link active" id="branchSection-tab" data-toggle="pill" href="#branchSection" role="tab"
+                        aria-controls="branchSection" aria-selected="true">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.AssigneToBranch</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" id="committeeSection-tab" data-toggle="pill" href="#committeeSection" role="tab"
+                           aria-controls="committeeSection" aria-selected="false">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.AssigneToCommitee</a>
+                        </li>
+                     </ul>
+
+                     <div class=" col-12 tab-content pt-2 pl-1" id="pills-tabContent">
+                        <div class="row tab-pane fade show active" id="branchSection" role="tabpanel" aria-labelledby="branchSection-tab">
+                           <div class="col-sm-12 col-xs-12">
+                              <div class="" id="divRoleNameCommitee">
+                                 <div class="form-group bmd-form-group">
+                                    <label asp-for="RoleName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Roles</label><span class="text-danger">*</span>
+                                    <select name="RoleIdBranch" id="RoleIdBranch" @@change="GetBranches()" class="selectpicker" data-live-search="true" data-style="select-with-transition" v-model="selectedUser.roleName">
+                                       <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseChoose </option>
+                                       <option v-for="role in BranchRoles" :value="role.roleName">{{ role.roleNameAr }}</option>
+                                    </select>
+                                    <input type="hidden" v-model="roleBranchSelected = selectedUser.roleName != '' " />
+                                    <span class="alert-danger" v-if="!roleBranchSelected && isSubmitted">@MOF.Etimad.Monafasat.Resources.UsersResources.ErrorMessages.RoleMandetory</span>
+                                 </div>
+                              </div>
+                              <div id="EstimatedValue" style="display:none;">
+                                 <div class="form-group bmd-form-group">
+                                    <label class="label bmd-label-static">القيمة التقديرية </label><span class="text-danger">*</span>
+                                    <div class="row">
+                                       <div class="col-lg-6 col-sm-6 col-xs-12">
+                                          <input type="text" class="form-control allownumeric" placeholder="من" name="EstimatedValueFrom" id="estimatedValueFrom">
+                                       </div>
+                                       <div class="col-lg-6 col-sm-6 col-xs-12">
+                                          <input type="text" class="form-control allownumeric" placeholder="إلى"  onkeydown="EstimatedValueToChanged();"  onkeyup="EstimatedValueToChanged();"  name="EstimatedValueTo" id="estimatedValueTo">
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <span style="display:none;" id="budgetWarningMessage" class="h6 badge badge-warning">البت بالترسية للاعمال التي تزيد تكلفتها عن 10 ملايين مستخدم يملك صلاحية: اعتماد ترسية المنافسة لصاحب الصلاحية </span>
+                              </div>
+
+                              <div class="" id="divBranchName">
+                                 <div class="form-group bmd-form-group">
+                                    <label asp-for="BranchName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.BranchName</label><span class="text-danger">*</span>
+                                    <select name="BranchId" id="BranchId" class="selectpicker" data-live-search="true" data-style="select-with-transition" v-model="selectedUser.branchId">
+                                       <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseChoose </option>
+                                       <option :value="bran.branchId" v-for="bran in loadedBranchs">{{ bran.branchName }}</option>
+                                    </select>
+                                    <input type="hidden" v-model="branchSelected = selectedUser.branchId != '' " />
+                                    <span class="alert-danger" v-if="!branchSelected && isSubmitted">@MOF.Etimad.Monafasat.Resources.UsersResources.ErrorMessages.BranchMandetory</span>
+                                 </div>
+                                 <br /><br />
+                                 <div class="float-left">
+                                    <div class="col-md-6 col-sm-12 col-xs-12 text-right">
+                                       <button type="button" id="btnSaveUserToBranch" class=" btn btn-primary btn-sm" v-on:click="assigneUserToBranch()">
+                                          @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+                                       </button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row tab-pane fade" id="committeeSection" role="tabpanel" aria-labelledby="committeeSection-tab">
+                           <div class="col-sm-12 col-xs-12">
+                              <div class="" id="divRoleNameCommitee">
+                                 <div class="form-group bmd-form-group">
+                                    <label asp-for="RoleName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Roles</label><span class="text-danger">*</span>
+                                    <select name="RoleIdCommitee" id="RoleIdCommitee" class="selectpicker" data-live-search="true" data-style="select-with-transition" v-model="selectedUser.roleName" v-on:change="onCommitteeRoleChange()">
+                                       <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseChoose </option>
+                                       <option v-for="role in SelectListCommittee" :value="role.roleName">{{ role.roleNameAr }}</option>
+                                    </select>
+                                    <input type="hidden" v-model="roleCommitteeSelected = selectedUser.roleName != '' " />
+                                    <span class="alert-danger" v-if="!roleCommitteeSelected && isSubmitted">@MOF.Etimad.Monafasat.Resources.UsersResources.ErrorMessages.RoleMandetory</span>
+                                 </div>
+                              </div>
+                              <div class="" id="divCommitteeName">
+                                 <div class="form-group bmd-form-group">
+                                    <label asp-for="CommitteeName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.CommitteeName</label><span class="text-danger">*</span>
+                                    <div>
+                                       <select name="CommitteeId" id="CommitteeId" class="selectpicker" data-live-search="true" data-style="select-with-transition" v-model="selectedUser.committeeId">
+                                          <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseChoose </option>
+                                          <option v-for="commit in committee" :value="commit.committeeId">{{ commit.committeeName }}</option>
+                                       </select>
+
+                                       <input type="hidden" v-model="committeeSelected = selectedUser.committeeId != '' " />
+                                       <span class="alert-danger" v-if="!committeeSelected && isSubmitted"> @MOF.Etimad.Monafasat.Resources.UsersResources.ErrorMessages.CommitteeMandetory</span>
+                                    </div>
+                                 </div>
+                                 <br /><br />
+                                 <div class="float-left">
+                                    <div class="col-sm-12 col-xs-12 text-right">
+                                       <button type="button" class=" btn btn-primary btn-sm" v-on:click="assigneUserToCommittee()">
+                                          @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+                                       </button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+               <div class="card" id="CommitteeBranchDiv">
+                  <table id="CommitteeBranchTable" class="table table-striped text-center" aria-describedby="edit users assign to committees">
+                     <thead class="text-center">
+                        <tr>
+                           <th scope="col" class="text-center">#</th>
+                           <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.RoleName</th>
+                           <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.CommitteeBranchName  </th>
+                           <th scope="col" class="text-center">القيمة التقديرية(من - إلى)</th>
+                           <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Operations </th>
+                        </tr>
+                     </thead>
+                     <tbody class="text-center" v-if="branchescommitteetbl && branchescommitteetbl.length > 0">
+                        <tr v-for="(model, index) in branchescommitteetbl">
+                           <td class="text-center">
+                              {{index + 1}}
+                           </td>
+                           <td class="text-center">
+                              {{ model.roleNameAr != null ? model.roleNameAr : model.roleName}}
+                           </td>
+                           <td class="text-center">
+                              {{model.committeeName}} {{model.branchName}}
+                           </td>
+                           <td class="text-center" v-if="model.estimatedValueFrom!=null && model.estimatedValueTo!=null">
+                              {{model.estimatedValueFrom }} - {{model.estimatedValueTo}}
+                           </td>
+                           <td class="text-center" v-else>
+                              لا يوجد
+                           </td>
+                           <td class="text-center">
+                              <div style="text-align: center;">
+                                 <button type="button" @@click=showDialog(index) class="btn-sm btn btn-danger btn-round btn-just-icon"><i class="material-icons">remove</i><div class="ripple-container"></div></button>
+                              </div>
+                           </td>
+                        </tr>
+                     </tbody>
+                     <tbody v-else>
+                        <tr>
+                           <td colspan="9" class="text-center">
+                              <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                              <br />
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+                  <pagination :visible_pages="3" ref="vpaginator" :resource_url="committeebranchesresource_url" @@update="updateCommitteeBranchResource"></pagination>
+               </div>
+            </div>
+
+         </div>
+         <div class="col-12 float-left">
+            <button class="btn btn-outline-primary btn-link pull-right" type="button" onclick="window.location = '@Url.Action("Index", "ManageUsersAssignation")'">
+               @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BackButton
+               <div class="ripple-container"></div>
+            </button>
+         </div>
+      </form>
+
+      @section scripts {
+         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+         <script>
+
+            var BranchCom = new Vue({
+               el: '#CommitteeBranchManagment',
+               data: {
+                  loadedBranchs: [],
+                  branchescommitteetbl: [],
+                  committeebranchesresource_url: '/ManageUsersAssignation/GetBranchAndCommitteeUsersAsync?userIdString=' + '@Model.UserIdString',
+                  branches: [],
+                  committee: [], @*@Html.Raw(Json.Serialize(@Model.CommitteeNotAssignToUser)),*@
+                  roles: @Html.Raw(Json.Serialize(@Model.Roles)),
+                  SelectListRoles: [],
+                  SelectListCommittee: @Html.Raw(Json.Serialize(Model.AllCommitteeRoles)),
+                  BranchRoles: @Html.Raw(Json.Serialize(Model.BranchRoles)),
+                  CommitteeOpenOfferRoles: @Html.Raw(Json.Serialize(Model.CommitteeOpenOfferRoles)),
+                  CommitteeAuditOfferRoles: @Html.Raw(Json.Serialize(Model.CommitteeAuditOfferRoles)),
+                  CommitteeTechnicalRoles: @Html.Raw(Json.Serialize(Model.CommitteeTechnicalRoles)),
+                  CommitteeOpenAndCheckRoles: @Html.Raw(Json.Serialize(Model.CommitteeOpenAndCheckRoles)),
+                  CommitteePurchaseRoles:@Html.Raw(Json.Serialize(Model.CommitteePurchaseRoles)),
+                  CommitteePreQualificationRoles:@Html.Raw(Json.Serialize(Model.CommitteePreQualificationRoles)),
+                  //CommitteeBlockRoles: @Html.Raw(Json.Serialize(Model.CommitteeBlockRoles)),
+
+                  totalCount: 0,
+                  currentPage: 1,
+                  selectedUser: { committeeId: '', branchId: '', roleId: '', roleName: ''},
+                  userIdString: '@Model.UserIdString',
+                  nationalId: '@Model.NationalId',
+                  pageSize: 10,
+                  isValid: false,
+                  deleteIndex: -1,
+                  componentEnum: { committee: 1, branchs: 2, roles: 3 },
+                  roleBranchSelected: false,
+                  roleCommitteeSelected: false,
+                  branchSelected: false,
+                  committeeSelected: false,
+                  CommitteeTypes: {},
+                  isSubmitted: false,
+                  estimatedValueFrom: '',
+                  estimatedValueTo:''
+               },
+               methods: {
+                  init: function () {
+                     var self = this;
+                     self.CommitteeTypes = {
+                        techCommittee: 1,
+                        openofferCommittee: 2,
+                        checkofferCommittee: 3,
+                        BlockCommittee: 4,
+                        purchaseCommittee: 5,
+                        preQualificationCommittee: 6,
+                        openAndCheckCommittee: 7,
+                     };
+                  },
+                  toggleRolesText: function (flagDisplayMore) {
+                     var btnMoreId = "#showmorerolesBtn";
+                     var btnLessId = "#showlessrolesBtn";
+                     var pId = "#showmoreroles";
+                     if (flagDisplayMore) {
+                        $(btnLessId).show();
+                        $(btnMoreId).hide();
+                        $(pId).show();
+                     } else {
+                        $(btnMoreId).show();
+                        $(btnLessId).hide();
+                        $(pId).hide();
+                     }
+                  },
+                  updateCommitteeBranchResource: function (data) {
+                     var self = this;
+                     self.branchescommitteetbl = data;
+                     self.totalCount = self.totalCount;
+                     self.currentPage = self.$refs.vpaginator.currentPage;
+                     self.pageSize = self.$refs.vpaginator.pageSize;
+                  },
+                  GetBranches: function () {
+                     
+                     $("#EstimatedValue").hide();
+                     BranchCom.loadedBranchs = [];
+                     //self.userCurrentRoles.push({roleId:0,roleName:this.loading});
+
+                     var roleId = $('#RoleIdBranch').val();
+                     if (roleId=="@Enums.UserRole.NewMonafasat_ApproveTenderAward") {
+                        $("#EstimatedValue").show();
+                     }
+
+                     if (roleId=="") {
+                        return false;
+                     }
+                     var token = $('input[name=__RequestVerificationToken]').val();
+                     $.post('/ManageUsersAssignation/GetBranchesByUserAndRoleId', { userName: '@Model.UserId', roleId: $('#RoleIdBranch').val(), __RequestVerificationToken: token }).done(function (result) {
+                        BranchCom.loadedBranchs = result;
+                        setTimeout(function () {
+                           $('#BranchId').selectpicker("refresh");
+                        }, 1000)
+                                }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+               });
+            },
+                  assigneUserToBranch: function () {
+                     var self = this;
+                     self.isSubmitted = true;
+                     var estimatedValueFrom = $("#estimatedValueFrom").val();
+                     var estimatedValueTo = $("#estimatedValueTo").val();
+
+                     if (estimatedValueTo != "" && estimatedValueFrom!=""  ) {
+                        if (parseFloat(estimatedValueFrom) > parseFloat(estimatedValueTo)) {
+                           AlertFun('لابد أن تكون القيمةالتقديرية النهائية أكبر من القيمة الابتدائية', 'danger');
+                           return false;
+                        }
+                     }
+                     $('#LoadingSite').fadeIn();
+                     if (!self.isUserToBranchRelationValid()) { return false;/*//view errro msg*/ }
+                     var BranchObjIndex = self.BranchRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                     var BranchObjRoleName = self.BranchRoles[BranchObjIndex].roleName;
+
+                     var token = $('input[name=__RequestVerificationToken]').val();
+                     $.post('/ManageUsersAssignation/AssignUsersToBranchAsync', { EstimatedValueFrom: estimatedValueFrom, EstimatedValueTo: estimatedValueTo, UserIdString: self.userIdString, NationalIdString: self.nationalId, branchId: self.selectedUser.branchId, roleName: BranchObjRoleName, __RequestVerificationToken: token }).done(function (result) {
+
+                        self.$refs.vpaginator.fetchData(self.committeebranchesresource_url, self.currentPage);
+
+                        AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success)
+                     }).fail(function (error) {
+
+                        $('#LoadingSite').fadeOut();
+                        AlertFun(error.responseJSON.message, 'danger');
+                           //AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+                        });
+
+                     self.reload();
+                  },
+                  removeUser: function () {
+                     var self = this;
+                     if (self.branchescommitteetbl[self.deleteIndex].branchUserId != null) {
+                        self.removeUserFormBranch(self.deleteIndex);
+                     } else if (self.branchescommitteetbl[self.deleteIndex].committeeUserId != null) {
+                        self.removeUserFormCommittee(self.deleteIndex);
+                     }
+                  },
+                  removeUserFormBranch: function (index) {
+                     $("#DeleteConfirmationModal").modal("hide");
+                     var self = this;
+                     var branchUserId = self.branchescommitteetbl[index].branchUserId
+                     var branchId = self.branchescommitteetbl[index].branchId
+                     var roleId = self.branchescommitteetbl[index].roleId
+                     var roleName = self.branchescommitteetbl[index].roleName
+                     var token = $('input[name=__RequestVerificationToken]').val();
+                     $.post('/ManageUsersAssignation/RemoveBranchAssignedUserAsync', { branchUserId: branchUserId, userIdString: self.userIdString, branchId: branchId, roleName: roleName, roleId: roleId, __RequestVerificationToken: token }).done(function (result) {
+                        self.branchescommitteetbl.splice(index, 1);
+                        AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success)
+                     }).fail(function (error) {
+                        $('#LoadingSite').fadeOut();
+                        AlertFun(error.responseJSON.message, 'danger');
+                        //AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+                        });
+
+                     self.reload();
+                  },
+                  assigneUserToCommittee: function () {
+                     var self = this;
+                     self.isSubmitted = true;
+                     if (!self.isUserToCommitteeRelationValid()) { return false;/*//view errro msg*/ }
+                     var token = $('input[name=__RequestVerificationToken]').val();
+                     $.post('/ManageUsersAssignation/AssignUsersToCommitteesAsync', { UserIdString: self.userIdString, NationalIdString: self.nationalId, committeeId: self.selectedUser.committeeId, roleName: self.selectedUser.roleName,__RequestVerificationToken: token }).done(function (result) {
+                        self.$refs.vpaginator.fetchData(self.committeebranchesresource_url, self.currentPage);
+                        AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success)
+                        }).fail(function (error) {
+                           $('#LoadingSite').fadeOut();
+                           AlertFun(error.responseJSON.message, 'danger');
+                        });
+
+                     self.reload();
+                  },
+                  removeUserFormCommittee: function (index) {
+                     $("#DeleteConfirmationModal").modal("hide");
+                     var self = this;
+                     var committeeUserId = self.branchescommitteetbl[index].committeeUserId
+                     var committeeId = self.branchescommitteetbl[index].committeeId
+                     var roleId = self.branchescommitteetbl[index].roleId
+                     var roleName = self.branchescommitteetbl[index].roleNameAr
+
+                     var token = $('input[name=__RequestVerificationToken]').val();
+
+                     $.post('/ManageUsersAssignation/RemoveCommitteeAssignedUserAsync', { committeeUserId: committeeUserId, userIdString: self.userIdString, committeeId: committeeId, roleId: roleId, roleName: roleName, __RequestVerificationToken: token }).done(function (result) {
+                        self.branchescommitteetbl.splice(index, 1);
+                        AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success)
+                     }).fail(function (error) {
+                        $('#LoadingSite').fadeOut();
+                        AlertFun(error.responseJSON.message, 'danger');
+                       // AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+                     });
+
+                     self.reload();
+                  },
+                  isUserToBranchRelationValid: function () {
+                     var self = this;
+                     if (self.roleBranchSelected && $('#BranchId').val()!='') {
+                        return true;
+                     }
+                     else {
+                        $('#LoadingSite').fadeOut();
+                        AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.UsersResources.ErrorMessages.AddUserBranchErrorMessage)', 'danger');
+                        return false;
+                     }
+                  },
+                  isUserToCommitteeRelationValid: function () {      //TODO :: Check TechincalCommittee issue userTechincalCommittee not match why?
+                     $('#LoadingSite').fadeIn();
+                     var self = this;
+                     var selectedCommitteeType;
+                     if (self.roleCommitteeSelected && self.committeeSelected) {
+                        var pos = self.CommitteePreQualificationRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                        if (pos == -1) {
+                           pos = self.CommitteePurchaseRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                           if (pos == -1) {
+                              pos = self.CommitteeAuditOfferRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                              if (pos == -1) {
+                                 pos = self.CommitteeOpenOfferRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                                 if (pos == -1) {
+                                    pos = self.CommitteeTechnicalRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                                    if (pos == -1) {
+                                       pos = self.CommitteeOpenAndCheckRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                                       if (pos != -1) {
+                                          selectedCommitteeType = self.CommitteeTypes.openAndCheckCommittee;
+                                       }
+                                    }
+                                    else {
+                                       selectedCommitteeType = self.CommitteeTypes.techCommittee;
+                                    }
+                                 } else { selectedCommitteeType = self.CommitteeTypes.openofferCommittee; }
+                              } else { selectedCommitteeType = self.CommitteeTypes.checkofferCommittee; }
+                           }
+                           else {
+                              selectedCommitteeType = self.CommitteeTypes.purchaseCommittee;
+                           }
+                        }
+                        else {
+                           selectedCommitteeType = self.CommitteeTypes.preQualificationCommittee;
+                        }
+                        var committeeObjIndex = self.committee.map(function (e) { return e.committeeId; }).indexOf(self.selectedUser.committeeId);
+                        var committeeObjTypeId = self.committee[committeeObjIndex].committeeTypeId;
+                        if (selectedCommitteeType != committeeObjTypeId) {
+                            $('#LoadingSite').fadeOut();
+                            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.UsersResources.ErrorMessages.UserCommitteeNotMatchErrorMessage)', 'danger');
+                            return false;
+                        }
+                        return true;
+                     }
+                     else {
+                        $('#LoadingSite').fadeOut();
+                        AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.UsersResources.ErrorMessages.AddUserCommitteeErrorMessage)', 'danger');
+                        return false;
+                     }
+                  },
+                  onCommitteeRoleChange: function () {
+                     var self = this;
+                     var selectedCommitteeType;
+                     var pos = self.CommitteePreQualificationRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                     if (pos == -1) {
+                        pos = self.CommitteePurchaseRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                        if (pos == -1) {
+                           pos = self.CommitteeAuditOfferRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                           if (pos == -1) {
+                              pos = self.CommitteeOpenOfferRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                              if (pos == -1) {
+                                 pos = self.CommitteeTechnicalRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                                 if (pos == -1) {
+                                    pos = self.CommitteeOpenAndCheckRoles.map(function (e) { return e.roleName; }).indexOf(self.selectedUser.roleName);
+                                    if (pos != -1) {
+                                       selectedCommitteeType = self.CommitteeTypes.openAndCheckCommittee;
+                                    }
+                                 }
+                                 else {
+                                    selectedCommitteeType = self.CommitteeTypes.techCommittee;
+                                 }
+                              } else { selectedCommitteeType = self.CommitteeTypes.openofferCommittee; }
+                           } else { selectedCommitteeType = self.CommitteeTypes.checkofferCommittee; }
+                        }
+                        else {
+                           selectedCommitteeType = self.CommitteeTypes.purchaseCommittee;
+                        }
+                     }
+                     else {
+                        selectedCommitteeType = self.CommitteeTypes.preQualificationCommittee;
+                     }
+
+                     $.get('/ManageUsersAssignation/GetCommitteeNotAssignedByTypeAsync?userIdString=' + self.userIdString + '&' + "committeeTypeId=" + selectedCommitteeType, null, function (result) {
+                        self.committee = result;
+                           setTimeout(function () {
+                              $('#CommitteeId').selectpicker('refresh');
+                           }, 1000);
+                        });
+
+                  },
+                  showDialog: function (index) {
+                     $("#DeleteConfirmationModal").modal("show");
+                     this.deleteIndex = index;
+                  },
+                  reload: function () {
+                     setTimeout(function () {
+                        location.reload();  //Refresh page
+                     }, 2000);
+                  },
+               },
+               mounted: function () {
+                  var self = this;
+                  self.init();
+               }
+            });
+
+            function EstimatedValueToChanged() {
+               var estimatedValue = $("#estimatedValueTo").val();
+               
+                  if (estimatedValue != "") {
+                     if (parseFloat(estimatedValue) > parseFloat(10000000)) {
+                        $("#budgetWarningMessage").show();
+                     } else {
+                        $("#budgetWarningMessage").hide();
+                     }
+                  }
+            }
+         </script>
+      }
+
+
+
+

@@ -1,0 +1,82 @@
+@model MOF.Etimad.Monafasat.ViewModel.DashboardIndexModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+    string statusResString = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status;
+    string tenderNameResString = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName;
+    string referenceNumberResString = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber;
+    string acceptanceTypeNameResString = MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.AcceptanceTypeName;
+    string tenderNumberResString = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber;
+    string rejectionReason = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason;
+    string noDataResString = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData;
+}
+<div class="table-responsive ">
+   <table class="table table-striped" id="RejectedTendersTable" summary="desc">
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col">@Html.Raw(tenderNameResString)</th>
+            <th scope="col">@Html.Raw(referenceNumberResString)</th>
+            <th scope="col">@Html.Raw(tenderNumberResString)</th>
+            <th scope="col">@Html.Raw(statusResString)</th>
+            <th scope="col">@Html.Raw(acceptanceTypeNameResString)</th>
+            <th scope="col">@Html.Raw(rejectionReason)</th>
+            <th scope="col">@Html.Raw(@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options)</th>
+         </tr>
+      </thead>
+      <tbody v-if="TendersWaitingTheUnitAction && TendersWaitingTheUnitAction.length > 0">
+         <tr v-for="(tender, $index) in TendersWaitingTheUnitAction">
+            <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td data-label="@Html.Raw(tenderNameResString)"> {{tender.tenderName}} </td>
+            <td data-label="@Html.Raw(referenceNumberResString)"> {{tender.referenceNumber}} </td>
+            <td data-label="@Html.Raw(tenderNumberResString)"> {{tender.tenderNumber}} </td>
+            <td data-label="@Html.Raw(statusResString)"> {{tender.status}} </td>
+            <td data-label="@Html.Raw(acceptanceTypeNameResString)"> {{tender.operationType}} </td>
+            <td v-if="tender.tenderUnitStatusId == @((int)Enums.TenderUnitStatus.RejectedByManager)" data-label="@Html.Raw(rejectionReason)"> {{tender.rejectionReasonFromUnitManager}} </td><td v-else></td>
+            <td data-label="@Html.Raw(@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options)">
+               <div class="dropdown">
+                  @if (User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2))
+                  {
+                     <a :href="GoToNegotiation(tender.requestId)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.OffersAwarding) " class="btn btn-sm btn-primary">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve
+                     </a>
+                  }
+                  @if (User.IsInRole(RoleNames.UnitSpecialistLevel1))
+                  {
+                     <a :href="getTenderDetailsUrl(tender.tenderIdString)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && (tender.tenderUnitStatusId == @((int)Enums.TenderUnitStatus.WaitingUnitSecretaryReview) || tender.tenderUnitStatusId == @((int)Enums.TenderUnitStatus.UnderUnitReviewLevelOne) || tender.tenderUnitStatusId == @((int)Enums.TenderUnitStatus.RejectedByManager))" class="btn btn-sm btn-primary">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReviewData
+                     </a>
+                     <a :href="getTenderDetailsUrl(tender.tenderIdString)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && tender.tenderUnitStatusId == @((int)Enums.TenderUnitStatus.UnderReviewing)" class="btn btn-sm btn-primary">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+                     </a>
+                  }
+                  @if (User.IsInRole(RoleNames.UnitSpecialistLevel2))
+                  {
+                     <a :href="getTenderDetailsUrl(tender.tenderIdString)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && (tender.tenderUnitStatusId == @((int)Enums.TenderUnitStatus.UnderUnitReviewLevelTwo) || tender.tenderUnitStatusId == @((int)Enums.TenderUnitStatus.TenderTransferdToLevelTwo) || tender.tenderUnitStatusId == @((int)Enums.TenderUnitStatus.RejectedByManager))" class="btn btn-sm btn-primary">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReviewData
+                     </a>
+                     <a :href="getTenderDetailsUrl(tender.tenderIdString)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && tender.tenderUnitStatusId == @((int)Enums.TenderUnitStatus.UnderReviewing)" class="btn btn-sm btn-primary">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+                     </a>
+                  }
+                  @if (User.IsInRole(RoleNames.UnitManagerUser))
+                  {
+                     <a :href="getTenderDetailsUrl(tender.tenderIdString)" v-if="tender.canUnitDoAnyAction && tender.tenderStatusId == @((int)Enums.TenderStatus.UnitStaging) && (tender.tenderUnitStatusId == @((int)Enums.TenderUnitStatus.WaitingManagerApprove) || tender.tenderUnitStatusId == @((int)Enums.TenderUnitStatus.UnderManagerReviewing))" class="btn btn-sm btn-primary">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve
+                     </a>
+                  }
+               </div>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td align="center" style="text-align:center !important" colspan="8">
+               <i class="text-primary material-icons" style="font-size:3rem">sentiment_very_dissatisfied</i> 
+               <br>
+               @Html.Raw(noDataResString)
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>

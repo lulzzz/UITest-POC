@@ -1,0 +1,31 @@
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferFiles;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferFiles</li>
+      </ol>
+   </nav>
+}
+@Html.Partial("~/Views/Offer/CheckOffer/Partials/_QuantityTableFull.cshtml")
+
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   <script>
+   function AjaxSuccess() {
+      AlertFun("@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved", alertMessageType.Success);
+      $('#myModal3').modal('toggle');
+   }
+      function onFailure(xhr) {
+         AlertFun(xhr.responseJSON["message"], alertMessageType.Danger);
+      }
+   </script>
+}

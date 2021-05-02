@@ -1,0 +1,95 @@
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Invitations;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Invitations</li>
+      </ol>
+   </nav>
+}
+
+<form class="form">
+   <div id="TenderGrid" v-cloak>
+      <div class="tableDiv">
+         @Html.Partial("_SupplierInvitationTendersGrid")
+      </div>
+   </div>
+</form>
+
+<!--endtBody-->
+@section scripts{
+   <script>
+      var Tender = new Vue({
+         el: '#TenderGrid',
+         data: {
+            Tenders: [],
+            tenderStatusList: [],
+            areasList: [],
+            selectedStatus: '',
+            selectedAreaList: [],
+            selectedTenderId: 0,
+            selectedRowStatus: '',
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 6,
+            // Here you define the url of your paginated API
+            resource_url: '/Tender/SupplierInvitationTendersPagingAsync',
+            queryString: ''
+         },
+         created: function () {
+          
+            this.getTenderStatus();
+         },
+         methods: {
+            updateResource: function (data) {
+               data.forEach(function (item) {
+                  //item.createdAt = item.createdAt.slice(0, 10);
+               });
+               this.Tenders = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            detailsUrl: function (id/*, invitationId, invitationStatusId*/) {
+               return '/Tender/Details?STenderId=' + id;// + "&invitationId=" + invitationId + "&invitationStatusId=" + invitationStatusId ;
+            },
+            invitationUrl: function (tenderId) {
+               return '/Tender/TenderDetailsAsync?tenderId=' + tenderId;
+            },
+            remove: function (id) {
+            
+               $.get('/Tender/Delete/' + id).done(function () {
+                  window.location = '/Tender/SupplierInvitationTenders/';
+               });
+            },
+            getTenderStatus: function () {
+          
+               $.get('/Tender/GetStatusAsync').done(function (result) {
+                  Tender.tenderStatusList = result;
+                  setTimeout(function () {
+                     $('#statusList').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+               $.get('/Tender/GetAreasAsync').done(function (result) {
+                  Tender.areasList = result;
+                  setTimeout(function () {
+                     $('#areaList').selectpicker('refresh');
+                  }, 1000);
+               }).fail(function (error) {
+                  console.log(error.statusText);
+               });
+            },
+            search: function () {
+               this.queryString = $('form').serialize();
+               this.queryString = this.queryString + '&TenderStatusId=' + this.selectedStatus + '&TenderAreasIdString=' + this.selectedAreaList;
+               this.resource_url = '/Tender/SupplierInvitationTendersPagingAsync' + '?' + this.queryString;
+            }
+         }
+      });
+   </script>
+}

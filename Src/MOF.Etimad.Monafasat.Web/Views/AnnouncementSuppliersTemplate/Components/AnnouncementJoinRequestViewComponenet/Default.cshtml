@@ -1,0 +1,120 @@
+@model MOF.Etimad.Monafasat.ViewModel.AnnouncementSuppliersTemplateJoinRequestsDetailsModel
+
+<style>
+   .agencyLogo {
+      border-radius: 100%;
+      border: 2px solid #ccc;
+      padding: 5px;
+      width: 56px;
+   }
+</style>
+<div class="row">
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <div class="">
+         <ul class="list-group form-details-list">
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     حالة طلب الانضمام
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     @if (Model.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.Sent || Model.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.PendingAcceptance || Model.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.PendingRejection)
+                     {
+                        <span>تم الارسال </span>
+                     }
+                     else
+                     {
+                        <span> @(Model.JoinRequestStatusName)</span>
+                     }
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     تاريخ ارسال طلب الانضمام
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span> @(Model.JoinRequestSendingDate)</span>
+                  </div>
+               </div>
+            </li>
+
+            @if (Model.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.Withdrawn)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        تاريخ الإنسحاب من القائمة
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span> @(Model.WithdrawalDate)</span>
+                     </div>
+                  </div>
+               </li>
+            }
+         </ul>
+
+      </div>
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <div class="">
+         <ul class="list-group form-details-list">
+
+            @if (Model.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.Rejected)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.RejectionReason)</span>
+                     </div>
+                  </div>
+               </li>
+            }
+            @if (Model.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.Deleted)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.SupplierDeleteReason
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.DeleteReason)</span>
+                     </div>
+                  </div>
+               </li>
+            }
+            @if (Model.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.Accepted)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.TemplateExtendMechanism
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.TemplateExtendMechanism)</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        آلية التوقف عن استخدام القائمة
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@(Model.StopUsingAnnouncemetMechanism)</span>
+                     </div>
+                  </div>
+               </li>
+            }
+
+         </ul>
+
+      </div>
+   </div>
+
+</div>
+

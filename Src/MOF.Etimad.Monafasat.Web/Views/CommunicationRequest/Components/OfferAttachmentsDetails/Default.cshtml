@@ -1,0 +1,437 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using res = MOF.Etimad.Monafasat.Resources;
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailModel;
+<div id="app">
+   <div class="clearfix"></div>
+   <div class="row">
+      <div class="col-12">
+         <div class="row tendar-navigation position-relative m-3" style="min-height: 0px;">
+            <ul class="nav nav-pills nav-pills-teal col-12">
+               <li class="nav-item active leader">
+                  <a href="#pill1" data-toggle="tab" class="nav-link active">
+                     <i class="material-icons pull-left" style="padding: 0px 3px;font-size: 24px;">contacts</i> 
+                     <i class="material-icons pull-left text-warning" style="padding: 0px 3px;font-size: 24px;">star</i> @Model.SupplierName
+                  </a>
+               </li>
+            </ul>
+         </div>
+      </div>
+      @{
+         if (@Model.CombinationLetter != null)
+         {
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+               <div class="tab-pane animated bounceInLeft  delay-1s active show">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="col-12">
+                              <h4 class="text-primary">@res.OfferResources.DisplayInputs.CombinationLetter</h4>
+                           </div>
+                           <div class="col-md-12 col-sm-12 col-xs-12">
+                              <ul class="list-group form-details-list">
+                                 <li class="list-group-item">
+                                    <div class="row">
+                                       <div class="col-8 etd-item-info">
+                                          <a href="#" onclick="RedirectURL('@Model.CombinationLetter.FileNetId','@Model.CombinationLetter.FileName');return false;" target="_blank"> @Model.CombinationLetter.FileName </a>
+                                       </div>
+                                    </div>
+                                 </li>
+                              </ul>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         }
+      }
+      @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile && Model.CombinedOwner == true)
+      {
+         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+               <div class="card-body">
+                  <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.BankGuarantee</h5>
+                  <div class="row">
+                     <div class="col-md-6 col-sm-6 col-xs-12">
+                        <ul class="list-group form-details-list">
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-6 etd-item-title">
+                                    @res.OfferResources.DisplayInputs.Attached
+                                 </div>
+                                 @if (Model.IsBankGuaranteeAttached == true)
+                                 {
+                                    <div class="col-6 etd-item-info"><span>@res.SharedResources.DisplayInputs.Yes</span></div>
+                                 }
+                                 else
+                                 {
+                                    <div class="col-6 etd-item-info"><span>@res.SharedResources.DisplayInputs.No</span></div>
+                                 }
+                              </div>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+               <table class="table table-striped">
+                  <caption></caption>
+                  <thead style="background-color: rgb(224, 239, 232);">
+                     <tr>
+                        <th scope="row">@res.OfferResources.DisplayInputs.BankGuaranteeStatus</th>
+                        <th scope="row">@res.OfferResources.DisplayInputs.BankGuaranteeNumber</th>
+                        <th scope="row">@res.OfferResources.DisplayInputs.GuaranteeValue</th>
+                        <th scope="row">@res.OfferResources.DisplayInputs.BankGuaranteeDays</th>
+                        <th scope="row">@res.OfferResources.DisplayInputs.GuaranteeBankName</th>
+                        <th scope="row">@res.OfferResources.DisplayInputs.GuaranteeStartDate</th>
+                        <th scope="row">@res.OfferResources.DisplayInputs.GuaranteeEndDate</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr v-for="(tbl,indexD) in BankGuarantees">
+                        <td>{{tbl.isBankGuaranteeValidString}}</td>
+                        <td>{{tbl.guaranteeNumber}}</td>
+                        <td>{{tbl.amount}}</td>
+                        <td>{{tbl.guaranteeDays}}</td>
+                        <td>{{tbl.bankName}}</td>
+                        <td>{{tbl.guaranteeStartDateDisplay}}</td>
+                        <td>{{tbl.guaranteeEndDateDisplay}}</td>
+                     </tr>
+                  </tbody>
+                  <tfoot v-if="BankGuarantees.length==0">
+                     <tr>
+                        <td colspan="8">
+                           <div class="card-body text-center" align="center">
+                              <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                              <br />
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                           </div>
+                        </td>
+                     </tr>
+                  </tfoot>
+               </table>
+            </div>
+         </div>
+      }
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <div class="card">
+            <div class="card-body">
+               <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.ClassificationCertificate</h5>
+               <div class="row">
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-6 etd-item-title">
+                                 تم إرفاقه
+                              </div>
+                              @if (Model.IsSpecificationAttached == true)
+                              {
+                                 <div class="col-6 etd-item-info"><span>@res.SharedResources.DisplayInputs.Yes</span></div>
+                              }
+                              else
+                              {
+                                 <div class="col-6 etd-item-info"><span>@res.SharedResources.DisplayInputs.No</span></div>
+                              }
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-6 etd-item-title">
+                                 @res.OfferResources.DisplayInputs.ClassificationCertificateStatus
+                              </div>
+                              @if (Model.IsSpecificationValidDate == true)
+                              {
+                                 <div class="col-6 etd-item-info"><span>   @res.SharedResources.DisplayInputs.Valid</span></div>
+                              }
+                              else
+                              {
+                                 <div class="col-6 etd-item-info"><span>   @res.SharedResources.DisplayInputs.Invalid</span></div>
+                              }
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <table class="table table-striped">
+               <caption></caption>
+               <thead style="background-color: rgb(224, 239, 232);">
+                  <tr>
+                     <th scope="row">@res.OfferResources.DisplayInputs.ClassificationCertificateFor</th>
+                     <th scope="row">@res.OfferResources.DisplayInputs.ClassificationDegree </th>
+                     <th scope="row">@res.OfferResources.DisplayInputs.ConstuctionWork</th>
+                     <th scope="row">@res.OfferResources.DisplayInputs.RunningMentainaceWork</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr v-for="tbl in Specifications">
+                     <td>
+                        <span v-if="tbl.isForApplier == true">@res.OfferResources.DisplayInputs.OfferApplier</span>
+                        <span v-if="tbl.isForApplier == false"> @res.OfferResources.DisplayInputs.Guarantor</span>
+                     </td>
+                     <td>{{tbl.degree}}</td>
+                     <td>{{tbl.constructionWorkString}}</td>
+                     <td>
+                        {{tbl.maintenanceRunningWorkString}}
+                     </td>
+                  </tr>
+               </tbody>
+               <tfoot v-if="Specifications.length == 0">
+                  <tr>
+                     <td colspan="8">
+                        <div class="card-body text-center" align="center">
+                           <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                           <br />
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                        </div>
+                     </td>
+                  </tr>
+               </tfoot>
+            </table>
+         </div>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <div class="card">
+            <div class="card-body">
+               <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.Attachments</h5>
+            </div>
+            <table class="table table-striped">
+               <caption></caption>
+               <thead style="background-color: rgb(224, 239, 232);">
+                  <tr>
+                     <th scope="row">@res.OfferResources.DisplayInputs.AttachedType</th>
+                     <th scope="row">@res.OfferResources.DisplayInputs.Attached</th>
+                     <th scope="row">@res.OfferResources.DisplayInputs.Status</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  @if (@Model.CombinedOwner == true)
+                  {
+                     <tr>
+                        <td>@res.OfferResources.DisplayInputs.PurchaseReceipt</td>
+                        @if (Model.IsPurchaseBillAttached == true)
+                        {
+                           <td> @res.SharedResources.DisplayInputs.Yes</td>
+                        }
+                        else
+                        {
+                           <td> @res.SharedResources.DisplayInputs.No</td>
+                        }
+                        <td>@res.OfferResources.DisplayInputs.NotApplicable</td>
+                     </tr>
+                     <tr>
+                        <td>@res.OfferResources.DisplayInputs.SiteVisitation</td>
+                        @if (Model.IsVisitationAttached == true)
+                        {
+                           <td> @res.SharedResources.DisplayInputs.Yes</td>
+                        }
+                        else
+                        {
+                           <td> @res.SharedResources.DisplayInputs.No</td>
+                        }
+                        <td>@res.OfferResources.DisplayInputs.NotApplicable</td>
+                     </tr>
+                     <tr>
+                        @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+                        {
+                           <td class="text-dark-green">@res.OfferResources.DisplayInputs.OfferCopy</td>
+                        }
+                        else
+                        {
+                           <td class="text-dark-green">@res.OfferResources.DisplayInputs.TechnicalOfferCopy</td>
+                        }
+                        @if (Model.IsOfferCopyAttached == true)
+                        {
+                           <td> @res.SharedResources.DisplayInputs.Yes</td>
+                        }
+                        else
+                        {
+                           <td> @res.SharedResources.DisplayInputs.No</td>
+                        }
+                        <td>@res.OfferResources.DisplayInputs.NotApplicable</td>
+                     </tr>
+                     <tr>
+                        @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+                        {
+                           <td class="text-dark-green">@res.OfferResources.DisplayInputs.OfferLetter </td>
+                        }
+                        else
+                        {
+                           <td class="text-dark-green">@res.OfferResources.DisplayInputs.TechnicalOfferLetter </td>
+                        }
+                        @if (Model.IsOfferLetterAttached == true)
+                        {
+                           <td> @res.SharedResources.DisplayInputs.Yes</td>
+                        }
+                        else
+                        {
+                           <td> @res.SharedResources.DisplayInputs.No</td>
+                        }
+                        <td class="p-0">
+                           <table class="table table-striped m-0">
+                              <caption></caption>
+                              <thead style="background-color: rgb(224, 239, 232);">
+                                 <tr>
+                                    <th scope="row">@res.OfferResources.DisplayInputs.OfferLetterNumber </th>
+                                    <th scope="row">@res.OfferResources.DisplayInputs.OfferLetterDate</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr>
+                                    <td>@Model.OfferLetterNumber</td>
+                                    <td>@Model.OfferLetterDate </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </td>
+                     </tr>
+                  }
+                  <tr>
+                     <td>@res.OfferResources.DisplayInputs.ZakatCerificate</td>
+                     @if(Model.IsZakatAttached == true)
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Yes</td>
+                     }
+                     else
+                     {
+                        <td>@res.SharedResources.DisplayInputs.No</td>
+                     }
+                     @if(Model.IsZakatValidDate == true)
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Valid</td>
+                     }
+                     else
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Invalid</td>
+                     }
+                  </tr>
+                  <tr>
+                     <td>@res.OfferResources.DisplayInputs.ZakatCerificate</td>
+                     @if(Model.IsZakatAttached == true)
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Yes</td>
+                     }
+                     else
+                     {
+                        <td>@res.SharedResources.DisplayInputs.No</td>
+                     }
+                     @if(Model.IsZakatValidDate == true)
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Valid</td>
+                     }
+                     else
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Invalid</td>
+                     }
+                  </tr>
+                  <tr>
+                     <td>@res.OfferResources.DisplayInputs.SocialInsuranceCerificate</td>
+                     @if(Model.IsSocialInsuranceAttached == true)
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Yes</td>
+                     }
+                     else
+                     {
+                        <td>@res.SharedResources.DisplayInputs.No</td>
+                     }
+                     @if(Model.IsSocialInsuranceValidDate == true)
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Valid</td>
+                     }
+                     else
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Invalid</td>
+                     }
+                  </tr>
+                  <tr>
+                     <td>@res.OfferResources.DisplayInputs.SuadizationCerificate</td>
+                     @if(Model.IsSaudizationAttached == true)
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Yes</td>
+                     }
+                     else
+                     {
+                        <td>@res.SharedResources.DisplayInputs.No</td>
+                     }
+                     @if(Model.IsSaudizationValidDate == true)
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Valid</td>
+                     }
+                     else
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Invalid</td>
+                     }
+                  </tr>
+                  <tr>
+                     <td>@res.OfferResources.DisplayInputs.CommercialRegisterCopy</td>
+                     @if(Model.IsCommercialRegisterAttached == true)
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Yes</td>
+                     }
+                     else
+                     {
+                        <td>@res.SharedResources.DisplayInputs.No</td>
+                     }
+                     @if(Model.IsCommercialRegisterValid == true)
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Valid</td>
+                     }
+                     else
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Invalid</td>
+                     }
+                  </tr>
+                  <tr>
+                     <td>@res.OfferResources.DisplayInputs.ChamberJoining</td>
+                     @if(Model.IsChamberJoiningAttached == true)
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Yes</td>
+                     }
+                     else
+                     {
+                        <td>@res.SharedResources.DisplayInputs.No</td>
+                     }
+                     @if(Model.IsChamberJoiningValid == true)
+                     {
+                        <td>@res.SharedResources.DisplayInputs.Valid</td>
+                     }
+                     else
+                     {
+                        <td>  @res.SharedResources.DisplayInputs.Invalid</td>
+                     }
+                  </tr>
+               </tbody>
+               <tfoot>
+               </tfoot>
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script src="~/Etimad-UI/assets/js/vue-app/vue2-filters.min.js"></script>
+<script src="~/Etimad-UI/assets/js/vue-app/pagination.js"></script>
+<script>
+   var isClassEdit = 0;
+   var classEditIndex;
+   var isGuaranteeEdit = 0;
+   var GuaranteeEditIndex;
+   var guaranteesList = [];
+   var classificationsList = [];
+   @if (Model != null && Model.BankGuaranteeFiles != null)
+   {
+      @:guaranteesList = @Html.Raw(Json.Serialize(Model.BankGuaranteeFiles));
+      @:classificationsList = @Html.Raw(Json.Serialize(Model.SpecificationsFiles));
+   }
+   var vueObj = new Vue({
+      el: "#app",
+      data: {
+         BankGuarantees: guaranteesList,
+         Specifications: classificationsList
+      }
+   });
+   function RedirectURL(fileNetReferenceId, fileName) {
+      window.open("/Upload/getfile/" + fileNetReferenceId + ":" + fileName, '_blank');
+   }
+</script>
+

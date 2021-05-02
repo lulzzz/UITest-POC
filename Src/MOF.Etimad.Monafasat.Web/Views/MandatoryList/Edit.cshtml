@@ -1,0 +1,235 @@
+@model InputMandatoryListViewModel
+@using System.Text.Json;
+@{
+   var serlize = JsonSerializer.Serialize(Model.Products, options: new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit + " " + @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.MandatoryList;
+}
+@section breadcrumb
+      {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.MandatoryList</li>
+      </ol>
+   </nav>
+}
+<div id="mandatoryListForm">
+   <form method="post" id="innerForm">
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                  <h4 class="text-primary title">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisionInfo</h4>
+                  <div class="row">
+                     <partial name="_FormRazor.cshtml" />
+                  </div>
+               </div>
+
+               <div class="col-12">
+                  <hr />
+
+                  <h4 class="text-primary title d-inline-block">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.Products</h4>
+                  <button id="addProductButton" class="btn btn-primary pull-right" type="button">
+                     @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.AddNewProduct
+                     <i class="material-icons">add</i>
+                  </button>
+
+
+               </div>
+               <div class="col-12">
+                  <partial name="_ProductItem.cshtml" model="new InputMandatoryListProductViewModel()" />
+               </div>
+            </div>
+         </div>
+      </div>
+      <div>
+         @if (Model.StatusId == (int)Enums.MandatoryListStatus.Approved)
+         {
+            <button type="submit" class="btn btn-primary">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.SaveAndSendToApproval</button>
+         }
+         else
+         {
+            <button type="submit" id="save" class="btn btn-primary">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+            <button type="submit" id="saveAndSendToApproval" class="btn btn-primary">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.SaveAndSendToApproval</button>
+         }
+         <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="goBack()">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToPrevious
+         </button>
+      </div>
+   </form>
+
+   @* MODALS *@
+   @* Add *@
+   <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+         <form id="addProductForm">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">اضافة منتج جديد</h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <div class="row">
+                     <partial name="_ProductFormRazor.cshtml" model="new InputMandatoryListProductViewModel()" />
+                  </div>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn  btn-primary btn-sm m-1" name="button" @@click="addProduct()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Add</button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal" @@click="clearProductForm()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+   @* EDIT *@
+   <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+         <form id="editProductForm">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">
+                     @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.EditProduct
+                  </h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <div class="row">
+                     <partial name="_ProductFormRazor.cshtml" model="new InputMandatoryListProductViewModel()" />
+                  </div>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn  btn-primary btn-sm m-1" name="button" @@click="updateProduct()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal" @@click="clearProductForm()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+
+</div>
+@section scripts {
+   <script src="~/Etimad-UI/assets/js/jquery-validation/dist/jquery.validate.min.js"></script>
+   <script src="~/Etimad-UI/assets/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+   <script>
+      $(document).ready(function () {
+
+         $("#innerForm").submit(function (e) {
+            if ($("#innerForm").valid()) {
+               $('#loader').show();
+            }
+         });
+         // Todo move to common file
+         function clearValidation(formElement) {
+            var validator = $(formElement).validate();
+
+            $('[name]', formElement).each(function () {
+               validator.successList.push(this);
+               validator.showErrors();
+            });
+
+            validator.resetForm();
+            validator.reset();
+         }
+
+         $("#addProductButton").on("click", function () {
+            clearValidation("#addProductForm");
+            $('#addProductModal').modal('show')
+         });
+
+                  $('#saveAndSendToApproval').mousedown(function () {
+            $('#SendToApproval').prop('checked', true);
+
+         });
+
+         $('#save').mousedown(function () {
+            $('#SendToApproval').prop('checked', false);
+         });
+      });
+
+      var vueForm = new Vue({
+         el: '#mandatoryListForm',
+         data: {
+            divisionCode: '@Model.DivisionCode',
+            products: [],
+            product: {
+               csiCode: '',
+               descriptionAr: '',
+               descriptionEn: '',
+               nameAr: '',
+               nameEn: '',
+               priceCelling: '',
+               id: 0,
+               listId: '',
+            }
+         },
+         created: function () {
+            setTimeout(function () {
+               vueForm.products = @Html.Raw(serlize) ? @Html.Raw(serlize) : [];
+               vueForm.products.forEach(function (value) {
+                  value.listId = GenerateUniqueId();
+               })
+            }, 0);
+         },
+        methods: {
+           addProduct: function () {
+               if ($("#addProductForm").valid()) {
+                  this.product.listId = GenerateUniqueId();
+                  this.products.push(this.product);
+                  $('#addProductModal').modal('hide');
+                  this.clearProductForm();
+               }
+            },
+
+            updateProduct: function () {
+               var productIndex = this.products.findIndex((obj => obj.listId == this.product.listId));
+               if (productIndex != -1 && $("#editProductForm").valid()) {
+                  this.products[productIndex] = this.product;
+                  this.clearProductForm();
+                  $('#editProductModal').modal('hide');
+               }
+           },
+
+           showDeleteModal: function (listId) {
+              $('#deleteProductModal' + listId).modal('show');
+            },
+
+           deleteProduct: function (listId) {
+               this.products = this.products.filter(function (product) {
+                  return product.listId != listId
+               });
+              $('#deleteProductModal' + listId).modal('hide');
+            },
+
+           editProduct: function (product) {
+               this.product = {
+                  csiCode: product.csiCode,
+                  descriptionAr: product.descriptionAr,
+                  descriptionEn: product.descriptionEn,
+                  nameAr: product.nameAr,
+                  nameEn: product.nameEn,
+                  priceCelling: product.priceCelling,
+                  id: product.id,
+                  listId: product.listId,
+               };
+               $('#editProductModal').modal('show');
+           },
+
+            clearProductForm: function () {
+               this.product = {
+                  csiCode: '',
+                  descriptionAr: '',
+                  descriptionEn: '',
+                  nameAr: '',
+                  nameEn: '',
+                  priceCelling: '',
+                  id: 0,
+               }
+            }
+         },
+      });
+   </script>
+}

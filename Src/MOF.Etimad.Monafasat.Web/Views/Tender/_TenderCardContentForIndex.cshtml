@@ -1,0 +1,93 @@
+<div class="card">
+   <div class="card-body">
+      <div class="row">
+         <div class="agncy_logo col-12">
+            <div class="dropdown pull-right">
+               <button class="btn btn-primary btn-link btn-just-icon" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i> <div class="ripple-container"></div></button>
+               <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                  @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.EtimadOfficer))
+                  {
+                     @Html.Partial("_TenderIndexUnderOperationsStageActions.cshtml")
+                  }
+                  else
+                  {
+                     @Html.Partial("_TenderIndexMangersActions.cshtml")
+                  }
+               </div>
+            </div>
+            <h5 class="text-dark-green m-0 p-0" style="overflow:hidden">
+               <span>
+                  @Html.Partial("_AgencyLogo")
+               </span>
+
+               <a class="text-primary h5" style=" margin-right: 22px;display: table;" v-if="tender.tenderName.length > 100" :href="detailsUrl(tender.tenderIdString)">{{tender.tenderName.substring(0, 100) + ' ...'}}</a>
+               <a class="text-primary h5"  style=" margin-right: 22px;display: table;" v-else :href="detailsUrl(tender.tenderIdString)">{{tender.tenderName}}</a>
+            </h5>
+            <div class="row">
+               <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 p-2">
+
+                  <h5 class="text-dark-green m-0">
+                     <span>{{tender.agencyName}} - {{tender.branchName}}</span>
+                  </h5>
+                  <br/>
+                  <template v-if="tender.submitionDate">
+                     <span class="">
+                        <i class="material-icons pull-left text-gray">date_range</i> 
+                        {{tender.submitionDate.split('T')[0]}}
+                     </span>
+                  </template>
+                 
+                  @Html.Partial("_TenderStatuses.cshtml")
+                  @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.EtimadOfficer))
+                  {
+                     <button v-if="tender.tenderChangeRequestIdsForDataEntry.length > 0 && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)" type="button" class="btn btn-sm btn-info btn-link btn-just-icon popover-status m-0" data-container="body" data-toggle="popover" data-placement="left">
+                        <i class="material-icons">info</i> 
+                        <div class="popover-content d-none">
+                           @Html.Partial("_TenderChangeRequestStatus.cshtml")
+                        </div>
+                     </button>
+                  }
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6">
+                  <template v-if="tender.lastOfferPresentationDate">
+                     <div class="progress pull-right m-2" :data-percentage="percentageLeft(tender.submitionDate, tender.lastOfferPresentationDate, tender.remainingDays, tender.remainingHours)">
+                        <span class="progress-left">
+                           <span class="progress-bar"></span>
+                        </span>
+                        <span class="progress-right">
+                           <span class="progress-bar"></span>
+                        </span>
+                        <div class="progress-value">
+                           @Html.Partial("~/Views/Shared/_ElapsedTime.cshtml")
+                        </div>
+                     </div>
+                  </template>
+                  <template v-else>
+
+                  </template>
+                 
+               </div>
+            </div>
+          
+         </div>
+         <div class="clearfix"></div>
+         @Html.Partial("_TenderCardContent.cshtml")
+      </div>
+   </div>
+   @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.EtimadOfficer))
+   {
+      <div class="card-footer row">
+         @Html.Partial("~/Views/Tender/Partials/_UnderOperationStageFooterActions.cshtml")
+      </div>
+   }
+   else
+   {
+      <div class="card-footer row">
+         <div class="col-md-12 text-right">
+            <a :href="detailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details
+            </a>
+         </div>
+      </div>
+   }
+</div>

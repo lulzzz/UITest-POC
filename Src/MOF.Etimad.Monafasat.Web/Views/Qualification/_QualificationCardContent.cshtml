@@ -1,0 +1,130 @@
+<div class="monafasa-content col-12">
+
+
+   <h5 class="text-primary">
+      
+      @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer))
+      {
+         <button v-if="(tender.tenderChangeRequestIdsForAuditor.length > 0 || tender.tenderChangeRequestIdsForDataEntry.length > 0 ) && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) && tender.tenderTypeId == @((int)Enums.TenderType.PreQualification)" type="button" class="btn btn-sm btn-info btn-link btn-just-icon popover-status m-0" data-container="body" data-toggle="popover" data-placement="left">
+            <i class="material-icons">info</i> 
+            <div class="popover-content d-none">
+               @Html.Partial("~/Views/Qualification/Partials/_QulificationChangeRequestStatus.cshtml")
+            </div>
+         </button>
+      }
+
+      @if (User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary))
+      {
+         <button v-if="  !tender.isLowBudgetTender && tender.tenderChangeRequestIdsForDirectSecretary.length > 0  &&  (tender.tenderStatusId == @((int)Enums.TenderStatus.Pending) || tender.tenderStatusId == @((int)Enums.TenderStatus.QualificationCommitteeApproval))&& tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)" type="button" class="btn btn-sm btn-info btn-link btn-just-icon popover-status m-0" data-container="body" data-toggle="popover" data-placement="left">
+            <i class="material-icons">info</i> 
+            <div class="popover-content d-none">
+               @Html.Partial("~/Views/Qualification/Partials/_QulificationChangeRequestStatus.cshtml")
+
+            </div>
+         </button>
+      }
+
+      @if (User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersCheckSecretary))
+      {
+         <button v-if="tender.tenderChangeRequestIdsForOfferCheckSecretary.length > 0 && (tender.tenderStatusId == @((int)Enums.TenderStatus.Pending) || tender.tenderStatusId == @((int)Enums.TenderStatus.QualificationCommitteeApproval)) && tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)" type="button" class="btn btn-sm btn-info btn-link btn-just-icon popover-status m-0" data-container="body" data-toggle="popover" data-placement="left">
+            <i class="material-icons">info</i> 
+            <div class="popover-content d-none">
+               @Html.Partial("~/Views/Qualification/Partials/_QulificationChangeRequestStatus.cshtml")
+
+            </div>
+         </button>
+      }
+
+      @if (User.IsInRole(RoleNames.PreQualificationCommitteeManager) || User.IsInRole(RoleNames.PreQualificationCommitteeSecretary))
+      {
+         <button v-if="tender.tenderChangeRequestIdsForSecretary.length > 0  &&  (tender.tenderTypeId == @((int)Enums.TenderType.PreQualification) || tender.tenderTypeId == @((int)Enums.TenderType.PostQualification))" type="button" class="btn btn-sm btn-info btn-link btn-just-icon popover-status m-0" data-container="body" data-toggle="popover" data-placement="left">
+            <i class="material-icons">info</i> 
+            <div class="popover-content d-none">
+               @Html.Partial("~/Views/Qualification/Partials/_QulificationChangeRequestStatus.cshtml")
+
+            </div>
+         </button>
+      }
+   </h5>
+
+
+
+   <div class="row">
+      <div class="col-12">
+         <ul class="list-group form-details-list">
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-6 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationNumber
+                  </div>
+                  <div class="col-6 etd-item-info">
+                     <span>{{tender.qualificationReferenceNumber}}</span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-6 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationType
+                  </div>
+                  <div class="col-6 etd-item-info">
+                     <span>
+                        {{tender.qualificationTypeName}}
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <template >
+               <li class="list-group-item"v-if="tender.lastEnqueriesDate">
+
+                  <div class="row">
+                     <div class="col-6 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate
+                     </div>
+                     <div class="col-6 etd-item-info">
+                        <span class="d-block" data-toggle="tooltip" data-placement="top" title="" data-container="body" v-bind:data-original-title="tender.lastEnqueriesDateHijri">
+                           {{tender.lastEnqueriesDate.split('T')[0]}}
+                        </span>
+                        
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item"v-if="tender.lastOfferPresentationDate">
+                  <div class="row">
+                     <div class="col-6 etd-item-title" >
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.LastQualificationPresentationDate
+                     </div>
+                     <div class="col-6 etd-item-info">
+                        <span class="d-block" data-toggle="tooltip" data-placement="top" title="" data-container="body" v-bind:data-original-title="tender.lastOfferPresentationDateHijri">
+                           {{tender.lastOfferPresentationDate.split('T')[0]}}
+                        </span>
+                    
+                        <span>
+                           {{tender.lastOfferPresentationTime}}
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item" v-if="tender.offersCheckingDate">
+                  <div class="row">
+                     <div class="col-6 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationEvaluationDate
+                     </div>
+                     <div class="col-6 etd-item-info">
+                        <span class="d-block" data-toggle="tooltip" data-placement="top" title="" data-container="body" v-bind:data-original-title="tender.offersCheckingDateHijri">
+                           {{tender.offersCheckingDate.split('T')[0]}}
+                        </span>
+                      
+                        <span>
+                           {{tender.offersCheckingTime}}
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            </template>
+         </ul>
+      </div>
+      
+   </div>
+</div>
+

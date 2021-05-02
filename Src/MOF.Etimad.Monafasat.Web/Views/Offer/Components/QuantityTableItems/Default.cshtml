@@ -1,0 +1,57 @@
+@using res = MOF.Etimad.Monafasat.Resources
+<div class="table-responsive ">
+   <table class="table  table-striped" id="QuantityTableItemTable">
+      <caption></caption>
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col">@res.TenderResources.DisplayInputs.ItemName</th>
+            <th scope="col">@res.TenderResources.DisplayInputs.Quantity</th>
+            <th scope="col">@res.TenderResources.DisplayInputs.Unit</th>
+            <th scope="col">@res.TenderResources.DisplayInputs.Attachment</th>
+            <th scope="col">@res.TenderResources.DisplayInputs.UnitPrice</th>
+            <th scope="col">@res.TenderResources.DisplayInputs.UnitDiscount</th>
+            <th scope="col">@res.TenderResources.DisplayInputs.TotalAmount</th>
+            <th scope="col">@res.TenderResources.DisplayInputs.TotalAmountWithDiscout</th>
+         </tr>
+      </thead>
+      <tbody v-if="QuantityTableItems && QuantityTableItems.length > 0">
+         <tr v-for="(quantityTableItem, $index) in QuantityTableItems">
+            <td data-label="@res.TenderResources.DisplayInputs.ItemName"> {{quantityTableItem.tenderQuantityTableItem.name}} </td>
+            <td data-label="@res.TenderResources.DisplayInputs.Quantity"> {{quantityTableItem.tenderQuantityTableItem.quantity}} </td>
+            <td data-label="@res.TenderResources.DisplayInputs.Unit"> {{quantityTableItem.tenderQuantityTableItem.unit}} </td>
+            <td data-label="@res.TenderResources.DisplayInputs.UnitPrice"> {{quantityTableItem.price}} </td>
+            <td data-label="@res.TenderResources.DisplayInputs.UnitDiscount"> {{quantityTableItem.discount}} </td>
+            <td data-label="@res.TenderResources.DisplayInputs.TotalAmount"> {{quantityTableItem.total}} </td>
+            <td data-label="@res.TenderResources.DisplayInputs.TotalAmountWithDiscout"> {{quantityTableItem.discountedTotal}} </td>
+            <td data-label="@res.SharedResources.DisplayInputs.Options">
+               <div class="dropdown">
+                  <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false">
+                     <i class="material-icons">more_vert</i> 
+                     <div class="ripple-container"></div>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                     <a :href="detailsUrl(quantityTableItem.quantityTableItemId)" class="dropdown-item">
+                        <i class="material-icons">format_list_bulleted</i>  @res.SharedResources.DisplayInputs.Details
+                     </a>
+                     <a href="#pablo" class="dropdown-item">
+                        <i class="material-icons">edit</i> @res.SharedResources.DisplayInputs.Edit
+                     </a>
+                     <a href="#" :id="quantityTableItem.quantityTableItemId" @@click="remove(quantityTableItem.quantityTableItemId)" class="dropdown-item">
+                        <i class="material-icons">clear</i> @res.SharedResources.DisplayInputs.Delete
+                     </a>
+                  </div>
+               </div>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td align="center" colspan="8">
+               @res.SharedResources.Messages.NoDataFound
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>

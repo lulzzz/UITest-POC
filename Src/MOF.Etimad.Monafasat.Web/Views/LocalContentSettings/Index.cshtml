@@ -1,0 +1,126 @@
+
+@model MOF.Etimad.Monafasat.ViewModel.LocalContentSettings.LocalContentSettingsViewModel
+
+
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.LocalContentSettingsPreference;
+}
+
+<div class="card">
+   <div class="card-body">
+      <h4 class="text-primary">
+         @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.LocalContentSettingsPreference
+      </h4>
+      <form asp-controller="LocalContentSettings" asp-action="Index" method="post" id="localContentSettingsForm">
+         <ul class="list-group form-details-list">
+
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.HighValueContractsAmmount
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <div class="row">
+                        <div class="col-6">
+                           <input type="text" asp-for="HighValueContractsAmmount" placeholder="@MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.HighValueContractsAmmount" class="form-control allownumericwithdecimal" style="display: initial;" />
+                           <span asp-validation-for="HighValueContractsAmmount" class="text-danger" />
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.NationalProductPercentageAdvantage
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <div class="row">
+                        <div class="col-6">
+                           <input type="text" asp-for="NationalProductPercentage" placeholder="@MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.NationalProductPercentageAdvantage" class="form-control allownumericwithdecimal" style="display: initial;">
+                           <span asp-validation-for="NationalProductPercentage" class="text-danger" />
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </li>
+
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.LocalContentMaximumPercentage
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <div class="row">
+                        <div class="col-6">
+
+                           <input type="text" asp-for="LocalContentMaximumPercentage" placeholder="@MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.LocalContentMaximumPercentage" class="form-control allownumericwithdecimal" style="display: initial;" />
+                           <span asp-validation-for="LocalContentMaximumPercentage" class="text-danger" />
+
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.PriceWeightAfterAdjustment
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <div class="row">
+                        <div class="col-6">
+                           <input type="text" asp-for="PriceWeightAfterAdjustment" placeholder="@MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.PriceWeightAfterAdjustment" class="form-control allownumericwithdecimal" style="display: initial;" />
+                           <span asp-validation-for="PriceWeightAfterAdjustment" class="text-danger" />
+
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.LocalContentWeightAndFinancialMarket
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <div class="row">
+                        <div class="col-6">
+                           <input type="text" asp-for="LocalContentWeightAndFinancialMarket" placeholder="@MOF.Etimad.Monafasat.Resources.LocalContentSettingsResources.DisplayInputs.LocalContentWeightAndFinancialMarket" class="form-control allownumericwithdecimal" style="display: initial;" />
+                           <span asp-validation-for="LocalContentWeightAndFinancialMarket" class="text-danger" />
+
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </li>
+         </ul>
+
+         <div class="row">
+            <div class="col-12">
+               <button type="submit" class="btn btn-primary">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+               </button>
+               <button type="button" class="btn btn-danger pull-right" onclick="reset()">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+               </button>
+               <div class="clearfix"></div>
+            </div>
+         </div>
+      </form>
+
+
+   </div>
+</div>
+
+
+@section scripts{
+   <script src="~/Etimad-UI/assets/js/jquery-validation/dist/jquery.validate.min.js"></script>
+   <script src="~/Etimad-UI/assets/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+   <script>
+      function reset() {
+         var referrer = document.referrer;
+         window.location = referrer
+      }
+   </script>
+}

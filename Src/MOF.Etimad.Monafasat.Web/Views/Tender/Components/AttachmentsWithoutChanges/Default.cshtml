@@ -1,0 +1,98 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderAttachmentModel
+<div class="row" id="TenderDetials">
+   <div class="col-12">
+      <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Attachment</h4>
+   </div>
+
+
+   @if ((!User.IsInRole(RoleNames.supplier) && User.UserRoles().Count != 0)
+   || (User.IsInRole(RoleNames.supplier) /*&& ((Model.InvitationStatusId == (int)Enums.InvitationStatus.Approved && (Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects)) || Model.IsPurchased == true)*/))
+   {
+      @if ((Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects))
+      {
+         <div class="col-md-6 col-sm-12 col-xs-12">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletAndAttachments
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        @foreach (var item in Model.OldAttachments.Where(a => a.AttachmentTypeId == (int)Enums.AttachmentType.TenderBookletAttachment).ToList())
+                        {
+                           <a href="#" onclick="RedirectURL('@item.FileNetReferenceId','@item.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm" style="white-space: normal;">
+                              <i class="material-icons">insert_drive_file</i>  @item.Name
+                           </a>
+                        }
+                     </div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+      }
+      else if (Model.ConditionTemplateStageStatusId.HasValue && Model.ConditionTemplateStageStatusId == (int)Enums.TenderConditoinsStatus.Specifications)
+      {
+         <div class="col-md-6 col-sm-12 col-xs-12">
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletAndAttachments
+                     </div>
+                     @if (Model.TenderActivityVersionId >= (int)Enums.ActivityVersions.Sprint7Activities)
+                     {
+                        <div class="col-8 etd-item-info">
+                           <form action="PrintConditionsTemplateHtmlWithVersion" target="_blank">
+                              <input type="hidden" name="STenderId" value="@Model.STenderId" />
+                              <button class="btn btn-primary btn-sm" type="submit">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DownloadFile</button>
+                           </form>
+                        </div>
+                     }
+                     else
+                     {
+                        <div class="col-8 etd-item-info">
+                           <form action="PrintConditionsTemplateHtml" target="_blank">
+                              <input type="hidden" name="STenderId" value="@Model.STenderId" />
+                              <button class="btn btn-primary btn-sm" type="submit">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DownloadFile</button>
+                           </form>
+                        </div>
+                     }
+                  </div>
+               </li>
+            </ul>
+         </div>
+      }
+   }
+
+   <div class="col-md-6 col-sm-12 col-xs-12" style="padding-left:10px;">
+      <ul class="list-group form-details-list">
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @if (Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects)
+                  {
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AttachmentsMainConditions
+                  }
+                  else
+                  {
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupportingFiles
+                  }
+               </div>
+               <div class="col-8 etd-item-info">
+                  @foreach (var item in Model.OldAttachments.Where(a => a.AttachmentTypeId == (int)Enums.AttachmentType.TenderOtherFile).ToList())
+                  {
+                     <a href="#" onclick="RedirectURL('@item.FileNetReferenceId','@item.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                        @item.Name
+                     </a>
+                  }
+               </div>
+            </div>
+         </li>
+      </ul>
+   </div>
+</div>
+<script>
+   function RedirectURL(ids, names) {
+      window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+   }
+</script>

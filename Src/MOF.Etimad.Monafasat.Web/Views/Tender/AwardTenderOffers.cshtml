@@ -1,0 +1,306 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderOffersModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+   string tenderIdString = Model.TenderIdString;
+   int tenderStatusId = Model.TenderStatusId;
+   int approvedAwardOffersConfirmationStatus = (int)Enums.TenderStatus.OffersCheckedConfirmed;
+   int rejectedAwardReportConfirmationStatus = (int)Enums.TenderStatus.OffersAwardedRejected;
+   int waitngForAwardReportConfirmationStatus = (int)Enums.TenderStatus.OffersAwardedPending;
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferAwardingDetails;
+   if (tenderStatusId == waitngForAwardReportConfirmationStatus)
+   {
+      ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferAwardingConfirmDetails;
+   }
+
+   var stagingUrl = Url.Action("TenderIndexAwardingStage", "Tender");
+   bool canFilterOnNPA = (Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.ContainSupply == true);
+   var SortCriteria = canFilterOnNPA == true && Model.NPCalcHaveBeenDone == true ? "OfferWeightAfterCalcNPA" : "FinalPriceAfterDiscount";
+
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item" aria-current="page"><a href="@Url.Action("TenderIndexAwardingStage", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardStageTenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"].ToString()</li>
+      </ol>
+   </nav>
+}
+@section modalTitle{
+   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+}
+@section modalContent{
+   <div class="col-lg-4 col-sm-6 col-xs-12" id="divRejectReason">
+      <div class="form-group bmd-form-group">
+         <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+         <input type="text" class="form-control" id="txtRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason" />
+         <div class="pull-left">
+            <span style="display:none" class="bmd-help text-danger" id="txtRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divApproveAward">
+      <div class="form-group bmd-form-group">
+         <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderWillOpenAwarding</lable>
+      </div>
+   </div>
+}
+@section modalButtons{
+
+   <button type="button" class="btn btn-sm btn-primary" name="button" id="btnAwardOffers"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm </button>
+   <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+}
+@Html.AntiForgeryToken()
+<div class="col-12" id="OffersCheckConfirmGrid">
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+            <div class="row" id="basicDetials">
+               <div class="col-12">
+                  <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails</h4>
+               </div>
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>@(Model.TenderName)</span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderReferenceNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @(Model.TenderRefrenceNumber)
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @(Model.TenderNumber)
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+
+                  </ul>
+               </div>
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @(Model.TenderTypeName)
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EvaluationValue
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @(Model.EstimatedValue)
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EvaluationValueWritten
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @(Model.EstimatedValueText)
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+               <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="row">
+                     <div class="col-12">
+                        <div class="tableDiv">
+                           @Html.Partial("_OffersAwardingConfirmGrid", Model)
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               @if (tenderStatusId == rejectedAwardReportConfirmationStatus)
+               {
+                  <div class="col-md-6 col-sm-12 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 <i class="material-icons text-danger pull-left">not_interested</i>
+                                 <span class="p-1">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</span>
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 @(Model.RejectionReason)
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               }
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="">
+   <button class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@stagingUrl'">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+      <div class="ripple-container"></div>
+   </button>
+
+   @if (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary))
+   {
+      <div class="row" id="approval">
+         @if ((tenderStatusId == approvedAwardOffersConfirmationStatus || tenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || tenderStatusId == (int)Enums.TenderStatus.DirectPurchaseOffersCheckingApproved || tenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingApproved || tenderStatusId == (int)Enums.TenderStatus.VROOffersFinancialCheckingApproved || tenderStatusId == (int)Enums.TenderStatus.BiddingApproved) && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender)
+         {
+            <div class="col-12">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveAwardOffers" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmAwardingStart</button>
+            </div>
+         }
+         @if (tenderStatusId == rejectedAwardReportConfirmationStatus)
+         {
+            <div class="col-12">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveAwardOffers" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestartAwarding</button>
+            </div>
+         }
+      </div>
+   }
+
+   @if (User.IsInRole(RoleNames.OffersPurchaseManager) && Model.IsLowBudgetDirectPurchase.HasValue==true)
+   {
+      <div class="row" id="approval">
+         @if ((tenderStatusId == approvedAwardOffersConfirmationStatus || tenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || tenderStatusId == (int)Enums.TenderStatus.DirectPurchaseOffersCheckingApproved || tenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingApproved || tenderStatusId == (int)Enums.TenderStatus.VROOffersFinancialCheckingApproved || tenderStatusId == (int)Enums.TenderStatus.BiddingApproved) && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender)
+         {
+            <div class="col-12">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveAwardOffers" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmAwardingStart</button>
+            </div>
+         }
+         @if (tenderStatusId == rejectedAwardReportConfirmationStatus)
+         {
+            <div class="col-12">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveAwardOffers" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestartAwarding</button>
+            </div>
+         }
+      </div>
+   }
+
+   <div class="clearfix"></div>
+</div>
+@section scripts{
+   <script>
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $("#btnApproveAwardOffers").on("click", function () {
+         $("#divRejectReason").hide();
+         $("#divApproveAward").show();
+         $("#btnAwardOffers").show();
+      });
+      $("#btnApprove").on("click", function () {
+         $("#divRejectReason").hide();
+         $("#divApproveAward").hide();
+         $("#btnAwardOffers").hide();
+      });
+      $("#btnReject").on("click", function () {
+         $("#divRejectReason").show();
+         $("#divApproveAward").hide();
+         $("#btnAwardOffers").hide();
+      });
+      $(document).ready(function () {
+         $("#btnAwardOffers").on("click", function () {
+            $('#LoadingSite').fadeIn();
+            $.post('@Url.Action("AwardTenderOffersAsync", "Tender")',
+               {
+                  tenderIdString: '@tenderIdString',
+                  __RequestVerificationToken: token
+               }).done(function () {
+                  $('#LoadingSite').fadeOut();
+                  $('#myModal').modal('hide');
+                  $("#btnApproveAwardOffers").attr("disabled", true);
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                  setTimeout(function () {
+                   window.location = '@stagingUrl';
+                     }, 3000);
+             }).fail(function (error) {
+                $('#myModal').modal('hide');
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+         });
+      });
+
+      var OffersCheckObj = new Vue({
+         el: '#OffersCheckConfirmGrid',
+         data: {
+            InvitationsOffersCheck: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            sort: '@canFilterOnNPA' == 'True' ? 'OfferWeightAfterCalcNPA': 'FinalPriceAfterDiscount',
+            resource_url: '/Tender/GetOffersForAwardingStageByTenderIdAsync?tenderIdString=' + '@tenderIdString' + '&Sort= @SortCriteria',
+            queryString: ''
+         },
+         methods: {
+            updateResource: function (data) {
+               this.InvitationsOffersCheck = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            getSupplierInfo: function (CR) {
+               getSupplierInfo(CR);
+            },
+            //viewFinancialOffer: function (id) {
+            //   return '/Offer/OfferOpeningData/' + id;
+            //},
+            OfferDetails: function (id) {
+               return '/Offer/OpenOffersDetailsForAwarding/' + id +'/'+ @((int)Enums.TenderStatus.OffersAwarding);
+            },
+            OfferChecking: function (id) {
+               return '/Offer/OfferCheckingDetailsForAwarding/' + '@tenderIdString' + '/' + id;
+            },
+             CheckOneFileOffer: function (id) {
+               return '/Offer/OfferCheckingOneFile/' + id;
+            },
+            CheckFinancialOffer: function (id) {
+               return '/Offer/OfferChecking/' + '@tenderIdString' + '/' + id;
+            },
+         }
+      });
+   </script>
+
+}
+

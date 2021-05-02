@@ -1,0 +1,73 @@
+@model List<MOF.Etimad.Monafasat.ViewModel.OfferDeatilsReportForTenderModel>
+<link rel="icon" href="~/Etimad-UI/assets/imgs/favicon.ico">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script>
+   document.title = "Report";
+   (function () {
+      var link = document.createElement('link');
+      oldLink = document.getElementById('dynamic-favicon');
+      link.id = 'dynamic-favicon';
+      link.rel = 'shortcut icon';
+
+      link.href = '~/Etimad-UI/assets/imgs/favicon.ico';
+      document.getElementsByTagName('head')[0].appendChild(link);
+   })();
+   function printData() {
+      window.print();
+      window.close();
+   }
+   function saveData() {
+      var sourceHTML = document.getElementById("printDiv").innerHTML;
+      var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      var fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = 'document.doc';
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+   }
+</script>
+<button id="printButton" onclick="printData();" class="btn btn-success d-print-none" style="margin:20px;">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Print</button>
+<button id="saveButton" onclick="saveData();" class="btn btn-success d-save-none" style="margin:20px;">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+<div id="printDiv" class="row" dir="rtl" style="margin:20px;">
+   <div class="col-sm-12 text-center">
+      <img class="rounded mx-auto" src="~/Etimad-UI/assets/imgs/favicon.ico" alt="Etimad" />
+      <hr />
+   </div>
+   <h2 class="col-sm-12 text-center">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OpenOffersReport</h2>
+   <h6 class="col-sm-12 text-center" style="margin-top:20px;">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber : @Model?.FirstOrDefault()?.TenderNumber </h6>
+   <h6 class="col-sm-12 text-center">@Model?.FirstOrDefault()?.TenderName</h6>
+   <h6 class="col-sm-12 text-right" style="margin-top:20px;">
+      @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OpenEnvelopesDate : @Model?.FirstOrDefault()?.OpenOffersDate
+   </h6>
+   <table class="col-sm-12 table text-center table-bordered" aria-describedby="offer details">
+      <tr>
+         <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferSupplierName</th>
+         <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferNumberReport</th>
+         @if (Model.FirstOrDefault() != null && Model.FirstOrDefault().CanViewPrice)
+         {
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferPriceReport</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AmountAfterDiscountReport</th>
+         }
+         <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Notes</th>
+      </tr>
+      @*Loop Over Data*@
+      @if (Model != null)
+      {
+         @for (int i = 0; i < Model.Count; i++)
+         {
+            <tr>
+               <td>@Model[i].SupplierName</td>
+               <td>@Model[i].OfferId</td>
+               @if (Model[i].CanViewPrice)
+               {
+                  <td>@Model[i].OfferPrice</td>
+                  <td>@Model[i].OfferDiscountValue</td>
+               }
+               <td>@Model[i].Notes</td>
+            </tr>
+         }
+      }
+   </table>
+</div>

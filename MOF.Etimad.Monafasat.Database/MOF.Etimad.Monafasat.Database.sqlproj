@@ -1,0 +1,387 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>MOF.Etimad.Monafasat.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{89fa524c-c9dd-48bc-8b4e-7253710d7d47}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>MOF.Etimad.Monafasat.Database</RootNamespace>
+    <AssemblyName>MOF.Etimad.Monafasat.Database</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="LookUps\" />
+    <Folder Include="LookUps\Tables\" />
+    <Folder Include="Offer\" />
+    <Folder Include="Offer\Tables\" />
+    <Folder Include="Qualification\" />
+    <Folder Include="Qualification\Tables\" />
+    <Folder Include="Branch\" />
+    <Folder Include="Branch\Tables\" />
+    <Folder Include="CommunicationRequest\" />
+    <Folder Include="CommunicationRequest\Tables\" />
+    <Folder Include="AnnouncementTemplate\" />
+    <Folder Include="AnnouncementTemplate\Tables\" />
+    <Folder Include="IDM\" />
+    <Folder Include="IDM\Tables\" />
+    <Folder Include="Tender\" />
+    <Folder Include="Tender\Tables\" />
+    <Folder Include="Supplier\" />
+    <Folder Include="Supplier\Tables\" />
+    <Folder Include="Announcement\" />
+    <Folder Include="Announcement\Tables\" />
+    <Folder Include="Sadad\" />
+    <Folder Include="Sadad\Tables\" />
+    <Folder Include="CommunicationAgency\" />
+    <Folder Include="CommunicationAgency\Tables\" />
+    <Folder Include="Mobile\" />
+    <Folder Include="Mobile\Tables\" />
+    <Folder Include="FormConfig\" />
+    <Folder Include="FormConfig\Tables\" />
+    <Folder Include="PrePlanning\" />
+    <Folder Include="PrePlanning\Tables\" />
+    <Folder Include="Enquiry\" />
+    <Folder Include="Enquiry\Tables\" />
+    <Folder Include="Committee\" />
+    <Folder Include="Committee\Tables\" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="Notification\" />
+    <Folder Include="Notification\Tables\" />
+    <Folder Include="MandatoryList\" />
+    <Folder Include="MandatoryList\Tables\" />
+    <Folder Include="Verification\" />
+    <Folder Include="Verification\Tables\" />
+    <Folder Include="Settings\" />
+    <Folder Include="Settings\Tables\" />
+    <Folder Include="Block\" />
+    <Folder Include="Block\Tables\" />
+    <Folder Include="Invitation\" />
+    <Folder Include="Invitation\Tables\" />
+    <Folder Include="CommunicationRequest\Views\" />
+    <Folder Include="Offer\Views\" />
+    <Folder Include="Tender\Views\" />
+    <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="dbo\User Defined Types\" />
+    <Folder Include="Security\" />
+    <Folder Include="dbo\Sequences\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="LookUps\Tables\ChangeRequestType.sql" />
+    <Build Include="Offer\Tables\TechnicianReportAttachments.sql" />
+    <Build Include="Qualification\Tables\QualificationCategoryResult.sql" />
+    <Build Include="Branch\Tables\BranchAddresse.sql" />
+    <Build Include="LookUps\Tables\CommitteeType.sql" />
+    <Build Include="LookUps\Tables\ConditionsTemplateSections.sql" />
+    <Build Include="Qualification\Tables\QualificationSupplierData.sql" />
+    <Build Include="Branch\Tables\BranchUser.sql" />
+    <Build Include="LookUps\Tables\ConstructionWork.sql" />
+    <Build Include="CommunicationRequest\Tables\NegotiationSupplierQuantityTable.sql" />
+    <Build Include="Qualification\Tables\QualificationConfiguration.sql" />
+    <Build Include="AnnouncementTemplate\Tables\AnnouncementStatusSupplierTemplate.sql" />
+    <Build Include="LookUps\Tables\Country.sql" />
+    <Build Include="LookUps\Tables\AnnouncementJoinRequestStatusSupplierTemplate.sql" />
+    <Build Include="Qualification\Tables\QualificationFinalResult.sql" />
+    <Build Include="IDM\Tables\UserAgencyRole.sql" />
+    <Build Include="LookUps\Tables\EnquiryReplyStatus.sql" />
+    <Build Include="AnnouncementTemplate\Tables\AnnouncementSupplierTemplate.sql" />
+    <Build Include="Qualification\Tables\SupplierPreQualificationAttachment.sql" />
+    <Build Include="LookUps\Tables\InvitationStatus.sql" />
+    <Build Include="Tender\Tables\TenderQuantitableItems.sql" />
+    <Build Include="CommunicationRequest\Tables\NegotiationSupplierQuantityTableItem.sql" />
+    <Build Include="Tender\Tables\BiddingRoundOffer.sql" />
+    <Build Include="LookUps\Tables\InvitationType.sql" />
+    <Build Include="Qualification\Tables\QualificationSubCategoryConfiguration.sql" />
+    <Build Include="Supplier\Tables\FavouriteSupplierLists.sql" />
+    <Build Include="LookUps\Tables\MaintenanceRunningWork.sql" />
+    <Build Include="CommunicationRequest\Tables\PlaintRequest.sql" />
+    <Build Include="Announcement\Tables\AnnouncementJoinRequest.sql" />
+    <Build Include="AnnouncementTemplate\Tables\AnnouncementActivitySupplierTemplate.sql" />
+    <Build Include="Sadad\Tables\BillInfo.sql" />
+    <Build Include="Tender\Tables\TenderQuantityTableItem.sql" />
+    <Build Include="LookUps\Tables\NegotiationReason.sql" />
+    <Build Include="Qualification\Tables\QualificationSubCategoryResult.sql" />
+    <Build Include="Tender\Tables\Address.sql" />
+    <Build Include="CommunicationAgency\Tables\PlaintRequestAttachment.sql" />
+    <Build Include="LookUps\Tables\NegotiationStatus.sql" />
+    <Build Include="AnnouncementTemplate\Tables\AnnouncementAreaSupplierTemplate.sql" />
+    <Build Include="Mobile\Tables\MobileAlert.sql" />
+    <Build Include="FormConfig\Tables\Column.sql" />
+    <Build Include="LookUps\Tables\NegotiationSupplierStatus.sql" />
+    <Build Include="CommunicationRequest\Tables\EscalationRequest.sql" />
+    <Build Include="Qualification\Tables\QualificationSupplierDataYearly.sql" />
+    <Build Include="FormConfig\Tables\DisplayValidation.sql" />
+    <Build Include="LookUps\Tables\NegotiationType.sql" />
+    <Build Include="AnnouncementTemplate\Tables\AnnouncementConstructionWorkSupplierTemplate.sql" />
+    <Build Include="PrePlanning\Tables\PrePlanningArea.sql" />
+    <Build Include="FormConfig\Tables\DisplayValidationRole.sql" />
+    <Build Include="LookUps\Tables\NotifacationStatusEntity.sql" />
+    <Build Include="CommunicationRequest\Tables\PlaintRequestNotification.sql" />
+    <Build Include="FormConfig\Tables\Footer.sql" />
+    <Build Include="LookUps\Tables\NotifayTypeEntity.sql" />
+    <Build Include="CommunicationRequest\Tables\SupplierExtendOfferDatesRequest.sql" />
+    <Build Include="AnnouncementTemplate\Tables\AnnouncementCountrySupplierTemplate.sql" />
+    <Build Include="Supplier\Tables\SupplierViolator.sql" />
+    <Build Include="Qualification\Tables\SupplierPreQualificationDocument.sql" />
+    <Build Include="PrePlanning\Tables\PrePlanningCountry.sql" />
+    <Build Include="FormConfig\Tables\FooterColumn.sql" />
+    <Build Include="LookUps\Tables\NotificationCategory.sql" />
+    <Build Include="CommunicationRequest\Tables\AgencyCommunicationRequest.sql" />
+    <Build Include="FormConfig\Tables\Form.sql" />
+    <Build Include="LookUps\Tables\OfferSolidarityStatus.sql" />
+    <Build Include="AnnouncementTemplate\Tables\AnnouncementHistorySupplierTemplate.sql" />
+    <Build Include="Tender\Tables\AttachmentChanges.sql" />
+    <Build Include="Mobile\Tables\DeviceTokenNotification.sql" />
+    <Build Include="FormConfig\Tables\FormHeader.sql" />
+    <Build Include="LookUps\Tables\OfferStatus.sql" />
+    <Build Include="Tender\Tables\AgencyBudgetNumber.sql" />
+    <Build Include="FormConfig\Tables\Template.sql" />
+    <Build Include="LookUps\Tables\RequestsRejectionType.sql" />
+    <Build Include="AnnouncementTemplate\Tables\AnnouncementMaintenanceRunnigWorkSupplierTemplate.sql" />
+    <Build Include="Tender\Tables\Attachment.sql" />
+    <Build Include="PrePlanning\Tables\PrePlanningProjectType.sql" />
+    <Build Include="FormConfig\Tables\ValidationType.sql" />
+    <Build Include="LookUps\Tables\SpendingCategory.sql" />
+    <Build Include="LookUps\Tables\AnnouncementJoinRequestStatus.sql" />
+    <Build Include="LookUps\Tables\ColumnType.sql" />
+    <Build Include="LookUps\Tables\SupplierExtendOffersValidityStatus.sql" />
+    <Build Include="Enquiry\Tables\Enquiry.sql" />
+    <Build Include="AnnouncementTemplate\Tables\AnnouncementRequestSupplierTemplate.sql" />
+    <Build Include="Tender\Tables\BiddingRounds.sql" />
+    <Build Include="LookUps\Tables\FieldType.sql" />
+    <Build Include="LookUps\Tables\SupplierSecondNegotiationStatus.sql" />
+    <Build Include="Tender\Tables\TenderDatesChanges.sql" />
+    <Build Include="LookUps\Tables\FormCategory.sql" />
+    <Build Include="LookUps\Tables\TenderAction.sql" />
+    <Build Include="Branch\Tables\BranchCommittee.sql" />
+    <Build Include="Tender\Tables\RejectionHistory.sql" />
+    <Build Include="Tender\Tables\ConditionsBooklet.sql" />
+    <Build Include="LookUps\Tables\HeaderType.sql" />
+    <Build Include="LookUps\Tables\TenderConditoinsStatus.sql" />
+    <Build Include="AnnouncementTemplate\Tables\AnnouncementSuppliersTemplateAttachment.sql" />
+    <Build Include="LookUps\Tables\Role.sql" />
+    <Build Include="LookUps\Tables\TenderCreatedByType.sql" />
+    <Build Include="Committee\Tables\CommitteeUser.sql" />
+    <Build Include="Tender\Tables\FavouriteSupplierTenders.sql" />
+    <Build Include="LookUps\Tables\TenderPlaintRequestProcedure.sql" />
+    <Build Include="dbo\Tables\SP_AddQuantityItemsToTenderQT.sql" />
+    <Build Include="Tender\Tables\TenderQuantityTableChanges.sql" />
+    <Build Include="LookUps\Tables\AnnouncementTemplateListType.sql" />
+    <Build Include="LookUps\Tables\TenderStatus.sql" />
+    <Build Include="Tender\Tables\PostQualificationSuppliersInvitations.sql" />
+    <Build Include="Notification\Tables\UserNotificationSetting.sql" />
+    <Build Include="LookUps\Tables\TenderType.sql" />
+    <Build Include="LookUps\Tables\TenderUnitStatus.sql" />
+    <Build Include="dbo\Tables\_Config.sql" />
+    <Build Include="Offer\Tables\SupplierCombinedDetail.sql" />
+    <Build Include="LookUps\Tables\TenderUnitUpdateType.sql" />
+    <Build Include="AnnouncementTemplate\Tables\AnnouncementTemplateJoinRequestAttachment.sql" />
+    <Build Include="Qualification\Tables\QualificationItem.sql" />
+    <Build Include="LookUps\Tables\UserRole.sql" />
+    <Build Include="dbo\Tables\_Log.sql" />
+    <Build Include="Qualification\Tables\QualificationConfigurationAttachment.sql" />
+    <Build Include="Tender\Tables\TenderActivity.sql" />
+    <Build Include="LookUps\Tables\VendorCertificate.sql" />
+    <Build Include="Qualification\Tables\QualificationSupplierProject.sql" />
+    <Build Include="Qualification\Tables\QualificationTypeCategory.sql" />
+    <Build Include="Qualification\Tables\Point.sql" />
+    <Build Include="Tender\Tables\TenderAgreementAgency.sql" />
+    <Build Include="Qualification\Tables\QualificationItemCategory.sql" />
+    <Build Include="AnnouncementTemplate\Tables\AnnouncementTemplateJoinRequestHistory.sql" />
+    <Build Include="Tender\Tables\ConditionsTemplateCertificate.sql" />
+    <Build Include="Qualification\Tables\QualificationItemType.sql" />
+    <Build Include="Sadad\Tables\BillPaymentDetails.sql" />
+    <Build Include="Tender\Tables\TenderArea.sql" />
+    <Build Include="Qualification\Tables\QualificationLookupsNames.sql" />
+    <Build Include="AnnouncementTemplate\Tables\LinkedAgenciesAnnouncementTemplate.sql" />
+    <Build Include="Tender\Tables\TenderConditionsTemplateTechnicalDelrations.sql" />
+    <Build Include="Qualification\Tables\QualificationType.sql" />
+    <Build Include="Tender\Tables\TenderAwardingHistory.sql" />
+    <Build Include="Qualification\Tables\QualificationYear.sql" />
+    <Build Include="dbo\Tables\__EFMigrationsHistory.sql" />
+    <Build Include="Tender\Tables\TenderConditionsTemplateTechnicalOutput.sql" />
+    <Build Include="LookUps\Tables\MandatoryListStatus.sql" />
+    <Build Include="dbo\Tables\_AuditLog.sql" />
+    <Build Include="MandatoryList\Tables\MandatoryList.sql" />
+    <Build Include="Tender\Tables\TenderChangeRequest.sql" />
+    <Build Include="Supplier\Tables\FavouriteSuppliers.sql" />
+    <Build Include="Tender\Tables\SyncDataWithOldMonafasat.sql" />
+    <Build Include="dbo\Tables\_UserAudit.sql" />
+    <Build Include="Announcement\Tables\AnnouncementStatus.sql" />
+    <Build Include="Tender\Tables\TenderConditionsTemplateMaterialsInofmration.sql" />
+    <Build Include="MandatoryList\Tables\MandatoryListProduct.sql" />
+    <Build Include="IDM\Tables\GovAgency.sql" />
+    <Build Include="Announcement\Tables\Announcement.sql" />
+    <Build Include="Tender\Tables\VacationsDate.sql" />
+    <Build Include="Tender\Tables\Tender.sql" />
+    <Build Include="IDM\Tables\Supplier.sql" />
+    <Build Include="Tender\Tables\TenderConstructionWork.sql" />
+    <Build Include="Announcement\Tables\AnnouncementActivity.sql" />
+    <Build Include="Verification\Tables\VerificationType.sql" />
+    <Build Include="Tender\Tables\TenderQuantityTableItemChanges.sql" />
+    <Build Include="IDM\Tables\UserProfile.sql" />
+    <Build Include="Branch\Tables\Branch.sql" />
+    <Build Include="LookUps\Tables\EstablishmentType.sql" />
+    <Build Include="LookUps\Tables\City.sql" />
+    <Build Include="Offer\Tables\SupplierTenderQuantityTableItem.sql" />
+    <Build Include="Tender\Tables\TenderCountry.sql" />
+    <Build Include="LookUps\Tables\MandatoryListChangeRequestStatus.sql" />
+    <Build Include="Announcement\Tables\AnnouncementArea.sql" />
+    <Build Include="Settings\Tables\NationalProductSettings.sql" />
+    <Build Include="IDM\Tables\SupplierUserProfile.sql" />
+    <Build Include="LookUps\Tables\OfferPresentationWay.sql" />
+    <Build Include="MandatoryList\Tables\MandatoryListChangeRequest.sql" />
+    <Build Include="LookUps\Tables\PrePlanningStatus.sql" />
+    <Build Include="Offer\Tables\SupplierSpecificationDetail.sql" />
+    <Build Include="Tender\Tables\TenderHistory.sql" />
+    <Build Include="Tender\Tables\TenderQuantitiyItemsJson.sql" />
+    <Build Include="Mobile\Tables\DeviceToken.sql" />
+    <Build Include="MandatoryList\Tables\MandatoryListProductChangeRequest.sql" />
+    <Build Include="LookUps\Tables\QuantityTableRowType.sql" />
+    <Build Include="Announcement\Tables\AnnouncementConstructionWork.sql" />
+    <Build Include="LookUps\Tables\ReasonForLimitedTenderType.sql" />
+    <Build Include="Tender\Tables\TenderQuantitiyItemsChangeJson.sql" />
+    <Build Include="PrePlanning\Tables\PrePlanning.sql" />
+    <Build Include="Tender\Tables\TenderMentainanceRunnigWork.sql" />
+    <Build Include="LookUps\Tables\ReasonForPurchaseTenderType.sql" />
+    <Build Include="Announcement\Tables\AnnouncementCountry.sql" />
+    <Build Include="dbo\Tables\TenderQuantityTable009.sql" />
+    <Build Include="CommunicationRequest\Tables\NegotiationQuantityItemJson.sql" />
+    <Build Include="LookUps\Tables\TenderFeesType.sql" />
+    <Build Include="Enquiry\Tables\EnquiryReply.sql" />
+    <Build Include="Tender\Tables\TenderQuantityTable.sql" />
+    <Build Include="LookUps\Tables\Activity.sql" />
+    <Build Include="LookUps\Tables\YearQuarter.sql" />
+    <Build Include="Offer\Tables\SupplierTenderQuantityTableItemJson.sql" />
+    <Build Include="Announcement\Tables\AnnouncementHistory.sql" />
+    <Build Include="LookUps\Tables\Activitytemplate.sql" />
+    <Build Include="Enquiry\Tables\JoinTechnicalCommittee.sql" />
+    <Build Include="Tender\Tables\TenderUnitAssign.sql" />
+    <Build Include="Sadad\Tables\BillArchive.sql" />
+    <Build Include="Block\Tables\SupplierBlock.sql" />
+    <Build Include="LookUps\Tables\AddressType.sql" />
+    <Build Include="Offer\Tables\SupplierTenderQuantityTable.sql" />
+    <Build Include="CommunicationRequest\Tables\ExtendOffersValidity.sql" />
+    <Build Include="Announcement\Tables\AnnouncementMaintenanceRunnigWork.sql" />
+    <Build Include="LookUps\Tables\AgencyCommunicationPlaintStatus.sql" />
+    <Build Include="Tender\Tables\TenderUnitStatusesHistory.sql" />
+    <Build Include="CommunicationRequest\Tables\ExtendOffersValiditySupplier.sql" />
+    <Build Include="LookUps\Tables\AgencyCommunicationRequestStatus.sql" />
+    <Build Include="Committee\Tables\Committee.sql" />
+    <Build Include="LookUps\Tables\AgencyCommunicationRequestType.sql" />
+    <Build Include="dbo\Tables\SupplierBankGuaranteeDetail.sql" />
+    <Build Include="Notification\Tables\Notification.sql" />
+    <Build Include="LookUps\Tables\AgreementType.sql" />
+    <Build Include="CommunicationAgency\Tables\ExtendOffersValidityAttachment.sql" />
+    <Build Include="Tender\Tables\ConditionTemplateActivities.sql" />
+    <Build Include="LookUps\Tables\Area.sql" />
+    <Build Include="Offer\Tables\OfferHistory.sql" />
+    <Build Include="LookUps\Tables\AttachmentType.sql" />
+    <Build Include="CommunicationRequest\Tables\Negotiation.sql" />
+    <Build Include="Invitation\Tables\Invitation.sql" />
+    <Build Include="LookUps\Tables\NotificationOperationCode.sql" />
+    <Build Include="LookUps\Tables\Bank.sql" />
+    <Build Include="LookUps\Tables\BiddingRoundStatus.sql" />
+    <Build Include="Offer\Tables\OfferSolidarity.sql" />
+    <Build Include="Qualification\Tables\QualificationSubCategory.sql" />
+    <Build Include="LookUps\Tables\BillStatus.sql" />
+    <Build Include="dbo\Tables\TenderQuantitableItems0009.sql" />
+    <Build Include="Invitation\Tables\UnRegisteredSuppliersInvitation.sql" />
+    <Build Include="LookUps\Tables\BlockStatus.sql" />
+    <Build Include="CommunicationAgency\Tables\NegotiationAttachment.sql" />
+    <Build Include="Qualification\Tables\QualificationLookup.sql" />
+    <Build Include="LookUps\Tables\BlockType.sql" />
+    <Build Include="Offer\Tables\SupplierAttachment.sql" />
+    <Build Include="Offer\Tables\Offer.sql" />
+    <Build Include="Tender\Tables\TenderConditionsTemplate.sql" />
+    <Build Include="LookUps\Tables\CancelationReason.sql" />
+    <Build Include="CommunicationRequest\Tables\NegotiationFirstStageSupplier.sql" />
+    <Build Include="LookUps\Tables\ChangeRequestStatus.sql" />
+    <Build Include="Verification\Tables\VerificationCode.sql" />
+    <Build Include="CommunicationRequest\Views\VW_NegotiationQTJsonItems.sql" />
+    <Build Include="Offer\Views\VW_QTJsonItems.sql" />
+    <Build Include="Tender\Views\VW_TendersQTJsonItems.sql" />
+    <Build Include="dbo\Stored Procedures\SP_GenerateReferenceNumber.sql" />
+    <Build Include="dbo\Stored Procedures\SP_AddLogEntry.sql" />
+    <Build Include="dbo\Stored Procedures\SP_QuantityTableCellCount.sql" />
+    <Build Include="dbo\Stored Procedures\SelectAllTendersForSupplier.sql" />
+    <Build Include="dbo\Stored Procedures\SP_TenderQuantityTableCellCount.sql" />
+    <Build Include="dbo\Stored Procedures\SP_TenderQuantityTableChangeCellCount.sql" />
+    <Build Include="dbo\Stored Procedures\SP_convertOfferQTItemsToJson.sql" />
+    <Build Include="dbo\Stored Procedures\SP_DeleteTenderQuantityTableWithItems.sql" />
+    <Build Include="dbo\User Defined Types\OfferQuantityItems.sql" />
+    <Build Include="Security\Announcement.sql" />
+    <Build Include="Security\AnnouncementTemplate.sql" />
+    <Build Include="Security\Block.sql" />
+    <Build Include="Security\Branch.sql" />
+    <Build Include="Security\Committee.sql" />
+    <Build Include="Security\CommunicationAgency.sql" />
+    <Build Include="Security\CommunicationRequest.sql" />
+    <Build Include="Security\Enquiry.sql" />
+    <Build Include="Security\FormConfig.sql" />
+    <Build Include="Security\IDM.sql" />
+    <Build Include="Security\Invitation.sql" />
+    <Build Include="Security\LookUps.sql" />
+    <Build Include="Security\MandatoryList.sql" />
+    <Build Include="Security\Mobile.sql" />
+    <Build Include="Security\Notification.sql" />
+    <Build Include="Security\Offer.sql" />
+    <Build Include="Security\PrePlanning.sql" />
+    <Build Include="Security\Qualification.sql" />
+    <Build Include="Security\Sadad.sql" />
+    <Build Include="Security\Settings.sql" />
+    <Build Include="Security\Supplier.sql" />
+    <Build Include="Security\Tender.sql" />
+    <Build Include="Security\Verification.sql" />
+    <Build Include="dbo\Sequences\ReferenceNumberSequence.sql" />
+    <Build Include="Announcement\Tables\TestTabel.sql" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,44 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+@using res = MOF.Etimad.Monafasat.Resources
+
+
+<div>
+   <button type="button" class="btn btn-primary  next-tab" @@click="nextTab">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+   @if (User.IsInRole(RoleNames.supplier))
+   {
+      <a class="btn btn-outline-primary btn-link pull-right" href="/Tender/SupplierTenders">
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+         <div class="ripple-container"></div>
+      </a>
+   }
+   else if (User.IsInRole(RoleNames.OffersOppeningSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedRejected)
+   {
+      <button id="btnBackToOffers" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("OpenTenderOffers", "Tender",new { tenderIdString = @ViewBag.tenderIdEncrypt , actionName="reopen"})'">
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+         <div class="ripple-container"></div>
+      </button>
+   }
+   else if (User.IsInRole(RoleNames.OffersOppeningSecretary) && Model.TenderStatusId != (int)Enums.TenderStatus.OffersOppenedRejected)
+   {
+      <button id="btnBackToOffers" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("OpenTenderOffers", "Tender",new { tenderIdString = @ViewBag.tenderIdEncrypt , actionName="details"})'">
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+         <div class="ripple-container"></div>
+      </button>
+   }
+   else if (User.IsInRole(RoleNames.OffersOppeningManager) && Model.TenderStatusId == (int)Enums.TenderStatus.Approved)
+   {
+      <button class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("OpenTenderOffers", "Tender", new { tenderIdString = @ViewBag.tenderIdEncrypt, actionName = "open" })'">
+         @res.OfferResources.DisplayInputs.BackButton
+         <div class="ripple-container"></div>
+      </button>
+   }
+   else if (User.IsInRole(RoleNames.OffersOppeningManager) && Model.TenderStatusId != (int)Enums.TenderStatus.Approved)
+   {
+      <button class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("OpenTenderOffers", "Tender", new { tenderIdString = @ViewBag.tenderIdEncrypt, actionName = "review" })'">
+         @res.OfferResources.DisplayInputs.BackButton
+         <div class="ripple-container"></div>
+      </button>
+   }
+</div>
+
+

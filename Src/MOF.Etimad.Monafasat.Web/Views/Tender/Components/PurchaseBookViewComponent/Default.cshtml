@@ -1,0 +1,386 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.PurchaseModel
+<div class="row" id="basicDetials">
+   <div class="modal fade" id="myModal2" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PurchaseConditionsBooklet</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i> 
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="row" id="divSpecification">
+                  <div class="col-12">
+                     <div class="form-check">
+                        <label class="form-check-label text-dark-green">
+                           <input class="form-check-input" type="checkbox" required id="cbConditionApprove" />
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsReviewed
+                           <span class="form-check-sign">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <span class="text-danger">*</span>
+                        <div class="clearfix"></div>
+                        <span id="vdcbConditionApprove" class="text-danger h6" style="display:none;">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.YouShouldReviewConditions</span>
+                     </div>
+                  </div>
+                  <div class="col-12">
+                     <a href="/Account/Conditions" target="_blank"> <span class="btn-sm"> الشروط والاحكام</span> </a>
+                  </div>
+                  <div class="col-12">
+                     <ul class="list-group form-details-list col-12">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-6 etd-item-title">
+                                 قيمة وثائق المنافسة
+                              </div>
+                              <div class="col-6 etd-item-info">
+                                 <span>
+                                    @(Model.Price)
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SARiyal
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                        @if (Model.HaveToPayConditionalBookletFees)
+                        {
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-6 etd-item-title">
+                                    المقابل المالي لشراء كراسة الشروط
+                                 </div>
+                                 <div class="col-6 etd-item-info">
+                                    <span>
+                                       @(Model.ConditionalBookletFees)
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SARiyal
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-6 etd-item-title">
+                                    المجموع
+                                 </div>
+                                 <div class="col-6 etd-item-info">
+                                    <span>
+                                       @(Model.Price + Model.ConditionalBookletFees)
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SARiyal
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                        }
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               @if (Model.LastOfferPresentationDate.Value > DateTime.Now)
+               {
+                  <button class="btn btn-primary btn-sm" type="button" id="btnSubmit">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CompletePurchase
+                  </button>
+               }
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-12 ">
+      <div class="form-group bmd-form-group">
+         <div class="blockquote blockquote-success undefined" id="divText" style="display:none">
+            <div class="clearfix">
+               <button class="btn btn-sm btn-link btn-primary pull-right btn-just-icon d-print-none" formtarget="_blank" onclick="printEnquiry(event)">
+                  <i class="material-icons">print</i> 
+               </button>
+            </div>
+            <div class="col-6 mx-auto text-center">
+               <svg style="width: 150px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 150 78">
+                  <defs>
+                     <clipPath id="b">
+                        <rect width="150" height="78" />
+                     </clipPath>
+                  </defs>
+                  @await Html.PartialAsync("~/Views/Shared/_Logo.cshtml")
+               </svg>
+               <div class="col-12">
+                  <h4 class="text-dark-green text-center">فاتورة شراء</h4>
+               </div>
+            </div>
+            <small class="d-print-none">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PurchaseDone
+            </small>
+            <div id="printDiv" class="row h6">
+               <div class=" col-sm-12 col-xs-12">
+                  <h5> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails</h5>
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-6 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BillNumber
+                           </div> <div class="col-6 etd-item-info"><span id="spanSadad">@Model.SadadNumber</span></div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-6 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+                           </div> <div class="col-6 etd-item-info">
+                              <span id="spanNumber" style="display:inline">
+                                 @Model.TenderNumber
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-6 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+                           </div> <div class="col-6 etd-item-info">
+                              <span id="spanName">
+                                 @Model.TenderName
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-6 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PurchaseDate
+                           </div> <div class="col-6 etd-item-info">
+                              <span id="spanDate">
+                                 @Model.PurshaseDateString
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     @if (Model.BillBookletFees > 0)
+                     {
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-6 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BuyingCost
+                              </div> <div class="col-6 etd-item-info">
+                                 <span id="spanPrice">
+                                    @Model.BillBookletFees
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SARiyal
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                     }
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-6 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletPrice
+                           </div> <div class="col-6 etd-item-info">
+                              <span id="spanPrice">
+                                 @Model.Price
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SARiyal
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-6 etd-item-title">
+                              المجموع
+                           </div> <div class="col-6 etd-item-info">
+                              <span id="spanPrice">
+                                 @if (Model.BillBookletFees > 0)
+                                 {
+                                    @(Model.Price + Model.BillBookletFees)
+                                 }
+                                 else
+                                 {
+                                    @(Model.Price)
+                                 }
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SARiyal
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+               <div class=" col-sm-12 col-xs-12">
+                  <h5> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierDetails</h5>
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-6 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName
+                           </div> <div class="col-6 etd-item-info">
+                              <span id="spanCompany">
+                                 @Model.CommericalRegisterName
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-6 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber
+                           </div> <div class="col-6 etd-item-info">
+                              <span id="spanCR">
+                                 @Model.CommericalRegisterNo
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-6 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Email
+                           </div> <div class="col-6 etd-item-info">
+                              <span id="spanEmail">
+                                 @Model.Email
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-6 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.PhoneNumber
+                           </div> <div class="col-6 etd-item-info">
+                              <span id="spanMobile">
+                                 @Model.Mobile
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+               <hr />
+               <div class="col-12">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvoiceNote1
+               </div>
+               <br />
+               <div class="col-12">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvoiceNote2
+               </div>
+            </div>
+         </div>
+         <div class="blockquote blockquote-success undefined" id="PayemntMessage" style="display:none">
+            <span id="LabelPaymentMessage" class="h5 text-dark-green">
+               @Model.PaymentMessage
+            </span>
+         </div>
+         @if (Model.IsAvailabletoBuy)
+         {
+            <div id="divButton">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnPurchase" data-toggle="modal" data-target="#myModal2">@(Model.IsPublicCompetition ? "سداد المقابل المالى لكراسة الشروط" : MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PurchaseConditionsBooklet)</button>
+            </div>
+         }
+         @if (Model.IsBillExpired)
+         {
+            <div id="divRepurchaseButton">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnRePurchase">@(Model.IsPublicCompetition ? "سداد المقابل المالى لكراسة الشروط" : "إعادة إصدار فاتورة شراء")</button>
+            </div>
+         }
+      </div>
+   </div>
+</div>
+<script>
+   $(document).ready(function () {
+      if ('@Model.CanSupplierBuyBook.ToString().ToLower()' == 'true') {
+         $('#divButton').show();
+         $('#divText').hide();
+         $('#divRepurchaseButton').hide();
+      }
+      else {
+         if (@Model.PaymentStatusId == @((int)Enums.BillStatus.Paid) && (@Model.BillAmount > 0)) {
+            $('#divText').show();
+         }
+         else {
+            if ('@Model.IsBillExpired.ToString().ToLower()' == 'true') {
+               $('#divRepurchaseButton').show();
+            }
+            else {
+               $("#PayemntMessage").show();
+            }
+         }
+         $('#divButton').hide();
+      }
+      function printData() {
+         var divToPrint = document.getElementById("printDiv");
+         newWin = window.open("");
+         newWin.document.write(divToPrint.outerHTML);
+         newWin.print();
+         newWin.close();
+      }
+      $('#printBtn').on('click', function () {
+         printData();
+      });
+      $('#btBackToTender').on('click', function () {
+         window.location = "Tender/AllSuppliersTenders";
+      });
+      $("#btnSubmit").click(function () {
+         PurchaseTender();
+      });
+      function PurchaseTender() {
+         if ($('#cbConditionApprove').prop('checked') == false) {
+            $('#vdcbConditionApprove').show();
+            return false;
+         }
+         else {
+            $('#vdcbConditionApprove').hide();
+         }
+         $('#LoadingSite').fadeIn();
+         var token = $('#detailsForm input[name=__RequestVerificationToken]').val();
+         $.ajax({
+            type: "POST",
+            url: "/Tender/PurshaseTender",
+            data: {
+               tenderIdString: "@Model.TenderIdString", __RequestVerificationToken: token
+            }
+         }).done(function (result) {
+            $('#myModal2').modal('hide');
+            $('#PayemntMessage').show();
+            $('#divText').hide();
+            $('#divButton').hide();
+            $('#LoadingSite').fadeOut();
+            if ("@(((int)Model.Price).ToString())" != "0") {
+               $('#LabelPaymentMessage').text('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WaitingForSaddNumber)');
+            }
+            else
+               $('#LabelPaymentMessage').text('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderHasBeenBoughtBefore)');
+            location.reload();
+         }).fail(function (error) {
+            $('#myModal2').modal('hide');
+            $('#LoadingSite').fadeOut();
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         });
+      }
+      $("#btnRePurchase").click(function () {
+         $('#LoadingSite').fadeIn();
+         var token = $('#detailsForm input[name=__RequestVerificationToken]').val();
+         $.ajax({
+            type: "POST",
+            url: "/Tender/PurshaseTender",
+            data: {
+               tenderIdString: "@Model.TenderIdString", __RequestVerificationToken: token
+            }
+         }).done(function (result) {
+            $('#myModal2').modal('hide');
+            $('#PayemntMessage').show();
+            $('#divText').hide();
+            $('#divButton').hide();
+            $('#LoadingSite').fadeOut();
+            if ("@(((int)Model.Price).ToString())" != "0") {
+               $('#LabelPaymentMessage').text('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WaitingForSaddNumber)');
+            }
+            else
+               $('#LabelPaymentMessage').text('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderHasBeenBoughtBefore)');
+            location.reload();
+         }).fail(function (error) {
+            $('#myModal2').modal('hide');
+            $('#LoadingSite').fadeOut();
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         });
+      });
+   });
+</script>

@@ -1,0 +1,33 @@
+@model MOF.Etimad.Monafasat.ViewModel.NewRequestModel
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.TenderDetails</li>
+      </ol>
+   </nav>
+}
+<div class="col-12" id="applyOffer" v-cloak>
+
+</div>
+
+<div class="col-12">
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+            <div id="divPreview" class="col-md-12 col-lg-12">
+               <div class="form-group bmd-form-group">
+                  <label class="label bmd-label-static noSpecial">نوع الطلب</label>
+               </div>
+               @if (Model != null)
+               {
+                  <a asp-action="CreateSecondNegotiationRequest" asp-controller="CommunicationRequest" asp-route-TenderIdString="@(Model.TenderIdString)">بدء التفاوض المرحلة الثانية</a>
+               }
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div>
+</div>

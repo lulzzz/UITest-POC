@@ -1,0 +1,94 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderBasicInfoModel
+
+@{
+    ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails;
+}
+
+<div class="row">
+   <div class="col-12">
+      <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails</h4>
+   </div>  
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <ul class="list-group form-details-list">
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>@(Model.TenderName)</span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderRefrenceNumber
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.TenderRefrenceNumber)
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.TenderNumber)
+                  </span>
+               </div>
+            </div>
+         </li>
+      </ul>
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <ul class="list-group form-details-list">
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.EstimatedValue
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.EstimatedValue)
+                  </span>
+               </div>
+            </div>
+         </li>
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.EstimatedValueLetters
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.EstimatedValueText)
+                  </span>
+               </div>
+            </div>
+         </li>
+         @if (User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersPurchaseManager))
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OffersNumber
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.OffersNumber)
+                     </span>
+                  </div>
+               </div>
+            </li>
+         }
+      </ul>
+   </div>
+</div>
+
+

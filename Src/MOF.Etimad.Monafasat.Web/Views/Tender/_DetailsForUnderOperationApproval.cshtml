@@ -1,0 +1,64 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderDetailsModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   int tenderId = Model.TenderId;
+   int tenderStatus = Model.TenderStatusId;
+}
+<input id="tenderIdHidden" hidden type="number" value="@tenderId" />
+@if ((tenderStatus == (int)Enums.TenderStatus.Established) && (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PurshaseSpecialist)))
+{@if (!string.IsNullOrEmpty(Model.RejectionReason))
+   {
+      <div class="card">
+         <div class="card-body">
+            <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</h4>
+            <p>@Model.RejectionReason</p>
+         </div>
+      </div>
+   }
+<button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApprove" data-toggle="modal" data-target="#ApproveModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove</button>
+}
+else if ((tenderStatus == (int)Enums.TenderStatus.Pending) && (User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.EtimadOfficer)))
+{
+<button type="button" class="btn btn-primary pull-left" name="button"  id="btnApprove" data-toggle="modal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve</button>
+<button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+}
+@if ((tenderStatus == (int)Enums.TenderStatus.PendingVROAuditerApprove) && Model.CreatedByTypeId == (int)Enums.TenderCreatedByType.AgenciesRelatedByVRO && Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects && User.IsInRole(RoleNames.EtimadOfficer))
+{
+   <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveVRO" data-toggle="modal" data-target="#myModalVro">إنشاء المنافسة</button>
+   <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+}
+else if ((tenderStatus == (int)Enums.TenderStatus.Rejected || tenderStatus == (int)Enums.TenderStatus.RejectedFromUnit) && (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PurshaseSpecialist)))
+{
+   <div class="card">
+      <div class="card-body">
+         <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</h4>
+         <p>@Model.RejectionReason</p>
+         <p>@Model.UnitRejectionReason</p>
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnReOpen">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen</button>
+      </div>
+   </div>
+}
+else if (tenderStatus == (int)Enums.TenderStatus.ReturnedFromUnitToAgencyForEdit && User.IsInRole(RoleNames.DataEntry))
+{
+   <div class="card">
+      <div class="card-body">
+         <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason (@Model.UnitModificationType)</h4>
+         <p>@Model.UnitRejectionReason</p>
+         <br />
+         @{
+            if (Model.UnitModificatationsFiles?.Count() > 0)
+            {
+               <div class="col-6">
+                  <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DownloadFile</label>
+                  @foreach (var file in Model.UnitModificatationsFiles)
+                  {
+                     <br />
+                     <a href="#" onclick="return GetDownloadFileUrl('@file.FileNetReferenceId', '@file.Name');" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">@file.Name</a>
+                  }
+               </div>
+            }
+         }
+      </div>
+   </div>
+   <button type="button" class="btn btn-primary pull-left" name="button" id="btnReOpen">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen</button>
+}

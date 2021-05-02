@@ -1,0 +1,68 @@
+@model MOF.Etimad.Monafasat.ViewModel.VROTenderOffersModel
+<button class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("VROTendersIndexCheckingAndOpeningStage", "Tender")'">
+   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+   <div class="ripple-container"></div>
+</button>
+@if (User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && Model.AreAllOffersChecked == true)
+{
+   @if (Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersTechnicalCheckingApproved)
+   {
+      <div class="col-12">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnOpenCheckFinancialOffers" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmOpenOfferStage</button>
+      </div>
+   }
+   if (Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersCheckingAndTechnicalEval)
+   {
+      <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApproveTechnical" data-toggle="modal" data-target="#myModal">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+      </button>
+   }
+   else if (Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersFinancialChecking && Model.IsValidToGoToFinancailCheck)
+   {
+      <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApproveFinancial" data-toggle="modal" data-target="#myModal">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+      </button>
+   }
+}
+
+@if (User.IsInRole(RoleNames.OffersOpeningAndCheckManager))
+{
+   <div class="row" id="approval">
+      @if (Model.TenderStatusId == (int)Enums.TenderStatus.Approved)
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnCheckOffers" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOfferConfirmStage</button>
+         </div>
+      }
+      @if (Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersTechnicalCheckingPending)
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveTechnical" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Accepted</button>
+            <button type="button" class="btn btn-danger pull-left" name="button" id="btnRejectTechnical" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+         </div>
+      }
+      @if (Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersFinancialCheckingPending)
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveFinancial" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Accepted</button>
+            <button type="button" class="btn btn-danger pull-left" name="button" id="btnRejectFinancial" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+         </div>
+      }
+   </div>
+}
+else if (User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersTechnicalCheckingRejected)
+{
+   <div class="row" id="approval">
+      <div class="col-12">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnReopenCheckOffersTechnical" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestartCheckOffers</button>
+      </div>
+   </div>
+}
+else if (User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersFinancialCheckingRejected)
+{
+   <div class="row" id="approval">
+      <div class="col-12">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnReopenCheckOffersFinancial" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenOfferOpening</button>
+      </div>
+   </div>
+}

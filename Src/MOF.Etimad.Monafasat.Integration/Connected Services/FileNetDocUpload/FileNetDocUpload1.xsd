@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns="http://www.ejada.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://www.ejada.com" xmlns:ns="http://www.ejada.com" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.ejada.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="https://ry1drvesbiib01.mof.gov.sa:7931/FileNetDocUpload?xsd=xsd1" />
+</xsd:schema>

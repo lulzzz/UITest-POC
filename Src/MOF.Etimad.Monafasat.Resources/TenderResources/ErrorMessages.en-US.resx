@@ -1,0 +1,621 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ModelDataError123" xml:space="preserve">
+    <value>Plese Review data and try again</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="AttachmentsNotAdded" xml:space="preserve">
+    <value>Attachments are not added</value>
+  </data>
+  <data name="QuantityTableMustHaveOneItem" xml:space="preserve">
+    <value>All QuantityTables must have one QuantityTableItem at least</value>
+  </data>
+  <data name="QuantityTablesNotAdded" xml:space="preserve">
+    <value>Quantity tables are not added</value>
+  </data>
+  <data name="TenderNotFound" xml:space="preserve">
+    <value>Tender is not found</value>
+  </data>
+  <data name="TenderStatusIsNotApproved" xml:space="preserve">
+    <value>Tender status is not approved</value>
+  </data>
+  <data name="AlreadyDeletedTable" xml:space="preserve">
+    <value>so you can not update QuantityTableItem, that is already deleted.</value>
+  </data>
+  <data name="DeletedQuantityTable" xml:space="preserve">
+    <value>quantityTable is: not active (deleted)</value>
+  </data>
+  <data name="CheckWithAuditor" xml:space="preserve">
+    <value>Check With Auditor</value>
+  </data>
+  <data name="CommitteeNameExist" xml:space="preserve">
+    <value>Committee Name Exist</value>
+  </data>
+  <data name="CommitteeNotFound" xml:space="preserve">
+    <value>Committee Not Found</value>
+  </data>
+  <data name="ConditionBookNotZero" xml:space="preserve">
+    <value>Condition Book Not Zero</value>
+  </data>
+  <data name="DataEntryPermissions" xml:space="preserve">
+    <value>Data Entry Permissions</value>
+  </data>
+  <data name="DateLessThanToday" xml:space="preserve">
+    <value>Date Less Than Today</value>
+  </data>
+  <data name="EmailExist" xml:space="preserve">
+    <value>Email Exist</value>
+  </data>
+  <data name="EndDateLessThanStartDate" xml:space="preserve">
+    <value>End date should be larger than start date</value>
+  </data>
+  <data name="EnterConditionBook" xml:space="preserve">
+    <value>Enter Condition Book Price</value>
+  </data>
+  <data name="EnterConditionsBookletDeliveryAddress" xml:space="preserve">
+    <value>Enter Conditions Booklet Delivery Address</value>
+  </data>
+  <data name="EnterEmail" xml:space="preserve">
+    <value>Enter Email</value>
+  </data>
+  <data name="EnterFourtyCharacters" xml:space="preserve">
+    <value>Enter Fourty Characters At Least</value>
+  </data>
+  <data name="EnterLastEnqueriesDate" xml:space="preserve">
+    <value>Enter Last Enqueries Date</value>
+  </data>
+  <data name="EnterLastOfferPresentationDate" xml:space="preserve">
+    <value>Enter Last Offer Presentation Date</value>
+  </data>
+  <data name="EnterLastOfferPresentationTime" xml:space="preserve">
+    <value>Enter Last Offer Presentation Time</value>
+  </data>
+  <data name="EnterOfferPresentationPlace" xml:space="preserve">
+    <value>Enter Offer Presentation Place</value>
+  </data>
+  <data name="EnterOffersOpeningAddress" xml:space="preserve">
+    <value>Enter Offers Opening Address</value>
+  </data>
+  <data name="EnterOffersOpeningDate" xml:space="preserve">
+    <value>Enter Offers Opening Date</value>
+  </data>
+  <data name="EnterDeliveryDate" xml:space="preserve">
+    <value>Enter Offers Delivery Date</value>
+  </data>
+  <data name="EnterOffersOpeningTime" xml:space="preserve">
+    <value>Enter Offers Opening Time</value>
+  </data>
+  <data name="EnterDeliveryTime" xml:space="preserve">
+    <value>Enter Delivery Time</value>
+  </data>
+  <data name="EnterPhone" xml:space="preserve">
+    <value>Enter Phone</value>
+  </data>
+  <data name="EnterQuantitiesTable" xml:space="preserve">
+    <value>Please enter at least a quantity table</value>
+  </data>
+  <data name="EnterQuantitiesTableItem" xml:space="preserve">
+    <value>Please enter at least one item in the Bill of Quantities</value>
+  </data>
+  <data name="EnterSamplesAdress" xml:space="preserve">
+    <value>Please enter the sample delivery address</value>
+  </data>
+  <data name="EnterSearchFields" xml:space="preserve">
+    <value>Enter search fields </value>
+  </data>
+  <data name="EnterTechnicalCommittee" xml:space="preserve">
+    <value>Enter Technical Committee</value>
+  </data>
+  <data name="EnterTenderActivities" xml:space="preserve">
+    <value>Enter Tender Activities</value>
+  </data>
+  <data name="EnterDetails" xml:space="preserve">
+    <value>Enter Details</value>
+  </data>
+  <data name="EnterTenderConstructionWorks" xml:space="preserve">
+    <value>Enter Tender Construction Works</value>
+  </data>
+  <data name="EnterTenderMentainanceRunnigWorks" xml:space="preserve">
+    <value>Enter Tender Mentainance Runnig Works</value>
+  </data>
+  <data name="EnterActivityDescription" xml:space="preserve">
+    <value>Enter Activity Description</value>
+  </data>
+  <data name="EnterTenderAreas" xml:space="preserve">
+    <value>Enter Tender Areas</value>
+  </data>
+  <data name="EnterTenderName" xml:space="preserve">
+    <value>Enter Tender Name</value>
+  </data>
+  <data name="EnterTenderNumber" xml:space="preserve">
+    <value>Enter Tender Number</value>
+  </data>
+  <data name="EnterTenderPurpose" xml:space="preserve">
+    <value>Enter Tender Purpose</value>
+  </data>
+  <data name="ExpiredActivationCode" xml:space="preserve">
+    <value>Verification Code Error Please resend verification code</value>
+  </data>
+  <data name="InvalidLastEnqueriesDate" xml:space="preserve">
+    <value>The deadline for receipt of suppliers inquiries must be less than the opening date of the offers and the date of submission of the offers</value>
+  </data>
+  <data name="ModelDataError" xml:space="preserve">
+    <value>Please check the data and try again</value>
+  </data>
+  <data name="OfficialVacationDate" xml:space="preserve">
+    <value>Official Vacation Date</value>
+  </data>
+  <data name="PhoneExist" xml:space="preserve">
+    <value>Phone Exist</value>
+  </data>
+  <data name="PleaseEnterNumbers" xml:space="preserve">
+    <value>Please enter numbers</value>
+  </data>
+  <data name="TechnicalOrganizationRequired" xml:space="preserve">
+    <value>Technical Organization Required</value>
+  </data>
+  <data name="TenderNotExist" xml:space="preserve">
+    <value>Tender Not Exist</value>
+  </data>
+  <data name="TenderSentFailed" xml:space="preserve">
+    <value>Tender Sent Failed</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>Unexpected Error</value>
+  </data>
+  <data name="WeekendDate" xml:space="preserve">
+    <value>Vacation Date</value>
+  </data>
+  <data name="WrongEmail" xml:space="preserve">
+    <value>Wrong Email</value>
+  </data>
+  <data name="EnterConditionsBookletAttachments" xml:space="preserve">
+    <value>Please, add Conditionsbooklet and Attachments</value>
+  </data>
+  <data name="PurposeValiation" xml:space="preserve">
+    <value>Length must be 40 characters as minimum</value>
+  </data>
+  <data name="InvalidOfferValue" xml:space="preserve">
+    <value>Offer Value Cannot be zero or empty value</value>
+  </data>
+  <data name="EnterTenderAttachments" xml:space="preserve">
+    <value>Attach tender files</value>
+  </data>
+  <data name="InvalidOfferOpeningDate" xml:space="preserve">
+    <value>Last offer opening date should be larger than last enquiries date</value>
+  </data>
+  <data name="InvalidOfferPresentationDate" xml:space="preserve">
+    <value>Last offer presentation date should be larger than last enquiries date and not larger than offer opening date</value>
+  </data>
+  <data name="EnterValidQuantity" xml:space="preserve">
+    <value>Please enter valid quantity</value>
+  </data>
+  <data name="EnterTenderCountries" xml:space="preserve">
+    <value>Please select countries</value>
+  </data>
+  <data name="EnterListName" xml:space="preserve">
+    <value>Please enter valid list name</value>
+  </data>
+  <data name="PleseSelectAList" xml:space="preserve">
+    <value>Please select a list</value>
+  </data>
+  <data name="PleseSelectASupplier" xml:space="preserve">
+    <value>Please select a supplier</value>
+  </data>
+  <data name="FillTenderBasicInformation" xml:space="preserve">
+    <value>Fill tender basic information</value>
+  </data>
+  <data name="FillTenderClassificationInformation" xml:space="preserve">
+    <value>Fill tender classification information</value>
+  </data>
+  <data name="FillTenderDetailsiInformation" xml:space="preserve">
+    <value>Fill tender details information</value>
+  </data>
+  <data name="FillTenderQuantityTablesInformation" xml:space="preserve">
+    <value>Fill tender quantity tables information</value>
+  </data>
+  <data name="EnquiryDateLargerThanPresentationDate" xml:space="preserve">
+    <value>Offer presentation date should be larger than last enquiries date</value>
+  </data>
+  <data name="OpeningDateLessThanEnquiriesDate" xml:space="preserve">
+    <value>offer opening date should be larger than last enquiries date</value>
+  </data>
+  <data name="OpeningDateLessThanPresentationDate" xml:space="preserve">
+    <value>offer opening date should be larger than offer presentation date</value>
+  </data>
+  <data name="EnterQualificationCheckingDate" xml:space="preserve">
+    <value>Please enter qualification documents evaluation date</value>
+  </data>
+  <data name="EnterQualificationCheckingTime" xml:space="preserve">
+    <value>Please enter qualification documents evaluation time</value>
+  </data>
+  <data name="InvalidQualificationCheckingDate" xml:space="preserve">
+    <value>Last documents presentation date should be larger than last enquiries date and not larger than documents evaluation date</value>
+  </data>
+  <data name="TenderLastPresentationDatePassed" xml:space="preserve">
+    <value>Last Presentation date has passed</value>
+  </data>
+  <data name="EnterQualificationApplyingTime" xml:space="preserve">
+    <value>Please enter qualification documents applying time</value>
+  </data>
+  <data name="EnterAllQualificationDates" xml:space="preserve">
+    <value>Please enter all qualification dates</value>
+  </data>
+  <data name="CheckingDateLessThanEnquiriesDate" xml:space="preserve">
+    <value>Documents checking date should be larger than last enquiries date</value>
+  </data>
+  <data name="CheckingDateLessThanPresentationDate" xml:space="preserve">
+    <value>Documents checking date should be larger than documents presentation date</value>
+  </data>
+  <data name="EnterQualificationName" xml:space="preserve">
+    <value>Please Enter Qualification Name</value>
+  </data>
+  <data name="CanNotProceedStatusIs" xml:space="preserve">
+    <value>Can not proceed because tender status is not </value>
+  </data>
+  <data name="HTML5Error" xml:space="preserve">
+    <value>Sorry! Your browser does not support HTML5!</value>
+  </data>
+  <data name="ValidExcell" xml:space="preserve">
+    <value>Please upload a valid Excel file And Fill Required Failed !</value>
+  </data>
+  <data name="LastEnqueriesDateLessThanToday" xml:space="preserve">
+    <value>Last enqueries date should be greater than today</value>
+  </data>
+  <data name="EnterOffersCheckingData" xml:space="preserve">
+    <value>الرجاء إدخال تاريخ فحص العروض </value>
+  </data>
+  <data name="EnterOffersCheckingTime" xml:space="preserve">
+    <value>الرجاء إدخال وقت فحص العروض</value>
+  </data>
+  <data name="ErrorUploadToSadadMessage" xml:space="preserve">
+    <value>something went wrong, unable to send bill to sadad</value>
+  </data>
+  <data name="FavouriteListHasSupplierExist" xml:space="preserve">
+    <value>Supplier already exists in Favourite List</value>
+  </data>
+  <data name="FavouriteListNotForAgency" xml:space="preserve">
+    <value>Favourite List does not belong to your agency</value>
+  </data>
+  <data name="FavouriteListNotForBranch" xml:space="preserve">
+    <value>Favourite List does not belong to your branch</value>
+  </data>
+  <data name="FavouriteListNameExist" xml:space="preserve">
+    <value>Favourite List name already exists</value>
+  </data>
+  <data name="CanNotAccessTenderInAnotherBranch" xml:space="preserve">
+    <value>You Can't Access Tender In Another Branch</value>
+  </data>
+  <data name="SendToApproveCantbeGreaterThanLastPresentation" xml:space="preserve">
+    <value>Can't send this competition for approving because "last offer presentation date &amp; last enquirying date" have passed</value>
+  </data>
+  <data name="AlreadyPurchased" xml:space="preserve">
+    <value>This tender already have a request for purchase, contact customer service</value>
+  </data>
+  <data name="OfferPresentationDatePassed" xml:space="preserve">
+    <value>Last offer presentation date passed</value>
+  </data>
+  <data name="YouMustChangeOneDateAtLeast" xml:space="preserve">
+    <value>You Must Change One Date At Least</value>
+  </data>
+  <data name="CannotApproveFinishedTender" xml:space="preserve">
+    <value>لايمكن اعتماد المنافسة حيث ان التاريخ الحالي أكبر من تاريخ أخر موعد لاستلام العروض</value>
+  </data>
+  <data name="YouHaveToMakeChangeAtAnyTable" xml:space="preserve">
+    <value>You have to make a change in any table</value>
+  </data>
+  <data name="CantFindRecord" xml:space="preserve">
+    <value>Cant Find Record</value>
+  </data>
+  <data name="DateMustMoreThanTenderDates" xml:space="preserve">
+    <value>Dates must be Grater than current  tender Dates</value>
+  </data>
+  <data name="SamplesDeliveryAddressRequired" xml:space="preserve">
+    <value>Please enter samples delivery address</value>
+  </data>
+  <data name="EnterAwardingData" xml:space="preserve">
+    <value>Please enter awarding data</value>
+  </data>
+  <data name="AllOffersFinancialDataMustBeEntered" xml:space="preserve">
+    <value>All offers financial data must be entered</value>
+  </data>
+  <data name="AllTenderOffersMustBeTechnicallyChecked" xml:space="preserve">
+    <value>All tender offers must be technically checked</value>
+  </data>
+  <data name="AllTendersMustBeFinanciallyChecked" xml:space="preserve">
+    <value>All tenders must be financially checked</value>
+  </data>
+  <data name="TenderMustBeInOfferCheckingStageOrOpenOffersConfirmed" xml:space="preserve">
+    <value>Tender Must Be In Offer Checking Stage Or In Open Offers Confirmed</value>
+  </data>
+  <data name="TenderMustBeInTechnicalCheckingStageOrInFinancailCheckingStage" xml:space="preserve">
+    <value>Tender Must Be In Technical Checking Stage Or In Financail Checking Stage</value>
+  </data>
+  <data name="NoSpaceInitialGuranteePresentationAddress" xml:space="preserve">
+    <value>Initial gurantee presentation address cannot be white spaces</value>
+  </data>
+  <data name="NoSpaceSamplesDeliveryAddress" xml:space="preserve">
+    <value>Samples delivery address cannot be white spaces</value>
+  </data>
+  <data name="NoSpaceTenderName" xml:space="preserve">
+    <value>Tender name cannot be white spaces</value>
+  </data>
+  <data name="NoSpaceTenderNumber" xml:space="preserve">
+    <value>Tender number cannot be white spaces</value>
+  </data>
+  <data name="NoWhiteSpace" xml:space="preserve">
+    <value>No White Space Allowed</value>
+  </data>
+  <data name="YouHaveAnotherPlaint" xml:space="preserve">
+    <value>You already have a plaint request on this competition</value>
+  </data>
+  <data name="CancelationReasonDescriptionRequired" xml:space="preserve">
+    <value>Please enter cancelation reason description</value>
+  </data>
+  <data name="PleaseSelectLevel2Spacialist" xml:space="preserve">
+    <value>Please Select Level 2 Spacialist</value>
+  </data>
+  <data name="PleaseEnterYourNotes" xml:space="preserve">
+    <value>Please Enter Your Notes</value>
+  </data>
+  <data name="PleaseSelectModificaitonType" xml:space="preserve">
+    <value>Please Select Modificaiton Type</value>
+  </data>
+  <data name="PleaseEnterModicationDescription" xml:space="preserve">
+    <value>Please Enter Modication Description</value>
+  </data>
+  <data name="TenderEstimationValueIsNotWithinTheManagerApprovalRange" xml:space="preserve">
+    <value>Tender Estimation Value Is Not Within The Manager Approval Range</value>
+  </data>
+  <data name="PleaseCheckTheValueOf" xml:space="preserve">
+    <value>Pleas eCheck The Value Of </value>
+  </data>
+  <data name="MustFillPreviousInformation" xml:space="preserve">
+    <value>Must Fill Previous Conditions Information</value>
+  </data>
+  <data name="CurrentBudgetIsNotEnoughToAwardThisTender" xml:space="preserve">
+    <value>Current Budget Is Not Enough To Award This Tender</value>
+  </data>
+  <data name="EnterEstimatedValue" xml:space="preserve">
+    <value>Please enter estimated value field</value>
+  </data>
+  <data name="MustSelectMoreThanOneOfferInPartialAwarding" xml:space="preserve">
+    <value>You must select more than one offer in partial awarding or select full awarding</value>
+  </data>
+  <data name="CheckingDateNotStartedYet" xml:space="preserve">
+    <value>Checking Date Not Started Yet</value>
+  </data>
+  <data name="ThereAreActiveNegotiationsOnThisTender" xml:space="preserve">
+    <value>You can not proceed with this action, there are active negotiations requests on this tender</value>
+  </data>
+  <data name="YouNeedToInsertAtLeastOneItem" xml:space="preserve">
+    <value>You have to insert at least one item in one table</value>
+  </data>
+  <data name="EnquiryDateLargerThanPresentationDateForPurchase" xml:space="preserve">
+    <value>Offer presentation date should be larger than or equal to last enquiries date</value>
+  </data>
+  <data name="InvalidLastEnqueriesDateForPurchase" xml:space="preserve">
+    <value>The deadline for receipt of suppliers inquiries must be less than or equal to opening date of the offers and the date of submission of the offers</value>
+  </data>
+  <data name="LastEnqueriesDateForPurchase" xml:space="preserve">
+    <value>Last enqueries date should be greater than or equal to today</value>
+  </data>
+  <data name="CheckingDateGreaterThanOpeiningPurchase" xml:space="preserve">
+    <value>Offer checking date should be graeter than or equal to offers opening date</value>
+  </data>
+  <data name="InvalidOffersCheckingDatePurchase" xml:space="preserve">
+    <value>Offer checking date should be graeter than or equal to offers applying date</value>
+  </data>
+  <data name="TenderMustHaveActiveOrCommingBiddingRounds" xml:space="preserve">
+    <value>Tender Must Have Active Or Comming Bidding Rounds</value>
+  </data>
+  <data name="EnterCompletionValidityPeriod" xml:space="preserve">
+    <value>يرجى إدخال مدة السماح لاستكمال الشهادات</value>
+  </data>
+  <data name="EnterOfferSighningDays" xml:space="preserve">
+    <value>يرجى إدخال المدة التي يجب أن يوقع فيه المورد العقد</value>
+  </data>
+  <data name="MaxAnswerPeriod" xml:space="preserve">
+    <value>يرجى إدخال أقصى مدة للإجابة على الإستفسارات </value>
+  </data>
+  <data name="ThereAreActiveActiveExtendDateOnThisTender" xml:space="preserve">
+    <value>There Are Active Active Extend Date On This Tender</value>
+  </data>
+  <data name="CheckingDateTimeLessThanNow" xml:space="preserve">
+    <value>Checking date and time can't be less than current date and time.</value>
+  </data>
+  <data name="ApprovedPriceMoreThanOffer" xml:space="preserve">
+    <value>The approved price can not exceed offer price</value>
+  </data>
+  <data name="AddBankGuarantee" xml:space="preserve">
+    <value>Please attach bank guarantee</value>
+  </data>
+  <data name="CannotCancelTenderBill" xml:space="preserve">
+    <value>Cannot cancel tender bill</value>
+  </data>
+  <data name="BuyingCostCannotBeMinusForType" xml:space="preserve">
+    <value>Buying cost for tender type ({0}) cannot be in minus</value>
+  </data>
+  <data name="InvitationCostCannotBeMinusForType" xml:space="preserve">
+    <value>Invitation cost for tender type ({0}) cannot be in minus</value>
+  </data>
+  <data name="AttachmentsValidation" xml:space="preserve">
+    <value>Please enter attachments data</value>
+  </data>
+  <data name="SpecialConditionsValidation" xml:space="preserve">
+    <value>Please enter the special conditions</value>
+  </data>
+  <data name="TenderOfferCannotBeTodayOrLessThanOffer" xml:space="preserve">
+    <value>The requested date must be greater than today and less than the end of offers date</value>
+  </data>
+  <data name="ThereIsNoAttachmentsToUpdate" xml:space="preserve">
+    <value>There is no attachments to update</value>
+  </data>
+  <data name="DetailsValiation" xml:space="preserve">
+    <value>Number of characters shoulb be less than 1024 character</value>
+  </data>
+  <data name="ExcludedMessageNotInserted" xml:space="preserve">
+    <value>الرجاء إدخال سبب الإستبعاد لجميع الموردين الغير مرسى عليهم</value>
+  </data>
+  <data name="PlaintReasonValiation" xml:space="preserve">
+    <value>يجب أن لا يزيد طول الحقل عن 2000 حرف</value>
+  </data>
+  <data name="EnterBuildingName" xml:space="preserve">
+    <value>ادخل اسم المبنى</value>
+  </data>
+  <data name="EnterDepartmentName" xml:space="preserve">
+    <value>ادخل اسم الغرفة</value>
+  </data>
+  <data name="EnterFloarNumber" xml:space="preserve">
+    <value>ادخل اسم الطابق</value>
+  </data>
+  <data name="EnterOffersOpeningRangeTime" xml:space="preserve">
+    <value>الرجاء ادخال تاريخ فتح العروض ما بين الساعة السابعة صباحا والثامنة مساءً</value>
+  </data>
+  <data name="EnterOffersOpeningVacationRangeTime" xml:space="preserve">
+    <value>الرجاء ادخال تاريخ فتح العروض ما بين الساعة التاسعة صباحا الثانية مساءً</value>
+  </data>
+  <data name="EstimationValueShouldNotBrGreaterThan100000" xml:space="preserve">
+    <value>EstimationValueShouldNotBrGreaterThan100000</value>
+  </data>
+  <data name="AwardingExpectedDateRequired" xml:space="preserve">
+    <value>الرجاء ادخال التاريخ المتوقع للترسية</value>
+  </data>
+  <data name="StartingBusinessOrServicesDateRequired" xml:space="preserve">
+    <value>الرجاء ادخال تاريخ بدء الأعمال / الخدمات</value>
+  </data>
+  <data name="FinalGuaranteePercentageRequired" xml:space="preserve">
+    <value>Please enter final guarantee percentage </value>
+  </data>
+  <data name="FinalGuaranteeNotValidValue" xml:space="preserve">
+    <value>يجب ألا تقل النسبة عن 5 % ولاتزيد عن 100%</value>
+  </data>
+  <data name="OfferDeliveryAddressRequired" xml:space="preserve">
+    <value>Please enter offers delivery address</value>
+  </data>
+  <data name="StoppingPeriodRequired" xml:space="preserve">
+    <value>Please enter stopping period</value>
+  </data>
+  <data name="LocalContentMechanismIMessage" xml:space="preserve">
+    <value>الرجاء تحديد آلية الأفضلية المستخدمة</value>
+  </data>
+</root>

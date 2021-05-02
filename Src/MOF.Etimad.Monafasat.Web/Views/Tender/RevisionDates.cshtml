@@ -1,0 +1,197 @@
+@model IEnumerable<MOF.Etimad.Monafasat.ViewModel.TenderHistoryModel>
+
+@{
+   //ViewData["Title"] = "Revisions";
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page"><a href="@Url.Action("Revisions", "Tender")">@ViewData["Title"]</a></li>
+      </ol>
+   </nav>
+}
+
+@section pagecontrols{
+   @*<div class="dropdown">
+      <span data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search">
+         <button id="searchBtnColaps" class="btn btn-outline-primary btn-link btn-just-icon" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search">
+            <i class="material-icons">search</i>
+         </button>
+      </span>
+   </div>*@
+}
+
+   <ul class="nav nav-pills nav-pills-icons" role="tablist">
+      <li class="nav-item">
+         <a class="nav-link text-center active show" href="#TenderRevisionDate" role="tab" data-toggle="tab" aria-selected="true">
+            <i class="fa fa-calendar" aria-hidden="true"></i>
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtendDates
+         </a>
+      </li>
+      @*<li class="nav-item">
+         <a class="nav-link text-center" id="add-new" href="#revisionAttachment" role="tab" data-toggle="tab" aria-selected="true">
+            <i class="fa fa-file" aria-hidden="true"></i>
+            جدول الكميات
+         </a>
+      </li>*@
+   </ul>
+
+
+<div class="tab-content  tab-space col-12 " style="padding:0">
+   @*revision date pan*@
+   <div class="tab-pane active animated bounceInLeft  delay-1s hidden" id="TenderRevisionDate">
+      
+      <div class="card">
+         <form id="revisionDateSearchFrom" class="form ">
+            <div class="card-body">
+               <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtendDates <a class="btn p-2 btn-outline-primary pull-right" data-toggle="collapse" href="#_revisionDateSearchFrom" role="button" aria-expanded="false" aria-controls="_revisionDateSearchFrom"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</a></h4>
+               <div class="clearfix"></div>
+               <div class=" collapse" id="_revisionDateSearchFrom">
+                  <div class="row">
+
+                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="TenderName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName </label>
+                           <input type="text" id="TenderName" name="TenderName" maxlength="50" autocomplete="off" class="form-control">
+                        </div>
+                     </div>
+
+                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group form-check etd-calendar-group">
+                           <label for="RequestDateFrom" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RequestDateFrom</label>
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" name="RequestDateFrom" id="RequestDateFrom" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date">
+                           <input type="hidden" name="RequestDateFromS">
+                        </div>
+                     </div>
+                     <div class="col-lg-6 col-md-12 col-sm-6 col-xs-6">
+                        <div class="form-group form-check etd-calendar-group">
+                           <label for="RequestDateTo" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RequestDateTo</label>
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" name="RequestDateTo" id="RequestDateTo" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date">
+                           <input type="hidden" name="RequestDateToS">
+                        </div>
+                     </div>
+
+                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group form-check etd-calendar-group">
+                           <label for="ResponseDateFrom" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResponseDateFrom</label>
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" name="ResponseDateFrom" id="ResponseDateFrom" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date">
+                           <input type="hidden" name="ResponseDateFromS">
+                        </div>
+                     </div>
+                     <div class="col-lg-6 col-md-12 col-sm-6 col-xs-6">
+                        <div class="form-group form-check etd-calendar-group">
+                           <label for="ResponseDateTo" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResponseDateTo</label>
+                           <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" name="ResponseDateTo" id="ResponseDateTo" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date">
+                           <input type="hidden" name="ResponseDateToS">
+                        </div>
+                     </div>
+
+                     <div class="col-12">
+                        <button class="btn btn-sm btn-primary" @@click="search" type="button"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Search</button>
+                        <button class="btn btn-sm " type="button" @@click="reset"><i class="material-icons">close</i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Clear </button>
+                     </div>
+                     <hr />
+                     <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Results </h4>
+                  </div>
+               </div>
+            </div>
+         </form>
+         <div class="table-responsive" id="revisionList">
+            <table class="table" aria-describedby="Revision List">
+               <thead>
+                  <tr>
+                     <th scope="col" class="text-center">#</th>
+                     <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</th>
+                     <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate</th>
+                     <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate</th>
+                     <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate</th> 
+                     <th scope="col"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy</th>
+                     <th scope="col" class="text-right">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status</th> 
+                  </tr>
+               </thead>
+               <tbody v-if="RevisionsDate && RevisionsDate.length > 0">
+                  <tr v-for="(request, $index) in RevisionsDate">
+                     <td class="text-center">{{++$index}}</td>
+                     <td><a :href="detailsUrl(revisionDate.tender.tenderIdString)">{{request.tender.tenderName}}</a></td>
+                     <td>{{request.lastEnqueriesDate}}</td>
+                     <td>{{request.lastOfferPresentationDate}}</td>
+                     <td>{{request.offersOpeningDate}}</td>
+                     <td class="text-right">{{request.createdBy}}</td>
+                     <td>{{request.statusName}}</td>
+                  </tr>
+               </tbody>
+               <tbody v-else>
+                  <tr>
+                     <td colspan="8" align="center" style="text-align:center !important">
+                        <i class="text-primary material-icons" style="font-size:3rem">info</i>
+                        <br />
+                        @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.NoRecordsFound
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         <div class="col-12 m-5 m-auto">
+            <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+         </div>
+      </div>
+   </div>  
+</div>
+
+
+<!--endtBody-->
+@section scripts{
+<script>
+   var TenderRevisionDate = new Vue({
+      el: '#TenderRevisionDate',
+      data() {
+         return {
+            RevisionsDate: [],
+            tenderStatusList: [],
+            resource_url: '/Tender/RevisionDatesPagingAsync'
+         }
+      },
+      methods: {
+         updateResource(data) {
+            TenderRevisionDate.RevisionsDate = data; 
+         },
+         detailsUrl: function (id) {
+            return '/Tender/Details?STenderId=' + id;
+         },
+         reset: function () {
+            this.resource_url = '/Tender/RevisionDatesPagingAsync';
+            $('#revisionDateSearchFrom').trigger("reset");
+         },
+         search: function () {
+            function handleDateVal(input) {
+               if (input == undefined)
+                  return;
+               if (input.val() != "") {
+                  var i = input.val().split('/');
+                  var alt = input.parent().find('input[type="hidden"]');
+                  if (input.parent().find('input[type="checkbox"]').is(':checked')) {
+                     newVal = i[0] + ',' + i[1] + ',' + i[2] + ',' + 'G';
+                  }
+                  else {
+                     newVal = i[0] + ',' + i[1] + ',' + i[2] + ',' + 'H';
+                  }
+               }
+               if (alt == undefined)
+                  return;
+               alt.val(newVal);
+            }
+            handleDateVal($('#RequestDateFrom'));
+            handleDateVal($('#RequestDateTo'));
+            handleDateVal($('#ResponseDateFrom'));
+            handleDateVal($('#ResponseDateTo'));
+            this.queryString = $('#revisionDateSearchFrom').serialize();
+            this.resource_url = '/Tender/RevisionDatesPagingAsync' + '?' + this.queryString;
+         },
+      }
+   });
+
+
+</script>
+}

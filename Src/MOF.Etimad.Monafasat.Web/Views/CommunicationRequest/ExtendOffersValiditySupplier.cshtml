@@ -1,0 +1,275 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierExtendOffersValidityViewModel
+@section modalTitle{
+   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+}
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtendOfferValidity;
+}
+@section modalContent{
+   <div id="divRejectMsg">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AreYouSureReject
+      <br />
+      <span class="text-danger">
+         يجب مراجعة الجهة لاستلام الضمان البنكي ان وجد
+
+      </span>
+   </div>
+   <div id="divAcceptMsg">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AreYouSureAccept
+      <br />
+      <span class="text-danger">
+         @MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.YouHaveToUploadInitialGuarantee
+      </span>
+   </div>
+}
+@section modalButtons{
+   <button type="button" class="btn btn-link btn-success" name="button" id="btnRejectConfirmation"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionConfirm</button>
+   <button type="button" class="btn btn-link btn-success" name="button" id="btnAcceptConfirmation"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</button>
+   <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item" aria-current="page"><a href="#">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtendOfferValidity</li>
+      </ol>
+   </nav>
+}
+<form id="myForm">
+   @Html.AntiForgeryToken()
+   <div class="col-12">
+      <div class="row">
+         <div class="card">
+            <div class="card-body">
+               @Html.Partial("~/Views/CommunicationRequest/Partials/_ExtendOffersValiditySupplierDetails.cshtml", Model)
+            </div>
+         </div>
+      </div>
+   </div>
+   @if (Model.AgencyRequestStatusId != (int)Enums.AgencyCommunicationRequestStatus.Finished && Model.SupplierExtendOffersValidityStatusId == (int)Enums.SupplierExtendOffersValidityStatus.UnderProcessing && Model.NewOffersExpiryDate >= DateTime.Now)
+   {
+      <div class="">
+         <div class="row" id="approval">
+            <div class="col-12">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnAccept" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Accept</button>
+               <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Reject</button>
+               <button id="btnBackToOffers" class="btn btn-outline-primary btn-link pull-right" type="button" onclick="window.location = '@Url.Action("DetailsForSupplier", "Tender",new { STenderId =Model.TenderIdString})'">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+
+               </button>
+            </div>
+         </div>
+         <div class="clearfix"></div>
+      </div>
+   }
+
+</form>
+@if (Model.IsFileUploaded == true)
+{
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <ul>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           ملف الضمان الإبتدائي
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <a href="#" onclick="DownLoadAttachment('@Model.ExtendOffersValidityAttachementViewModel.FileNetReferenceId','@Model.ExtendOffersValidityAttachementViewModel.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                              @Model.ExtendOffersValidityAttachementViewModel.Name
+                           </a>
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+         </div>
+
+      </div>
+   </div>
+
+
+   <div class="row">
+      <div class="col-12">
+
+         <button id="btnBackToOffers" class="btn btn-outline-primary btn-link pull-right" type="button" onclick="window.location = '@Url.Action("DetailsForSupplier", "Tender",new { STenderId =Model.TenderIdString})'">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+
+         </button>
+      </div>
+   </div>
+}
+@if (Model.AgencyRequestStatusId != (int)Enums.AgencyCommunicationRequestStatus.Finished && Model.SupplierExtendOffersValidityStatusId == (int)Enums.SupplierExtendOffersValidityStatus.AcceptedInitially && Model.IsFileUploaded == false)
+{
+   <form>
+      @Html.AntiForgeryToken()
+      <div class="col-12">
+         <div class="row">
+            <div class="card">
+               <div class="card-body">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                     <div class="form-group bmd-form-group p-0">
+                        <label asp-for="InitialGuaranteerefId"></label>
+                        @Html.FileUploader("InitialGuaranteerefId", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col">
+                        <button type="button" id="btnSaveAttachment" class="btn btn-primary">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+                        </button>
+                        <button type="button" id="btnCancelAttachment" class="btn btn-danger">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+                        </button>
+                        <button id="btnBackToOffers" class="btn btn-outline-primary btn-link pull-right" type="button" onclick="window.location = '@Url.Action("DetailsForSupplier", "Tender",new { STenderId =Model.TenderIdString})'">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </form>
+}
+
+@section scripts{
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+      $(document).ready(function () {
+
+         $("#btnAccept").on("click", function () {
+            $("#divRejectMsg").hide();
+            $("#btnRejectConfirmation").hide();
+            $("#btnAcceptConfirmation").show();
+            $("#divAcceptMsg").show();
+         });
+         $("#btnReject").on("click", function () {
+            $("#divRejectMsg").show();
+            $("#btnRejectConfirmation").show();
+            $("#btnAcceptConfirmation").hide();
+            $("#divAcceptMsg").hide();
+         });
+         $("#btnAcceptConfirmation").on("click", function () {
+            
+            var token = $('input[name=__RequestVerificationToken]').val();
+            $('#LoadingSite').fadeIn();
+            $.ajax({
+               type: "POST",
+               url: '@Url.Action("AcceptExtendOffersValidityBySupplierAsync", "CommunicationRequest")',
+               data: {
+                  extendOffersValidtyId: '@Model.ExtendOffersValidityIdString',
+                  __RequestVerificationToken: token
+               },
+               success: function () {
+                  $('#LoadingSite').fadeOut();
+
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+                  window.location = '@Url.Action("ExtendOffersValiditySupplier", "CommunicationRequest", new { Model.SupplierExtendOffersValidityId })';
+               },
+               error: function () {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.ErrorMessage)', alertMessageType.Danger);
+                  $('#LoadingSite').fadeOut();
+               }
+            });
+         });
+
+         $("#btnSaveAttachment").on("click", function () {
+            if ($("#InitialGuaranteerefId").val() == '') {
+                 AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.ErrorMessages.RequiredInitialGuarantee)', alertMessageType.Danger);
+            }
+            else {
+               
+               $('#InitialGuaranteerefIdRequired').hide();
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $('#LoadingSite').fadeIn();
+               $.ajax({
+                  type: "POST",
+                  url: '@Url.Action("AddInitialGuaranteeAttachmentToOfferAsync", "CommunicationRequest")',
+                  data: {
+                     guaranteeReferenceId: $("#InitialGuaranteerefId").val(),
+                     extendOffersValiditySupplierString: '@Model.SupplierExtendOffersValidityId',
+                     __RequestVerificationToken: token
+                  },
+                  success: function () {
+                     
+                     AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+                     window.location = '@Url.Action("Details", "Tender", new { STenderId= Model.TenderIdString})';
+                     $('#LoadingSite').fadeOut();
+                  },
+                  error: function () {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.ErrorMessage)', alertMessageType.Danger);
+                     $('#LoadingSite').fadeOut();
+                  }
+               });
+            }
+         });
+
+         $("#btnCancelAttachment").on("click", function () {
+
+
+
+             var token = $('input[name=__RequestVerificationToken]').val();
+               $.ajax({
+                  type: "POST",
+                  url: '@Url.Action("CancelSupplierExtendOfferValidity", "CommunicationRequest")',
+                  data: {
+                  extendOffersValidtyId: '@Model.ExtendOffersValidityIdString',
+                  __RequestVerificationToken: token
+               },
+                  success: function () {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+                  window.location = '@Url.Action("ExtendOffersValiditySupplier", "CommunicationRequest", new { Model.SupplierExtendOffersValidityId })';
+                  $('#LoadingSite').fadeOut();
+                  },
+                  error: function () {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.ErrorMessage)', alertMessageType.Danger);
+                     $('#LoadingSite').fadeOut();
+                  }
+            });
+
+
+
+
+
+         });
+         $("#btnRejectConfirmation").on("click", function () {
+            $("#divRejectMsg").show();
+            $("#btnRejectConfirmation").show();
+            $("#btnAcceptConfirmation").hide();
+            var rejectionReason = $("#txtRejectionReason").val();
+            $("#txtRejectionReasonValidation").hide()
+            if (rejectionReason == '')
+            {
+               $("#txtRejectionReasonValidation").show();
+               return false;
+            }
+            var token = $('input[name=__RequestVerificationToken]').val();
+               $.ajax({
+                  type: "POST",
+                  url: '@Url.Action("RejectExtendOffersValidityBySupplierAsync", "CommunicationRequest")',
+                  data: {
+                  extendOffersValidtyId: '@Model.ExtendOffersValidityIdString',
+                  __RequestVerificationToken: token
+               },
+                  success: function () {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+                  window.location = '@Url.Action("ExtendOffersValiditySupplier", "CommunicationRequest", new { Model.SupplierExtendOffersValidityId })';
+                  $('#LoadingSite').fadeOut();
+                  },
+                  error: function () {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.ErrorMessage)', alertMessageType.Danger);
+                     $('#LoadingSite').fadeOut();
+                  }
+            });
+         });
+      });
+   </script>
+}

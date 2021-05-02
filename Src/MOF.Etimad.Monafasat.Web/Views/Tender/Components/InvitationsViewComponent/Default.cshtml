@@ -1,0 +1,77 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.PurchaseModel
+@{
+    string tenderIdString = ViewBag.TenderIdString;
+}
+
+<div class="tab-pane animated bounceInLeft  delay-1s" id="d-7">
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-md-12">
+               <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.RegisteredSuppliersIn</h4>
+               @Html.Partial("~/Views/Tender/DetailsPartials/_DetailsInvitedSuppliersGrid.cshtml")
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-md-12">
+               <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.UnRegisteredSuppliersIn</h4>
+               @Html.Partial("~/Views/Tender/DetailsPartials/_DetailsInvitedUnregisteredSuppliersGrid.cshtml")
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<script>
+   $(document).ready(function () {
+      
+   });
+      var NebObj = new Vue({
+            el: '#SuppliersGrid',
+            data: {
+               InvitedSuppliers: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '/Invitation/GetInvitedSuppliersForInvitationAfterTenderApprovementAsync?InvitationTenderIdString=' + '@tenderIdString',
+               queryString: '',
+               showTable: false
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.InvitedSuppliers = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+               },
+               getSupplierInfo: function (CR) {
+                  getSupplierInfo(CR);
+               },
+            }
+         });
+
+         var NebObj2 = new Vue({
+            el: '#UnregisterSuppliersGrid',
+            data: {
+               UnregisterInvitedSuppliers: [],
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: 10,
+               resource_url: '/Invitation/GetInvitedUnregisteredSuppliersForInvitationAfterTenderApprovement?InvitationTenderIdString=' + '@tenderIdString',
+               queryString: '',
+               showTable: false
+            },
+            methods: {
+               updateResource: function (data) {
+                  this.UnregisterInvitedSuppliers = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+               }
+            }
+         });
+</script>

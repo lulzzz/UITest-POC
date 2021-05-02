@@ -1,0 +1,77 @@
+
+@{
+   ViewData["Title"] = "ConditionsBookletTemplate";
+}
+<style type="text/css" media="print">
+   @@page {
+      size: auto; /* auto is the initial value */
+      margin: 2mm 4mm 0mm 0mm; /* this affects the margin in the printer settings */
+   }
+
+   thead {
+      display: table-header-group;
+   }
+
+   tfoot {
+      display: table-footer-group;
+   }
+</style>
+<style type="text/css" media="screen">
+   thead {
+      display: block;
+   }
+
+   tfoot {
+      display: block;
+   }
+</style>
+<input type="button" id="print" name="print" value="Print" onclick="javascript:PrintPage();"
+       class="button" />
+
+<table id="printedTable"  class="table card" style="width:100%" role="none" aria-describedby="temp">
+   <thead>
+      <tr class="d-block">
+         <td class="d-block">
+            <div class="row">
+               <div class="col-6 pull-left">
+                  <h5>المملكة العربية السعودية</h5>
+                  <h6>إسم الوزارة : سشيشسيشسيشسيشسشسشس</h6>
+                  <h6>إسم الإدارة : سشيشسيشسيشسيشسشسشس</h6>
+                  <h6>إسم النموذج : سشيشسيشسيشسيشسشسشس</h6>
+               </div>
+               <div class="col-6 pull-right">
+                  <img class="pull-right" src="~/Etimad-UI/assets/imgs/etd-logo.svg"   style="max-width:150px" alt="Etimad"/>
+               </div>
+            </div>
+            
+         </td>
+      </tr>
+   </thead>
+   <tbody>
+      <tr>
+         <td>
+            1
+         </td>
+      </tr>
+      
+   </tbody>
+   <tfoot>
+      <tr>
+         <td>
+            <div>footer comes here for each page</div>
+         </td>
+      </tr>
+   </tfoot>
+</table>
+<script type="text/javascript">
+   function PrintPage() {
+      document.getElementById('print').style.display = 'none';
+      //var printArea = document.getElementById('printedTable')
+      var sourceHTML = document.getElementById("printDiv").innerHTML;
+      window.resizeTo(960, 600);
+      document.URL = "";
+      window.location.href = "";
+      window.print('printArea');
+   }
+
+</script>

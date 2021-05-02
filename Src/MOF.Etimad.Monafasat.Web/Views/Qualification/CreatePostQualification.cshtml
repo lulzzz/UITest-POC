@@ -1,0 +1,1166 @@
+@using res = MOF.Etimad.Monafasat.Resources;
+@using  MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.PostQualificationApplyDocumentsModel
+@{
+   ViewData["Title"] = res.QualificationResources.DisplayInputs.AddEditPostQualification;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Qualification</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AddQualification</li>
+      </ol>
+   </nav>
+}
+<style>
+   .tab-content > .tab-pane {
+      display: block;
+      height: 0;
+      overflow: hidden;
+   }
+   .form-control:disabled, .form-control[readonly] {
+      background-color:rgba(255, 255, 255, 0);
+      opacity: 1;
+   }
+   .tab-content > .active {
+      display: block;
+      height: auto;
+      overflow: visible;
+   }
+</style>
+<form id="basicStepForm" method="POST" asp-controller="Qualification" asp-action="CreatePostQualification" autocomplete="off">
+   @Html.AntiForgeryToken()
+   @for (int i = 0; i < Model.CommercialNumbers.Count; i++)
+   {
+      @Html.HiddenFor(model => Model.CommercialNumbers[i])
+   }
+
+   <input type="hidden" id="ModuleType" value="1" />
+   <div id="app" v-cloak>
+      <input asp-for="TenderIdString" type="hidden" />
+      <input asp-for="IsAgancyHasTechnicalCommittee" type="hidden" />
+      <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+      <input asp-for="postQualificationIdString" type="hidden" />
+      <input asp-for="PostQualificationTenderIdString" name="PostQualificationTenderIdString" id="hfPostQualificationTenderId" type="hidden" />
+      <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+         <li class="nav-item">
+            <a class="nav-link active" href="#monafasa-info" role="tab" data-toggle="tab">
+               <i class="material-icons">assignment</i> 
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation
+            </a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link " href="#DatesStep" role="tab" data-toggle="tab">
+               <i class="fa fa-calendar" aria-hidden="true"></i> 
+               @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationDates
+            </a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link" href="#RelationStep" role="tab" data-toggle="tab">
+               <i class="material-icons">table_chart</i> 
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep
+            </a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link" href="#attachments" role="tab" data-toggle="tab">
+               <i class="material-icons">attach_file</i> 
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Attachment
+            </a>
+         </li>
+         @if (User.UserRole() == RoleNames.PreQualificationCommitteeSecretary)
+         {
+            <li class="nav-item">
+               <a class="nav-link" href="#Evaluation" role="tab" data-toggle="tab">
+                  <i class="material-icons">view_list</i> 
+                  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationEvaluation
+               </a>
+            </li>
+         }
+
+         <li class="nav-item">
+            <a class="nav-link" href="#Suppliers" role="tab" data-toggle="tab">
+               <i class="material-icons">people</i> 
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SuppliersList
+            </a>
+         </li>
+      </ul>
+      <div class="tab-content tab-space">
+         <div class="tab-pane active" id="monafasa-info">
+
+            @Html.Partial("~/Views/Qualification/Partials/_QualificationBasicData.cshtml")
+         </div>
+         <div class="tab-pane" id="DatesStep">
+            @Html.Partial("~/Views/Qualification/Partials/_QualificationDates.cshtml")
+         </div>
+         <div class="tab-pane" id="RelationStep">
+            @Html.Partial("~/Views/Qualification/Partials/_QualificationRelationData.cshtml")
+
+
+         </div>
+
+         <div class="tab-pane" id="attachments">
+            @Html.Partial("~/Views/Qualification/Partials/_QualificationAttachments.cshtml")
+
+         </div>
+         @if (User.UserRole() == RoleNames.PreQualificationCommitteeSecretary)
+         {
+            <div class="tab-pane" id="Evaluation">
+               <div class="card">
+                  <div class="card-body">
+
+                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static">@res.QualificationResources.DisplayInputs.QualificationType</label>
+                           <select data-live-search="false" class="selectpicker" id="dllqualificationType" asp-for="QualificationTypeId" onchange="qualificationTypeChange()" data-style="select-with-transition" title="@res.QualificationResources.DisplayInputs.QualificationType" data-size="7">
+                              <option value=""> @res.SharedResources.DisplayInputs.PleaseChoose </option>
+                              <option value="@((int)Enums.PreQualificationType.Small)"> @res.QualificationResources.DisplayInputs.Small</option>
+                              <option value="@((int)Enums.PreQualificationType.Medium)"> @res.QualificationResources.DisplayInputs.Medium </option>
+                              <option value="@((int)Enums.PreQualificationType.Large)"> @res.QualificationResources.DisplayInputs.Large </option>
+                           </select>
+                           <span asp-validation-for="QualificationTypeId" class="text-danger"></span>
+                        </div>
+                     </div>
+                     <br />
+                     <div id="divConfigurationQualification" style="width:100%;margin-top: 1em;">
+                     </div>
+                  </div>
+               </div>
+
+               <div>
+                  <button type="button" class="btn btn-default  prev-tab" onclick="prevTab()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Previous</button>
+                  <button type="button" class="btn btn-primary  next-tab" onclick="nextTab()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+               </div>
+            </div>
+         }
+         <div class="tab-pane " id="Suppliers">
+            <div class="table-responsive  text-primary" style="min-height:100px">
+               <table id="InvitedSuppliersTable" class="table  table-striped text-center"  summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow"  >
+                  <thead class="text-center">
+                     <tr>
+                        @*<th scope="col" class="text-center">#</th>*@
+                        @*<th scope="col" class="text-center">@Html.Raw(res.InvitationResources.DisplayInputs.ComericalRegisterName)</th>*@
+                        <th scope="col" class="text-center">@Html.Raw(res.SharedResources.DisplayInputs.ComericalRegisterNo)</th>
+                     </tr>
+                  </thead>
+                  <tbody class="text-center">
+                     @foreach (var item in Model.CommercialNumbers)
+                     {
+                        <tr>
+                           <td class="text-center" data-label="@Html.Raw(res.SharedResources.DisplayInputs.ComericalRegisterNo)"> @item</td>
+
+                        </tr>
+                     }
+                  </tbody>
+               </table>
+               <pagination :visible_pages="3" ref="vpaginator" :resource_url="invitedResource_url" @@update="updateInvitedResource"></pagination>
+            </div>
+            <button type="button" class="btn btn-default  prev-tab" onclick="prevTab()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Previous</button>
+
+            @if (User.UserRole() == RoleNames.PreQualificationCommitteeSecretary)
+            {
+               <button id="btnSaveSecond" type="submit" class="btn btn-primary">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveContinue
+               </button>
+               @*<button id="btnSendToApprove" type="button" class="btn btn-primary">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+               </button>*@
+            }
+            else
+            {
+               <button id="btnSaveFirst" type="submit" class="btn btn-primary">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveContinue
+               </button>
+            }
+            <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '/Qualification/index'">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+            </button>
+         </div>
+      </div>
+   </div>
+</form>
+
+@section scripts{
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   @*<script src="~/Etimad-UI/assets/vendor/calendar/javascriptUtils/DateConverterUtil.js"></script>*@
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+   <script>
+      var obj = new Vue({
+         el: "#monafasa-info",
+         data: {
+         },
+         methods: {
+
+         },
+         computed: {
+            disableItemsIfSecrtary: function () {
+               return '@User.UserRole()' == '@RoleNames.PreQualificationCommitteeSecretary'
+            }
+         }
+      })
+   </script>
+   <script type="text/javascript">
+      $(document).ready(function () {
+         $('#LoadingSite').fadeOut();
+
+            setTimeout(function () {
+
+      $("#lastOfferPressentationDate").calendarsPicker('option', 'onClose', function () {
+                  validateOfferPressentationDateVacation();
+                  changeDatesValues();
+               });
+
+         $("#lastEnqueriesDate").calendarsPicker('option', 'onClose', function () {
+                  validateEnquiriesDateVacation();
+               });
+
+         $("#offersCheckingDate").calendarsPicker('option', 'onClose', function () {
+                  validateCheckingDateVacation();
+               });
+
+               validateOfferPressentationDateVacation();
+               validateEnquiriesDateVacation();
+               validateCheckingDateVacation();
+            }, 1000);
+
+
+            if ('@User.UserRole()' == '@RoleNames.PreQualificationCommitteeSecretary') {
+               qualificationTypeChange();
+            }
+
+         });
+
+
+
+    function checkQualificationExecution() {
+
+      var qualificationPalace = $("input[name='InsideKSA']:checked").val();
+      var areas = $("#dD_TenderAreas").val();
+      var countries = $("#dD_TenderCountries").val();
+
+       if (qualificationPalace == "true" && areas.length == 0) {
+         $("span[data-valmsg-for='TenderAreaIDs']").html('حقل مطلوب')
+          $("span[data-valmsg-for='TenderCountriesIDs']").html('');
+              $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+          return false;
+       } else if (qualificationPalace == "false" && countries.length == 0)
+      {
+            $("span[data-valmsg-for='TenderAreaIDs']").html('')
+          $("span[data-valmsg-for='TenderCountriesIDs']").html('حقل مطلوب')
+              $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+          return false;
+       }
+
+      $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+   }
+
+
+      function validateEnquiriesDateVacation() {
+         var lastEnqueriesDate = $("#lastEnqueriesDate").val();
+         var lastEnqueriesDateGregorian
+         if ($('#cb_lastEnqueriesDate').is(':checked')) {
+            var i = lastEnqueriesDate.split('/');
+            lastEnqueriesDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+         }
+         else {
+            lastEnqueriesDateGregorian = convertUmmalquraToGregorian(lastEnqueriesDate);
+         }
+         if (lastEnqueriesDate != "") {
+            var Gregorian = lastEnqueriesDateGregorian;
+            Gregorian = new Date(Gregorian);
+            var currentDate = new Date();
+            var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+            var day = Gregorian.getUTCDate() + 1;
+            var year = Gregorian.getUTCFullYear();
+            var newdate = day + "/" + month + "/" + year;
+            var flag = 1;
+            for (var i = 0; i < vacations.length; i++) {
+               if (newdate == vacations[i].vacationDateString) {
+                  flag = flag * 0;
+               }
+            }
+            if (flag == 1) {
+               $('#lastEnquiriesDateVac').hide();
+            }
+            else {
+               $('#lastEnquiriesDateVac').show();
+            }
+            if (Gregorian.getDay() == 5 || Gregorian.getDay() == 6) {
+               $('#lastEnquiriesDateVac').show();
+            }
+            else {
+               $('#lastEnquiriesDateVac').hide();
+            }
+         }
+      }
+      function validateOfferPressentationDateVacation() {
+         var offerPressentationDate = $("#lastOfferPressentationDate").val();
+         var offerPressentationDateGregorian;
+         if ($('#cb_lastOfferPressentationDate').is(':checked')) {
+            var i = offerPressentationDate.split('/');
+            offerPressentationDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+         }
+         else {
+            offerPressentationDateGregorian = convertUmmalquraToGregorian(offerPressentationDate);
+         }
+         offerPressentationDateGregorian = new Date(offerPressentationDateGregorian);
+         //validate vacations
+         if (offerPressentationDateGregorian != "") {
+            Gregorian = new Date(offerPressentationDateGregorian);
+            var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+            var day = Gregorian.getUTCDate() + 1;
+            var year = Gregorian.getUTCFullYear();
+            var newdate = day + "/" + month + "/" + year;
+
+            var flag = 1;
+            for (var i = 0; i < vacations.length; i++) {
+               if (newdate == vacations[i].vacationDateString) {
+                  flag = flag * 0;
+               }
+            }
+            if (flag == 1) {
+               $('#lastOfferPressentationDateVac').hide();
+            }
+            else {
+               $('#lastOfferPressentationDateVac').show();
+            }
+            if (Gregorian.getDay() == 5 || Gregorian.getDay() == 6) {
+               $('#lastOfferPressentationDateVac').show();
+            }
+            else {
+               $('#lastOfferPressentationDateVac').hide();
+            }
+         }
+      }
+
+      function changeDatesValues()
+      {
+         var offerPressentationDate = $("#lastOfferPressentationDate").val();
+         var offerPressentationDateGregorian;
+         if ($('#cb_lastOfferPressentationDate').is(':checked')) {
+            var i = offerPressentationDate.split('/');
+            offerPressentationDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+         }
+         else {
+            offerPressentationDateGregorian = convertUmmalquraToGregorian(offerPressentationDate);
+         }
+         offerPressentationDateGregorian = new Date(offerPressentationDateGregorian);
+
+         //change values
+         offerPressentationDateGregorian = addDays(offerPressentationDateGregorian, 1);
+         var offersCheckingDate;
+         if ($('#cb_offersCheckingDate').is(':checked')) {
+            offersCheckingDate = offerPressentationDateGregorian;
+            var copiedDate = new Date(offersCheckingDate);
+            var month = copiedDate.getUTCMonth() + 1; //months from 1-12
+            var day = copiedDate.getUTCDate() + 1;
+            var year = copiedDate.getUTCFullYear();
+            newdate = day + "/" + month + "/" + year;
+         } else {
+            offersCheckingDate = convertGregorianToUmmalqura(dateToString(offerPressentationDateGregorian));
+            newdate = offersCheckingDate;
+         }
+         $("#offersCheckingDate").val(newdate);
+         $("#lastOfferPressentationDate").blur();
+      }
+
+      function validateCheckingDateVacation() {
+         var offersCheckingDate = $("#offersCheckingDate").val();
+         var offersCheckingDateGregorian;
+         if ($('#cb_offersCheckingDate').is(':checked')) {
+            var i = offersCheckingDate.split('/');
+            offersCheckingDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+         }
+         else {
+            offersCheckingDateGregorian = convertUmmalquraToGregorian(offersCheckingDate);
+         }
+         if (offersCheckingDate != "") {
+
+            Gregorian = new Date(offersCheckingDateGregorian);
+            var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+            var day = Gregorian.getUTCDate() + 1;
+            var year = Gregorian.getUTCFullYear();
+            var newdate = day + "/" + month + "/" + year;
+            var currentDate = new Date();
+            var flag = 1;
+            for (var i = 0; i < vacations.length; i++) {
+               if (newdate == vacations[i].vacationDateString) {
+                  flag = flag * 0;
+               }
+            }
+            if (flag == 1) {
+               $('#offersCheckingDateVac').hide();
+            }
+            else {
+               $('#offersCheckingDateVac').show();
+            }
+            if (Gregorian.getDay() == 5 || Gregorian.getDay() == 6) {
+               $('#offersCheckingDateVac').show();
+            }
+            else {
+               $('#offersCheckingDateVac').hide();
+            }
+         }
+      }
+
+      function nextTab(_divId) {
+
+         var divId = (_divId != undefined ? _divId : $('.etd-wiz-tabs').children().find('a.active').attr('href'));
+         var _inputs = $("" + divId + " :input[data-val]");
+         for (var i = 0; i < _inputs.length; i++)
+         {
+
+            var isValid = true;
+            var inputElm = _inputs[i];
+            var inputElmValue = _inputs[i].value;
+            var inputElmName = _inputs[i].name;
+            var inputRequired = inputElm.attributes['data-val'].value;
+            var errElm = $("span[data-valmsg-for='" + inputElmName + "']");
+            if (inputElmName == "TechnicalOrganizationId" && ('@Model.IsAgancyHasTechnicalCommittee' == 'False')) {
+               inputRequired = "false";
+            }
+            if (inputRequired == "true" && inputElmValue == '') {
+               isValid = false;
+               return postValidate(isValid, 'حقل مطلوب', errElm, inputElm, divId);
+            } else {
+               errElm.html('');
+            }
+         }
+
+
+          // check date before next tab
+      if (divId == "#DatesStep") {
+         checkQualificationDate();
+
+      } else if (divId == "#RelationStep") {
+         checkQualificationExecution();
+      } else
+      {
+         $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+      }
+      }
+
+      function postValidate(isValid, errMsg, errElm, inputElm , divId) {
+         if (!isValid) {
+            // Show errMsg on errElm, if provided.
+            if (errElm !== undefined && errElm !== null
+               && errMsg !== undefined && errMsg !== null) {
+               errElm.html(errMsg);
+            }
+            // Set focus on Input Element for correcting error, if provided.
+            if (inputElm !== undefined && inputElm !== null) {
+               inputElm.focus();
+            }
+         }
+         else {
+            // Clear previous error message on errElm, if provided.
+            if (errElm !== undefined && errElm !== null) {
+               errElm.html('');
+            }
+         }
+      }
+
+
+      function checkQualificationDate() {
+
+         var lastEnquiesDate = $("#lastEnqueriesDate").val();
+         var lastOfferPressentationDate = $("#lastOfferPressentationDate").val();
+         var offersCheckingDate = $("#offersCheckingDate").val();
+         var lastOfferPresentationTime = $("#lastOfferPresentationTime").val();
+         $.post("/Qualification/checkQualificationDate?LastEnqueriesDate=" + lastEnquiesDate + "&LastOfferPresentationDate=" + lastOfferPressentationDate + "&OffersCheckingDate=" + offersCheckingDate + "&LastOfferPresentationTime=" + lastOfferPresentationTime ).done(function () {
+
+            $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+         }).fail(function (error) {
+
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         });
+      }
+
+
+
+
+      function prevTab() {
+         $('.etd-wiz-tabs').children().find('a.active').parent().prev().children().click();
+      }
+      var fixing = false;
+   var validator;
+   var vacations = [];
+   $(document).ready(function () {
+      if ($("input[name='InsideKSA']:checked").val() == "true") {
+         showareas(0);
+      }
+      else {
+         showcountries(0);
+      }
+
+    @if (Model != null && Model.Vacations != null)
+    {
+       @:vacations = @Html.Raw(Json.Serialize(Model.Vacations))
+    }
+
+      $('#btnPrivious').click(function () {
+         $('#LoadingSite').fadeOut();
+         window.location = "@Url.Action("BasicTenderData", "Tender", new { id =  Model.TenderIdString })";
+         return false;
+      });
+           //Verify that all of the date fields do not accept a date greater than the current date
+      $("#btnSaveFirst").on("click", function (event) {
+         //if (CheckEvaluationPercentages() == false) {
+         //   event.preventDefault();
+         //   return false;
+         //}
+         if (checkQualificationExecution() == false) {
+            event.preventDefault();
+            return false;
+         }
+         changeExecutionPlace();
+         CheckFirstStep();
+         CheckDates();
+         CheckRelationStep();
+      });
+      $("#btnSaveSecond").on("click", function (event) {
+         if ($("#TenderPointsToPass").prop("disabled") == false) {
+
+         if (CheckEvaluationPercentages() == false) {
+            event.preventDefault();
+            return false;
+         }
+         if (checkQualificationExecution() == false) {
+            event.preventDefault();
+            return false;
+            }
+         }
+         changeExecutionPlace();
+         CheckFirstStep();
+         CheckDates();
+         CheckRelationStep();
+      })
+      function CheckFirstStep() {
+         if ($('#TenderName').val() == '') {
+            $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+            $('#TenderName').focus();
+         }
+         else if ($('#dD_TechnicalOrganizationId').val() == '' && '@Model.IsAgancyHasTechnicalCommittee' == 'True') {
+            $('.etd-wiz-tabs').find('a[href="#monafasa-info"]').click();
+            $('#dD_TechnicalOrganizationId').selectpicker('toggle');
+         }
+      }
+      function CheckDates() {
+         if ($("#lastEnqueriesDate").val() == "") {
+            $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+            $('#lastEnqueriesDate').focus();
+
+            return false;
+         }
+         else if ($("#lastOfferPressentationDate").val() == "") {
+            $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+            $('#lastOfferPressentationDate').focus();
+            return false;
+         }
+         //else if ($("#offersCheckingDate").val() == "") {
+         //   $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+         //   $('#offersCheckingDate').focus();
+         //   return false;
+         //}
+         else if ($('#lastOfferPresentationTime').val() == '') {
+            $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+            $('#lastOfferPresentationTime').focus();
+            return false;
+         }
+         //else if ($('#offersCheckingTime').val() == '') {
+         //   $('.etd-wiz-tabs').find('a[href="#DatesStep"]').click();
+         //   $('#offersCheckingTime').focus();
+         //}
+      }
+      function CheckRelationStep() {
+         if ($('#TenderActivitieIDs').selectpicker('val') == null) {
+            $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+            $('#TenderActivitieIDs').selectpicker('toggle');
+            $('#TenderActivitieIDs').focus();
+         }
+         //else if ($("#AttachmentReference").val() == '') {
+         //   $('.etd-wiz-tabs').find('a[href="#attachments"]').click();
+         //   $('#AttachmentReference_attachement_div input[type="file"]').trigger('click');
+
+         //}
+         else if ($('input[type=radio][name=InsideKSA]:checked').val() == "true") {
+            if ($('#dD_TenderAreas').selectpicker('val') == null) {
+               $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+               $('#dD_TenderAreas').selectpicker('toggle');
+               return false;
+            }
+         }
+         else if ($('input[type=radio][name=InsideKSA]:checked').val() == "false") {
+            if ($('#dD_TenderCountries').selectpicker('val') == null) {
+               $('.etd-wiz-tabs').find('a[href="#RelationStep"]').click();
+               $('#dD_TenderCountries').selectpicker('toggle');
+               return false;
+            }
+         }
+         else {
+            //prepareDatesToSave();
+         }
+      };
+
+             @*var token = $('input[name=__RequestVerificationToken]').val();
+   $("#btnSendToApprove").on("click", function (event) {
+      if (CheckEvaluationPercentages() == false) {
+         event.preventDefault();
+         return false;
+      }
+      if (checkQualificationExecution() == false) {
+         event.preventDefault();
+         return false;
+      }
+      changeExecutionPlace();
+      CheckFirstStep();
+      CheckDates();
+      CheckRelationStep();
+
+       $('#LoadingSite').fadeIn();
+      $.post('@Url.Action("SendQualificationToCommitteeApproveAsync", "Qualification")',
+         {
+            tenderIdString: '@Model.postQualificationIdString',
+            __RequestVerificationToken: token
+         }).done(function () {
+            $('#LoadingSite').fadeOut();
+            $('#btnSendExtendDatesToApprove').attr('disabled', true);
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+               window.location = '@Url.Action("Index", "Qualification")';
+            }, 3000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         });
+   })*@
+   });
+
+
+      function changeExecutionPlace() {
+         if ($('input[type=radio][name=InsideKSA]:checked').val() == "true") {
+            var TenderAreaIDs_isvalid = $("select[name='TenderAreaIDs'] option:selected").length > 0;
+            var TenderAreaIDs_error = $("span[data-valmsg-for='TenderAreaIDs']");
+            TenderAreaIDs_error.text("");
+            if (!TenderAreaIDs_isvalid) {
+               TenderAreaIDs_error.text("@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterTenderAreas)");
+               return false;
+            }
+         }
+         else {
+            var TenderCountryIDs_isvalid = $("select[name='TenderCountriesIDs'] option:selected").length > 0;
+            var TenderCountryIDs_error = $("span[data-valmsg-for='TenderCountriesIDs']");
+            TenderCountryIDs_error.text("");
+               if (!TenderCountryIDs_isvalid)
+                  TenderCountryIDs_error.text("@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterTenderCountries)");
+               return false;
+            }
+      }
+
+   function blockSpecialChar(e) {
+         if (fixing)
+            return;
+         fixing = true;
+         var newString = "";
+         var stringValue = $(e.currentTarget).val();
+         for (var i = 0; i < stringValue.length; i++) {
+            var k = stringValue[i];
+            var iChars = "!@@#$%^&*()+=-[]\\\';,./{}|\":<>?_×÷،ٍِِِِِ’َ؟?‘ًَُ~ٍِـ`";
+            if (iChars.indexOf(k) == -1)
+               newString = newString + k;
+         }
+         $(e.currentTarget).val(newString);
+         fixing = false;
+      }
+   function showcountries(freshFlag) {
+      if (freshFlag == 1) {
+         $("select[name='TenderAreaIDs']").val('').selectpicker("refresh");
+      }
+      $("#divTenderAreas").hide();
+      $("#divTenderCountries").show();
+   }
+   function showareas(freshFlag) {
+      if (freshFlag == 1) {
+         $("select[name='TenderCountriesIDs']").val('').selectpicker("refresh");
+      }
+      $("#divTenderCountries").hide();
+      $("#divTenderAreas").show();
+   }
+
+
+
+
+      function CheckEvaluationPercentages()
+      {
+         var TenderPointsToPass = Number($("#TenderPointsToPass").val());
+         var TechnicalAdministrativeCapacity = Number($("#TechnicalAdministrativeCapacity").val());
+         var PreviousExperienceWeight = Number($("#PreviousExperienceWeight").val());
+
+         var ExperienceYearCountMax = Number($("#ExperienceYearCountMax").val());
+         var ExperienceYearCountMin = Number($("#ExperienceYearCountMin").val());
+         var ExperienceYearCountWeight = Number($("#ExperienceYearCountWeight").val());
+
+         var LastProjectCountMax = Number($("#LastProjectCountMax").val());
+         var LastProjectCountMin = Number($("#LastProjectCountMin").val());
+         var LastProjectCountWeight = Number($("#LastProjectCountWeight").val());
+
+         var LastProjectCostMax = Number($("#LastProjectCostMax").val());
+         var LastProjectCostMin = Number($("#LastProjectCostMin").val());
+         var LastProjectCostWeight = Number($("#LastProjectCostWeight").val());
+
+         var ExistingContractualObligationsWeight = Number($("#ExistingContractualObligationsWeight").val());
+         var CurrentProjectCountMax = Number($("#CurrentProjectCountMax").val());
+         var CurrentProjectCountMin = Number($("#CurrentProjectCountMin").val());
+         var CurrentProjectCountWeight = Number($("#CurrentProjectCountWeight").val());
+
+         var CurrentProjectCostMax = Number($("#CurrentProjectCostMax").val());
+         var CurrentProjectCostMin = Number($("#CurrentProjectCostMin").val());
+         var CurrentProjectCostWeight = Number($("#CurrentProjectCostWeight").val());
+
+         var HRWeight = Number($("#HRWeight").val());
+         var TotalEmployeeCountMax = Number($("#TotalEmployeeCountMax").val());
+         var TotalEmployeeCountMin = Number($("#TotalEmployeeCountMin").val());
+         var TotalEmployeeCountWeight = Number($("#TotalEmployeeCountWeight").val());
+
+         var TotalEmployeePercentageMax = Number($("#TotalEmployeePercentageMax").val());
+         var TotalEmployeePercentageMin = Number($("#TotalEmployeePercentageMin").val());
+         var TotalEmployeePercentageWeight = Number($("#TotalEmployeePercentageWeight").val());
+
+         var FinancialCapacity = Number($("#FinancialCapacity").val());
+
+
+         var CashRateMax = Number($("#CashRateMax").val());
+         var CashRateMin = Number($("#CashRateMin").val());
+         var CashRateWeight = Number($("#CashRateWeight").val());
+
+         var LiquidityRatioMax = Number($("#LiquidityRatioMax").val());
+         var LiquidityRatioMin = Number($("#LiquidityRatioMin").val());
+         var LiquidityRatioWeight = Number($("#LiquidityRatioWeight").val());
+
+         if ($("#dllqualificationType").val() == '') {
+            AlertFun('من فضلك اختر نوع التاهيل', alertMessageType.Danger);
+         }
+
+         // عدد نقاط اجتياز التأهيل
+          if (TenderPointsToPass == '' || TenderPointsToPass == 0 || TenderPointsToPass > 7) {
+             AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TenderPintsMustbeLargerThanZeroAndSmallerThanSeven)', alertMessageType.Danger);
+             return false;
+          }
+
+         // مجموع القدرات الفنية والمالية
+         if (TechnicalAdministrativeCapacity + FinancialCapacity != 100) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TechnicalAndFinancialTotalMustbe100)', alertMessageType.Danger);
+            return false;
+         }
+
+         // مجموع وزن عناصر الخبرات السابقة
+         if (ExperienceYearCountWeight + LastProjectCountWeight + LastProjectCostWeight != 100) {
+             AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TotalWeightForNumberOfExperiancPreviousMustbe100)', alertMessageType.Danger);
+             return false;
+         }
+
+         // مجموع وزن عناصر الالتزامات التعاقدية القائمة
+         if (CurrentProjectCountWeight + CurrentProjectCostWeight  != 100) {
+             AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TotalWeightNumberOfExistingProjectsMustBe100)', alertMessageType.Danger);
+             return false;
+         }
+
+         // مجموع عناصر الموارد البشرية
+         if (TotalEmployeeCountWeight + TotalEmployeePercentageWeight != 100) {
+             AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TotalWeightForNumberOfEmplyeesAndPercentageMustbe100)', alertMessageType.Danger);
+             return false;
+         }
+
+          if (ExperienceYearCountMin >= ExperienceYearCountMax) {
+             AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#NumberOfExperianceYears').text() + '', alertMessageType.Danger);
+          return false;
+          }
+
+         if (LastProjectCountMin >= LastProjectCountMax) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin) ' + $('#NumberOfProjects').text() + ' ', alertMessageType.Danger);
+          return false;
+      }
+
+         if (LastProjectCostMin >= LastProjectCostMax) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#TotalProjectsValueInThreeYears').text() + ' ', alertMessageType.Danger);
+          return false;
+         }
+
+         if (CurrentProjectCountMin >= CurrentProjectCountMax) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#NumberOfExisitngProjects').text() + ' ', alertMessageType.Danger);
+          return false;
+                  }
+
+         if (CurrentProjectCostMin >= CurrentProjectCostMax) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#ValueExistingProjectsCapacityByClassification').text() + ' ', alertMessageType.Danger);
+          return false;
+                  }
+
+         if (TotalEmployeeCountMin >= TotalEmployeeCountMax) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#NumberOfEmplyess').text() + ' ', alertMessageType.Danger);
+          return false;
+                  }
+         if (TotalEmployeePercentageMin >= TotalEmployeePercentageMax) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#SudianEmplyeePercentage').text() + ' ', alertMessageType.Danger);
+          return false;
+         }
+
+
+         if (CashRateMin >= CashRateMax) {
+                 AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#CashRate').text() + ' ', alertMessageType.Danger);
+          return false;
+                  }
+
+
+         if (LiquidityRatioMin >= LiquidityRatioMax) {
+            AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#LiquidityRatio').text() + ' ', alertMessageType.Danger);
+          return false;
+              }
+         if ($("#dllqualificationType").val() == @((int)Enums.PreQualificationType.Small)) {
+
+             if (PreviousExperienceWeight + ExistingContractualObligationsWeight + HRWeight != 100) {
+                AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TechnicalSmallSubCatgeoryWeight)', alertMessageType.Danger);
+                return false;
+             }
+
+             if (CashRateWeight + LiquidityRatioWeight != 100) {
+                AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TotalWeightcashandPercentageMustBe100)', alertMessageType.Danger);
+                return false;
+             }
+         }
+
+          if ($("#dllqualificationType").val() == @((int)Enums.PreQualificationType.Medium)) {
+            var Quality = Number($("#Quality").val());
+             var EnviromentAndHealthyWeight = Number($("#EnviromentAndHealthyWeight").val());
+
+             var TradeRateMax = Number($("#TradeRateMax").val());
+             var TradeRateMin = Number($("#TradeRateMin").val());
+             var TradeRateWeight = Number($("#TradeRateWeight").val());
+
+            if (PreviousExperienceWeight + ExistingContractualObligationsWeight + HRWeight + Quality + EnviromentAndHealthyWeight != 100) {
+               AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TechnicalMediumSubCatgeoryWeight)', alertMessageType.Danger);
+               return false;
+            }
+
+            if (CashRateWeight + LiquidityRatioWeight + TradeRateWeight != 100) {
+                AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.FinancialMediumSubCategoryWeight)', alertMessageType.Danger);
+                return false;
+            }
+
+
+             if (TradeRateMin >= TradeRateMax) {
+                AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#TradeRate').text() + ' ', alertMessageType.Danger);
+          return false;
+              }
+
+         }
+
+         if ($("#dllqualificationType").val() == @((int)Enums.PreQualificationType.Large)) {
+
+            var Insurance = Number($('#InsuranceWeight').val());
+            var Quality = Number($("#Quality").val());
+            var EnviromentAndHealthyWeight = Number($("#EnviromentAndHealthyWeight").val());
+            var InsuranceProfessionalCompensationWeight =Number($('#InsuranceProfessionalCompensationWeight').val());
+            var InsuranceLiabilityWeight = Number($('#InsuranceLiabilityWeight').val());
+            var InsuranceGeneralCommercialResponsibilityWeight = Number($('#InsuranceGeneralCommercialResponsibilityWeight').val());
+
+
+            var TradeRateMax = Number($("#TradeRateMax").val());
+            var TradeRateMin = Number($("#TradeRateMin").val());
+            var TradeRateWeight = Number($("#TradeRateWeight").val());
+
+            var ObligationsRationMax = Number($('#ObligationsRationMax').val());
+            var ObligationsRationMin = Number($('#ObligationsRationMin').val());
+            var ObligationsRationWeight = Number($('#ObligationsRationWeight').val());
+
+            var ProfitabilityRateMax = Number($('#ProfitabilityRateMax').val());
+            var ProfitabilityRateMin = Number($('#ProfitabilityRateMin').val());
+            var ProfitabilityRateWeight = Number($('#ProfitabilityRateWeight').val());
+
+
+               if (PreviousExperienceWeight + ExistingContractualObligationsWeight + HRWeight + Quality + EnviromentAndHealthyWeight + Insurance != 100) {
+                AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.TechnicalLargeSubCatgeoryWeight)', alertMessageType.Danger);
+                return false;
+               }
+
+              @*if (InsuranceProfessionalCompensationWeight + InsuranceLiabilityWeight + InsuranceGeneralCommercialResponsibilityWeight != 100) {
+               AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.InsuranceItemsMustbe100)', alertMessageType.Danger);
+               return false;
+              }*@
+
+              if (CashRateWeight + LiquidityRatioWeight + TradeRateWeight + ObligationsRationWeight + ProfitabilityRateWeight != 100) {
+               AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.FinancialLargeSubCatgeoryWeight)', alertMessageType.Danger);
+               return false;
+              }
+
+            if (TradeRateMin >= TradeRateMax) {
+                AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#TradeRate').text() + ' ', alertMessageType.Danger);
+                 return false;
+            }
+
+            if (ObligationsRationMin >= ObligationsRationMax) {
+               AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin)' + $('#ObligationsRation').text() + ' ', alertMessageType.Danger);
+          return false;
+            }
+
+            if (ProfitabilityRateMin >= ProfitabilityRateMax) {
+               AlertFun('@Html.Raw(res.QualificationResources.ErrorMessages.MaxMustbeLargerThanMin) ' + $('#ProfitabilityRate').text() + ' ', alertMessageType.Danger);
+          return false;
+                  }
+
+         }
+
+   }
+
+
+       function allowNumericWithDecimal(event) {
+
+
+       var _isTextSelected = isTextSelected(document.getElementById(event.target.id));
+      if (_isTextSelected)
+      {
+         $("#" +  event.target.id).val('');
+      }
+
+      event.target.value = event.target.value.replace(/[^0-9\.]/g, '');
+
+      if ((event.which != 46 || event.target.value.indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+         event.preventDefault();
+      }
+
+      if (hasDecimalPlace(event.target.value, 2) == true) {
+                  event.preventDefault();
+      }
+   }
+
+      function allowNumeric(event) {
+         event.target.value = event.target.value.replace(/[^\d].+/, "");
+         if ((event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+         }
+      }
+
+
+   function hasDecimalPlace(value, x)
+   {
+
+    var pointIndex = value.indexOf('.');
+      return pointIndex >= 0 && pointIndex < value.length - x;
+   }
+
+      function addListenerMulti(elementId, eventNames) {
+
+         var events = eventNames.split(',');
+         var element = document.getElementById(elementId);
+         for (var i = 0, iLen = events.length; i < iLen; i++) {
+            element.addEventListener(events[i], function (event) {
+
+               var inputId = event.target.id;
+               var pattern = $("#" + inputId).attr('pattern');
+               var validator = new RegExp(pattern);
+               var _val = '';
+               if ($("#" + inputId).val() == '') {
+                  _val = event.key;
+               } else {
+                  _val = $("#" + inputId).val() + event.key;
+               }
+               var runner = validator.test(_val);
+               if (!runner) {
+                  event.preventDefault();
+                  return false;
+               }
+            });
+         }
+      }
+
+      function percentageLimit(event) {
+
+           var _isTextSelected = isTextSelected(document.getElementById(event.target.id));
+         if (_isTextSelected)
+         {
+            $("#" + event.target.id).val('');
+         }
+         allowNumericWithDecimal(event);
+         var inputId = event.target.id;
+         var _val = '';
+         if ($("#" + inputId).val() == '') {
+            _val = event.key;
+         } else {
+            _val = $("#" + inputId).val() + event.key;
+         }
+
+         if (_val > 100) {
+            event.preventDefault();
+            return false;
+         }
+      }
+
+      function isTextSelected(input)
+      {
+
+    if (typeof input.selectionStart == "number") {
+        return input.selectionStart == 0 && input.selectionEnd == input.value.length;
+    }
+    else if (typeof document.selection != "undefined") {
+        input.focus();
+        return document.selection.createRange().text == input.value;
+          }
+       }
+
+      function PercentageCanNotExceed(event) {
+         if (event.target.value > 100) {
+            event.preventDefault();
+            event.target.value = 100;
+
+            return false;
+         }
+      }
+
+
+
+
+   function percentageLimitWithCustomLength(event,length) {
+
+      var _isTextSelected = isTextSelected(document.getElementById(event.target.id));
+      if (_isTextSelected) {
+         $("#" +  event.target.id).val('');
+      }
+
+
+      allowDecimalWithCustomLength(event, length);
+         var inputId = event.target.id;
+         var _val = '';
+         if ($("#" + inputId).val() == '') {
+            _val = event.key;
+         } else {
+            _val = $("#" + inputId).val() + event.key;
+         }
+
+         if (_val > 100) {
+            event.preventDefault();
+            return false;
+         }
+   }
+
+
+   function allowDecimalWithCustomLength(event, inputlength) {
+      var _isTextSelected = isTextSelected(document.getElementById(event.target.id));
+      if (_isTextSelected) {
+         $("#" + event.target.id).val('');
+      }
+
+      event.target.value = event.target.value.replace(/[^0-9\.]/g, '');
+
+      if ((event.which != 46 || event.target.value.indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+         event.preventDefault();
+      }
+
+      if (checkInputLength(event.target.value, inputlength, event.key) == true) {
+         event.preventDefault();
+      }
+
+      if (hasDecimalPlace(event.target.value, 2) == true) {
+         event.preventDefault();
+      }
+   }
+
+
+   function checkInputLength(value , length , key) {
+
+      var inputLength = value.length + 1 ;
+      if (inputLength > length && key != '.') {
+         // check point
+         if (value.indexOf('.') != -1) {
+            inputLength = value.split('.')[0].length;
+            if (inputLength == length  ) {
+             return   hasDecimalPlace(value, 2);
+            } else {
+               if (inputLength > length) {
+               return true;
+            } else {
+               return false;
+            }
+            }
+         }
+         return true;
+      } else {
+         if (key == ".") {
+          return  hasDecimalPlace(value, 2);
+         } else {
+         return   hasDecimalPlace(value, 2);
+         }
+      }
+      return false;
+   }
+
+   // Calculte Percentages
+
+   function CalcFinancialCapacity() {
+       ;
+      if (Number($("#FinancialCapacity").val()) > 100) {
+         $("#FinancialCapacity").val(100)
+      }
+      $("#TechnicalAdministrativeCapacity").val(100 - Number($("#FinancialCapacity").val()))
+   }
+
+   function CalcTechnicalAdministrativeCapacity() {
+       ;
+      if (Number($("#TechnicalAdministrativeCapacity").val()) > 100) {
+         $("#TechnicalAdministrativeCapacity").val(100)
+      }
+      $("#FinancialCapacity").val(100 - Number($("#TechnicalAdministrativeCapacity").val()))
+   }
+      var token = $('input[name=__RequestVerificationToken]').val();
+      if ('@User.UserRole()' == '@RoleNames.PreQualificationCommitteeSecretary') {
+         function qualificationTypeChange() {
+            $('#loader').show();
+            var type = $("#dllqualificationType").val();
+            if (type != '') {
+               var data = {};
+               data = @Html.Raw(Json.Serialize(Model))
+                  data = JSON.stringify(data);
+               $.ajax({
+                  url: '@Url.Action("QualificationConfigurationType", "Qualification")',
+                  type: 'POST',
+                  cache: false,
+                  data: { type: type, obj: data, __RequestVerificationToken: token  }
+               }).done(function (result) {
+                  $('#divConfigurationQualification').html(result);
+            
+        if ('@Model.HasOldPostQualification' == 'True') {
+            $("#divConfigurationQualification input").prop("disabled", true);
+            $("#TenderPointsToPass").prop("disabled", true);
+            $("#dllqualificationType").prop("disabled", true);
+         }
+               });
+
+            } else {
+               $('#divConfigurationQualification').html('');
+   
+            }
+            $('#loader').hide();
+         }
+      }
+
+    
+
+
+
+
+
+   </script>
+}

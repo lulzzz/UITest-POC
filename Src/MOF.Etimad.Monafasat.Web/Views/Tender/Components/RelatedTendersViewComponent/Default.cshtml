@@ -1,0 +1,36 @@
+@model List<MOF.Etimad.Monafasat.ViewModel.BasicTenderModel>
+@{
+   ViewData["Title"] = "تفاصيل المنافسة";
+}
+@if (Model.Count > 0)
+{
+   <div class="col-12">
+      <div class="row">
+         <div class="card">
+            <div class="card-body">
+               <div class="col-md-12 col-sm-12 col-xs-12">
+                  <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelatedTenders</h4>
+                  <table class="table  table-striped text-center table-bordered"    summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow" >
+                     <caption></caption>
+                     <thead>
+                        <tr>
+                           <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</th>
+                           <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingValue</th>
+                        </tr>
+                     </thead>
+                     <tbody class="text-center">
+                        @foreach (var item in Model)
+                        {
+                           <tr>
+                              <td><a href="details?StenderId=@item.TenderIdString">@item.TenderName</a></td>
+                              <td>@item.AwardingValue</td>
+                           </tr>
+                        }
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+}

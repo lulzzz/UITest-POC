@@ -1,0 +1,134 @@
+@model MOF.Etimad.Monafasat.ViewModel.Offer.OfferFileVModel
+@using res = MOF.Etimad.Monafasat.Resources
+@{
+   ViewData["Title"] = "OfferFiles";
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.TenderDetails</li>
+      </ol>
+   </nav>
+}
+
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@*<script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>*@
+@*@section Scripts  {
+      @await Html.PartialAsync("_ValidationScriptsPartial")
+   }*@
+@Html.AntiForgeryToken()
+@{ if (Model.OfferStatusId == (int)Enums.OfferStatus.Established)
+   {
+
+      <form data-ajax="true"
+            data-ajax-method="POST"
+            data-ajax-mode="replace"
+            data-ajax-update="#ajaxresult"
+            data-ajax-complete="GetOfferFiles">
+
+         <input type="hidden" asp-for="offerIdString" />
+         <div class="card">
+            <div class="card-body">
+               <div class="row">
+                  <div class="col-12">
+                     <h4 class="text-primary">ملفات العرض</h4>
+                  </div>
+
+                  <div class="col-lg-4 col-sm-6 col-xs-12" id="divSolidarityFile">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static"> ملفات التضامن  <span class="text-danger">*</span></label>
+                        @Html.FileUploader("SolidarityrFilesReferenceIds", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 40, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                        <span id="vdBankGuaranteeReference" class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.EnterFile</span>
+                     </div>
+                  </div>
+
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">ملفات العرض  الفنى  <span class="text-danger">*</span></label>
+                        @Html.FileUploader("TechnicalFilesReferenceIds", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 40, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                        <span id="vdBankGuaranteeReference" class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.EnterFile</span>
+                     </div>
+                  </div>
+
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">   ملفات العرض المالى <span class="text-danger">*</span></label>
+                        @Html.FileUploader("FinancialFilesReferenceId", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 40, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                        <span id="vdBankGuaranteeReference" class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.EnterFile</span>
+                     </div>
+                  </div>
+                  <div class="col-12">
+                     <button type="submit" class="btn btn-primary">أضف الملفات على العرض</button>
+                  </div>
+                  <div class="col-12" id="divQtableFiles">
+                     @res.SharedResources.DisplayInputs.Loading
+                  </div>
+               </div>
+            </div>
+         </div>
+
+      </form>
+      <div class="row">
+         <div class="col-12">
+            <a asp-action="OfferQuantityTablesAsync"  class="btn btn-primary pull-left"  asp-controller="Offer" asp-route-OfferIdString ="@(Model.offerIdString)"></a>
+            <button type="submit" class="btn btn-outline-primary pull-right">الرجوع</button>
+
+         </div>
+      </div>
+   }
+}
+
+
+@{
+   await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+@section scripts
+   {
+
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   <script>
+
+      // onSuccessCallback: "SaveFiles(solidarityfilesreferenceids)"
+      $(document).ready(function () {
+         GetOfferFiles();
+      });
+      $('#divSolidarityFile').hide();
+
+      function ReloadFilesList(sender) {
+         $('#divQtableFiles').html('@res.SharedResources.DisplayInputs.Loading');
+         var token = $('#app input[name=__RequestVerificationToken]').val()
+         debugger;
+         var FileFullId = sender.Id;
+         $.post('/Offer/SaveFilesToOffer',   {
+                offeridString: '@Model.offerIdString',
+                FileFullId: FileFullId,
+               __RequestVerificationToken: token
+  }, function (_html) {
+            $('#divQtableFiles').html(_html);
+         })
+      }
+
+      function ChangeSolidarity(_sender) {
+         if ($(_sender).is(':checked')) {
+            $('#divSolidarityFile').show()
+         }
+         else {
+            $('#divSolidarityFile').hide()
+         }
+      }
+      function GetOfferFiles() {
+         //var files = $('.file_uploader_message').remove();
+         $.get('/Offer/GetOfferAllFiles?OfferIdString=@Model.offerIdString', function (_html) {
+            $('#divQtableFiles').html(_html);
+         })
+      }
+   </script>
+}

@@ -1,0 +1,103 @@
+<div class="table-responsive">
+   <table class="table  table-striped" id="TenderTable">
+      <caption></caption>
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderAddress</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletPrice</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus</th>
+            <th scope="col" style="width:130px">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+         </tr>
+      </thead>
+      <tbody v-if="Tenders && Tenders.length > 0">
+         <tr v-for="(tender, $index) in Tenders">
+            <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber">{{tender.tenderNumber}}</td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderAddress">{{tender.tenderName}}</td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName">{{tender.technicalOrganizationId}}</td>
+            <template v-if="tender.lastEnqueriesDate">
+               <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate">{{tender.lastEnqueriesDate.split('T')[0]}}</td>
+            </template>
+            <template v-else>
+               <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate"></td>
+            </template>
+            <template v-if="tender.lastOfferPresentationDate">
+               <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate">{{tender.lastOfferPresentationDate.split('T')[0]}}</td>
+            </template>
+            <template v-else>
+               <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate"></td>
+            </template>
+            <template v-if="tender.offersOpeningDate">
+               <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate">{{tender.offersOpeningDate.split('T')[0]}}</td>
+            </template>
+            <template v-else>
+               <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate"></td>
+            </template>
+
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletPrice">{{tender.condetionalBookletPrice}}</td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus">
+               <span v-if="tender.invitationRequistTypeId=='1'">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+               </span>
+               <span v-else-if=" tender.invitationStatusId == '1' &&  tender.invitationRequistTypeId=='2'">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PendingGovernmentAcceptanceOfTheRequest
+               </span>
+               <span v-else-if="tender.invitationStatusId == '2' &&  tender.invitationRequistTypeId=='2'">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TherequestHasbeenAccepted
+               </span>
+               <span v-else-if="tender.invitationStatusId == '3' &&  tender.invitationRequistTypeId=='2'">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TherequestHasbeenRejected
+               </span>
+            </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               <div class="dropdown">
+                  <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false">
+                     <i class="material-icons">more_vert</i> 
+                     <div class="ripple-container"></div>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                     <a :href="joiningToTender(tender.tenderIdString)" class="dropdown-item">
+                        <i class="material-icons">format_list_bulleted</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Joining
+                     </a>
+                     <a v-if="tender.invitationStatusId=='2'" :href="applyOffer(tender.tenderIdString)" class="dropdown-item">
+                        <i class="material-icons">format_list_bulleted</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ApplyOffer
+                     </a>
+                     <span v-if=" tender.invitationRequistTypeId == '1'">
+                        <template v-if="tender.invitationStatusId == '1'">
+                           <a :href="detailsUrl(tender.tenderId,tender.invitationId,tender.invitationStatusId)" class="dropdown-item">
+                              <i class="material-icons">format_list_bulleted</i> 
+                              <span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AcceptOrRejectTheInvetation</span>
+                           </a>
+                        </template>
+                        <template v-else-if="tender.invitationStatusId == '2'">
+                           <a :href="detailsUrl(tender.tenderId,tender.invitationId,tender.invitationStatusId)" class="dropdown-item">
+                              <i class="material-icons">format_list_bulleted</i> 
+                              <span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationWithdraw</span>
+                           </a>
+                        </template>
+                        <template v-else>
+                        </template>
+                     </span>
+                  </div>
+               </div>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="10" class="text-center">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+               <br />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>

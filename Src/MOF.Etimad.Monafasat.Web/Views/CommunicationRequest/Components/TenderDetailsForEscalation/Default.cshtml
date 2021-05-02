@@ -1,0 +1,447 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.TenderPlaintDatailsModel
+
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails;
+}
+<style>
+   .agencyLogo {
+      border-radius: 100%;
+      border: 2px solid #ccc;
+      padding: 5px;
+      width: 56px;
+   }
+</style>
+<div class="row" id="basicDetials">
+   <div class="col-12">
+      <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation<img class="pull-right agencyLogo" src="~/Etimad-UI/assets/imgs/capitol-building.png" alt="image description" /></h4>
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <h5 class="text-dark-green">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AwardedSuppliersList</h5>
+      @foreach (var item in Model.AwardedSupplierList)
+      {
+         <ul class="list-group form-details-list">
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @item.Name
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingValue
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @item.Value
+                     </span>
+                  </div>
+               </div>
+            </li>
+         </ul>
+      }
+   <ul class="list-group form-details-list">
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @(Model.TenderName)
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderReferenceNumber
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @(Model.TenderNumber)
+               </span>
+            </div>
+         </div>
+      </li>
+      
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AnnouncementDate
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @(Model.AcceptedAnnouncementDate)
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingEndDate
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @(Model.AwardingDate)
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersCheckingEndDate
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @(Model.OffersCheckingDate)
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningEndDate
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @(Model.OffersOpeningDate)
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @(Model.AgencyName)
+               </span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingType
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @(Model.TenderAwardingTypeName)
+               </span>
+            </div>
+         </div>
+      </li>
+      @*<li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingValue
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>
+                  @(Model.FullAmount)
+               </span>
+            </div>
+         </div>
+      </li>*@
+      @if (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.SecretaryGrievanceCommittee) || User.IsInRole(RoleNames.ManagerGrievanceCommittee))
+      {
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.PlaintsNumber
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.PlaintsNumber)
+                  </span>
+               </div>
+            </div>
+         </li>
+      }
+      @if (User.IsInRole(RoleNames.SecretaryGrievanceCommittee) || User.IsInRole(RoleNames.ManagerGrievanceCommittee))
+      {
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.EscalatedPlaintsNumber
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @(Model.EscalatedPlaintsNumber)
+                  </span>
+               </div>
+            </div>
+         </li>
+      }
+
+      @if (Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.Competition)
+      {
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.StoppingPeriod
+               </div>
+               <div class="col-8 etd-item-info">
+                  @(Model.AwardingStoppingPeriod)
+               </div>
+            </div>
+         </li>
+      }
+   </ul>
+      <input type="hidden" id="lastOfferPresentationDate" value="@Model.TenderIdString" />
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <br />
+      <br />
+      @if (!Model.IsOldTender && Model.VersionId >= (int)Enums.ActivityVersions.Sprint7Activities)
+      {
+         <ul class="list-group form-details-list">
+            @if (Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.Competition)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FinalGuaranteePercentage
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        @(Model.FinalGuaranteePercentage)
+                     </div>
+                  </div>
+               </li>
+            }
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingExpectedDate
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     @if (Model.AwardingExpectedDate.HasValue)
+                     {
+                        <span>
+                           @(Model.AwardingExpectedDate.ToGregorianDate("dd/MM/yyyy"))
+                        </span>
+                        <span>
+                           @(Model.AwardingExpectedDate.ToHijriDate("dd/MM/yyyy"))
+                        </span>
+
+                     }
+                     else
+                     {
+                        <span> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist </span>
+                     }
+                  </div>
+               </div>
+            </li>
+
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.StartingBusinessOrServicesDate
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     @if (Model.StartingBusinessOrServicesDate.HasValue)
+                     {
+                        <span>
+                           @(Model.StartingBusinessOrServicesDate.ToGregorianDate("dd/MM/yyyy"))
+                        </span>
+                        <span>
+                           @(Model.StartingBusinessOrServicesDate.ToHijriDate("dd/MM/yyyy"))
+                        </span>
+
+                     }
+                     else
+                     {
+                        <span> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist </span>
+                     }
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.StartingSendingEnquiries
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     @if (Model.StartingSendingEnquiries.HasValue)
+                     {
+                        <span>
+                           @(Model.StartingSendingEnquiries.ToGregorianDate("dd/MM/yyyy"))
+                        </span>
+                        <span>
+                           @(Model.StartingSendingEnquiries.ToHijriDate("dd/MM/yyyy"))
+                        </span>
+
+                     }
+                     else
+                     {
+                        <span> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist </span>
+                     }
+                  </div>
+               </div>
+            </li>
+
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ParticipationConfirmationLetterDate
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     @if (Model.ParticipationConfirmationLetterDate.HasValue)
+                     {
+                        <span>
+                           @(Model.ParticipationConfirmationLetterDate.ToGregorianDate("dd/MM/yyyy"))
+                        </span>
+                        <span>
+                           @(Model.ParticipationConfirmationLetterDate.ToHijriDate("dd/MM/yyyy"))
+                        </span>
+
+                     }
+                     else
+                     {
+                        <span> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist </span>
+                     }
+                  </div>
+               </div>
+            </li>
+
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MaxTimeToAnswerQuestions
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.MaxTimeToAnswerQuestions)
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SamplesDeliveryAddress
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(!(Model.SupplierNeedSample.HasValue && Model.SupplierNeedSample.Value) ? MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NoSamplesRequired : Model.SamplesDeliveryAddress)
+                     </span>
+                  </div>
+               </div>
+            </li>
+            @if (Model.SupplierNeedSample.Value == true)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DeliveryDate
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        @if (Model.DeliveryDate.HasValue)
+                        {
+                           <span>
+                              @(Model.DeliveryDate.ToGregorianDate("dd/MM/yyyy"))
+                           </span>
+                           <span>
+                              @(Model.DeliveryDate.ToHijriDate("dd/MM/yyyy"))
+                           </span>
+                           <span style="padding:0 5px;">
+                              @(Model.DeliveryDate.ToGregorianDate("hh:mm tt"))
+                           </span>
+                        }
+                        else
+                        {
+                           <span> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist </span>
+                        }
+
+                     </div>
+                  </div>
+               </li>
+            }
+
+            @if (Model.SupplierNeedSample.Value == true)
+            {
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.IsSampleAddresSameOffersAddress
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+
+                           @(Model.IsSampleAddresSameOffersAddress ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Yes : MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.No)
+
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            }
+
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDeliveryAddress
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.OfferDeliveryAddress)
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DeliveryDate
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     @if (Model.OffersDeliveryDate.HasValue)
+                     {
+                        <span>
+                           @(Model.OffersDeliveryDate.ToGregorianDate("dd/MM/yyyy"))
+                        </span>
+                        <span>
+                           @(Model.OffersDeliveryDate.ToHijriDate("dd/MM/yyyy"))
+                        </span>
+                        <span style="padding:0 5px;">
+                           @(Model.OffersDeliveryDate.ToGregorianDate("hh:mm tt"))
+                        </span>
+                     }
+                     else
+                     {
+                        <span> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist </span>
+                     }
+
+                  </div>
+               </div>
+            </li>
+
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.IsTenderContainsTawreed
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.IsTenderContainsTawreedTables.Value == true ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Yes : MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.No)
+                     </span>
+                  </div>
+               </div>
+            </li>
+         </ul>
+      }
+   </div>
+</div>

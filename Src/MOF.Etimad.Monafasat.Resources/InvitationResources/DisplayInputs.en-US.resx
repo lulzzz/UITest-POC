@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ApplyAutomatically" xml:space="preserve">
+    <value>Automatic Apply</value>
+  </data>
+  <data name="BackButton" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="ExecutionPlace" xml:space="preserve">
+    <value>Execution Place</value>
+  </data>
+  <data name="BreadCrumb_Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="LastEnqueriesDate" xml:space="preserve">
+    <value>last enqueries date</value>
+  </data>
+  <data name="LastOfferPresentationDate" xml:space="preserve">
+    <value>last offer presentation date</value>
+  </data>
+  <data name="OffersOpeningDate" xml:space="preserve">
+    <value>offers opening date</value>
+  </data>
+  <data name="Invalid" xml:space="preserve">
+    <value>Invalid</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Valid" xml:space="preserve">
+    <value>Valid</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="ActivityDescription" xml:space="preserve">
+    <value>Activity Desctiption</value>
+  </data>
+  <data name="CivilRegisterNo" xml:space="preserve">
+    <value>Civil Register Number</value>
+  </data>
+  <data name="ComericalRegisterName" xml:space="preserve">
+    <value>Comerical Register Number</value>
+  </data>
+  <data name="InsideKsa" xml:space="preserve">
+    <value>Inside Ksa</value>
+  </data>
+  <data name="InvitationAccepted" xml:space="preserve">
+    <value>Invitation Accepted</value>
+  </data>
+  <data name="InvitationRejected" xml:space="preserve">
+    <value>Invitation Rejected</value>
+  </data>
+  <data name="InvitationStatus" xml:space="preserve">
+    <value>Invitation Status</value>
+  </data>
+  <data name="InvitedSupplierList" xml:space="preserve">
+    <value>Invited Suppliers</value>
+  </data>
+  <data name="JoinedRequests" xml:space="preserve">
+    <value>Requests</value>
+  </data>
+  <data name="MobileNo" xml:space="preserve">
+    <value>Mobile Number</value>
+  </data>
+  <data name="NotInvited" xml:space="preserve">
+    <value>Hasn't Invited Yet</value>
+  </data>
+  <data name="OfferPresentationPlace" xml:space="preserve">
+    <value>Offer Presentation Place</value>
+  </data>
+  <data name="OutsideKsa" xml:space="preserve">
+    <value>Outside Ksa</value>
+  </data>
+  <data name="RegisteredSuppliers" xml:space="preserve">
+    <value>Registered Suppliers</value>
+  </data>
+  <data name="RequestDate" xml:space="preserve">
+    <value>Request Date</value>
+  </data>
+  <data name="RequestStatus" xml:space="preserve">
+    <value>Request Status</value>
+  </data>
+  <data name="SendByEmailAddress" xml:space="preserve">
+    <value>Send Bu Email Address</value>
+  </data>
+  <data name="SendBySms" xml:space="preserve">
+    <value>Send By Sms</value>
+  </data>
+  <data name="SendInvitations" xml:space="preserve">
+    <value>Send Invitations</value>
+  </data>
+  <data name="SuppliersList" xml:space="preserve">
+    <value>Suppliers List</value>
+  </data>
+  <data name="TenderDetails" xml:space="preserve">
+    <value>Tender Details</value>
+  </data>
+  <data name="TenderName" xml:space="preserve">
+    <value>Tender Name</value>
+  </data>
+  <data name="TenderNumber" xml:space="preserve">
+    <value>Tender Number</value>
+  </data>
+  <data name="WaitingApproval" xml:space="preserve">
+    <value>Waiting Approval</value>
+  </data>
+  <data name="WaitingForAcceptingInvitation" xml:space="preserve">
+    <value>Waiting for accepting invitation</value>
+  </data>
+  <data name="WithdrawalFromInvitation" xml:space="preserve">
+    <value>Invitation was withdrawal</value>
+  </data>
+  <data name="SupplierAlreadyExsit" xml:space="preserve">
+    <value>Supplier Already Exsit</value>
+  </data>
+  <data name="Blocked" xml:space="preserve">
+    <value>Blocked</value>
+  </data>
+  <data name="TenderOwner" xml:space="preserve">
+    <value>Tender's Owner</value>
+  </data>
+  <data name="EmailsList" xml:space="preserve">
+    <value>Emails List</value>
+  </data>
+  <data name="InvitedSuppliersList" xml:space="preserve">
+    <value>Invited suppliers list</value>
+  </data>
+  <data name="MobileNumbersList" xml:space="preserve">
+    <value>Mobil Numbers List</value>
+  </data>
+  <data name="MobileNoOrEmail" xml:space="preserve">
+    <value>Mobile Number \ Email</value>
+  </data>
+  <data name="RegisteredSuppliersIn" xml:space="preserve">
+    <value>Registered Suppliers Invited</value>
+  </data>
+  <data name="UnRegisteredSuppliersIn" xml:space="preserve">
+    <value>Unregistered Suppliers Invited</value>
+  </data>
+  <data name="ForiegnSupplierOrIdentity" xml:space="preserve">
+    <value>Forieng Supplier Or Idenitiy</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="SupplierHaveCommercialRegisterationNumber" xml:space="preserve">
+    <value>Supplier that have commercial registeration number</value>
+  </data>
+  <data name="InvitationSendingDate" xml:space="preserve">
+    <value>Invitation sending date</value>
+  </data>
+  <data name="InvitationAcceptanceDate" xml:space="preserve">
+    <value>Invitation acceptance date</value>
+  </data>
+  <data name="InvitationRejectionDate" xml:space="preserve">
+    <value>Invitation rejection date</value>
+  </data>
+  <data name="NumberOfInvitations" xml:space="preserve">
+    <value>Number of Invitations</value>
+  </data>
+  <data name="send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+</root>

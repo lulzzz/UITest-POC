@@ -1,0 +1,146 @@
+@*@using MOF.Etimad.Monafasat.SharedKernel
+<div class="card card-body">
+   <div class="row">
+      <div class="col-12" style="    ">
+         <a class="search-expand d-block" data-toggle="collapse" href="#basicInfo" role="button" aria-expanded="false" aria-controls="basicInfo">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation <i class="material-icons pull-right">keyboard_arrow_up</i></a>
+         <div class=" multi-collapse" id="basicInfo">
+            <div class="row">
+               <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                  <div class="form-group has-success bmd-form-group">
+                     <label for="activitiesList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Activity</label>
+                     <select data-live-search="true" id="activitiesList" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose" data-style="select-with-transition" v-model="selectedActivity">
+                        <option :value="item.value" v-for="item in activitiesList">{{item.text}}</option>
+                     </select>
+                  </div>
+               </div>
+
+               <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                  <div class="form-group has-success bmd-form-group">
+                     <label for="agency" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency</label>
+                     <select data-live-search="true" id="agency" name="agency" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectAgency" data-style="select-with-transition" v-model="selectedAgency">
+                        <option :value="item.id" v-for="item in agencyList">{{item.name}}</option>
+                     </select>
+                  </div>
+               </div>
+               <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                  <div class="form-group has-success bmd-form-group">
+                     <label for="areaList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Area</label>
+                     <select data-live-search="true" id="areaList" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose" data-style="select-with-transition" multiple v-model="selectedAreaList">
+                        <option :value="item.areaId" v-for="item in areasList">{{item.name}}</option>
+                     </select>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   @*@if (supplierSubscriptionType == (int)Enums.SubscriptionType.Full || supplierSubscriptionType == (int)Enums.SubscriptionType.Partial2000)*@
+      if(1==1)
+   {
+      <div class="" style="  ">
+         <a class="search-expand d-block collapsed" data-toggle="collapse" href="#dates" role="button" aria-expanded="false" aria-controls="dates">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AdvancedSearch <i class="material-icons pull-right">keyboard_arrow_up</i></a>
+         <div class="collapse multi-collapse" id="dates">
+            <div class="row">
+               <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="name" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationType </label>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input name="TenderTypeId" requierd="true" type="radio" class="form-check-input" checked value="0">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All
+                           <span class="circle"><span class="check"></span></span> <!---->
+                        </label>
+                        <label class="form-check-label">
+                           <input name="TenderTypeId" requierd="true" type="radio" class="form-check-input" value="@((int)Enums.TenderType.PreQualification)">
+                           @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualification
+                           <span class="circle"><span class="check"></span></span> <!---->
+                        </label>
+                        <label class="form-check-label">
+                           <input name="TenderTypeId" requierd="true" type="radio" class="form-check-input" value="@((int)Enums.TenderType.PreQualification)">
+                           @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PostQualification
+                           <span class="circle"><span class="check"></span></span> <!---->
+                        </label>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="publisher" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationName </label>
+                     <input type="text" class="form-control" id="txtTenderName" name="TenderName" maxlength="50" />
+                  </div>
+               </div>
+               <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="ReferenceNumber" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.QualificationNumber </label>
+                     <input type="text" class="form-control" id="ReferenceNumber" name="ReferenceNumber" maxlength="50" />
+                  </div>
+               </div>
+
+               <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="PublishDate" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.SubmtionDate</label>
+                     <select id="PublishDate" name="PublishDate" data-live-search="false" class="selectpicker" data-style="select-with-transition" data-size="7">
+                        <option value="">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose
+                        </option>
+                        <option value="">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AnyTime
+                        </option>
+                        <option value="2">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TwoDaysAgo
+                        </option>
+                        <option value="3">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WeekAgo
+                        </option>
+                        <option value="4">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MonthAgo
+                        </option>
+                     </select>
+                  </div>
+               </div>
+               <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate</label>
+                     <div class="input-group-prepend">
+                        <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="LastOfferPresentationDate" id="fromLastOfferPresentationDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.From">
+                        <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="LastOfferPresentationDate" id="toLastOfferPresentationDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.To">
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="TenderCategory" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.DisplayQualificationsOption</label>
+                     <select id="TenderCategory" name="TenderCategory" data-live-search="false" class="selectpicker" data-style="select-with-transition" data-size="7">
+                        <option value="">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose
+                        </option>
+                        <option value="">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All
+                        </option>
+                        <option value="2">
+                           @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ActiveQualifications
+                        </option>
+                        <option value="3">
+                           @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.EndedQualifications
+                        </option>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   }
+   else
+   {
+      <a class="btn btn-primary btn-link btn-block text-center" data-toggle="modal" data-target="#advancedModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AdvancedSearch<i class="material-icons">more_horiz</i></a>
+   }
+   <div class="input-group-prepend pull-left etd-search-btn">
+      <button type="button" class="btn btn-primary btn-block text-center btn-sm" id="searchBtn" name="button" @@click="search">
+         <i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+      </button>
+      <button type="reset" class="btn btn-block text-center btn-sm" name="button" @@click="clear">
+         <i class="material-icons">close</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+      </button>
+   </div>
+</div>*@

@@ -1,0 +1,317 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.OfferModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails;
+}
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.TenderDetails</li>
+      </ol>
+   </nav>
+}
+<input type="hidden" id="ModuleType" value="3" />
+@Html.AntiForgeryToken()
+<div class="col-12" id="applyOfferOld" v-cloak>
+   <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+      <li class="nav-item">
+         <a class="nav-link active" href="#applyOffer" role="tab" data-toggle="tab">
+            <i class="material-icons">table_chart</i>
+            @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.FinancialOfferDetails
+         </a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link" href="#attachments" role="tab" data-toggle="tab">
+            <i class="material-icons">attach_file</i>
+            @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.DiscountAndNotes
+         </a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link " href="#monafasa-info" role="tab" data-toggle="tab">
+            <i class="material-icons">assignment</i>
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentsAttachments
+         </a>
+      </li>
+   </ul>
+   <div class="tab-content tab-space">
+      <div class="tab-pane active" id="applyOffer">
+         <div class="col-12" v-for="(tbl,indexT) in QuantitiesTables">
+            <div class="row">
+               <div data-label=" Deliverable" style="width:100%">
+                  <a class="btn btn-block btn-outline-primary" data-toggle="collapse" :href="'#'+indexT" role="button" aria-expanded="false" aria-controls="collapseExample"> {{tbl.tableQuantityName}}</a>
+               </div>
+               <div class="table-responsive collapse" :id="indexT">
+                  <table class="table" role="none">
+                     <thead>
+                        <tr>
+                           <td hidden></td>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr class="animated  delay-0.5s animated  delay-2s fadeInDown">
+                           <td class="text-center padd0" style="padding:0;" colspan="6">
+                              <div class="card">
+                                 <div class="card-body padd0">
+                                    <table class="table" :id="'quantatyTable_'+indexT" role="none">
+                                       <thead style="background-color: #e0efe8;">
+                                       </thead>
+                                       <tbody>
+                                          <tr>
+                                             <td colspan="4"></td>
+                                             <td style="text-align:center"><b>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Price</b> </td>
+                                             <td style="text-align:center">
+                                                <label class="label" type="number" :id="'tblTotalPrice'+ indexT" name="tblTotalPrice">{{tbl.openingTotalPrice}}</label>
+                                             </td>
+                                             <td style="text-align:center"><b>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Discount</b> </td>
+                                             <td style="text-align:center">
+                                                <label class="label" type="number" :id="'tblTotalDiscount'+ indexT" name="tblTotalDiscount">{{tbl.openingDiscount}}</label>
+                                             </td>
+                                             <td style="text-align:center"><b>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.vat</b> </td>
+                                             <td style="text-align:center">
+                                                <label class="label" type="number" :id="'tblTotalVat'+ indexT" name="tblTotalVat">{{tbl.openingVat}}</label>
+                                             </td>
+                                             <td style="text-align:center"><b>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TotalPriceAfterDiscount</b> </td>
+                                             <td style="text-align:center">
+                                                <label class="label" type="number" :id="'tblTotalAfterDiscount'+ indexT" name="tblTotalAfterDiscount">{{tbl.openingTotalPrice - tbl.openingDiscount + tbl.openingVat}}</label>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                       <tfoot>
+                                       </tfoot>
+                                    </table>
+                                 </div>
+                              </div>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-4">
+               <div class="card">
+                  <div class="card-body">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-12 etd-item-title text-center">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TotalPrice
+                              </div>
+                              <div class="col-12 etd-item-info text-center h4">
+                                 <span id="txtTotPrice" name="totPrice"></span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <div class="col-4">
+               <div class="card">
+                  <div class="card-body">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-12 etd-item-title  text-center">
+                                 @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Discount
+                              </div>
+                              <div class="col-12 etd-item-info  text-center h4">
+                                 <span id="txtTotAfterDiscount" name="totPrice"></span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <div class="col-4">
+               <div class="card">
+                  <div class="card-body">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-12 etd-item-title  text-center">
+                                 @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TotalPriceAfterDiscount
+                              </div>
+                              <div class="col-12 etd-item-info  text-center h4">
+                                 <span id="txtFinal" name="Final"></span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="tab-pane " id="monafasa-info">
+         <div class="col-12">
+            @await Html.PartialAsync("~/Views/Offer/Partial/OpenningOffers/_CombinedSuppliersActions.cshtml", Model.CombinedSupplierModel)
+         </div>
+      </div>
+      <div class="tab-pane" id="attachments">
+         <div class="col-12">
+            <div class="row">
+               <div class="card">
+                  <div class="card-body">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-6 etd-item-title">
+                                 @res.OfferResources.DisplayInputs.Discount
+                              </div>
+                              <div class="col-6 etd-item-info text-left ">
+                                 <span>@Model.Discount</span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-6 etd-item-title">
+                                 @res.OfferResources.DisplayInputs.Notes
+                              </div>
+                              <div class="col-6 etd-item-info ">
+                                 <span>@Model.DiscountNotes</span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-12">
+      @if (User.IsInRole(RoleNames.OffersOppeningManager) && Model.TenderStatusId == (int)Enums.TenderStatus.Approved)
+      {
+         IDictionary<string, string> parameters = new Dictionary<string, string>();
+         parameters.Add("tenderIdString", Model.TenderIdString);
+         parameters.Add("actionName", "open");
+         <a class="btn btn-outline-primary btn-link pull-right" asp-action="OpenTenderOffers" asp-controller="Tender" asp-all-route-data="parameters">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+      }
+      else if (User.IsInRole(RoleNames.OffersOppeningManager) && Model.TenderStatusId != (int)Enums.TenderStatus.Approved)
+      {
+         IDictionary<string, string> parameters = new Dictionary<string, string>();
+         parameters.Add("tenderIdString", Model.TenderIdString);
+         parameters.Add("actionName", "details");
+         <a class="btn btn-outline-primary btn-link pull-right" asp-action="OpenTenderOffers" asp-controller="Tender" asp-all-route-data="parameters">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+      }
+      else if (User.IsInRole(RoleNames.OffersOppeningSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedRejected)
+      {
+         IDictionary<string, string> parameters = new Dictionary<string, string>();
+         parameters.Add("tenderIdString", Model.TenderIdString);
+         parameters.Add("actionName", "reopen");
+         <a class="btn btn-outline-primary btn-link pull-right" asp-action="OpenTenderOffers" asp-controller="Tender" asp-all-route-data="parameters">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+      }
+      else if (User.IsInRole(RoleNames.OffersOppeningSecretary) && Model.TenderStatusId != (int)Enums.TenderStatus.OffersOppenedRejected)
+      {
+         IDictionary<string, string> parameters = new Dictionary<string, string>();
+         parameters.Add("tenderIdString", Model.TenderIdString);
+         parameters.Add("actionName", "details");
+         <a class="btn btn-outline-primary btn-link pull-right" asp-action="OpenTenderOffers" asp-controller="Tender" asp-all-route-data="parameters">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+      }
+   </div>
+</div>
+
+@section scripts{
+   <script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+   <script src="~/Etimad-UI/assets/js/vue-app/vue2-filters.min.js"></script>
+   <script src="~/Etimad-UI/assets/js/vue-app/pagination.js"></script>
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <script type="text/javascript">
+      var finalPrice = 0;
+      var attachmentss = [];
+      @if (Model != null && Model.Attachment != null)
+      {
+         @:finalPrice = @Html.Raw(Json.Serialize(Model.FinalPrice));
+         @:attachmentss = @Html.Raw(Json.Serialize(Model.Attachment));
+      }
+      function nextTab() {
+
+         $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+      }
+      function prevTab() {
+
+         $('.etd-wiz-tabs').children().find('a.active').parent().prev().children().click();
+      }
+      var tables = [];
+      @if (Model != null && Model.QuantityTable != null)
+      {
+         @:tables = @Html.Raw(Json.Serialize(Model.QuantityTable));
+      }
+      var app2 = new Vue({
+         el: '#applyOffer',
+         data: {
+            QuantitiesTables: tables
+         },
+         created: function () {
+         },
+         methods: {
+            nextTab: function () {
+               $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+            },
+            prevTab: function () {
+               $('.etd-wiz-tabs').children().find('a.active').parent().prev().children().click();
+            },
+            SumItem: function (price, quantity) {
+               return price * quantity;
+            }
+         }
+      });
+      var appss = new Vue({
+         el: '#CombinedSuppliersGrid',
+         data: {
+            CombinedSuppliersDetails: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/Offer/GetCombinedSuppliersGridAsync?offerid=' + '@Model.OfferIdString',
+            queryString: ''
+         },
+         methods: {
+            updateResource: function (data) {
+               this.CombinedSuppliersDetails = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            SelectSupplier: function (id) {
+               alert(id)
+               return '/Offer/OfferDetail/' + id;
+            }
+         }
+      });
+      function calcTotal() {
+         var totalsPrice = 0;
+         var totalsAfterDiscount = 0;
+         var tabletotals = 0;
+         var tabletotalsAfterDiscount = 0;
+         for (var i = 0; i < app2.QuantitiesTables.length; i++) {
+            var txval = app2.QuantitiesTables[i].openingTotalPrice;
+            totalsPrice += parseFloat(txval);
+            $("#txtTotPrice").text(totalsPrice);
+            var txval = app2.QuantitiesTables[i].openingDiscount;
+            totalsAfterDiscount += parseFloat(txval);
+            $("#txtTotAfterDiscount").text(totalsAfterDiscount);
+         }
+         $("#txtFinal").text(finalPrice);
+      }
+      $('a[data-toggle="collapse"]').click(function () {
+         $(this).toggleClass('btn-outline-primary');
+         $(this).toggleClass('btn-primary');
+      });
+      calcTotal();
+   </script>
+}

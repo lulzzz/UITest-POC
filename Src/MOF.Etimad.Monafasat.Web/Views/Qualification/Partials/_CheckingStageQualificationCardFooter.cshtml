@@ -1,0 +1,50 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+<div class="col-md-12 text-right">
+   @if (User.IsInRole(RoleNames.OffersCheckSecretary))
+   {
+      <a :href="checkTenderOffers(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentChecking)) &&tender.tenderTypeId == @((int)Enums.TenderType.PreQualification)&& tender.offersCheckingDate <= tender.currentDate && tender.userCommitteeType == @((int)Enums.UserRole.NewMonafasat_OffersCheckSecretary))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CheckTechnicalEvaluation
+      </a>
+      <a :href="checkTenderOffers(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckRejected)&& tender.userCommitteeType == @((int)Enums.UserRole.NewMonafasat_OffersCheckSecretary)) &&tender.tenderTypeId == @((int)Enums.TenderType.PreQualification)" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ReopenCheck
+      </a>
+
+   }
+   @if (User.IsInRole(RoleNames.OffersCheckManager))
+   {
+      <a :href="confirmCheckOffersCheck(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckPending) && tender.tenderTypeId == @((int)Enums.TenderType.PreQualification) && tender.userCommitteeType == @((int)Enums.UserRole.NewMonafasat_OffersCheckManager))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ReviewData
+      </a>
+      
+   }
+
+
+
+
+   @* Post Qualification Actions*@
+   @if (User.IsInRole(RoleNames.OffersCheckSecretary))
+   {
+      <a :href="checkPostQualificationOffers(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentChecking)) &&tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)&& tender.offersCheckingDate <= tender.currentDate && tender.userCommitteeType == @((int)Enums.UserRole.NewMonafasat_OffersCheckSecretary))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CheckTechnicalEvaluation
+      </a>
+      <a :href="checkPostQualificationOffers(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckRejected) &&tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)&& tender.userCommitteeType == @((int)Enums.UserRole.NewMonafasat_OffersCheckSecretary))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ReopenCheck
+      </a>
+      <a :href="ApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Established) &&tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+      </a>
+      <a :href="ApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Rejected) &&tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+      </a>
+   }
+   @if (User.IsInRole(RoleNames.OffersCheckManager))
+   {
+      <a :href="ConfirmCheckPostQualificationOffers(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckPending) &&tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)&& tender.userCommitteeType == @((int)Enums.UserRole.NewMonafasat_OffersCheckManager))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ReviewData
+      </a>
+      <a :href="ApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Pending)) &&tender.tenderTypeId == @((int)Enums.TenderType.PostQualification)">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve
+      </a>
+   }
+</div>

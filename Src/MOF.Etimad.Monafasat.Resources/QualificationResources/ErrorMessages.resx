@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AfterDate" xml:space="preserve">
+    <value>لا يمكن التقديم بعد انتهاء المده المحددة</value>
+  </data>
+  <data name="AlreadyApplied" xml:space="preserve">
+    <value>لقد قدمت عرض من قبل</value>
+  </data>
+  <data name="EnterLastDocumentsPresentationDate" xml:space="preserve">
+    <value>الرجاء ادخال اخر موعد لتقديم الوثائق</value>
+  </data>
+  <data name="EnterQualificationActivities" xml:space="preserve">
+    <value>يرجي إدخال أنشطة التأهيل</value>
+  </data>
+  <data name="EnterQualificationDocuments" xml:space="preserve">
+    <value>يرجي إضافة مرفقات التأهيل</value>
+  </data>
+  <data name="EnterQualificationDocumentsApplying" xml:space="preserve">
+    <value>يرجي إدخال أخر موعد تقديم وثائق التأهيل</value>
+  </data>
+  <data name="EnterQualificationDocumentsEvaluationgDate" xml:space="preserve">
+    <value>يرجي إدخال تاريخ تقييم وثائق التأهيل</value>
+  </data>
+  <data name="EnterQualificationEnquiryDate" xml:space="preserve">
+    <value>يرجي إدخال أخر موعد لتقديم الإستفسارات</value>
+  </data>
+  <data name="EnterQualificationEvaluationTime" xml:space="preserve">
+    <value>يرجي إدخال وقت تقييم العروض</value>
+  </data>
+  <data name="EnterQualificationName" xml:space="preserve">
+    <value>يرجي إدخال إسم دعوة التأهيل</value>
+  </data>
+  <data name="EnterQualificationTechnicalCommittee" xml:space="preserve">
+    <value>الرجاء اختيار اللجنة الفنية</value>
+  </data>
+  <data name="EnterRejectedReason" xml:space="preserve">
+    <value>الرجاء إدخال سبب الرفض</value>
+  </data>
+  <data name="Err_NoAttachment" xml:space="preserve">
+    <value>من فضلك ادخل ملفات التأهيل</value>
+  </data>
+  <data name="InvalidDocumentsPresentationDate" xml:space="preserve">
+    <value>تاريخ تقديم الوثائق يجب أن يكون أكبر من آخر تاريخ لتقديم الإستفسارات و ليس أكبر من تاريخ تقييم الوثائق</value>
+  </data>
+  <data name="InvalidLastEnqueriesDate" xml:space="preserve">
+    <value>اخر موعد لإستلام استفسارات الموردين يجب أن يكون أقل من تاريخ تقييم الوثائق وتاريخ تقديم الوثائق</value>
+  </data>
+  <data name="NotAllaowedToApproveQyalification" xml:space="preserve">
+    <value>عذرا لا يمكنك إعتماد التاهيل</value>
+  </data>
+  <data name="NotAllaowedToRejectApproveQualification" xml:space="preserve">
+    <value>عذرا لا يمكنك رفض إعتماد التاهيل </value>
+  </data>
+  <data name="NotAllaowedToReopenQualification" xml:space="preserve">
+    <value>عذرا لا يمكنك إعادة فتح التاهيل </value>
+  </data>
+  <data name="NotAllaowedToSendTenderForApprovement" xml:space="preserve">
+    <value>عذرا لا يمكنك إرسال التاهيل للإعتماد</value>
+  </data>
+  <data name="QualificationCheckingStatus" xml:space="preserve">
+    <value>لا يمكن تقييم التأهيل قبل ان تصبح حالته</value>
+  </data>
+  <data name="QualificationCheckingStatusDate" xml:space="preserve">
+    <value>لا يمكن تقييم التأهيل السابق قبل تاريخ بداية الفحص</value>
+  </data>
+  <data name="OffersCheckingDateMoreThanToday" xml:space="preserve">
+    <value>تاريخ فحص العروض اكبر من تاريخ اليوم</value>
+  </data>
+  <data name="QualificationNotApproved" xml:space="preserve">
+    <value>منافسة غير معتمدة</value>
+  </data>
+  <data name="QualificationNotExist" xml:space="preserve">
+    <value>التأهيل غير موجود</value>
+  </data>
+  <data name="QualificationSentFailed" xml:space="preserve">
+    <value>حدث خطأ أثناء إرسال التأهيل السابق</value>
+  </data>
+  <data name="SelectQualificationResult" xml:space="preserve">
+    <value>الرجاء إختيار نتيجة وثائق التأهيل</value>
+  </data>
+  <data name="CanNotProceedStatusIs" xml:space="preserve">
+    <value>لا يمكن اتمام العملية لان حالة دعوة التاأهيل ليست </value>
+  </data>
+  <data name="FinancialMediumSubCategoryWeight" xml:space="preserve">
+    <value>يجب أن يكون مجموع الوزن للآتى يساوى 100% :  نسبة النقدية - نسبة التداول - نسبة السيولة</value>
+  </data>
+  <data name="FinancialSmallSubCatgeoryWeight" xml:space="preserve">
+    <value>يجب ان يكون وزن القدرات المالية يساوى 100%</value>
+  </data>
+  <data name="PreviousExperianceOligibalityContarctHRWeightMustbe100" xml:space="preserve">
+    <value>يجب أن يكون مجموع الوزن للآتى يساوى 100% :  الخبرات السابقة - الالتزامات التعاقدية القائمة - الموارد البشرية</value>
+  </data>
+  <data name="TechnicalAndFinancialTotalMustbe100" xml:space="preserve">
+    <value>يجب أن يكون مجموع الوزن للآتى يساوى 100% :  القدرات الفنية والإدارية - القدرات المالية</value>
+  </data>
+  <data name="TechnicalFinancialTotalPercentageequal100" xml:space="preserve">
+    <value>يجب أن يكون مجموع الوزن للآتى يساوى 100% :  القدرات الفنية والإدارية - القدرات المالية</value>
+  </data>
+  <data name="TechnicalMediumSubCatgeoryWeight" xml:space="preserve">
+    <value>يجب أن يكون مجموع الوزن للآتى يساوى 100% :  الخبرات السابقة - الجودة -  البيئة والصحة والسلامة - الالتزامات التعاقدية القائمة - الموارد البشرية</value>
+  </data>
+  <data name="TechnicalSmallSubCatgeoryWeight" xml:space="preserve">
+    <value>يجب أن يكون مجموع الوزن للآتى يساوى 100% :  الخبرات السابقة - الالتزامات التعاقدية القائمة - الموارد البشرية</value>
+  </data>
+  <data name="TenderPintsMustbeLargerThanZeroAndSmallerThanSeven" xml:space="preserve">
+    <value>يجب ان تكون عدد نقاط اجتياز المشروع اكبر من صفر واقل من او تساوي سبعة</value>
+  </data>
+  <data name="TotalWeightcashandPercentageMustBe100" xml:space="preserve">
+    <value>يجب أن يكون مجموع الوزن للآتى يساوى 100% :  مجموع نسبة النقدية - نسبة السيولة</value>
+  </data>
+  <data name="TotalWeightForNumberOfEmplyeesAndPercentageMustbe100" xml:space="preserve">
+    <value>يجب أن يكون مجموع الوزن للآتى يساوى 100% : عدد الموظفين - نسبة الموظفين السعوديين</value>
+  </data>
+  <data name="TotalWeightForNumberOfExperiancPreviousMustbe100" xml:space="preserve">
+    <value>يجب أن يكون مجموع الوزن للآتى يساوى 100% : عدد سنوات الخبرة-عدد المشاريع المنفذة - إجمالي قيمة المشاريع فى مجال طلب التأهيل</value>
+  </data>
+  <data name="TotalWeightNumberOfExistingProjectsMustBe100" xml:space="preserve">
+    <value>يجب أن يكون مجموع الوزن للآتى يساوى 100% : عدد المشاريع القائمة - قيمة المشاريع القائمة</value>
+  </data>
+  <data name="FinancialLargeSubCatgeoryWeight" xml:space="preserve">
+    <value>جب أن يكون مجموع الوزن للآتى يساوى 100% :  نسبة النقدية - نسبة التداول - نسبة السيولة - نسبة الإلتزامات - معدل الربحية</value>
+  </data>
+  <data name="InsuranceItemsMustbe100" xml:space="preserve">
+    <value>يجب أن يكون مجموع الوزن للآتى يساوى 100% :  تأمين التعويض المهني - تأمين المسؤولية ضد الغير - تأمين المسؤولية التجارية العامة</value>
+  </data>
+  <data name="MaxMustbeLargerThanMin" xml:space="preserve">
+    <value>يجب ان يكون قيمة (أكبر من) أكبر من قيمة (أصغر من)</value>
+  </data>
+  <data name="TechnicalLargeSubCatgeoryWeight" xml:space="preserve">
+    <value>يجب أن يكون مجموع الوزن للآتى يساوى 100% :  الخبرات السابقة - الجودة -  البيئة والصحة والسلامة - الالتزامات التعاقدية القائمة - الموارد البشرية - التأمين</value>
+  </data>
+  <data name="QualificationProjectInsert" xml:space="preserve">
+    <value>من فضلك ادخل جميع البيانات</value>
+  </data>
+  <data name="SupplierNotInsertProject" xml:space="preserve">
+    <value>من فضلك ادخل المشاريع</value>
+  </data>
+  <data name="pleaseCheckItemWeight" xml:space="preserve">
+    <value>لا يجب ان يكون الوزن بقيمة صفر </value>
+  </data>
+  <data name="SupplierApplyForQualificationBefore" xml:space="preserve">
+    <value>لقد قمت بالتقديم من قبل</value>
+  </data>
+  <data name="SaudiPercentagErrorMsg" xml:space="preserve">
+    <value>لا يمكن عدد الموظفين السعودين اكبر من عدد الموظفين الكلي</value>
+  </data>
+  <data name="DateMustMoreThanQualificationDates" xml:space="preserve">
+    <value>التواريخ يجب أن تكون أكبر من تواريخ التأهيل</value>
+  </data>
+  <data name="CanNotCreatePostQualificationAsExitActiveOne" xml:space="preserve">
+    <value>لا يمكن إضافة تأهيل لاحق لهذا المورد  لأن له تأهيل لاحق غير منتهى</value>
+  </data>
+  <data name="CanNotSendQualificationRequestExtendDate" xml:space="preserve">
+    <value>لا يمكن إرسال التعديل للاعتماد لدخول التأهيل في مرحلة فحص وثائق التأهيل</value>
+  </data>
+  <data name="InvalidOffersCheckingDate" xml:space="preserve">
+    <value>تاريخ فحص وثائق التأهيل يجب أن يكون أكبر من أخر تاريخ لتقديم وثائق التأهيل</value>
+  </data>
+  <data name="QualificationNotExit" xml:space="preserve">
+    <value> التأهيل غير موجود</value>
+  </data>
+  <data name="QualificationDateMustBelargeThanToday" xml:space="preserve">
+    <value>تواريخ التأهيل يجب ان تكون اكبر من تاريخ اليوم</value>
+  </data>
+  <data name="InvalidInsuranceDate" xml:space="preserve">
+    <value>   يجب ان يكون تاريخ التغطية اكبر من تاريخ فحص التأهيل</value>
+  </data>
+  <data name="PendingCancleRequest" xml:space="preserve">
+    <value>هناك طلب الغاء معلق    </value>
+  </data>
+  <data name="PendingCancleRequestFromDataEntry" xml:space="preserve">
+    <value>هناك طلب الغاء معلق من مدخل البيانات</value>
+  </data>
+  <data name="PendingCancleRequestFromPreSecreatry" xml:space="preserve">
+    <value>هناك طلب الغاء معلق من سكرتير لجنة التأهيل</value>
+  </data>
+  <data name="IsValidQualificationDateForApprovement" xml:space="preserve">
+    <value>لا يمكن اعتماد دعوة التأهيل حيث ان التاريخ الحالي أكبر من تاريخ اخر موعد لتقديم وثائق التأهيل</value>
+  </data>
+</root>

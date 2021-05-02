@@ -1,0 +1,138 @@
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailModel
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails</li>
+      </ol>
+   </nav>
+}
+<div class="card">
+   <div class="card-body">
+      @Html.Partial("~/Views/Offer/CheckOffer/Partials/_CombinedSuppliersActions.cshtml")
+   </div>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+   @if (Model.CombinedIdString != null)
+   {
+      if ((Model.isOldFlow && User.IsInRole(RoleNames.OffersCheckSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStage))
+                || (!(Model.isOldFlow) && User.IsInRole(RoleNames.OffersOppeningSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStage))
+                )
+      {
+         @await Component.InvokeAsync("OfferAttachmentsUpdateForChecking", new { combinedId = Model.CombinedIdString })
+      }
+      else
+      {
+         @await Component.InvokeAsync("OfferAttachmentsDetailsForCheckingComponent", new { combinedId = Model.CombinedIdString })
+      }
+      <div class="row">
+         <div class="col">
+            @{
+               if ((Model.isOldFlow && User.IsInRole(RoleNames.OffersCheckSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStage))
+                || (!(Model.isOldFlow) && User.IsInRole(RoleNames.OffersOppeningSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStage))
+                )
+               {
+                  <div class="row">
+                     <div class="col-12">
+                        <button type="button" onclick="SaveAttachmentDetailsData()" class="btn btn-primary">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+                        </button>
+                     </div>
+                  </div>
+               }
+            }
+         </div>
+         <div class="clearfix"></div>
+      </div>
+   }
+   @if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStage)
+   {
+      <div class="row">
+         <div class="col-12">
+            <a class="btn btn-outline-primary btn-link pull-right" asp-action="CheckTenderOffers" asp-controller="Tender" asp-route-tenderIdString="@Model.TenderIDString">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+         </div>
+      </div>
+   }
+   else
+   {
+      <div class="row">
+         <div class="col-12">
+            <a class="btn btn-outline-primary btn-link pull-right" asp-action="OfferChecking" asp-controller="Offer" asp-route-tenderId="@Model.TenderIDString" asp-route-offerId="@Model.OfferIdString">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+         </div>
+      </div>
+   }
+
+</div>
+
+@section scripts{
+   <script>
+      var CombinedSuppliersOffers = new Vue({
+         el: '#CombinedSuppliersGrid',
+         data: {
+            CombinedSuppliersDetails: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/Offer/GetCombinedSuppliersForCombinedSuppliersCheckingStageAsync/@Model.OfferIdString',
+            queryString: ''
+         },
+         created: function(){
+            this.resource_url = '/Offer/GetCombinedSuppliersForCombinedSuppliersCheckingStageAsync/@Model.OfferIdString';
+         },
+         methods: {
+            updateResource: function (data) {
+               this.CombinedSuppliersDetails = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            viewCombinedSuppliers: function (id, isOwner) {
+               return '/Offer/CombinedSuppliersCheckingStage/' + '@Model.OfferIdString' + '/' + '@Model.TenderIDString' + '/' + id;
+            },
+            //viewCombinedSuppliers: function (id) {
+            //   return '/Offer/OfferChecking/' + tenderId + '/' + id;
+            //}
+         }
+      });
+
+            function SaveAttachmentDetailsData() {
+         var obj = {};
+               obj.FinantialOfferLetterNumber = $("#finantialOfferLetterNumber").val();
+               obj.FinantialOfferLetterDate = $("#finantialOfferLetterDate").val();
+               obj.CombinedIdString = $("#CombinedIdString").val();
+               obj.BankGuaranteeFiles = vueObj.BankGuarantees;
+               obj.IsFinaintialOfferLetterAttached = $("input[name='IsFinaintialOfferLetterAttached']:checked").val();
+               obj.IsFinantialOfferLetterCopyAttached = $("input[name='IsFinantialOfferLetterCopyAttached']:checked").val();
+               obj.IsBankGuaranteeAttached = $("input[name='IsBankGuaranteeAttached']:checked").val();
+             obj.OfferIdString ="@Model.OfferIdString";
+             obj.CombinedOwner = "@Model.CombinedOwner.ToString().ToLower()";
+             obj.CombinedIdString = "@Model.CombinedIdString";
+
+             var token = $('input[name=__RequestVerificationToken]').val();
+             $('#LoadingSite').fadeIn();
+               $.post("/Offer/SaveCombinedOfferCheckingAttachments",{
+                  model: obj,  __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               window.location ='/Offer/CombinedSuppliersCheckingStage/' + '@Model.OfferIdString' + '/' + '@Model.TenderIDString';
+
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      }
+   </script>
+}

@@ -1,0 +1,382 @@
+@model MOF.Etimad.Monafasat.ViewModel.NegotiationAgencyPageModel
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FirstStageNegotiation;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FirstStageNegotiation</li>
+      </ol>
+   </nav>
+}
+<div class="col-12" id="applyOffer" v-cloak>
+   <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+      <li class="nav-item">
+         <a class="nav-link " href="#monafasa-info" role="tab" data-toggle="tab">
+            <i class="material-icons">assignment</i> 
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails
+         </a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link active" href="#NegotiationInfo" role="tab" data-toggle="tab">
+            <i class="material-icons">attach_file</i> 
+            @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.NegotiationInfo
+         </a>
+      </li>
+   </ul>
+   <div class="tab-content tab-space">
+      <div class="tab-pane " id="monafasa-info">
+         <div class="col-12">
+            <div class="row">
+               <div class="card">
+                  <div class="card-body">
+                     @{await Html.RenderPartialAsync("~/Views/CommunicationRequest/Partial/_NegotiationTenderInfo.cshtml", Model.NegotiationTenderModel); }
+                  </div>
+               </div>
+
+               <div class="col-12" id="app">
+                  @*<div class="row">
+                        <div class="card">
+                           <div class="card-body">
+                              <div class="row">
+                                 <div class="col-12">
+                                 </div>  @Html.Partial("~/Views/CommunicationRequest/Partials/_OffersExtendValidityGrid.cshtml")
+                              </div>
+                           </div>
+                        </div>
+                     </div>*@
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div class="tab-pane active" id="NegotiationInfo">
+         <div class="tab-pane" id="NegotiationData">
+            @{
+               await Html.RenderPartialAsync("~/Views/CommunicationRequest/Partial/_CreateFirstStageNegotiation.cshtml", Model.NegotiationFirstStageModel);
+
+            }
+
+         </div>
+
+      </div>
+      <div class="row">
+         <div class="col-12">
+            <a asp-action="DetailsForAll" asp-controller="Tender" asp-route-STenderId="@Model.NegotiationTenderModel.TenderIdString" class="btn btn-outline-primary pull-right">الرجوع الى تفاصيل المنافسة</a>
+            <a asp-action="TenderIndexAwardingStage" asp-controller="Tender" class="btn btn-outline-primary pull-right">ألرجوع الى منافسات مرحلة الترسية</a>
+         </div>
+      </div>
+      <div class="col-12">
+         <div class="">
+            <div class="card">
+               <div id="divPreview" class="col-md-12 col-lg-12">
+                  @Html.Partial("~/Views/CommunicationRequest/Partial/_OfferslistAfterDiscount.cshtml")
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+@section scripts
+   {
+
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+   <script>
+
+         var negotiation = new Vue({
+         el: '#divPreview',
+         data: {
+            resource_url: '/CommunicationRequest/GetOffersListForFirstStageNegotiation?pagesize=7&DiscountValue='+@(Model.NegotiationFirstStageModel.ReductionPercent)+'&TenderIdString=@Model.NegotiationTenderModel.TenderIdString',
+            offers: [],
+            totalCount: 0,
+            currentPage: 2,
+            pageSize: 7
+         },
+            methods: {
+               NumberCustom: function (_number) {
+                  //    alert(_number);
+                  //  alert( $.number( _number, 2 ));
+                  return $.number(_number, 2)
+               },
+               formatMoney: function (number, decPlaces, decSep, thouSep) {
+                  decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+                     decSep = typeof decSep === "undefined" ? "." : decSep;
+                  thouSep = typeof thouSep === "undefined" ? "," : thouSep;
+                  var sign = number < 0 ? "-" : "";
+                  var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
+                  var j = (j = i.length) > 3 ? j % 3 : 0;
+
+                  return sign +
+                     (j ? i.substr(0, j) + thouSep : "") +
+                     i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+                     (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
+               }
+            ,
+
+            updateResource: function (data) {
+                 
+               this.offers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            }  , viewOfferFiles: function (id) {
+                 return '/CommunicationRequest/OfferNegotiationFiles/' + id;
+              },
+              viewFinancialOffer: function (id) {
+                 
+                 var prev = '@Context.Request.Path'
+                 //alert(prev);
+                 return '/Offer/FinancialOfferDetailsN?offerIdString=' + id +'&PreviusAction='+prev;
+              }, getSupplierInfo: function (CommericalNumber) {
+                 getSupplierInfo(CommericalNumber);
+            }
+         }
+      });
+
+
+      function CheckReason(sender) {
+         if (parseInt($(sender).val()) ==  @((int)Enums.enNegotiationFirstStageRejectionReasons.HighPriceThanBudget)) {
+            $('#divProjectNumber').show().removeAttr('hidden');
+         }
+         else {
+
+            $('#divProjectNumber').hide();
+         }
+      }
+      function GetNTISValue() {
+
+
+         var projNumber = $('#txtProjectNumber').val();
+
+         if (projNumber == '') {
+
+            $('#projectValue').html('');
+            $('#spnVProjectNumber').show().removeAttr('hidden');
+         }
+         else {
+            $('#LoadingSite').fadeIn();
+            var IsGfs = $('input[name=rideoProjectName]:checked').val() == "1" ? true : false;
+            var message = $('input[name=rideoProjectName]:checked').val() == "1" ? "رقم البند غير صحيح" : "رقم المشروع غير صحيح";
+            $.ajax({
+               type: "GET",
+               url: '@Url.Action("AgencyProjectBudget", "Tender")',
+               data: { ProjectNumber: projNumber, IsGfs: IsGfs },
+               success: function (data) {
+                  
+                  if (data.statusCode == "Error") {
+                     $('#LoadingSite').fadeOut();
+                     AlertFun(message, alertMessageType.Danger);
+                  } else {
+
+                     $('#projectValue').text(data.cash + ' ريال')
+                     $('#LoadingSite').fadeOut();
+
+                  }
+               },
+               error: function () {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ExpiredActivationCode)', alertMessageType.Danger);
+               }
+            });
+
+
+         }
+      }
+
+
+      $('form').submit(function (e) {
+         
+         var projNumber = $('#txtProjectNumber').val();
+         if (projNumber == '') {
+            $('#spnVProjectNumber').show().removeAttr('hidden');
+            e.preventDefault();
+            e.returnValue = false;
+         }
+         else {
+            $('#spnVProjectNumber').hide();
+         }
+      });
+      function CheckProjectValue(e) {
+         
+         if (true) {
+            e.preventDefault();
+            return false;
+         }
+      }
+    //  getDataAfterNegotiation(@Model.NegotiationFirstStageModel.ReductionPercent)
+      var app = new Vue({
+         el: "#app",
+         data: {
+            offers: [],
+            offer: {},
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/CommunicationRequest/GetTenderOffersPagingAsync?tenderIdString=' + '@Model.NegotiationTenderModel.TenderIdString',
+            queryString: ''
+         },
+         methods: {
+            updateResource: function (data) {
+               this.offers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            viewOfferFiles: function (id) {
+               return '/CommunicationRequest/OfferFiles/' + id;
+            },
+
+            viewFinancialOffer: function (id) {
+               return '/CommunicationRequest/OfferDetail/' + id;
+            },
+            viewCombinedSupplier: function (id) {
+               return '/CommunicationRequest/CombinedSuppliers/' + id;
+            },
+            viewOfferDetails: function () {
+               return '/CommunicationRequest/CombinedSuppliers/' + OfferidString + '/@Model.NegotiationTenderModel.TenderIdString/' + CombineIdString +''
+            }
+         }
+      });
+      function StartLoading() {
+    //     $('#LoadingSite').fadeIn();
+      }
+      function RedirectURL(ids, names) {
+         window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+      }
+      function success(result) {
+         $('#LoadingSite').fadeOut();
+         $("#confirmModal").modal("hide");
+         $("#confirmApproveModal").modal("hide");
+         if (result.success == true) {
+            window.location.href= '../../../CommunicationRequest/Negotiation/@(Model.NegotiationTenderModel.TenderIdString)/@(Model.NegotiationFirstStageModel.NegotiationIdString)'
+            AlertFun(result.message, alertMessageType.Success);
+         }
+         else if (result.success == false) {
+            AlertFun(result.message, alertMessageType.Danger);
+            location.reload();
+         }
+         else {
+            $('#divPreview').html(result);
+         }
+      }
+
+      function Fail(data) {
+         //alert(data)
+         $('#LoadingSite').fadeOut();
+         
+         if (data.status == 401) {
+            window.location = '@Url.Action("Index","Acount")';
+         }
+         else {
+        // consol.log(data);
+
+         AlertFun(data.responseJSON.message, alertMessageType.Danger);
+         }
+      }
+      function successManagerAction(result) {
+         $('#LoadingSite').fadeOut();
+         $("#rejectModal").modal("hide");
+         $("#confirmApproveModal").modal("hide");
+         if (result.success == true) {
+            location.reload();
+            AlertFun(result.message, alertMessageType.Success);
+         } else if (result.success == false) {
+            AlertFun(result.message, alertMessageType.Danger);
+         }
+         else {
+            $('#divPreview').html(result);
+         }
+         location.reload();
+      }
+      function GetProjectBudjetFromNIS(_sender) {
+         var _rejectioReason = $(_sender).attr('Id');
+         if (_rejectioReason ==@((int)MOF.Etimad.Monafasat.SharedKernel.Enums.enNegotiationFirstStageRejectionReasons.HighPriceThanBudget)) {
+            $.getJSON("", null
+               ,
+               function (data) {
+                  alert("NTIS Data")
+               }, "");
+         }
+      }
+      function getDataAfterNegotiation(discountAmount) {
+
+         $('#LoadingSite').fadeIn();
+         var url = "/CommunicationRequest/PreviewOffersAfterDiscount/";
+         url = url + discountAmount + "/";
+         url = url + '@Model.NegotiationFirstStageModel.TenderIdString'
+         $.ajax({
+            url: url,
+            type: "GET",
+            dataType: "html",
+            success: function (data) {
+               $('#LoadingSite').fadeOut();
+               $('#divPreview').html(data);
+            }
+         });
+      }
+      function ViewFinancialDetails(offerid) {
+         
+         var prev = '@Context.Request.Path'
+                 //alert(prev);
+              location.href= '/Offer/FinancialOfferDetailsN?offerIdString=' + offerid +'&PreviusAction='+prev ;
+              }
+      function Preview() {
+           var discountAmount = $('#txtDiscount').val();
+negotiation.resource_url = '/CommunicationRequest/GetOffersListForFirstStageNegotiation?pagesize=7&DiscountValue='+discountAmount+'&TenderIdString=@Model.NegotiationTenderModel.TenderIdString'
+       //  getDataAfterNegotiation(((discountAmount == '' || discountAmount == undefined) ? 0 : discountAmount));
+      }
+      $('#btnPreview').on('click', function (evt) {
+         evt.preventDefault();
+         evt.stopPropagation();
+         $('#LoadingSite').fadeIn();
+         var discountAmount = $('#txtDiscount').val();
+         var url = "/CommunicationRequest/PreviewOffersAfterDiscount/";
+         url = url + '@Model.NegotiationTenderModel.TenderIdString' + "/";
+         url = url + discountAmount;
+         $.ajax({
+            url: url,
+            type: "POST",
+            dataType: "html",
+            data: json,
+            success: function (data) {
+               $('#LoadingSite').fadeOut();
+               $('#divPreview').html(data);
+            }
+         });
+      });
+      $('#txtDiscount').on('change', function (event) {
+         if (event.keyCode == 8) {
+            event.returnValue = true;
+            return true;
+         }
+         if ($(this).val() > 100) {
+            $(this).val(100);
+            return false;
+         }
+      });
+      function LoadNegotiationData(_id) {
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            url: '../../../CommunicationRequest/LoadNegotiationFirstStageDataAsync/' + _id,
+            type: "GET",
+            dataType: "html",
+            success: function (data) {
+               console.log(data);
+               $('#NegotiationData').html('');
+               $('#NegotiationData').html(data);
+            }
+         });
+         $('#LoadingSite').fadeOut();
+      }
+   </script>
+}

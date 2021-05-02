@@ -1,0 +1,214 @@
+@model MOF.Etimad.Monafasat.ViewModel.Offer.OfferFileVModel
+@using res = MOF.Etimad.Monafasat.Resources
+@{
+   ViewData["Title"] = "الملفات";
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">الملفات</li>
+      </ol>
+   </nav>
+}
+
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@*<script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>*@
+@*@section Scripts  {
+      @await Html.PartialAsync("_ValidationScriptsPartial")
+   }*@
+
+
+@Html.AntiForgeryToken()
+@if (Model.offerStatusModel.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.offerStatusModel.OfferStatusId == (int)Enums.OfferStatus.Established || Model.offerStatusModel.OfferStatusId == (int)Enums.OfferStatus.Canceled)
+
+{
+   <form method="POST" asp-action="OfferFilesAsync" asp-controller="Offer">
+
+      <input type="hidden" asp-for="offerIdString" />
+      <div class="card">
+         <div class="alert alert-warning p-1">
+            <i class="material-icons pull-left p-2">
+               warning
+            </i>
+            <span class="d-inline-block p-2">
+               يجب إرفاق جميع المستندات المطلوبة حسب ما
+               هو مذكور في الإعلان و كراسة الشروط و المواصفات
+            </span>
+
+         </div>
+         <div class="card-body">
+
+            <div class="row">
+               <div class="col-12">
+                  <h4 class="text-primary">ملفات العرض</h4>
+               </div>
+
+               @if (Model.isSolidarity)
+               {
+                  <div class="col-lg-4 col-sm-6 col-xs-12" id="divSolidarityFile">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static"> ملفات التضامن  <span class="text-danger">*</span></label>
+                        @Html.FileUploaderFor(d => d.SolidarityrFilesReferenceIds, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 40, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                     </div>
+                  </div>
+               }
+               @if (Model.OfferPresentationWay == Enums.OfferPresentationWayId.OneFile)
+               {
+                  if (Model.tenderType == Enums.TenderType.Competition || Model.tenderType == Enums.TenderType.FirstStageTender || Model.tenderType == Enums.TenderType.ReverseBidding)
+                  {
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static">ملفات العرض الفنى <span class="text-danger">*</span></label>
+                           @Html.FileUploaderFor(d => d.TechnicalFilesReferenceIds, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 40, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                        </div>
+                     </div>
+
+                  }
+                  else
+                  {
+                     <div class="col-lg-4 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label for="publisher" class="label bmd-label-static">ملفات العرض المالى و الفنى  <span class="text-danger">*</span></label>
+                           @Html.FileUploaderFor(d => d.TechnicalandFinancialFilesReferenceIds, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 40, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                        </div>
+                     </div>
+                  }
+               }
+               else
+               {
+
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">ملفات العرض   الفنى  <span class="text-danger">*</span></label>
+                        @Html.FileUploaderFor(m => m.TechnicalFilesReferenceIds, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 40, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                     </div>
+                  </div>
+                  <div class="col-lg-4 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <label for="publisher" class="label bmd-label-static">   ملفات العرض المالى <span class="text-danger">*</span></label>
+                        @Html.FileUploaderFor(m => m.FinancialFilesReferenceId, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 40, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                     </div>
+                  </div>}
+
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-12">
+            <a asp-action="OfferMainAsync" class="btn btn-default pull-left" onclick="submitForm()" asp-controller="Offer" asp-route-OfferIdString="@Model.offerIdString" asp-route-tenderIdString="@Model.tenderIdString"> السابق</a>
+
+            @if (Model.offerStatusModel.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.offerStatusModel.OfferStatusId == (int)Enums.OfferStatus.Established || Model.offerStatusModel.OfferStatusId == (int)Enums.OfferStatus.Canceled)
+            {
+
+               <button type="submit" class="btn btn-primary pull-left" name="ActionType" value="@Enums.enSubmitActionType.SaveOnly">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+               <button type="submit" class="btn btn-primary pull-left" name="ActionType" value="@Enums.enSubmitActionType.SaveAndSend">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+            }
+            else
+            {
+               <a asp-action="ApplyOfferQuantityTablesStep" class="btn btn-primary pull-left" asp-controller="Offer" asp-route-OfferIdString="@(Model.offerIdString)">التالى</a>
+            }
+
+         </div>
+      </div>
+   </form>
+}
+<div class="row">
+
+   <div class="col-12">
+      @if (Model.offerStatusModel.OfferStatusId != (int)Enums.OfferStatus.UnderEstablishing && Model.offerStatusModel.OfferStatusId != (int)Enums.OfferStatus.Established && Model.offerStatusModel.OfferStatusId != (int)Enums.OfferStatus.Canceled)
+      {
+         <a asp-action="OfferMainAsync" class="btn btn-default pull-left" asp-controller="Offer" asp-route-OfferIdString="@Model.offerIdString" asp-route-tenderIdString="@Model.tenderIdString"> السابق</a>
+      }
+
+      <a asp-action="SupplierTenders" asp-controller="Tender" class="btn btn-outline-primary pull-right">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToMyTenders</a>
+      @if (Model.offerStatusModel.OfferStatusId != (int)Enums.OfferStatus.UnderEstablishing && Model.offerStatusModel.OfferStatusId != (int)Enums.OfferStatus.Established && Model.offerStatusModel.OfferStatusId != (int)Enums.OfferStatus.Canceled)
+      {
+
+         if (Model.isSolidarity)
+         {
+            <a asp-action="OfferSolidarityAsync" asp-controller="Offer" class="btn btn-default pull-left" asp-route-OfferIdString="@Model.offerIdString" asp-route-tenderIdString="@Model.tenderIdString">@res.SharedResources.DisplayInputs.Previous</a>
+         }
+         else if (Model.tenderType == Enums.TenderType.Competition || Model.tenderType == Enums.TenderType.ReverseBidding || Model.tenderType == Enums.TenderType.FirstStageTender)
+         {
+            <a asp-action="ApplyOfferQuantityTablesStep" class="btn btn-primary pull-left" asp-controller="Offer" asp-route-OfferIdString="@(Model.offerIdString)">التالى</a>
+         }
+
+
+
+      }
+
+
+   </div>
+   <input type="hidden" id="ModuleType" value="@((int)Enums.DeleteModule.Offer)" />
+</div>
+
+@{
+   await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+@section scripts
+   {
+
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   <script>
+
+      // onSuccessCallback: "SaveFiles(solidarityfilesreferenceids)"
+      $(document).ready(function () {
+   //      GetOfferFiles();
+      });
+     // $('#divSolidarityFile').hide();
+      function startLoading() {
+         $('#LoadingSite').fadeIn();
+      }
+      function ReloadFilesList(sender) {
+        @*// $('#divQtableFiles').html('@res.SharedResources.DisplayInputs.Loading');
+         var token = $('#app input[name=__RequestVerificationToken]').val()
+
+         var FileFullId = sender.Id;
+         $.post('/Offer/SaveFilesToOffer',   {
+                offeridString: '@Model.offerIdString',
+                FileFullId: FileFullId,
+               __RequestVerificationToken: token
+  }, function (_html) {
+            $('#divQtableFiles').html(_html);
+         })*@
+      }
+         function submitForm() {
+            $('form').submit();
+         }
+
+
+      function ChangeSolidarity(_sender) {
+         if ($(_sender).is(':checked')) {
+            $('#divSolidarityFile').show()
+         }
+         else {
+            $('#divSolidarityFile').hide()
+         }
+      }
+
+      function deleteAttach(id) {
+           $('#LoadingSite').fadeIn();
+
+         $.get('/Offer/DeleteAttachment?attachmentId=' + id, function (res) {
+             GetOfferFiles()
+         })
+      }
+      function GetOfferFiles() {
+
+         //var files = $('.file_uploader_message').remove();
+         $.get('/Offer/GetOfferAllFiles?OfferIdString=@Model.offerIdString', function (_html) {
+            $('#divQtableFiles').html(_html);
+
+            $('#LoadingSite').fadeOut();
+         })
+      }
+   </script>
+}

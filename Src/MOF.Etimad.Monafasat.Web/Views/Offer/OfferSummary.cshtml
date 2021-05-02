@@ -1,0 +1,162 @@
+@model MOF.Etimad.Monafasat.ViewModel.Offer.OfferSummaryStatusModel
+@using res = MOF.Etimad.Monafasat.Resources
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+   ViewData["Title"] = @res.OfferResources.DisplayInputs.OfferDataDetails;
+}
+
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferDataDetails</li>
+      </ol>
+   </nav>
+}
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@if (Model.IValidationSummary != null && Model.IValidationSummary.Any() && (Model.StatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.StatusId == (int)Enums.OfferStatus.Established || Model.StatusId == (int)Enums.OfferStatus.Canceled))
+{
+
+   <div class="card card-body">
+      <span class="text-danger h5"> @res.OfferResources.ErrorMessages.PleaseCheckBusinessErrors</span>
+      <ul class="p-0" style="list-style:none">
+         @{
+            foreach (var error in (Model.IValidationSummary.ToList() ?? new List<string>()))
+            {
+               <li><i class="material-icons text-danger pull-left">error_outline</i><span class="badge badge-danger" style="font-size: 0.8em;"> @error</span></li>
+            }
+         }
+      </ul>
+   </div>
+}
+
+<div id="divoffersummary"></div>
+ <div class="row">
+   <div class="col-12">
+      @if (Model.IsOfferOwner && (Model.StatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.StatusId == (int)Enums.OfferStatus.Established || Model.StatusId == (int)Enums.OfferStatus.Canceled))
+      {
+         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ConfirmationModal">
+            @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ApproveAndSend
+         </button>
+         <div class="modal fade" id="ConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog  modal-lg " role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="exampleModalLabel">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.SendOffer</h5>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                     </button>
+                  </div>
+                  <div class="modal-body">
+                     <div class="form-check">
+                        <label class="form-check-label text-dark-green" style="margin-bottom:10px">
+                           <input class="form-check-input" type="checkbox" id="chVATValue">
+                           أقر  وأتعهد بما يلي:
+                           <span class="form-check-sign">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+
+                        <div class="text-dark-green pr-4 text-muted">
+
+                           1- أني اطلعت على نظام المنافسات والمشتريات الحكومية ولائحته التنفيذية واللوائح والقرارات والتعليمات ذات العلاقة.
+
+                           <br />
+
+                           2- صحة العرض المقدم وبياناته المدخلة وفقاً لما أشير إليه أعلاه واستيفائه لشروط ومواصفات ووثائق المنافسة.
+
+                           <br />
+                           3- أتعهد بتقديم أصل الضمان المالي قبل انتهاء فترة تقديم العروض، وإذا كان الضمان نص فيه على ما تضمنه قرار وزير المالية رقم ٣٥٥٥ وتاريخ ١٤٤١/٨/١٦هـ فأتعهد بتقديمه متى كان ذلك ممكناً بالتنسيق مع الجهة الحكومية، وأتحمل كامل المسؤولية في حال الإخلال بكل أو بعض ما أشير إليه أعلاه.
+
+                        </div>
+
+                        <span class="h6 text-danger d-block mr-4 mt-3" id="txtApproveVAT" style="display:none !important">@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseAgree</span>
+                     </div>
+
+                  </div>
+                  <div class="modal-footer">
+
+                     <a id="btnSubmit" asp-action="SendOfferToApprove" asp-controller="Offer" class="btn btn-primary btn-sm" asp-route-OfferIdString="@Model.OfferStringId">@res.SharedResources.DisplayInputs.Send</a>
+                     <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+
+      }
+      @{
+         if (Model.IsOfferOwner && (Model.StatusId == (int)Enums.OfferStatus.Established || Model.StatusId == (int)Enums.OfferStatus.UnderEstablishing))
+         {
+            if (Model.IsSolidarity)
+            {
+               <a asp-action="OfferSolidarityAsync" asp-controller="Offer" class="btn btn-default pull-left" asp-route-OfferIdString="@Model.OfferStringId">@res.SharedResources.DisplayInputs.Previous</a>
+            }
+            else if (Model.tenderTypeId == (int)Enums.TenderType.Competition || Model.tenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.tenderTypeId == (int)Enums.TenderType.FirstStageTender)
+            {
+               <a asp-action="OfferFilesAsync" asp-controller="Offer" class="btn btn-default pull-left" asp-route-OfferIdString="@Model.OfferStringId">@res.SharedResources.DisplayInputs.Previous</a>
+            }
+
+            else
+            {
+                <a asp-action="ApplyOfferQuantityTablesStep" asp-controller="Offer" class="btn btn-default pull-left" asp-route-OfferIdString="@Model.OfferStringId">@res.SharedResources.DisplayInputs.Previous</a>
+            }
+         }
+
+
+      }
+       <a asp-action="SupplierTenders" asp-controller="Tender" class="btn btn-outline-primary pull-right">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToMyTenders</a>
+
+   </div>
+</div>
+
+@section scripts
+   {
+   <script type="text/javascript">
+
+      $(document).ready(function () {
+         $('#loader').show();
+
+          $.ajax({
+            url: "/Offer/GetOfferSummaryComponent?offerId=@Model.OfferStringId",
+            success: function (html) {
+               $('#loader').hide();
+
+               $('#divoffersummary').html(html);
+            }
+            , complete: function () {
+               $('#loader').hide();
+
+               $('#LoadingSite').fadeOut();
+
+            }
+         });
+      });
+
+       function submitForm(formId) {
+
+
+      }
+      var isNeedConfirmation =@(  (!(Model.tenderTypeId == (int)Enums.TenderType.Competition || Model.tenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.tenderTypeId == (int)Enums.TenderType.FirstStageTender)).ToString().ToLower())
+         $('#btnSubmit').click(function () {
+
+            if ($('#chVATValue').prop("checked") != true) {
+               $('#txtApproveVAT').show();
+               return false;  
+            }
+            else {
+               $('#loader').show(); 
+
+            }
+      });
+
+
+   </script>
+}
+

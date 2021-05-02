@@ -1,0 +1,796 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+
+@model MOF.Etimad.Monafasat.ViewModel.OfferModel
+
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ApplyOffer;
+   var tableIndex = 0;
+
+}
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.TenderDetails</li>
+      </ol>
+   </nav>
+}
+<form id="myForm">
+   <input type="hidden" id="ModuleType" value="3" />
+   @Html.AntiForgeryToken()
+
+   @if (Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)
+   {
+
+      @section modalTitle{
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+      }
+      @section modalContent{
+         @MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.SendOfferFilesConfirm
+      }
+      @section modalButtons{
+         <button type="button" class="btn btn-link btn-success" onclick="sendOffer('@Model.OfferId')">@MOF.Etimad.Monafasat.Resources.OfferResources.Messages.ApproveAndSendOffer</button>
+         <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+         <span id="vsNoDataFound" class="text-danger" style="display:none">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.ApplyOfferDataIssue</span>
+         <span id="vsNoAttachmentsDataFound" class="text-danger" style="display:none">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.ApplyOfferAttachmentsDataIssue</span>
+      }
+   }
+
+   <div class="modal fade" id="myModal2" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">رفع ملفات جديده</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i> 
+               </button>
+            </div>
+            <div class="modal-body">
+               <form id="formSaveFiles">
+                  <div class="" id="bankUploader">
+                     @Html.FileUploader("model", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 4, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                     <span id="vdBankGuaranteeReference" class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.EnterFile</span>
+                  </div>
+               </form>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="button"
+                       onclick="saveFiles('@ViewBag.tenderIdEncrypt');"
+                       value="">
+                  @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Save
+               </button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Cancel</button>
+
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-12" id="applyOffer" v-cloak>
+      <ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+         <li class="nav-item">
+            <a class="nav-link active" href="#monafasa-info" role="tab" :data-toggle="isEdit? '' : 'tab'" :disabled="isEdit">
+               <i class="material-icons">assignment</i> 
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails
+            </a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link " href="#quantity-tables" role="tab" :data-toggle="isEdit?  '': 'tab'">
+               <i class="material-icons">table_chart</i> 
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantityTables
+            </a>
+         </li>
+         <li class="nav-item">
+            <a class="nav-link" href="#attachments" role="tab" :data-toggle="isEdit? '' : 'tab'" :disabled="isEdit">
+               <i class="material-icons">attach_file</i> 
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Atachementes
+            </a>
+         </li>
+      </ul>
+      <div class="tab-content tab-space">
+         <div class="tab-pane active" id="monafasa-info">
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        @await Component.InvokeAsync("BasicTenderInfo", new { TenderId = ViewBag.tenderId })
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div>
+               <button type="button" class="btn btn-primary  next-tab" @@click="nextTab">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+               @if (User.IsInRole(RoleNames.supplier))
+               {
+                  <a class="btn btn-outline-primary btn-link pull-right" href="/Tender/SupplierTenders">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+                     <div class="ripple-container"></div>
+                  </a>
+               }
+            </div>
+         </div>
+         <div class="tab-pane" id="quantity-tables">
+            @foreach (var table in Model.QuantityTable)
+            {
+               tableIndex++;
+               <div class="col-12">
+                  <div class="row">
+                     <div data-label=" Deliverable" style="width:100%">
+                        <a class="btn btn-block" :class="{'btn-primary':@tableIndex == 1, 'btn-white':@tableIndex != 1}" :data-toggle="isEdit? '' : 'collapse'" href="#@tableIndex" role="button" aria-expanded="false" aria-controls="collapseExample"> @table.TableQuantityName</a>
+                     </div>
+                     <div class="table-responsive">
+                        <table class="table">
+                           <caption>جداول الكميات</caption>
+                           <thead>
+                              <tr>
+                                 <th scope="col" hidden></th>
+                                 <td hidden></td>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr :class="{collapse:true, 'show':@tableIndex == 1}" class="animated  delay-0.5s animated  delay-2s fadeInDown" id="@tableIndex">
+                                 <td class="text-center padd0" style="padding:0;" colspan="6">
+                                    <form class="tableForm" id="TableQuantity_@tableIndex">
+                                       <div class="card">
+                                          <div class="card-body padd0">
+                                             <table class="table" id="quantatyTable_@tableIndex">
+                                                <caption>الاصناف</caption>
+                                                <thead style="background-color: #e0efe8;">
+                                                   <tr>
+                                                      @if (@table.QuantityTableItem.Count() > 0)
+                                                      {
+                                                         <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ItemName  </th>
+                                                         <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Quantity</th>
+                                                         <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Unit</th>
+                                                         <th scope="col">@res.TenderResources.DisplayInputs.Price</th>
+                                                         <th scope="col">@res.TenderResources.DisplayInputs.DiscountPercent</th>
+}
+                                                      else
+                                                      {
+                                                         <th scope="col"> </th>
+                                                         <th scope="col"></th>
+                                                         <th scope="col"></th>
+                                                         <th scope="col"></th>
+                                                         <th scope="col"></th>
+                                                      }
+                                                      <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TotalPrice</th>
+                                                      <th scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TotalPriceAfterDiscount</th>
+                                                   </tr>
+                                                </thead>
+                                                <tbody>
+                                                   @foreach (var item in table.QuantityTableItem)
+                                                   {
+                                                      <tr class="ItemsGrid">
+                                                         <td data-label=" Milestone">
+                                                            <input type="hidden" name="Id" value="@item.Id" />
+                                                            <span> @item.TenderQuantityTableItem.Name</span>
+                                                         </td>
+                                                         <td data-label=" Quantity">
+                                                            <span id="spanQuantity"> @item.TenderQuantityTableItem.Quantity</span>
+                                                         </td>
+                                                         <td data-label="Unit">
+                                                            <span> @item.TenderQuantityTableItem.Unit</span>
+                                                         </td>
+                                                         <td data-label="Details">
+                                                            <input class="form-control" type="number" min="0" id="txtPrice" name="price" value="@item.Price" disabled />
+                                                         </td>
+                                                         <td data-label="Price">
+                                                            <div class="input-group">
+                                                               <input class="form-control txtDiscount" type="number" id="txtDiscount" min="0" max="100" name="discount" value="@item.Discount" pattern="[0-9]+([\.,][0-9]+)?" />
+                                                            </div>
+                                                         </td>
+                                                         <td data-label="Details" style="text-align:center">
+                                                            <input class="form-control" id="txtTotPriceItem" name="itemtotalprice" value="@(item.TenderQuantityTableItem.Quantity * item.Price)" disabled />
+                                                         </td>
+                                                         <td style="text-align:center">
+                                                            <input class="form-control" id="txtTotalAfter" name="itemTotaldiscount" value="@(item.Price * item.TenderQuantityTableItem.Quantity - (item.Price * item.TenderQuantityTableItem.Quantity) * (item.Discount / 100))" disabled />
+                                                         </td>
+                                                      </tr>
+                                                   }
+                                                </tbody>
+                                                <tfoot>
+                                                   <tr>
+                                                      <td colspan="4"></td>
+                                                      <td style="text-align:center"><strong>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Total</strong> </td>
+                                                      <td style="text-align:center">
+                                                         <input class="form-control" id="tblTotalPrice" name="tblTotalPricename" value="@table.TotalPrice" disabled />
+                                                      </td>
+                                                      <td style="text-align:center">
+                                                         @{
+                                                            var total = table.TotalPrice - (table.TotalPrice * (table.Discount / 100));
+                                                         }
+                                                         <input class="form-control" id="tblTotalAfterDiscount" name="tbltotafterdiscountname" value="@total" disabled />
+                                                      </td>
+                                                   </tr>
+                                                </tfoot>
+                                             </table>
+                                             @if (User.IsInRole(RoleNames.supplier) && Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)
+                                             {
+                                                <button type="button" class="btn btn-warning btn-sm etd-edit-btn" @@click="editmode($event)">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit</button>
+                                                <button type="button" value="save" class="btn btn-primary btn-sm d-none etd-save-btn" @@click="saveTable('TableQuantity_@tableIndex','@table.TableQuantityId','@table.OfferId','@ViewBag.tenderIdEncrypt',$event);">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+                                             }
+                                          </div>
+                                       </div>
+                                    </form>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            }
+            <div class="row">
+               <div class="col-6">
+                  <div class="card">
+                     <div class="card-body">
+                        <ul class="list-group form-details-list">
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-12 etd-item-title text-center">
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TotalPrice
+                                 </div>
+                                 <div class="col-12 etd-item-info text-center h4">
+                                    <span id="txtTotPrice" name="totPrice"></span>
+                                 </div>
+                              </div>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-6">
+                  <div class="card">
+                     <div class="card-body">
+                        <ul class="list-group form-details-list">
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-12 etd-item-title  text-center">
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TotalPriceAfterDiscount
+                                 </div>
+                                 <div class="col-12 etd-item-info  text-center h4">
+                                    <span id="txtTotAfterDiscount" name="totPrice"></span>
+                                 </div>
+                              </div>
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            @if (User.IsInRole(RoleNames.OffersOppeningSecretary) && @Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppening)
+            {
+               <h5>إضافة بيان جديد</h5>
+               <div class="card-collapse" v-for="(tbl,indexD) in QuantitiesTables">
+                  <table class="table">
+                     <caption>البيان</caption>
+                     <tr>
+                        <th scope="col">
+                           إسم البيان
+                        </th>
+                        <th scope="col">
+                           السعر
+                        </th>
+                        <th scope="col">
+                           نسبة الخصم
+                        </th>
+                        <th scope="col">
+                           السعر بعد الخصم
+                        </th>
+                        <th scope="col">
+                        </th>
+                     </tr>
+                     <tr>
+                        <td>
+                           <h5 class="mb-0">
+                              <a data-toggle="collapse" :href="'#'+indexD" aria-expanded="true" aria-controls="collapseOne" class="">
+                                 {{tbl.name}}
+                              </a>
+                           </h5>
+                        </td>
+                        <td>
+                           <h5 class="mb-0">
+                              <a data-toggle="collapse" :href="'#'+indexD" aria-expanded="true" aria-controls="collapseOne" class="">
+                                 {{tbl.totalPrice}}
+                              </a>
+                           </h5>
+                        </td>
+                        <td>
+                           <h5 class="mb-0">
+                              <a data-toggle="collapse" :href="'#'+indexD" aria-expanded="true" aria-controls="collapseOne" class="">
+                                 {{tbl.discount}}
+                              </a>
+                           </h5>
+                        </td>
+                        <td>
+                           <h5 class="mb-0">
+                              <a data-toggle="collapse" :href="'#'+indexD" aria-expanded="true" aria-controls="collapseOne" class="">
+                                 {{tbl.totalPrice-(tbl.totalPrice*tbl.discount/100)}}
+                              </a>
+                           </h5>
+                        </td>
+                        <td><button type="button" class="btn btn-round btn-just-icon deletBtn btn-danger pull-right btn-sm" @@click="deleteQuantityTable(indexD)" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DeleteTable" data-original-title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DeleteTable"> <i class="material-icons">delete</i> </button></td>
+                     </tr>
+                  </table>
+               </div>
+               <div class="" id="divSendTables">
+                  <button type="button" class="btn btn-primary" name="buttonsend" id="btnSend" @@click="sendTables()" style="margin-top:30px">
+                     @res.SharedResources.DisplayInputs.Send
+                  </button>
+               </div>
+               <table class="table">
+                  <caption>البيان</caption>
+                  <tr>
+                     <th scope="col">إسم البيان</th>
+                     <th scope="col">السعر</th>
+                     <th scope="col">نسبة الخصم</th>
+                     <th scope="col"></th>
+                  </tr>
+                  <tr>
+                     <td>
+                        <input type="text" id="txtNDName" name="txtNDName" maxlength="50" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TableName" class="form-control">
+                        <span class="bmd-help text-danger" id="txtTableNameValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterTableName</span>
+                     </td>
+                     <td>
+                        <input class="form-control" type="number" min="0" id="OpenTxtPrice" name="OpenTxtPrice" />
+                        <span class="bmd-help text-danger" id="OpenTxtPriceValidation">@MOF.Etimad.Monafasat.Resources.OfferResources.Messages.EnterPrice</span>
+                     </td>
+                     <td>
+                        <input class="form-control txtDiscount" type="number" id="OpenTxtDiscount" min="0" max="100" name="discount" />
+
+                     </td>
+                     <td>
+                        <button type="button" name="buttonadd" id="btnadd" @@click="AddQuantityTable()" class="btn p-2 btn-outline-primary" rel="tooltip" data-placement="top" title="" data-original-title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddTable">
+                           <i class="material-icons">add</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddTable<div class="ripple-container"></div>
+                        </button>
+                     </td>
+                  </tr>
+               </table>
+            }
+            <div>
+               <button type="button" class="btn btn-default  prev-tab" @@click="prevTab">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+               <button type="button" class="btn btn-primary  next-tab" @@click="nextTab" :disabled="isEdit">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+               @if (User.IsInRole(RoleNames.supplier))
+               {
+                  <a class="btn btn-outline-primary btn-link pull-right" href="/Tender/SupplierTenders">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+                     <div class="ripple-container"></div>
+                  </a>
+               }
+            </div>
+         </div>
+         <div class="tab-pane" id="attachments">
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="alert alert-warning" style="z-index:0">
+                           <div class="container">
+                              <div class="alert-icon">
+                                 <i class="material-icons">warning</i> 
+                              </div>
+                              @MOF.Etimad.Monafasat.Resources.OfferResources.Messages.AttachAllFilesAsAdvertisement
+                           </div>
+                           <span class="badge badge-pill badge-warning"> </span>
+                        </div>
+                        <div id="attachmentDelete">
+                           <table class="table table-striped">
+                              <caption>المرفقات</caption>
+                              <thead style="background-color: #e0efe8;">
+                                 <tr>
+                                    <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FileName </th>
+                                    <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FileSize </th>
+                                    <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr v-for="(tbl,index) in attachments">
+                                    <td data-label=" Milestone">
+
+                                       <a href="#" @@click="RedirectURL(index);return false;" target="_blank"> {{tbl.fileName}} </a>
+                                    </td>
+                                    <td data-label=" Quantity">
+                                       <span>  {{tbl.size }}</span>
+                                    </td>
+                                    <td data-label="Details">
+                                       @if (User.IsInRole(RoleNames.supplier) && Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)
+                                       {
+                                          <div class="dropdown pull-right">
+                                             <button @@click="DeleteAttach(index)" class="btn btn-round btn-sm btn-danger"><i class="material-icons">clear</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</button>
+                                          </div>
+                                       }
+                                    </td>
+                                 </tr>
+                              </tbody>
+                              <tfoot>
+                                 @if (User.IsInRole(RoleNames.supplier) && Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)
+                                 {
+                                    <tr>
+                                       <td colspan="3"> <button type="button" onclick="resetFileUpload()" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal2">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.UploadFile </button></td>
+                                    </tr>
+                                 }
+                              </tfoot>
+                           </table>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div>
+                  <button type="button" class="btn btn-default  prev-tab" @@click="prevTab">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Previous</button>
+                  @if (User.IsInRole(RoleNames.supplier) && Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established)
+                  {
+                     <button type="button" class="btn btn-primary" data-toggle="modal" id="btnSend" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.OfferResources.Messages.ApproveAndSendOffer</button>
+                  }
+                  @if (User.IsInRole(RoleNames.supplier))
+                  {
+                     <a class="btn btn-outline-primary btn-link pull-right" href="/Tender/SupplierTenders">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+                        <div class="ripple-container"></div>
+                     </a>
+                  }
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</form>
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script src="~/Etimad-UI/assets/js/vue-app/vue2-filters.min.js"></script>
+<script src="~/Etimad-UI/assets/js/vue-app/pagination.js"></script>
+<script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+<script type="text/javascript">
+   function checkSpcialChar(event) {
+      console.log(event);
+      if (event.key == '.' && event.target.value.indexOf('.') > 0) {
+         return false
+      }
+      if (!($.isNumeric(event.target.value))) {
+         if (event.keyCode == 8 || (event.key == '.' && event.target.value.split('.').length <= 2)) {
+            event.returnValue = true;
+            return true;
+         }
+         event.returnValue = false;
+         return false;
+      }
+      event.returnValue = true;
+      return true;
+   }
+   var attachmentss = [];
+      @if (Model != null && Model.Attachment != null)
+      {
+         @:attachmentss = @Html.Raw(Json.Serialize(Model.Attachment));
+      }
+      $('#divSendTables').hide();
+   var app2 = new Vue({
+      el: '#applyOffer',
+      data: {
+         isEdit: false,
+         isEmpty: false,
+         isNumber: false,
+         QuantitiesTables: [],
+         attachments: attachmentss
+      },
+      methods: {
+         nextTab: function () {
+            if (!this.isEdit) {
+               $('.etd-wiz-tabs').children().find('a.active').parent().next().children().click();
+            } else {
+               AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseMakeSureOfSavingData', 'warning')
+            }
+         },
+         prevTab: function () {
+            if (!this.isEdit) {
+               $('.etd-wiz-tabs').children().find('a.active').parent().prev().children().click();
+            } else {
+               AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseMakeSureOfSavingData', 'warning')
+
+            }
+         },
+         SumItem: function (price, quantity) {
+            return price * quantity;
+         },
+         RedirectURL: function (index) {
+            window.open("/Upload/getfile/" + this.attachments[index].fileNetReferenceId + ":" + this.attachments[index].fileName, '_blank');
+         },
+         AddQuantityTable: function () {
+            if ($('#txtNDName').val() == '' || $('#txtNDName').val() == undefined) {
+               $('#txtTableNameValidation').show();
+               return false;
+            }
+            else { $('#txtTableNameValidation').hide(); }
+            if ($('#OpenTxtPrice').val() == '' || $('#OpenTxtPrice').val() == undefined) {
+               $('#OpenTxtPriceValidation').show();
+               return false;
+            }
+            else {
+               $('#OpenTxtPriceValidation').hide();
+            }
+            var tbl = {};
+            tbl.tableQuantityId == 0;
+            tbl.offerId =@Model.OfferId;
+            tbl.name = $('#txtNDName').val();
+            tbl.totalPrice = $('#OpenTxtPrice').val();
+            tbl.discount = $('#OpenTxtDiscount').val();
+            app2.QuantitiesTables.push(tbl);
+            $("#txtNDName").val('');
+            $("#OpenTxtPrice").val('');
+            $("#OpenTxtDiscount").val('');
+            $('#divSendTables').show();
+            return false;
+         },
+         sendTables: function () {
+            var token = $('input[name=__RequestVerificationToken]').val();
+            $('#LoadingSite').fadeIn();
+            $.post('/Offer/SaveOpeningStageTables', {
+               tables: app2.QuantitiesTables, __RequestVerificationToken: token
+            }).done(function (e) {
+               $('#LoadingSite').fadeOut();
+               $('#btnBackToOffers').click();
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            });
+         },
+         deleteQuantityTable: function (index) {
+            this.QuantitiesTables.splice(index, 1);
+            if (this.QuantitiesTables.length > 0) {
+               $('#divSendTables').show();
+            }
+            else
+               $('#divSendTables').hide();
+         },
+         SumItemAfterDiscount: function (price, quantity, discount) {
+            var totalPrice = ((price * quantity) - (price * quantity) * (discount / 100));
+            return totalPrice;
+         },
+         SumAll: function (items) {
+            items
+         },
+         editmode: function (event) {
+            this.isEdit = !this.isEdit
+            $(event.target).prev().find('input').not("#txtTotPriceItem").not("#txtTotalAfter").not("#txtTotPrice").not("#txtTotAfterDiscount").attr('disabled', false);
+            $(event.target).toggleClass('d-none');
+            $(event.target).next('.etd-save-btn').toggleClass('d-none');
+         },
+         saveTable: function (formName, tableId, offerId, tenderId, event) {
+            $('#LoadingSite').fadeIn();
+            var form = $('#' + formName).serializeArray();
+            for (var x = 0; form.length > x; x++) {
+               var row = form[x];
+               if (row.name == 'Price' && !$.isNumeric(row.value)) {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.PleaseEnterNumbers', 'danger');
+                  return;
+               }
+            }
+            var items = this.serializeTableToJson(form);
+            var totlaPrice = $('#' + formName).find("#tblTotalPrice").val();
+            var afterDiscountPrice = $('#' + formName).find("#tblTotalAfterDiscount").val();
+            var tableObj = { OfferId: offerId, TableQuantityId: tableId, QuantityTableItem: items, TenderId: tenderId, TotalPrice: parseFloat(totlaPrice), Discount: 100 - (parseFloat(afterDiscountPrice * 100 / totlaPrice)) };
+            var token = $('input[name=__RequestVerificationToken]').val();
+            $.post("/Offer/savetable", {
+               table: tableObj, __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $(event.target).prev().prev().find('input').attr('disabled', true);
+               $(event.target).toggleClass('d-none');
+               $(event.target).prev('.etd-edit-btn').toggleClass('d-none');
+               app2.isEdit = !app2.isEdit;
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+         },
+         serializeTableToJson: function (serializer) {
+            var tableColumnsCount = 3;
+            var _string = '[';
+            for (var x = 0; serializer.length - 2 > x; x += tableColumnsCount) {
+               _string += '{';
+               for (var y = 0; tableColumnsCount > y; y++) {
+                  var row = serializer[x + y];
+                  _string += '"' + row.name + '":"' + row.value + '",';
+               }
+               var end = _string.length - 1;
+               _string = _string.substr(0, end);
+               _string += '},';
+            }
+            var end = _string.length - 1;
+            _string = _string.substr(0, end);
+            _string += ']';
+            return JSON.parse(_string);
+         },
+         DeleteAttach: function (index) {
+            var attach = this.attachments[index];
+            this.attachments.splice(index, 1);
+            var obj = { AttachmentId: attach.attachmentId, OfferId: attach.offerId }
+            $('#LoadingSite').fadeIn();
+            var token = $('input[name=__RequestVerificationToken]').val();
+            $.post("/Offer/DeleteSupplierAttachments", {
+               model: obj, __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DeletedSuccessfully)', alertMessageType.Success);
+
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+         }
+      }
+   });
+   $("input[name=price]").on("input", function () {
+      if ($("input[name=price]").val() == 0) {
+         AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.CannotInsertZeroInPrice)', alertMessageType.Danger);
+         return false;
+      }
+      var trIndex = $(this).parent().parent().parent().index() + 1;
+      var tableid = $(this).closest('table').attr('id');
+      calcTotal(trIndex, tableid);
+   });
+   $("#btnSend").click(function () {
+      $('#vsNoDataFound').hide();
+      $('#vsNoAttachmentsDataFound').hide();
+   });
+   $("input[name=discount]").on("input", function () {
+      var trIndex = $(this).parent().parent().parent().parent().index() + 1;
+      var tableid = $(this).closest('table').attr('id');
+      calcTotal(trIndex, tableid);
+   });
+   function calcTotal(trIndex, tableid) {
+      var totalsPrice = 0;
+      var totalsAfterDiscount = 0;
+      var tabletotals = 0;
+      var tabletotalsAfterDiscount = 0;
+      $("#" + tableid).not('thead tr').each(function (i) {
+         var price = parseFloat($($(this).children().children()[trIndex]).find("#txtPrice").val())
+         var discount = $($(this).children().children()[trIndex]).find("#txtDiscount").val()
+         var quantity = parseInt($($(this).children().children()[trIndex]).find("#spanQuantity")[0].innerHTML);
+         $($(this).children().children()[trIndex]).find("#txtTotPriceItem").val(price * quantity);
+         $($(this).children().children()[trIndex]).find("#txtTotalAfter").val(((price * quantity) - (price * quantity) * (discount / 100)));
+         $(this).find("#tblTotalPrice").val(tabletotals);
+         $(this).find("input[name=itemtotalprice]").each(function () {
+            var txval = $(this).val();
+            tabletotals += parseFloat(txval);
+            $(this).closest('table').find("#tblTotalPrice").val(tabletotals);
+         })
+         $(this).find("input[name=itemTotaldiscount]").each(function () {
+            var txval = $(this).val();
+            tabletotalsAfterDiscount += parseFloat(txval);
+            $(this).closest('table').find("#tblTotalAfterDiscount").val(tabletotalsAfterDiscount);
+         })
+         $("input[name=tblTotalPricename]").each(function () {
+            var txval = $(this).val();
+            totalsPrice += parseFloat(txval);
+            $("#txtTotPrice").text(totalsPrice);
+         })
+         $("input[name=tbltotafterdiscountname]").each(function () {
+            var txval = $(this).val();
+            totalsAfterDiscount += parseFloat(txval);
+            $("#txtTotAfterDiscount").text(totalsAfterDiscount);
+         })
+      })
+   }
+   var totalPricevalue = 0;
+   var totalDiscountvalue = 0;
+   $("input[name=tblTotalPricename]").each(function () {
+      var txval = $(this).val();
+      totalPricevalue += parseFloat(txval);
+      $("#txtTotPrice").text(totalPricevalue);
+   });
+   $("input[name=tbltotafterdiscountname]").each(function () {
+      var txval = $(this).val();
+      totalDiscountvalue += parseFloat(txval);
+      $("#txtTotAfterDiscount").text(totalDiscountvalue);
+   });
+   function resetFileUpload() {
+      $('.file_uploader_message').html('');
+      $('.qq-upload-list').html('');
+      $('.file_uploader').css('display', 'block');
+      $('#model').fineUploader().val('');
+   }
+   function saveFiles(tenderId) {
+      var modelValue = $('#model').val();
+      var obj = { tenderId: tenderId, files: modelValue };
+      $('#LoadingSite').fadeIn();
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $.post("/Offer/SaveSupplierAttachments", {
+         model: obj, __RequestVerificationToken: token
+      }).done(function (data) {
+         app2.attachments = data;
+         $('#myModal2').modal('hide');
+         $('#LoadingSite').fadeOut();
+         AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success);
+
+      }).fail(function (error) {
+         $('#myModal2').modal('hide');
+         $('#LoadingSite').fadeOut();
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });
+   }
+   $(function () {
+      $('tr.ItemsGrid').find('input').attr('disabled', true);
+      $('.txtDiscount').on('change', function (event) {
+         if (event.keyCode == 8) {
+            event.returnValue = true;
+            return true;
+         }
+         if ($(this).val() > 100) {
+            $(this).val(100);
+            return false;
+         }
+      });
+   });
+   $('a[data-toggle="collapse"]').click(function () {
+      $(this).toggleClass('btn-outline-primary');
+      $(this).toggleClass('btn-primary');
+   });
+   function sendOffer(id) {
+      console.log(id);
+      if (!isFormsValid()) {
+         $('#vsNoDataFound').show();
+         return false;
+      }
+      $('#LoadingSite').fadeIn();
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $.post("/Offer/SendOffer", {
+         offerId: id, __RequestVerificationToken: token
+      }).done(function (data) {
+         $('#LoadingSite').fadeOut();
+         setTimeout(function () {
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.OfferResources.Messages.DataSaved)', alertMessageType.Success);
+         }, 3000);
+         window.location = "/Tender/SupplierTenders";
+      }).fail(function (error) {
+         $('#LoadingSite').fadeOut();
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });
+   }
+   function isFormsValid() {
+      var forms = $('.tableForm');
+      for (var ii = 0; ii < forms.length; ii++) {
+         for (var xx = 0; xx < forms[ii].length; xx++) {
+            if (forms[ii][xx].type == 'number' && forms[ii][xx].name == 'price') {
+               if (isNaN(parseFloat(forms[ii][xx].value))) {
+                  return false;
+               }
+               if (parseFloat(forms[ii][xx].value) == 0) {
+                  return false;
+               }
+            }
+         }
+      }
+      if ($('#attachmentDelete tbody tr').length == 0) {
+         $('#vsNoAttachmentsDataFound').show();
+         return false;
+      }
+      return true;
+   }
+</script>
+
+

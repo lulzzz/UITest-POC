@@ -1,0 +1,15 @@
+@model MOF.Etimad.Monafasat.ViewModel.GetConditionTemplateModel
+<div style='width:100%;' class="p-2">
+   <div style="width:50%;float:right" dir="rtl">
+      <b style="font-size: 15px;text-align:start">@string.Format("المملكة العربية السعودية")</b> 
+      <br />
+      <span style="font-size: 15px;text-align:start">@string.Format("إسم الإدارة :") @string.Format(Model.AgencyName??"")</span>
+      <br />
+      <span style="font-size: 15px;text-align:start">@string.Format("إسم النموذج :") @string.Format(Model.TenderName??"")</span>
+      <br />
+   </div>
+   <div style="width:50%;float:left" class="text-left" dir="ltr">
+      <img src="~/Etimad-UI/assets/imgs/EITMAD2-01.png" alt="Etimad" style="padding: 4px;max-width:77px;margin-left:10px" />
+
+   </div>
+</div>

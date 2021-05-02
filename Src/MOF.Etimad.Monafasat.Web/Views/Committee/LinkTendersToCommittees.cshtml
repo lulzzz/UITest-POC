@@ -1,0 +1,382 @@
+@model MOF.Etimad.Monafasat.ViewModel.CommitteeTenderModel
+@{
+
+   ViewData["Title"] = (Model.CommitteeTypeId == 1 ? (MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.LinkTechnicalCommittees) : (Model.CommitteeTypeId == 2 ? (MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.LinkOpenOffersCommittees) : (Model.CommitteeTypeId == 3 ? (MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.LinkCheckOffersCommittees) : (Model.CommitteeTypeId == 4 ? (MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.LinkBlockCommittee) : (Model.CommitteeTypeId == 5 ? (MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.LinkDirectPurchase) : (Model.CommitteeTypeId == 6 ? (MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.LinkPreQualification) : "    "))))));
+
+   //ViewData["Title"] = (Model.CommitteeTypeId == 1 ? (MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.LinkTechnicalCommittees) : (Model.CommitteeTypeId == 2 ? (MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.LinkOpenOffersCommittees) : (Model.CommitteeTypeId == 3 ? (MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.DetailsCheckOffersCommittees) : (Model.CommitteeTypeId == 4 ? (MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.DetailsBlockCommittee) : "    "))));
+   //  ViewData["Title"] =  MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.JoinCommitteeToTender;
+   int committeeId = Model.CommitteeId;
+   int committeeTypeId = Model.CommitteeTypeId;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Committee", new { committeeTypeId = MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(Model.CommitteeTypeId) } )">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.BreadCrumbCommittee</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.JoinCommitteeToTender</li>
+      </ol>
+   </nav>
+}
+<style>
+   .table-responsive .form-check {
+      margin-bottom: 1.5rem;
+      margin-top: 0;
+   }
+</style>
+<form id="tenderGrid" asp-action="LinkTendersToCommittees" asp-controller="Committee">
+   <input type="hidden" id="CommitteeId" name="CommitteeId" value="@Model.CommitteeId" />
+   <div class="">
+      <div class="modal fade" id="joinConfirmationModal" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">
+                     @MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.ConfirmJoin
+                  </h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <p>
+                     @MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.ConfirmTenderJoining
+                  </p>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-primary btn-sm" id="joinTenderConfirmation" @@click="joinSelectedTenders()">@MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.Confirm</button>
+                  <button type="button" class="btn btn-primary btn-sm d-none" id="joinBranchTendersConfirmation" @@click="joinSelectedBranch()">@MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.Confirm</button>
+                  <button type="button" class="btn  btn-primary btn-sm d-none" id="joinAllTendersConfirmation" @@click="joinAllTenders()">@MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.Confirm</button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.CommitteeInfo</h4>
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.CommitteeName
+                           </div> <div class="col-8 etd-item-info"><span>@(Model.CommitteeName)</span></div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.Address
+                           </div> <div class="col-8 etd-item-info"><span>@(Model.Address)</span></div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="branchId" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Branches</label>
+                     <select data-live-search="true" id="branchId" name="BranchId" class="selectpicker" @@change="getAllTendersByBranchId()" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose" data-style="select-with-transition" v-model="selectedBranch">
+                        <option value="" selected>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All</option>
+                        <option :value="item.id" v-for="item in branchesList">{{item.name}}</option>
+                     </select>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <br />
+                     <button class="btn btn-primary btn-sm" id="btnSave" v-if="isTenderSelected" @@click="showJoinConfirmationDialog()" type="button">  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save<div class="ripple-container"></div></button>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="table-responsive">
+            <table id="TenderTable" class="table table-striped text-center" aria-describedby="link tenders to committees">
+               <thead class="text-center">
+                  <tr>
+                     <th scope="col" class="text-center">
+                        <div class="form-check"  v-if="tenders.length > 0">
+                           <label class="form-check-label">
+                              <input class="form-check-input" v-model="allSelected" @@change="selectAll" type="checkbox">
+                              <span class="form-check-sign">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.BranchName</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate </th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate </th>
+                  </tr>
+               </thead>
+               <tbody class="text-center" v-if="tenders && tenders.length > 0">
+                  <tr v-for="(tender, $index) in tenders">
+                     <td class="text-center" data-label="">
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input class="form-check-input" @@change="select"  v-model="selectedTenders" :disabled="tender.offersOpeningCommitteeId == @(Model.CommitteeId) || tender.offersCheckingCommitteeId == @(Model.CommitteeId)" type="checkbox" :value="tender.tenderId">
+                              <span class="form-check-sign">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </td>
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.BranchName"> {{tender.branchName}} </td>
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName"> {{tender.tenderName}} </td>
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber  "> {{tender.tenderNumber}} </td>
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType"> {{tender.tenderTypeName}} </td>
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SubmtionDate"> {{tender.offersOpeningDate != null ? tender.offersOpeningDate.split('T')[0] : " "}} </td>
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate"> {{tender.lastOfferPresentationDate != null ? tender.lastOfferPresentationDate.split('T')[0] : ""}} </td>
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate"> {{tender.lastEnqueriesDate != null ? tender.lastEnqueriesDate.split('T')[0] : ""}} </td>
+                  </tr>
+               </tbody>
+               <tbody v-else>
+                  <tr>
+                     <td colspan="9" class="text-center">
+                        <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                        <br />
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                     </td>
+              
+                  </tr>
+               </tbody>
+            </table>
+            <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+         </div>
+      </div>
+      <div>
+         @Html.ActionLink(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton, "Index", new { committeeTypeId = MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(Model.CommitteeTypeId) }, new { @class = "btn btn-outline-primary btn-link pull-right" })
+         <div class="clearfix"></div>
+      </div>
+   </div>
+</form>
+@section scripts {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+      var Tender = new Vue({
+         el: '#tenderGrid',
+         data: {
+            tenders: [],
+            selectedTenders: [],
+            selectedBranch: '',
+            selectedBranches: [],
+            branchesList: [],
+            BranchIds: [],
+            branchIdStringList: '',
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10000,
+            resource_url: '',
+            selected: [],
+            allSelected: false,
+         },
+         computed: {
+            isTenderSelected: function () {
+               if (this.selectedTenders.length > 0) {
+                  return true;
+               }
+               else {
+                  return false;
+               }
+            }
+         },
+         created: function () {
+            this.getBranchesDropDown();
+         },
+         methods: {
+            selectAll: function () {
+               this.selectedTenders = [];
+               if (this.allSelected) {
+                  for (tender in this.tenders) {
+                     this.selectedTenders.push(this.tenders[tender].tenderId.toString());
+                  }
+               }
+            }, select: function () {
+               if (this.selectedTenders.length == this.tenders.length) {
+                  this.allSelected = true;
+               } else {
+                  this.allSelected = false;
+               }
+            },
+            getAllTendersByBranchId: function () {
+               this.branchIdStringList = '';
+               Tender.branchIdStringList += '&BranchIdStringList=' + this.selectedBranch;
+
+               this.resource_url = '/Tender/GetTendersToJoinCommittees?CommitteeTypeId=' + @Model.CommitteeTypeId  + this.branchIdStringList + '&CommitteeId=' + @committeeId
+            },
+            getBranchesDropDown: function () {
+               $.get('/Tender/GetAllBranchesNotAssignedToCommittee', { committeeId: @committeeId, committeeType: @Model.CommitteeTypeId }).done(function (result) {
+
+                  Tender.branchesList = result;
+                  result.forEach(function (item) {
+                     Tender.BranchIds.push(item.id);
+                    Tender.branchIdStringList += '&BranchIdStringList=' + item.id
+                  });
+                  Tender.resource_url = '/Tender/GetTendersToJoinCommittees?CommitteeTypeId=' + @Model.CommitteeTypeId  + Tender.branchIdStringList + '&CommitteeId=' + @committeeId;
+                  Tender.branchIdStringList='';
+
+                  setTimeout(function () {
+                     $('#branchId').selectpicker('refresh');
+                  }, 1000);
+               });
+
+            },
+            //selected tenders and click save button
+            showJoinConfirmationDialog: function () {
+               $("#joinTenderConfirmation").removeClass('d-none');
+               $("#joinAllTendersConfirmation").addClass('d-none');
+               $("#joinBranchTendersConfirmation").addClass('d-none');
+               $("#joinConfirmationModal").modal("show");
+            },
+            //selected branch and click joinBranchTenders button
+            showJoinBranchConfirmationDialog: function () {
+               $("#joinBranchTendersConfirmation").removeClass('d-none');
+               $("#joinTenderConfirmation").addClass('d-none');
+               $("#joinAllTendersConfirmation").addClass('d-none');
+               $("#joinConfirmationModal").modal("show");
+            },
+            //joinAllTenders
+            showJoinAllTendersConfirmationDialog: function () {
+               $("#joinAllTendersConfirmation").removeClass('d-none');
+               $("#joinBranchTendersConfirmation").addClass('d-none');
+               $("#joinTenderConfirmation").addClass('d-none');
+               $("#joinConfirmationModal").modal("show");
+            },
+            //selected tenders and click save button
+            joinSelectedTenders: function () {
+
+               $('#joinConfirmationModal').modal('hide');
+               var committeeObject = {
+                  tenderIds: Tender.selectedTenders,
+                  committeeId: @committeeId,
+                  committeeTypeId: @committeeTypeId
+               };
+
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $('#LoadingSite').fadeIn();
+               $.post('/Committee/JoinCommitteeToTenders', { committeeTenderModel: committeeObject, __RequestVerificationToken: token }).done(function (result) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommitteeResources.ErrorMessages.TenderJoinedSuccess)', alertMessageType.Success);
+                  Tender.$refs.vpaginator.fetchData(Tender.resource_url);
+                  //$("#btnSave").a
+                  Tender.selectedTenders = [];
+
+               }).fail(function (error) {
+                        $('#LoadingSite').fadeOut();
+                        if (error.responseText != "Logout") {
+                           AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                        }
+                        else if (error.responseText == "Logout") {
+                           window.location = '/account/logout'; return;
+                        }
+               });
+               return false;
+            },
+             joinSelectedBranch: function () {
+
+               $('#joinConfirmationModal').modal('hide');
+                var committeeObject = {
+                   branchId: Tender.selectedBranch,
+                   committeeId: @committeeId,
+                   committeeTypeId: @committeeTypeId
+               };
+
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $('#LoadingSite').fadeIn();
+                $.post('/Committee/JoinCommitteeToBranchTenders', { committeeTenderModel: committeeObject, __RequestVerificationToken: token }).done(function (result) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommitteeResources.ErrorMessages.TenderJoinedSuccess)', alertMessageType.Success);
+                  Tender.$refs.vpaginator.fetchData(Tender.resource_url);
+
+               }).fail(function (error) {
+                        $('#LoadingSite').fadeOut();
+                        if (error.responseText != "Logout") {
+                           AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                        }
+                        else if (error.responseText == "Logout") {
+                           window.location = '/account/logout'; return;
+                        }
+                     });
+
+               return false;
+            },
+            joinAllTenders: function () {
+
+               $('#joinConfirmationModal').modal('hide');
+                var committeeObject = {
+                  committeeId: @committeeId,
+                  committeeTypeId: @committeeTypeId
+               };
+
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $('#LoadingSite').fadeIn();
+                $.post('/Committee/JoinCommitteeToAllTenders', { committeeTenderModel: committeeObject, __RequestVerificationToken: token }).done(function (result) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommitteeResources.ErrorMessages.TenderJoinedSuccess)', alertMessageType.Success);
+                  Tender.$refs.vpaginator.fetchData(Tender.resource_url);
+
+               }).fail(function (error) {
+                        $('#LoadingSite').fadeOut();
+                        if (error.responseText != "Logout") {
+                           AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                        }
+                        else if (error.responseText == "Logout") {
+                           window.location = '/account/logout'; return;
+                        }
+                     });
+
+               return false;
+            },
+            cancelJoinCommitteeToTender: function (id) {
+
+               $('#joinConfirmationModal').modal('hide');
+               var committeeObject = {
+                   tenderId: id,
+                  committeeId: @committeeId,
+                  committeeTypeId: @committeeTypeId
+               };
+
+               var token = $('input[name=__RequestVerificationToken]').val();
+               $('#LoadingSite').fadeIn();
+               $.post('/Committee/CancelJoinCommitteeToTender', { committeeTenderModel: committeeObject, __RequestVerificationToken: token }).done(function (result) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommitteeResources.ErrorMessages.CancelTenderJoinedSuccess)', alertMessageType.Success);
+                  Tender.$refs.vpaginator.fetchData(Tender.resource_url);
+
+               }).fail(function (error) {
+                        $('#LoadingSite').fadeOut();
+                        if (error.responseText != "Logout") {
+                           AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                        }
+                        else if (error.responseText == "Logout") {
+                           window.location = '/account/logout'; return;
+                        }
+                     });
+
+               return false;
+            },
+            updateResource: function (data) {
+               this.tenders = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            tenderDetailsUrl: function (id) {
+               return '/Tender/Details?STenderId=' + id;
+            }
+         }
+
+      });
+   </script>
+}

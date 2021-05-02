@@ -1,0 +1,234 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierAnnouncementDetailsModel
+<link rel="icon" href="~/Etimad-UI/assets/imgs/favicon.ico">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script>
+   document.title = "Report";
+   (function () {
+      var link = document.createElement('link'),
+         oldLink = document.getElementById('dynamic-favicon');
+      link.id = 'dynamic-favicon';
+      link.rel = 'shortcut icon';
+
+      link.href = '~/Etimad-UI/assets/imgs/favicon.ico';
+      document.getElementsByTagName('head')[0].appendChild(link);
+   })();
+   function printData() {
+      window.print();
+      window.close();
+   }
+</script>
+<style type="text/css">
+   .table tr td {
+      width: 50% !important;
+   }
+</style>
+<button id="printButton" onclick="printData();" class="btn btn-success d-print-none" style="margin:20px;">طباعة</button>
+@if (User.UserRole() == RoleNames.supplier)
+{
+   <a href="@(Url.Action("SupplierAnnouncementDetails","Announcement", new { announcmentIdString = Model.AnnouncementIdString }))" class="btn btn-danger d-print-none">رجوع</a>
+}
+else
+{
+   <a href="@(Url.Action("GetAnnouncementDetails","Announcement", new { AnnouncementIdString = Model.AnnouncementIdString }))" class="btn btn-danger d-print-none">رجوع</a>
+}
+<div id="printDiv" class="row" dir="rtl" style="margin:20px;">
+   <div class="col-sm-12 text-center">
+      <img alt="" class="rounded mx-auto" src="~/Etimad-UI/assets/imgs/favicon.ico" />
+      <hr />
+   </div>
+   <h2 class="col-sm-12 text-center">تفاصيل الإعلان</h2>
+   <table class="table table-bordered col-sm-12">
+      <caption></caption>
+      <tr>
+         <th scope="row">الجهة الحكومية</th>
+         <td class="text-center">@Model?.AgencyName</td>
+      </tr>
+      <tr>
+         <th scope="row">فرع الجهة الحكومية</th>
+         <td class="text-center">@Model?.BranchName</td>
+      </tr>
+      <tr>
+         <th scope="row">المعلومات الأساسية</th>
+         <td class="text-center">
+            إسم الإعلان: @Model?.AnnouncementName
+            <br />
+            رقم الإعلان: @Model?.ReferenceNumber
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">نوع المنافسة</th>
+         <td class="text-center">@Model?.TenderTypeName</td>
+      </tr>
+      <tr>
+      <tr>
+         <th scope="row">مدة الإعلان عن المنافسة</th>
+         <td class="text-center">@Model?.AnnouncementPeriod</td>
+      </tr>
+      <tr>
+         <th scope="row">تعريف عن المنافسة المنافسة</th>
+         <td class="text-center">@Model?.IntroAboutTender</td>
+      </tr>
+      <tr>
+         <th scope="row">الحالة</th>
+         <td class="text-center">
+            @Model?.StatusName
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">أنشأت بواسطة</th>
+         <td class="text-center">
+            @Model?.CreatedBy
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">اعتمدت من قبل</th>
+         <td class="text-center">
+            @Model?.AuditedBy
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">
+            @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.LastJoinDate
+         </th>
+         <td class="text-center">
+            @Model?.LastApplyingRequestsDateString
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">
+            @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.PublishDate
+         </th>
+         <td class="text-center">
+            @Model?.PublishDateString
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">
+            @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.Details
+         </th>
+         <td class="text-center">@Model?.Details</td>
+      </tr>
+      <tr>
+         <th scope="row">مكان التفيذ</th>
+         <td class="text-center">@Model?.InsideKSAString</td>
+      </tr>
+      <tr>
+         <th scope="row" >
+            @if (Model.Areas != null && Model.Areas.Count > 0)
+            {
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Areas
+            }
+            else
+            {
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Countries
+            }
+         </th>
+         <td class="text-center">
+            <ul>
+               @if (Model.Areas != null && Model.Areas.Count > 0)
+               {
+                  @foreach (var areaItem in Model.Areas)
+                  {
+                     <li> @areaItem.Name</li>
+                  }
+               }
+               else
+               {
+                  @if (Model.Countries != null && Model.Countries.Count > 0)
+                  {
+                     @foreach (var countryItem in Model.Countries)
+                     {
+                        <li> @countryItem.Name</li>
+                     }
+                  }
+               }
+            </ul>
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MaintenanceOperationActions
+         </th>
+         <td class="text-center">
+            <ol>
+               @if (Model.MaintenanceOperationActions != null)
+               {
+                  @foreach (var maintenanceWorkItem in Model.MaintenanceOperationActions)
+                  {
+                     <li> @maintenanceWorkItem.Name</li>
+                  }
+               }
+            </ol>
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EstablishingActions
+         </th>
+         <td class="text-center">
+            <ol>
+               @if (Model.ConstructionWorks != null)
+               {
+                  @foreach (var constructionWorkItem in Model.ConstructionWorks)
+                  {
+                     <li> @constructionWorkItem.Name</li>
+                  }
+               }
+            </ol>
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">
+            نشاط الإعلان
+         </th>
+         <td class="text-center">
+            <ol>
+               @if (Model.TenderActivities != null)
+               {
+                  @foreach (var activityItem in Model.TenderActivities)
+                  {
+                     <li>@activityItem.Name</li>
+                  }
+               }
+            </ol>
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">
+            @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.ActivityDescription
+         </th>
+         <td class="text-center">
+            <span>
+               @Model.ActivityDescription
+            </span>
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">
+            أسلوب الشراء بناء على نتائج الاعلان
+         </th>
+         <td class="text-center">
+            <span>
+               @Model.PurchaseMethodName
+            </span>
+         </td>
+      </tr>
+      <tr>
+         <th scope="row">
+            قائمة طلبات الانضمام
+         </th>
+         <td class="text-center">
+            <ol>
+               @if (Model.JoinedSupplierList != null)
+               {
+                  @foreach (var supplier in Model.JoinedSupplierList)
+                  {
+                     <li>@(supplier.Key + " - " + @supplier.Value)</li>
+                  }
+               }
+            </ol>
+         </td>
+      </tr>
+   </table>
+</div>

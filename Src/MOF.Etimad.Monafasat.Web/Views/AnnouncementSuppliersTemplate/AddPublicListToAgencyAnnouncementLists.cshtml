@@ -1,0 +1,274 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.AddPublicListToAgencyAnnouncementListsModel
+
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementTemplateDetails;
+
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page"><a asp-controller="AnnouncementSuppliersTemplate" asp-action="AllAgencyAnnouncementSupplierTemplates">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AllAnnouncementTemplate</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementTemplateDetails</li>
+      </ol>
+   </nav>
+}
+<div id="detailsForm">
+
+   <div class="modal fade" id="addListToAgencyModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">تأكيد أضافة القائمة لقوائم الجهة</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p> عند التأكيد فسيتم إضافة القائمة المحددة لقوائم الجهة</p>
+            </div>
+            <div class="modal-footer">
+               <button type="button" onclick="addListToAgencyAnnouncementLists()" class="btn btn-success btn-sm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="modal fade" id="removeListFromAgencyModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">تأكيد حذف القائمة من قوائم الجهة</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p> عند التأكيد سيتم إزالة القائمة من قوائم الموردين المضافة لديكم</p>
+            </div>
+            <div class="modal-footer">
+               <button type="button" onclick="removeListFromAgencyAnnouncementLists()" class="btn btn-success btn-sm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <ul class="nav nav-pills nav-pills-icons" role="tablist">
+      <li class="nav-item">
+         <a class="nav-link active text-center show" id="basicStepTab" href="#d-1" role="tab" data-toggle="tab" aria-selected="true">
+            <i class="material-icons">dashboard</i>
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation
+         </a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link text-center" id="announcementTemplateDetails" href="#d-2" role="tab" data-toggle="tab" aria-selected="true">
+            <i class="material-icons">chat</i>
+            تفاصيل القائمة
+         </a>
+      </li>
+
+      <li class="nav-item">
+         <a class="nav-link text-center" id="activityTab" href="#d-3" role="tab" data-toggle="tab" aria-selected="true">
+            <i class="material-icons">chat</i>
+            العناوين والأنشطة
+         </a>
+      </li>
+
+      <li class="nav-item">
+         <a class="nav-link text-center" id="requirement" href="#d-4" role="tab" data-toggle="tab" aria-selected="true">
+            <i class="material-icons">question_answer</i>
+            المواصفات والمرفقات المطلوبة للانضمام للقائمة
+         </a>
+      </li>
+
+      <li class="nav-item">
+         <a class="nav-link text-center" id="tenders1" href="#d-5" role="tab" data-toggle="tab" aria-selected="true">
+            <i class="material-icons">question_answer</i>
+            قائمة الموردين المنضمين
+         </a>
+      </li>
+
+   </ul>
+
+   <div class="tab-content  tab-space col-12 " style="padding:0">
+      <div class="tab-pane active animated fadeInLeft delay-1s show" id="d-1">
+         <div>
+            <div id="basicStepDiv">
+               <div class="col-12">
+                  <div class="row">
+                     <div class="card">
+                        <div class="card-body">
+                           @await Component.InvokeAsync("AnnouncementBasicDetail", new { idString = @Model.AnnouncementIdString })
+                        </div>
+                     </div>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div class="tab-pane animated fadeInLeft delay-1s" id="d-2">
+         <div class="card">
+            <div class="card-body" id="announcementTemplateDetailsDiv">
+            </div>
+         </div>
+      </div>
+      <div class="tab-pane animated fadeInLeft delay-1s" id="d-3">
+         <div class="card">
+            <div class="card-body" id="activityDiv">
+            </div>
+         </div>
+      </div>
+
+      <div class="tab-pane animated fadeInLeft delay-1s" id="d-4">
+         <div class="card">
+            <div class="card-body" id="requirementyDiv">
+            </div>
+         </div>
+      </div>
+
+      <div class="tab-pane animated fadeInLeft delay-1s" id="d-5">
+         <div class="card">
+            <div id="requestsGrid" class="tableDiv">
+               @await Html.PartialAsync("~/Views/AnnouncementSuppliersTemplate/Partials/_ApprovedSuppliersJoinRequestsGrid.cshtml")
+
+            </div>
+         </div>
+      </div>
+
+   </div>
+   @if (Model.CanAddAnnouncementListToAgency)
+   {
+
+      <div class="row">
+         <button type="button" id="btnAddListToAgency" @@click="showAddToAgencyList()" class="btn btn-primary pull-left">
+            إضافة القائمة الى قوائم الجهة
+         </button>
+
+      </div>
+   }
+   @if (Model.CanRemoveAnnouncementListFromAgency)
+   {
+
+      <div class="row">
+         <button type="button" id="btnRemoveListFromAgency" @@click="showRemoveFromAgencyList()" class="btn btn-primary pull-left">
+            حذف القائمة من قوائم الجهة
+         </button>
+
+      </div>
+   }
+
+   <div class="row" id="approval">
+      <div class="col-12 ">
+         <a class="btn btn-outline-primary btn-link pull-right" asp-action="AllAgencyAnnouncementSupplierTemplates" asp-controller="AnnouncementSuppliersTemplate">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+      </div>
+   </div>
+</div>
+
+@section scripts{
+   <script>
+      $(document).ready(function () {
+      $('#requirement').click(function () {
+         $('#loader').show();
+         $.get('/AnnouncementSuppliersTemplate/GetAnnouncementDescriptionViewComponenet?announcementIdStr=' + '@Model.AnnouncementIdString', function (data) {
+            $("#requirementyDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+
+       $('#activityTab').click(function () {
+         $('#loader').show();
+         $.get('/AnnouncementSuppliersTemplate/GetAnnouncementTemplateActivityAndAddressViewComponenet?announcementIdStr=' + '@Model.AnnouncementIdString', function (data) {
+            $("#activityDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+
+      $('#announcementTemplateDetails').click(function () {
+               $('#loader').show();
+         $.get('/AnnouncementSuppliersTemplate/GetAnnouncementTemplateListViewComponenet?announcementIdStr=' + '@Model.AnnouncementIdString', function (data) {
+            $("#announcementTemplateDetailsDiv").html(data);
+            $('#loader').hide();
+         });
+
+      });
+      });
+      function addListToAgencyAnnouncementLists() {
+         $('#LoadingSite').fadeIn();
+         axios.get("AddListToAgencyAnnouncementLists", {
+            params: {
+               announcementIdString: '@Model.AnnouncementIdString',
+            }
+          }).then(res => {
+             $("#addListToAgencyModal").modal("hide");
+             $("#btnAddListToAgency").attr("disabled", true);
+             $('#LoadingSite').fadeOut();
+            setTimeout(function () {
+               window.location = '@Url.Action("AllAgencyAnnouncementSupplierTemplates", "AnnouncementSuppliersTemplate")';
+            }, 3000);
+            AlertFun("تم إضافة القائمة إلى قوائم الجهة بنجاح", alertMessageType.Success);
+
+         })
+            .catch(error => {
+               $('#LoadingSite').fadeOut();
+               AlertFun(error.response.data.message, alertMessageType.Danger);
+            });
+      }
+
+      function removeListFromAgencyAnnouncementLists() {
+         $('#LoadingSite').fadeIn();
+         axios.get("RemoveListFromAgencyAnnouncementLists", {
+            params: {
+               announcementIdString: '@Model.AnnouncementIdString',
+            }
+          }).then(res => {
+             $("#removeListFromAgencyModal").modal("hide");
+             $("#btnRemoveListFromAgency").attr("disabled", true);
+             $('#LoadingSite').fadeOut();
+            setTimeout(function () {
+               window.location = '@Url.Action("AllAgencyAnnouncementSupplierTemplates", "AnnouncementSuppliersTemplate")';
+            }, 3000);
+            AlertFun("تم حذف القائمة من قوائم الجهة بنجاح", alertMessageType.Success);
+
+         })
+            .catch(error => {
+               $('#LoadingSite').fadeOut();
+               AlertFun(error.response.data.message, alertMessageType.Danger);
+            });
+      }
+
+   var tenders = new Vue({
+      el: '#detailsForm',
+      data: {
+         requests: [],
+         totalCount: 0,
+         currentPage: 1,
+         pageSize: 10,
+         resource_url: '/AnnouncementSuppliersTemplate/ApprovedSuppliersJoinRequestsPagingAsync?announcementIdString=' + '@Model.AnnouncementIdString'
+       },
+      methods: {
+         getSupplierInfo: function (cr) {
+            getSupplierInfo(cr);
+         },
+         updateResource: function (data) {
+            this.requests = data;
+            this.totalCount = this.$refs.vpaginator.totalCount;
+            this.currentPage = this.$refs.vpaginator.currentPage;
+            this.pageSize = this.$refs.vpaginator.pageSize;
+         },
+         showAddToAgencyList: function () {
+            $("#addListToAgencyModal").modal("show");
+         },
+         showRemoveFromAgencyList: function () {
+            $("#removeListFromAgencyModal").modal("show");
+         }
+      }
+   });
+
+   </script>
+}

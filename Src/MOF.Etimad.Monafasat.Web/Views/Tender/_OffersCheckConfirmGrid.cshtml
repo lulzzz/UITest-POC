@@ -1,0 +1,146 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderDetailsCheckingStageModel
+@if (!(User.IsInRole(RoleNames.OffersCheckManager) && Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedConfirmed))
+{
+
+
+   <div class="table-responsive">
+      <table id="OffersCheckTable" class="table table-striped text-center" aria-describedby="Offers Check Table">
+         <thead class="text-center">
+            <tr>
+               <th scope="col" class="text-center">#</th>
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName</th>
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber</th>
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferNumber</th>
+               @if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding && Model.TenderTypeId != (int)Enums.TenderType.Competition)
+               {
+                  if (Model.canViewOfferPrice)
+                  {
+                     <th scope="col" class="text-center" v-bind:class="{ 'bg-light' : (sort == 'FinalPriceAfterDiscount')}">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue</th>
+                     if (Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.IsTenderTechnicalChecked == true && Model.IsTenderFinancialChecked == true && Model.ContainSupply == true)
+                     {
+                        <th scope="col" class="text-center" v-bind:class="{ 'bg-light' : (sort == 'OfferWeightAfterCalcNPA')}">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValueAfterCalcNPA</th>
+
+                     }
+                     if (Model.isApplyOfferPreference && Model.IsTenderTechnicalChecked == true && Model.IsTenderFinancialChecked == true && Model.isOffersPreferenceChecked)
+                     {
+                        <th scope="col" class="text-center" v-bind:class="{ 'bg-light' : (sort == 'localContentWeight')}">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LocalContentWeight</th>
+                        <th scope="col" class="text-center" v-bind:class="{ 'bg-light' : (sort == 'finalPrice')}">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PriceAfterPreferenceCalculations</th>
+                        <th scope="col" class="text-center" v-bind:class="{ 'bg-light' : (sort == 'financialEvaluation')}">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FinancialEvaluation</th>
+}
+                  }
+               }
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseStatus</th>
+               @if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding && Model.TenderTypeId != (int)Enums.TenderType.Competition)
+               {
+                  if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile || (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles &&
+                     (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed ||
+                     Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialChecking ||
+                     Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingPending ||
+                     Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected)))
+                  {
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOffer</th>
+                  }
+               }
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TechnicalEvaluation</th>
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+            </tr>
+         </thead>
+         <tbody class="text-center" v-if="InvitationsOffersCheck && InvitationsOffersCheck.length > 0">
+            <tr v-for="(invitationOffer, $index) in InvitationsOffersCheck">
+               <td class="text-center" data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+               <td class="text-center text-primary" style="cursor:pointer" @@click="getSupplierInfo(invitationOffer.commericalRegisterNo)" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName"> {{invitationOffer.commericalRegisterName}} </td>
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{invitationOffer.commericalRegisterNo}} </td>
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferNumber"> @Model.OffersCount / {{ (currentPage -1) * (pageSize) +  $index + 1}}  </td>
+               @if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding && Model.TenderTypeId != (int)Enums.TenderType.Competition)
+               {
+                  if (Model.canViewOfferPrice)
+                  {
+                     <td class="text-center" v-bind:class="{ 'bg-light' : (sort == 'FinalPriceAfterDiscount')}" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue"> {{invitationOffer.offerPrice}} </td>
+                     if (Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.IsTenderTechnicalChecked == true && Model.IsTenderFinancialChecked == true && Model.ContainSupply == true)
+                     {
+                        <td class="text-center" v-bind:class="{ 'bg-light' : (sort == 'OfferWeightAfterCalcNPA')}" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValueAfterCalcNPA"> {{invitationOffer.offerWeightAfterCalcNPA}} </td>
+                     }
+                     if (Model.isApplyOfferPreference && Model.IsTenderTechnicalChecked == true && Model.IsTenderFinancialChecked == true && Model.isOffersPreferenceChecked)
+                     {
+                        <td class="text-center" v-bind:class="{ 'bg-light' : (sort == 'localContentWeight')}" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LocalContentWeight"> {{invitationOffer.localContentWeight}} </td>
+                        <td class="text-center" v-bind:class="{ 'bg-light' : (sort == 'finalPrice')}" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PriceAfterPreferenceCalculations"> {{invitationOffer.finalPrice}} </td>
+                        <td class="text-center" v-bind:class="{ 'bg-light' : (sort == 'financialEvaluation')}" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FinancialEvaluation"> {{invitationOffer.financialEvaluation}} </td>
+                     }
+
+                  }
+               }
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseStatus">
+                  {{invitationOffer.invitationPurchaseStatus}}
+               </td>
+               @if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding && Model.TenderTypeId != (int)Enums.TenderType.Competition)
+               {
+                  if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile || (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles &&
+                     (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed ||
+                     Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialChecking ||
+                     Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingPending ||
+                     Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected)))
+                  {
+                     <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOffer">
+                        <span v-if="invitationOffer.offerAcceptanceStatusId == @((int)Enums.OfferAcceptanceStatusId.AcceptedOffer)">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferAccepted
+                        </span>
+                        <span v-else-if="invitationOffer.offerAcceptanceStatusId == @((int)Enums.OfferAcceptanceStatusId.RejectedOffer)">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferRejected
+                        </span>
+                        <span v-else>
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferNotChecked
+                        </span>
+                     </td>
+                  }
+               }
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TechnicalEvaluation">
+                  <span v-if="invitationOffer.offerTechnicalEvaluationStatusId == @((int)Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer)">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Matched
+                  </span>
+                  <span v-else-if="invitationOffer.offerTechnicalEvaluationStatusId == @((int)Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NotMatched
+                  </span>
+                  <span v-else>
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferNotTechnicallyEvaluated
+                  </span>
+               </td>
+               <td data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+                  <div class="dropdown">
+                     <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i><div class="ripple-container"></div></button>
+                     <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                        <a :href="ApplyOffer(invitationOffer.offerIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferFiles</a>
+                        @if (Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender || Model.TenderTypeId == (int)Enums.TenderType.Competition
+                        || ((Model.isOldFlow && Model.CheckingDateSet) || (!Model.isOldFlow && Model.canEnterOfferData))
+                        || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase)
+                        {
+
+                           <a :href="CheckFinancialOffer(invitationOffer.offerIdString, invitationOffer.combinedCount)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EvaluateOffer</a>
+                        }
+                     </div>
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+         <tbody v-else>
+            <tr>
+               @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles)
+               {
+                  <td colspan="9" class="text-center">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.AllOffersRejectedTechnically
+                  </td>
+               }
+               else
+               {
+                  <td colspan="9" class="text-center">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                  </td>
+               }
+            </tr>
+         </tbody>
+      </table>
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+
+
+
+}

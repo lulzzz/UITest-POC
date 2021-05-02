@@ -1,0 +1,42 @@
+<div class="table-responsive ">
+   <table class="table table-striped text-center" aria-describedby="Blocked Resources">
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialRegistrationNo</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockDetails</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.From</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.To</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CreatedBy</th>
+            <th scope="col">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Options</th>
+         </tr>
+      </thead>
+      <tbody v-if="Blocks && Blocks.length > 0">
+         <tr v-for="(block, $index) in Blocks">
+            <td> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td> {{block.commercialSupplierName}} </td>
+            <td> {{block.commercialRegistrationNo}} </td>
+            <td> {{block.blockDetails}} </td>
+            <td> {{((block.blockStartDate != "" && block.blockStartDate != null) ? block.blockStartDate.split('T')[0] : "")}}</td>
+            <td> {{((block.blockEndDate != "" && block.blockEndDate != null) ? block.blockEndDate.split('T')[0] : "")}}</td>
+            <td> {{block.createdBy}} </td>
+            <td>
+               <button @@click="showDialog(block.supplierBlockIdString)" type="button" v-if="(block.isActive && block.blockStartDate >=block.currentDate && block.blockEndDate >=block.currentDate)||(block.isActive && block.blockStartDate ==null && block.blockEndDate ==null)" id="DeleteBTN" class="btn btn-sm btn-danger"><i class="material-icons">clear</i>   @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Remove</button>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="8" align="center" style="text-align:center !important">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i>
+               <br />
+               @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.NoRecordsFound
+               <br />
+               <button type="button" class="btn btn-primary btn-sm add-new-vendor" onclick="window.location = '/Block/createasync?BlockId=@(ViewData["BlockId"])'"><i class="fa fa-user-plus"></i>     @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.AddNewSupplier</button>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>

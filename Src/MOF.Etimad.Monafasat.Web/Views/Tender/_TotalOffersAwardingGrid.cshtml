@@ -1,0 +1,213 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+@model MOF.Etimad.Monafasat.ViewModel.TenderOffersModel
+@{
+   var canUserTakeAction = Model.CanInsertAwardingData && Model.TenderStatusId == (int)Enums.TenderStatus.OffersAwarding && !Model.IsOldTender;
+}
+<div class="table-responsive">
+   <table id="totalOffersAwardingTable" class="table table-bordered table-striped text-center" summary="desc">
+      <thead class="text-center">
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            @if (canUserTakeAction)
+            {
+               <th scope="col" class="text-center" v-if="Offers && Offers.length > 0 && showCheckBox"></th>
+            }
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NumberOfOffers</th>
+            @if (Model.TenderTypeId != (int)Enums.TenderType.Competition)
+            {
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue</th>
+            }
+            @if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding && Model.TenderTypeId != (int)Enums.TenderType.Competition)
+            {
+               if (!Model.IsOldTender && Model.ContainSupply == true)
+               {
+                  <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValueAfterCalcNPA</th>
+               }
+            }
+            @if (Model.TenderTypeId != (int)Enums.TenderType.Competition)
+            {
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOffer</th>
+            }
+            @if (Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects)
+            {
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TechnicalWeight</th>
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.FinancialWeight</th>
+            }
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TechnicalEvaluation</th>
+
+            @if (!Model.IsOldTender)
+            {
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PrequalificationStatus</th>
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExclusionFromAwarding</th>
+            }
+
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Add</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+         </tr>
+      </thead>
+      <tbody class="text-center" v-if="Offers && Offers.length > 0">
+         <tr v-for="(offer, $index) in Offers">
+            <td class="text-center" data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+
+            @if (canUserTakeAction)
+            {
+               <template v-if="showCheckBox">
+                  <td v-if="offer.isExclusionReasonEmpty == true" class="text-center" data-label="#">
+                     <div class="form-check m-0">
+                        <label class="form-check-label">
+                           <input type="checkbox" class="form-check-input" @@click="toggleOfferInOffersArray(offer.commericalRegisterNo)" />
+                           <span class="form-check-sign" style="top: -12px;right: 19px;">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </td>
+                  <td v-else></td>
+               </template>
+            }
+
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName" style="cursor:pointer" @@click="getSupplierInfo(offer.commericalRegisterNo)"> {{offer.commericalRegisterName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{offer.commericalRegisterNo}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NumberOfOffers"> {{ (currentPage -1) * (pageSize) +  $index + 1}} / {{Offers.length}} </td>
+            @if (Model.TenderTypeId != (int)Enums.TenderType.Competition)
+            {
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue">{{offer.finalPrice == 0 ? "لم يتم المشاركة بالمزايدة" : offer.finalPrice}}</td>
+            }
+            @if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding && Model.TenderTypeId != (int)Enums.TenderType.Competition)
+            {
+               if (!Model.IsOldTender && Model.ContainSupply == true)
+               {
+                  <td class="text-center" v-bind:class="{ 'bg-light' : (sort == 'OfferWeightAfterCalcNPA')}" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValueAfterCalcNPA"> {{offer.offerWeightAfterCalcNPA}} </td>
+               }
+            }
+            @if (Model.TenderTypeId != (int)Enums.TenderType.Competition)
+            {
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOffer">
+                  <span v-if="offer.offerAcceptanceStatusId == @((int)Enums.OfferAcceptanceStatusId.AcceptedOffer) || (@Model.TenderTypeId == @((int)Enums.TenderType.ReverseBidding) && offer.offerTechnicalEvaluationStatusId == @((int)Enums.OfferAcceptanceStatusId.AcceptedOffer))">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferAccepted
+                  </span>
+                  <span v-else>
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferRejected
+                  </span>
+               </td>
+            }
+            @if (Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects)
+            {
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TechnicalWeight"> {{offer.technicalEvaluationLevel}} </td>
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.FinancialWeight"> {{offer.financialEvaluationLevel}} </td>
+            }
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TechnicalEvaluation">
+               <span v-if="offer.offerTechnicalEvaluationStatusId == @((int)Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer)">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Matched
+               </span>
+               <span v-else>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NotMatched
+               </span>
+            </td>
+
+            @if (!Model.IsOldTender)
+            {
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PrequalificationStatus">
+                  <template v-if="offer.isPasssPostQaulification">
+                     <span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PassedInPostQualification</span>
+                  </template>
+                  <template v-if="offer.isPasssPostQaulification == false ">
+                     <span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FailedInPostQualification</span>
+                  </template>
+                  <template v-if="offer.isPasssPostQaulification == null && '@Model.IsPasssPreqaulification' != 'True' ">
+                     <span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.HasNoPrequalifiactionNorPostQualification</span>
+                  </template>
+                  <template v-if="offer.isPasssPostQaulification == null && '@Model.IsPasssPreqaulification' == 'True' && '@Model.IsPreqaulificationExpired' != 'True' ">
+                     <span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.HasValidPrequalification</span>
+                  </template>
+                  <template v-if="offer.isPasssPostQaulification == null && '@Model.IsPasssPreqaulification' == 'True' && '@Model.IsPreqaulificationExpired' == 'True' ">
+                     <span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.HasExpiredPrequalification</span>
+                  </template>
+               </td>
+
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExclusionFromAwarding">
+                  <template v-if="offer.isExclusionReasonEmpty">
+                     <span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NotExcluded</span>
+                  </template>
+                  <template v-else>
+                     <span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Excluded</span> <br />
+                     <span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExclusionReason:( {{offer.exclusionReason}} )</span>
+                  </template>
+               </td>
+            }
+
+            <td class="text-center" v-if="offer.isExclusionReasonEmpty" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Add">
+               <template v-if="offer.tenderStatusId == @((int)Enums.TenderStatus.OffersAwarding)">
+                  @if (Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding)
+                  {
+                     <button :disabled="!(checkIfLowestPrice(offer) && ActualOffersAwarding.length == 0)" type="button" class="btn btn-primary btn-just-icon btn-round btn-sm" id="btnAddToAwardedGrid" @@click="addToActualAwardedGrid($event,offer)"><i class="material-icons">add</i> </button>
+                  }
+                  else
+                  {
+                     <button type="button" class="btn btn-primary btn-just-icon btn-round btn-sm" id="btnAddToAwardedGrid" @@click="addToActualAwardedGrid($event,offer)"><i class="material-icons">add</i> </button>
+                  }
+               </template>
+               <template v-else>
+                  <button type="button" class="btn btn-primary btn-just-icon btn-round btn-sm" disabled id="btnAddToAwardedGrid"><i class="material-icons">add</i> </button>
+               </template>
+            </td>
+
+            <td v-else class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Add"></td>
+
+            <td data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               <div class="dropdown">
+                  <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i> <div class="ripple-container"></div></button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                     <a :href="OfferDetails(offer.offerIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferFiles</a>
+                     <a :href="OfferChecking(offer.offerIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails</a>
+
+                     @if (canUserTakeAction)
+                     {
+                        <template v-if="offer.isPasssPostQaulification != false && !offer.hasActivePostQaulification">
+                           <template v-if="offer.isExclusionReasonEmpty">
+                              <button type="button" data-toggle="modal" data-target="#excludedReasonModal" @@click="showExcludedReasonModal(offer.commericalRegisterNo,offer.offerIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExcludedFromAwarding</button>
+                           </template>
+                           <template v-else>
+                              <button type="button" data-toggle="modal" data-target="#removeExcludedReasonModal" @@click="showRemoveExcludedReasonModal(offer.commericalRegisterNo,offer.offerIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExclusionCancelled</button>
+                           </template>
+                        </template>
+                     }
+
+                     <template v-if="offer.isExclusionReasonEmpty== true">
+                        @if (canUserTakeAction)
+                        {
+                           if (Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding)
+                           {
+                              <button v-if="checkIfLowestPrice(offer) && offer.isPasssPostQaulification == null && ActualOffersAwarding.length == 0" type="button" data-toggle="modal" data-target="#initialModal" @@click="showPostQualificationModal(offer.commericalRegisterNo)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AddPrequalification</button>
+
+                           }
+                           else
+                           {
+                              <button v-if="awardingType == true || awardingType =='true' " type="button" data-toggle="modal" data-target="#initialModal" @@click="showPostQualificationModal(offer.commericalRegisterNo)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AddPrequalification</button>
+                           }
+                        }
+                     </template>
+                  </div>
+               </div>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="10" class="text-center">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i>
+               <br />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+
+   @if (canUserTakeAction)
+   {
+      <button v-if="showPostQualification && (awardingType == false || awardingType == 'false')" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#initialModal" @@click="showPostQualificationModal(null)"><i class="material-icons">touch_app</i> @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.AddPrequalification</button>
+   }
+</div>

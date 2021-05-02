@@ -1,0 +1,95 @@
+@model List<SelectListItem>
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   ViewBag.Title = "الاشعارات";
+}
+
+@section breadcrumb
+      {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">الاشعارات</li>
+      </ol>
+   </nav>
+}
+
+
+<form id="cSearchForm" class="form">
+   <div id="BrachGrid" v-cloak>
+      @Html.AntiForgeryToken()
+         <div class="card card-body">
+            <div class="row">
+               <div class="col-lg-4 col-sm-6 col-xs-12 form form-newsletter">
+                  <div class="form-group bmd-form-group pull-left" dir="rtl">
+
+                     <select asp-items="Model" data-live-search="true" class="selectpicker" name="roleId" id="roleid" data-style="select-with-transition" title="Multi Select with Search" data-size="7">
+                     </select>
+                     @*<input type="hidden" name="CommitteeTypeIdString" value="@(ViewData["CommitteeTypeId"])" />*@
+                  </div>
+                  <div class="input-group-prepend">
+                     <button type="button" class="btn btn-primary btn-just-icon" name="button" @@click="search" style="margin-right:10px;">
+                        <i class="material-icons">search</i>
+                        <div class="ripple-container"></div>
+                     </button>
+                     <button type="button" class="btn btn-danger btn-just-icon" name="reset" @@click="reset" style="margin-right:10px;">
+                        <i class="material-icons">clear</i>
+                        <div class="ripple-container"></div>
+                     </button>
+                  </div>
+               </div>
+            </div>
+         </div>
+     
+      <div class="clearfix"></div>
+      <a href="/Account/NotificationOperationCodeCreate/@MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(0)">إضافة جديد</a>
+      @*<div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="cardsresult">
+            @Html.Partial("_BranchCards.cshtml")
+         </div>*@
+      <div class="tableDiv col-md-12 col-sm-12 col-xs-12 animated  delay-2s" id="gridresult">
+         <div class="card">
+
+            @Html.Partial("_OperationCodeGrid")
+         </div>
+      </div>
+   </div>
+
+</form>
+<!--endtBody-->
+@section scripts{
+   <script>
+
+      var grid = new Vue({
+         el: '#BrachGrid',
+         data: {
+            Branches: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 50,
+            resource_url: '/Account/OperationCodesPagingAsync',
+            queryString: ''
+         },
+         methods: {
+            updateResource: function (data) {
+
+               this.Branches = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            editUrl: function (params) {
+               return '/Account/NotificationOperationCodeCreate/' + params;
+            },
+            search: function () {
+               this.queryString = $('form').serialize();
+               this.resource_url = '/Account/OperationCodesPagingAsync' + '?' + this.queryString;
+            },
+            reset: function () {
+               $("#roleid").val("");
+               this.resource_url = '/Account/OperationCodesPagingAsync';
+            }
+         }
+      });
+   </script>
+}
+

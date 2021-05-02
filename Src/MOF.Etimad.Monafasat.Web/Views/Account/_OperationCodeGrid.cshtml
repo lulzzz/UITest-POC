@@ -1,0 +1,44 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+<div class="table-responsive">
+   <table class="table table-striped" id="TenderTable" summary="desc">
+      <thead>
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">كود</th>
+            <th scope="col" class="text-center">الاسم العربي </th>
+            <th scope="col" class="text-center">الاسم الانكليزى</th>
+            <th scope="col" class="text-center">الصلاحية</th>
+            <th scope="col" class="text-center">المجموعة</th>
+            <th scope="col" class="text-center"></th>
+         </tr>
+      </thead>
+      <tbody v-if="Branches && Branches.length > 0">
+         <tr v-for="(br, $index) in Branches">
+            <td data-label="#" class="text-center"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.CommitteeBranchName">
+               {{br.operationCode}}  <br />
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName"> {{br.arabicName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Position"> {{br.englishName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Phone1"> {{br.roleName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               {{br.groupName}}
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+              <a :href="editUrl(br.idString)"  >تعديل</a>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="7" class="text-center">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+               <br />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>

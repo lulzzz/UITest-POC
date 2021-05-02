@@ -1,0 +1,9 @@
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationDetailsModel
+
+<div class="tab-pane animated bounceInLeft  delay-1s" id="d-4">
+   <div class="card">
+      <div class="card-body">
+         @await Component.InvokeAsync("PreQualificationAttachments", new { tenderIdString = Model.TenderIdString })
+      </div>
+   </div>
+</div>

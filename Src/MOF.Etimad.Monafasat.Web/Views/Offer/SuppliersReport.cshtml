@@ -1,0 +1,209 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderDetailsForAppliedSuppliersReportModel
+@using res = MOF.Etimad.Monafasat.Resources
+@{
+   ViewBag.Title = @res.OfferResources.DisplayInputs.SuppliersReport;
+   //var tenderIdString = ViewBag.tenderIdString;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@res.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@res.OfferResources.DisplayInputs.SuppliersReport</li>
+      </ol>
+   </nav>
+}
+<div id="Grid" v-cloak>
+   <div id="reportCard">
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @res.TenderResources.DisplayInputs.TenderName
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @Model.TenderName
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @res.TenderResources.DisplayInputs.ReferenceTenderNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @Model.ReferenceNumber
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @res.TenderResources.DisplayInputs.TenderNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @Model.TenderNumber
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @res.TenderResources.DisplayInputs.TenderStatus
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @Model.TenderStatusName
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @res.TenderResources.DisplayInputs.TenderType
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @Model.TenderTypeName
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @res.TenderResources.DisplayInputs.InvitationsNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @Model.InvitationsCount
+                                 @*{{invitationsCount > 0 ? invitationsCount : "@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist"}}*@
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @res.TenderResources.DisplayInputs.BuyerCount
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @Model.PurchaseCount
+                                 @*{{buyersCount > 0 ? buyersCount : "@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist"}}*@
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @res.OfferResources.DisplayInputs.OffersNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @Model.OffersCount
+                                 @* {{offersCount > 0 ? offersCount : "@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist"}}*@
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="tableDiv">
+         <div class="card">
+            @Html.Partial("_SuppliersReportGrid")
+         </div>
+      </div>
+   </div>
+   <a class="btn  btn-primary" href="/Offer/ExportAppliedSuppliersReportAsync?tenderIdString=@Model.TenderIdString" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExportTable" value="Export"><i class="material-icons">cloud_download</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExportTable</a>
+   <button id="printButton" onclick="printData();" class="btn btn-success d-print-none" style="margin:20px;">طباعة</button>
+   @*<button type="button" class="btn  btn-primary" @@click="tableToExcel()" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExportTable" value="Export"><i class="material-icons">cloud_download</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExportTable</button>*@
+   <button class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("Index", "Tender")'">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+   </button>
+</div>
+<script src="~/Etimad-UI/assets/js/xlsx.core.min.js"></script>
+<script src="~/Etimad-UI/assets/js/xls.core.min.js"></script>
+<script src="~/Etimad-UI/assets/js/xlsx.full.min.js"></script>
+<!--endtBody-->
+@section scripts{
+   <script>
+      var Offer = new Vue({
+         el: '#Grid',
+         data: {
+            Offers: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/Offer/GetSuppliersReportByTenderIdAsync__?tenderIdString=' + '@Model.TenderIdString',// &&pageNumber='+this.currentPage,
+            queryString: ''
+         },
+         methods: {
+            getSupplierInfo: function (CR) {
+               getSupplierInfo(CR);
+            },
+            updateResource: function (data) {
+               this.Offers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            //GetOfferAttachments: function (id) {
+            //   return '/Offer/OfferOpeningData/' + id;
+            //},
+            ApplyOffer: function (id) {
+               return '/Offer/OpenOffers/' + id + '/' + 0;
+            },
+            tableToExcel: function () {
+               exportToExcel();
+            }, error: function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            }
+         }
+      });
+      function printData() {
+         var printContents = document.getElementById('reportCard').innerHTML;
+			var originalContents = document.body.innerHTML;
+			document.body.innerHTML = printContents;
+			window.print();
+			document.body.innerHTML = originalContents;
+
+     }
+      function exportToExcel() {
+         var table = $('#OfferTable').clone();
+         table.find('tr th').last().remove();
+         table.find('tr').each(function (i, row) {
+            if (row.cells.length > 4) {
+               $(row).find('td').last().remove();
+            }
+         });
+         var wb = XLSX.utils.table_to_book(table[0], { sheet: "Suppliers" });
+         return XLSX.writeFile(wb, ('SuppliersReport.xlsx'));
+      }
+   </script>
+}

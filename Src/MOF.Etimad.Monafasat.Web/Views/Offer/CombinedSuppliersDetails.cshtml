@@ -1,0 +1,155 @@
+@using res = MOF.Etimad.Monafasat.Resources
+
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailModel
+
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails;
+}
+
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails</li>
+      </ol>
+   </nav>
+}
+
+@Html.Partial("~/Views/Offer/Partial/OpenningOffers/_CombinedSuppliersActions.cshtml")
+
+@if (!string.IsNullOrEmpty(Model.CombinedIdString))
+{
+   if (User.IsInRole(RoleNames.OffersOppeningSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppening || Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalOppening))
+   {
+      @await Component.InvokeAsync("OfferAttachmentsUpdate", new { combinedId = Model.CombinedIdString })
+   }
+   else
+   {
+      @await Component.InvokeAsync("OfferAttachmentsDetails", new { combinedId = Model.CombinedIdString })
+   }
+   <div class="row">
+      <div class="col">
+         @{
+            if (!User.IsInRole(RoleNames.OffersOppeningManager) && !(User.IsInRole(RoleNames.OffersOppeningSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedPending || Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalOppeningPending)))
+            {
+               <button type="button" onclick="SaveAttachmentDetailsData()" class="btn btn-primary" @(User.IsInRole(RoleNames.OffersOppeningManager) ? " style=\"display:none;\"" : "")>
+                  @res.SharedResources.DisplayInputs.Save
+               </button>
+            }
+         }
+
+         @{
+
+            IDictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("tenderIdString", Model.TenderIDString);
+            parameters.Add("offeridString", Model.OfferIdString);
+            parameters.Add("CombinedIdString", "null");
+            <a class="btn btn-outline-primary btn-link pull-right" asp-action="CombinedSuppliersDetails" asp-controller="Offer" asp-route-tenderIdString="@Model.TenderIDString" asp-route-offeridString="@Model.OfferIdString" asp-route-CombinedIdString="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+         }
+      </div>
+      <div class="clearfix"></div>
+   </div>
+}
+else
+{
+   <div class="row">
+      <div class="col">
+         <a class="btn btn-outline-primary btn-link pull-right" asp-action="OpenTenderOffers" asp-controller="Tender" asp-route-tenderIdString="@Model.TenderIDString">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+      </div>
+      <div class="clearfix"></div>
+   </div>
+}
+
+
+
+@section scripts{
+   <script>
+
+   var appss = new Vue({
+   el: '#CombinedSuppliersGrid',
+   data: {
+   CombinedSuppliersDetails: [],
+   totalCount: 0,
+   currentPage: 1,
+   pageSize: 10,
+      resource_url: '/Offer/GetCombinedSuppliersGridAsync?OfferIdString=' + '@Model.OfferIdString',
+   queryString: ''
+   },
+      methods: {
+         getSupplierInfo: function (CR) {
+            getSupplierInfo(CR);
+         },
+   updateResource: function (data) {
+   this.CombinedSuppliersDetails = data;
+   this.totalCount = this.$refs.vpaginator.totalCount;
+   this.currentPage = this.$refs.vpaginator.currentPage;
+   this.pageSize = this.$refs.vpaginator.pageSize;
+      },
+            SelectSupplier: function (CombinedIdString) {
+               return '/Offer/CombinedSuppliersDetails/' + '@Model.OfferIdString' + '/' + '@Model.TenderIDString' + '/' + CombinedIdString;
+   }
+
+   }
+   });
+
+
+      function SaveAttachmentDetailsData() {
+
+         var obj = {};
+         obj.OfferLetterNumber = $("#OfferLetterNumber").val();
+         obj.offerLetterDate = $("#offerLetterDate").val();
+         obj.CombinedIdString = $("#CombinedIdString").val();
+         obj.SpecificationsFiles = vueObj.Specifications;
+         obj.BankGuaranteeFiles = vueObj.BankGuarantees;
+         obj.OfferLetterNumber = $("#OfferLetterNumber").val();
+         obj.IsOfferLetterAttached = $("input[name='IsOfferLetterAttached']:checked").val();
+         obj.IsChamberJoiningAttached = $("input[name='IsChamberJoiningAttached']:checked").val();
+         obj.IsChamberJoiningValid = $("input[name='IsChamberJoiningValid']:checked").val();
+         obj.IsCommercialRegisterAttached = $("input[name='IsCommercialRegisterAttached']:checked").val();
+         obj.IsCommercialRegisterValid = $("input[name='IsCommercialRegisterValid']:checked").val();
+         obj.IsOfferCopyAttached = $("input[name='IsOfferCopyAttached']:checked").val();
+         obj.IsPurchaseBillAttached = $("input[name='IsPurchaseBillAttached']:checked").val();
+         obj.IsSaudizationAttached = $("input[name='IsSaudizationAttached']:checked").val();
+         obj.IsSaudizationValidDate = $("input[name='IsSaudizationValidDate']:checked").val();
+         obj.IsSocialInsuranceAttached = $("input[name='IsSocialInsuranceAttached']:checked").val();
+         obj.IsSocialInsuranceValidDate = $("input[name='IsSocialInsuranceValidDate']:checked").val();
+         obj.IsVisitationAttached = $("input[name='IsVisitationAttached']:checked").val();
+         obj.IsZakatAttached = $("input[name='IsZakatAttached']:checked").val();
+         obj.IsZakatValidDate = $("input[name='IsZakatValidDate']:checked").val();
+         obj.IsBankGuaranteeAttached = $("input[name='IsBankGuaranteeAttached']:checked").val();
+         obj.IsSpecificationAttached = $("input[name='IsSpecificationAttached']:checked").val();
+         obj.IsSpecificationValidDate = $("input[name='IsSpecificationValidDate']:checked").val();
+         obj.OfferIdString ="@Model.OfferIdString";
+         @*obj.CombinedOwner = "@Model.CombinedOwner";*@
+         obj.CombinedIdString = "@Model.CombinedIdString";
+
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $('#LoadingSite').fadeIn();
+            $.post("/Offer/OfferDetail",{
+                  model: obj,  __RequestVerificationToken: token
+            }).done(function () {
+
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+
+               window.location = '/Offer/CombinedSuppliersDetails/' + '@Model.OfferIdString' + '/' + '@Model.TenderIDString';
+
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      }
+
+   </script>
+}

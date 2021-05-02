@@ -1,0 +1,227 @@
+@using res = MOF.Etimad.Monafasat.Resources;
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationSavingModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ExtendDates;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Qualification")">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Qualification</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ExtendDates</li>
+      </ol>
+   </nav>
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+</style>
+<form method="POST" id="detailsStepForm" action="/Qualification/ExtendQualificationDates" autocomplete="off">
+   @Html.AntiForgeryToken()
+   <input asp-for="TenderIdString" value="@Model.TenderIdString" id="hdnTenderIdString" type="hidden" />
+   <input asp-for="TenderName" value="@Model.TenderName" type="hidden" />
+   <input asp-for="AttachmentReference" value="@Model.AttachmentReference" type="hidden" />
+
+   <div id="app" v-cloak>
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label asp-for="LastEnqueriesDate" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <input asp-for="LastEnqueriesDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="lastEnqueriesDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+                     <span class="form-control-feedback">
+                        <i class="material-icons">calendar_today</i> 
+                     </span>
+                  </div>
+                  <span class="badge badge-warning" id="lastEnquiriesDateVac" style="display:none">@res.TenderResources.ErrorMessages.WeekendDate </span>
+                  <span asp-validation-for="LastEnqueriesDate" class="text-danger"></span>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label asp-for="LastOfferPresentationDate" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <input asp-for="LastOfferPresentationDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="lastOfferPressentationDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+                  </div>
+                  <span class="badge badge-warning" id="lastOfferPressentationDateVac" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+                  <span asp-validation-for="LastOfferPresentationDate" class="text-danger"></span>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label asp-for="LastOfferPresentationTime" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <input asp-for="LastOfferPresentationTime" type="text" id="lastOfferPresentationTime" class="form-control timepicker" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+                     <span asp-validation-for="LastOfferPresentationTime" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label asp-for="OffersCheckingDate" for="datepick" class="label bmd-label-static"></label>
+                     <input asp-for="OffersCheckingDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="offersCheckingDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+                  </div>
+                  <span class="badge badge-warning" id="offersCheckingDateVac" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+                  <span asp-validation-for="OffersCheckingDate" class="text-danger"></span>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label asp-for="OffersCheckingTime" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <input asp-for="OffersCheckingTime" type="text" id="offersCheckingTime" class="form-control timepicker" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+                     <span asp-validation-for="OffersCheckingTime" class="text-danger"></span>
+                  </div>
+
+               </div>
+            </div>
+         </div>
+      </div>
+    
+            <div class="row">
+               <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+               <div class="col-12">
+                  <button class="btn btn-primary etd-search-btn" id="btnSave">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+                  </button>
+                  <button class="btn btn-danger etd-search-btn" id="btnCancel">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+                  </button>
+               </div>
+            </div>
+        
+   </div>
+</form>
+
+@section scripts{
+   <script src="~/Etimad-UI/assets/vendor/calendar/javascriptUtils/DateConverterUtil.js"></script>
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}
+
+<script type="text/javascript">
+   var validator;
+   var vacations = [];
+      $(document).ready(function () {
+      setTimeout(function () {
+         $("#lastEnqueriesDate").calendarsPicker('option', 'onClose', function () {
+            validateEnquiriesDateVacation();
+         });
+         $("#lastOfferPressentationDate").calendarsPicker('option', 'onClose', function () {
+            validateOfferPressentationDateVacation();
+            changeDatesValues();
+         });
+         validateEnquiriesDateVacation();
+         validateOfferPressentationDateVacation();
+      }, 1000);
+
+    @if (Model != null && Model.Vacations != null)
+    {
+       @:vacations = @Html.Raw(Json.Serialize(Model.Vacations))
+    }
+
+      $('#detailsStepForm').bind('submit', function () {
+       if ($('#detailsStepForm').valid())
+          $('#LoadingSite').fadeIn();
+      })
+   });
+   $('#btnCancel').click(function () {
+      window.location = "@Url.Action("Index", "Qualification")";
+      return false;
+   });
+   function validateEnquiriesDateVacation() {
+      var lastEnqueriesDate = $("#lastEnqueriesDate").val();
+      var lastEnqueriesDateGregorian
+      if ($('#cb_lastEnqueriesDate').is(':checked')) {
+         var i = lastEnqueriesDate.split('/');
+         lastEnqueriesDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         lastEnqueriesDateGregorian = convertUmmalquraToGregorian(lastEnqueriesDate);
+      }
+      if (lastEnqueriesDate != "") {
+         var Gregorian = lastEnqueriesDateGregorian;
+         Gregorian = new Date(Gregorian);
+         var currentDate = new Date();
+         var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+         var day = Gregorian.getUTCDate() + 1;
+         var year = Gregorian.getUTCFullYear();
+         var newdate = day + "/" + month + "/" + year;
+         var flag = 1;
+         for (var i = 0; i < vacations.length; i++) {
+            if (newdate == vacations[i].vacationDateString) {
+               flag = flag * 0;
+            }
+         }
+         if (flag == 1) {
+            $('#lastEnquiriesDateVac').hide();
+         }
+         else {
+            $('#lastEnquiriesDateVac').show();
+         }
+         if (Gregorian.getDay() == 5 || Gregorian.getDay() == 6) {
+            $('#lastEnquiriesDateVac').show();
+         }
+         else {
+            $('#lastEnquiriesDateVac').hide();
+         }
+      }
+   }
+   function validateOfferPressentationDateVacation() {
+      var offerPressentationDate = $("#lastOfferPressentationDate").val();
+      var offerPressentationDateGregorian;
+      if ($('#cb_lastOfferPressentationDate').is(':checked')) {
+         var i = offerPressentationDate.split('/');
+         offerPressentationDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         offerPressentationDateGregorian = convertUmmalquraToGregorian(offerPressentationDate);
+      }
+      offerPressentationDateGregorian = new Date(offerPressentationDateGregorian);
+
+      //validate vacations
+      if (offerPressentationDateGregorian != "") {
+         Gregorian = new Date(offerPressentationDateGregorian);
+         var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+         var day = Gregorian.getUTCDate() + 1;
+         var year = Gregorian.getUTCFullYear();
+         var newdate = day + "/" + month + "/" + year;
+
+         var flag = 1;
+         for (var i = 0; i < vacations.length; i++) {
+            if (newdate == vacations[i].vacationDateString) {
+               flag = flag * 0;
+            }
+         }
+         if (flag == 1) {
+            $('#lastOfferPressentationDateVac').hide();
+         }
+         else {
+            $('#lastOfferPressentationDateVac').show();
+         }
+         if (Gregorian.getDay() == 5 || Gregorian.getDay() == 6) {
+            $('#lastOfferPressentationDateVac').show();
+         }
+         else {
+            $('#lastOfferPressentationDateVac').hide();
+         }
+      }
+   }
+   function changeDatesValues() {
+      var offerPressentationDate = $("#lastOfferPressentationDate").val();
+      var offerPressentationDateGregorian;
+      if ($('#cb_lastOfferPressentationDate').is(':checked')) {
+         var i = offerPressentationDate.split('/');
+         offerPressentationDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         offerPressentationDateGregorian = convertUmmalquraToGregorian(offerPressentationDate);
+      }
+      offerPressentationDateGregorian = new Date(offerPressentationDateGregorian);
+      //change values
+      offerPressentationDateGregorian = addDays(offerPressentationDateGregorian, 1);
+
+      $("#lastOfferPressentationDate").blur();
+   }
+
+   function CheckWeekEnds(date) {
+      var day = date.getDay();
+      var isWeekend = (day === 4) || (day === 5);    // 4 = firiday, 5 = Sunday
+   }
+</script>

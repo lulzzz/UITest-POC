@@ -1,0 +1,27 @@
+@using  MOF.Etimad.Monafasat.SharedKernal
+@{
+   //TODO encrypt in mapper
+   @*string userId = @: usr.userId
+      userId = @Util.Encrypt(userId);*@
+
+}
+
+<div class="dropdown text-center">
+   <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i><div class="ripple-container"></div></button>
+   <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+      @if (User.IsInRole(RoleNames.MonafasatAdmin))
+      {
+         <a :href="editUrl(usr.userIdString, usr.nationalId)" class="dropdown-item"><i class="material-icons">edit</i> @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.ReAssignPriviliges </a>
+      }
+      @*<a :href="assignCommitteeUrl(usr.userId)" class="dropdown-item"><i class="material-icons">add</i> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AssignCommittees</a>
+      <a :href="assignUserUrl(usr.userId)" class="dropdown-item"><i class="material-icons">person_add</i> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AssignUsers </a>
+      <a :href="deleteUrl(usr.userId)" class="dropdown-item"><i class="material-icons">clear</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</a>*@
+
+      <a :href="detailsUrl(usr.nationalId)" class="dropdown-item"><i class="material-icons">list</i> @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Details </a>
+      @if (User.IsInRole(RoleNames.MonafasatAccountManager))
+      {
+         <button @@click="showDialog(usr.userId)" type="button" class="dropdown-item"><i class="material-icons">clear</i>اعاده تعيين الصلاحيات</button>
+      }
+      </div>
+</div>
+

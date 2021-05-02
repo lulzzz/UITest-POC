@@ -1,0 +1,30 @@
+<div id="UnregisterSuppliersGrid" v-cloak>
+   <div class="table-responsive" style="min-height:100px">
+      <table id="SuppliersTable" class="table  table-striped text-center" summary="dwsc">
+         <thead class="text-center">
+            <tr>
+               <th scope="col" class="text-center">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.MobileNoOrEmail)</th>
+               @*<th scope="col" class="text-center">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.InvitationStatus)</th>*@
+            </tr>
+         </thead>
+         <tbody class="text-center" v-if="UnregisterInvitedSuppliers && UnregisterInvitedSuppliers.length > 0">
+            <tr v-for="(UnregisterSupplier, $index) in UnregisterInvitedSuppliers">
+               <td class="text-center" data-label="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.MobileNoOrEmail)"> {{UnregisterSupplier.supplierEmailOrMobileNo}} </td>
+               @*<td class="text-center" data-label="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.InvitationStatus)">{{UnregisterSupplier.invitationStatusName}}</td>*@
+            </tr>
+         </tbody>
+         <tbody v-else>
+            <tr>
+            
+               <td colspan="3" class="text-center">
+                  <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                  <br />
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+               </td>
+             
+            </tr>
+         </tbody>
+      </table>
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+</div>

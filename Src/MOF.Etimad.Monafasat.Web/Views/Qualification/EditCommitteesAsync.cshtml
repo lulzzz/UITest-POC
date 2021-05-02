@@ -1,0 +1,176 @@
+@model MOF.Etimad.Monafasat.ViewModel.EditeCommitteesModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditCommittee;
+
+   bool isOpeningOffersStatus = (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppening || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedPending
+      || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedRejected || Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppenedConfirmed) ? true : false;
+
+   bool isCheckOffersStatus = (Model.TenderStatusId == (int)Enums.TenderStatus.OffersCheckedPending || Model.TenderStatusId == (int)Enums.TenderStatus.OffersCheckedRejected
+      || Model.TenderStatusId == (int)Enums.TenderStatus.OffersCheckedConfirmed) ? true : false;
+
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("PreQualificationIndexUnderOperationsStage", "Qualification")">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.UnderstablishedStageQualifications</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditCommittee</li>
+      </ol>
+   </nav>
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+</style>
+<form id="editCommitteeForm" method="POST" asp-controller="Qualification" asp-action="EditCommitteesAsync" autocomplete="off">
+   @Html.AntiForgeryToken()
+
+   @section modalTitle{
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+   }
+   @section modalContent{
+      <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmUpdateCommittee
+      </div>
+   }
+   @section modalButtons{
+      <button type="submit" class="btn btn-success btn-sm" name="submit" id="btnApproveConfirmation">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</button>
+      <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+   }
+   <div id="app" v-cloak>
+      <input asp-for="TenderIdString" type="hidden" />
+      <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               @if (Model.TenderStatusId == 0 || Model.TenderStatusId == (int)Enums.TenderStatus.UnderEstablishing ||
+            Model.TenderStatusId == (int)Enums.TenderStatus.Approved || Model.TenderStatusId == (int)Enums.TenderStatus.Established ||
+            (Model.LastEnqueriesDate.HasValue && Model.LastEnqueriesDate.Value <= DateTime.Now.Date))
+               {
+                  <div class="col-lg-6 col-sm-6 col-xs-12" id="divTechnicalCommittee">
+                     <div class="form-group bmd-form-group">
+                        <label asp-for="TechnicalOrganizationId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                        <select data-live-search="true" asp-for="TechnicalOrganizationId" name="TechnicalOrganizationId" v-if="@Model.TechnicalCommittees.Count()>0"
+                                asp-items="@(new SelectList(Model.TechnicalCommittees, "CommitteeId", "CommitteeName"))" id="dD_TechnicalOrganizationId" class="selectpicker" data-style="select-with-transition" data-size="7">
+                           <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseTechnicalCommittee </option>
+                        </select>
+                        <span asp-validation-for="TechnicalOrganizationId" class="text-danger"></span>
+                     </div>
+                  </div>
+               }
+
+               @if (Model.TenderStatusId == 0 || Model.TenderStatusId == (int)Enums.TenderStatus.UnderEstablishing || Model.TenderStatusId == (int)Enums.TenderStatus.Approved || Model.TenderStatusId == (int)Enums.TenderStatus.Established || isOpeningOffersStatus || isCheckOffersStatus)
+               {
+                  @*@if (Model.TenderTypeId != (int)Enums.TenderType.PostQualification)
+                  {*@
+                     <div class="col-lg-6 col-sm-6 col-xs-12" id="divOfferCheckingCommittee">
+                        <div class="form-group bmd-form-group">
+                           <label asp-for="PreQualificationCommitteeId" class="label bmd-label-static"></label>
+                           <select data-live-search="true" asp-for="PreQualificationCommitteeId" class="selectpicker" id="dD_PreQualificationCommitteeId" data-style="select-with-transition"
+                                   asp-items="@(new SelectList(Model.PreQualificationCommittees, "CommitteeId", "CommitteeName"))" data-size="7">
+                              <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChoosePreQualificationCommittee</option>
+                           </select>
+                        </div>
+                     </div>
+                  //}
+               }
+            </div>
+
+         </div>
+
+      </div>
+
+      <div class="row">
+         <div class="col">
+            @if (Model.TenderStatusId == (int)Enums.TenderStatus.Approved || isOpeningOffersStatus || isCheckOffersStatus)
+            {
+               <button type="submit" id="btnSaveUpdates" class="btn btn-primary etd-search-btn">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveUpdates
+               </button>
+            }
+            else
+            {
+               <button type="submit" id="btnSave" class="btn btn-primary etd-search-btn">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveContinue
+               </button>
+            }
+            <button type="button" id="btnCancel" class="btn btn-danger etd-search-btn" hidden="hidden">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+            </button>
+            <button type="button" class="btn btn-outline-primary btn-link pull-right" id="btnQback" onclick="window.location = '@Url.Action("Index", "Qualification")'">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+               <div class="ripple-container"></div>
+            </button>
+         </div>
+      </div>
+
+   </div>
+</form>
+
+@section scripts{
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+   <script type="text/javascript">
+      $(document).ready(function () {
+         $('#editCommitteeForm').validate({
+            ignore: '',
+            rules: {
+               TechnicalOrganizationId: {
+                  required: true
+               },
+            },
+            messages: {
+               TechnicalOrganizationId: {
+                  required: '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.TechnicalOrganizationRequired)'
+               },
+            },
+            errorPlacement: function (error, element) {
+               error.css({ 'color': 'red' });
+               error.insertAfter(element);
+            }
+         });
+      });
+      jQuery(function ($) {
+         $('#editCommitteeForm').bind('submit', function () {
+
+            if ($('#editCommitteeForm').valid())
+               $('#LoadingSite').fadeIn();
+         })
+      });
+      $("#btnApproveConfirmation").on("click", function () {
+         if (!$('form').valid())
+            return false;
+         $('#LoadingSite').fadeIn();
+         $('form').submit();
+      });
+
+
+      $("#btnSaveUpdates").click(function (e) {
+         
+         @*$("span[data-valmsg-for='PreQualificationCommitteeId']").html('');
+         var qualificationType = '@Model.TenderTypeId';
+         if (qualificationType != @((Int32)Enums.TenderType.PostQualification)) {
+            var committedId = $("#dD_PreQualificationCommitteeId").val();
+            if (committedId == '') {
+               $("span[data-valmsg-for='PreQualificationCommitteeId']").html( '@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.Required)');
+               return false;
+            }
+         }*@
+          
+          var frmIsValid = $("#editCommitteeForm").valid();
+         if (frmIsValid) {
+            e.preventDefault();
+            $("#myModal").modal('show');
+         }
+      });
+
+
+
+
+   </script>
+}
+

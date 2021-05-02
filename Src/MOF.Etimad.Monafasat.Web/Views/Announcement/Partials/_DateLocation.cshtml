@@ -1,0 +1,117 @@
+<div class="col-12">
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="">
+                     <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.Dates</h4>
+                  </div>
+                  <div class="">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.LastJoinDate
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model.LastApplyingRequestsDateString)</span>
+                                 <span>@(Model.LastApplyingRequestsHijriDateString)</span>
+                              </div>
+                           </div>
+                        </li>
+                        @if(User.UserRoles().Count ==0 || User.IsInRole(Enums.UserRole.NewMonafasat_Supplier.ToString())) { 
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.PublishDate
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model.PublishDateString)</span>
+                                 <span>@(Model.PublishDateHijriString)</span> 
+                              </div>
+                           </div>
+                        </li>
+                        }
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementDuration
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model.AnnouncementPeriod)</span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="">
+                     <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.ExecutionLocation</h4>
+                  </div>
+                  <div class="">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.ExecutionLocation
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model.InsideKSAString)</span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.Details
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model.Details)</span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @if (Model.Areas != null && Model.Areas.Count > 0)
+                                 {
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Areas
+                                 }
+                                 else
+                                 {
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Countries
+                                 }
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <ol>
+                                    @if (Model.Areas != null && Model.Areas.Count > 0)
+                                    {
+                                       @foreach (var areaItem in Model.Areas)
+                                       {
+                                          <li> @areaItem.Name</li>
+                                       }
+                                    }
+                                    else
+                                    {
+                                       @if (Model.Countries != null && Model.Countries.Count > 0)
+                                       {
+                                          @foreach (var countryItem in Model.Countries)
+                                          {
+                                             <li> @countryItem.Name</li>
+                                          }
+                                       }
+                                    }
+                                 </ol>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

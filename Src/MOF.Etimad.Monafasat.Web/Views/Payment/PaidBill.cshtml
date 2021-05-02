@@ -1,0 +1,38 @@
+@model MOF.Etimad.Monafasat.ViewModel.BillViewModel
+@{
+    ViewData["Title"] = "تسديد فاتورة";//@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.AddToBlockList;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">تسديد فاتورة</li>
+      </ol>
+   </nav>
+}
+
+@Html.AntiForgeryToken()
+   <form method="Post" action="" class="my-form">
+      <input type="hidden" id="ModuleType" value="4" />
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="BillInvoiceNumber" class="label bmd-label-static">رقم الفاتورة<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control allownumeric" id="BillInvoiceNumber" asp-for="BillInvoiceNumber" value="@(Model.BillInvoiceNumber)">
+                     <span asp-validation-for="BillInvoiceNumber" class="text-danger"></span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-12 ">
+         <button class="btn btn-primary" type="submit" id="createAsync">تسديد</button>
+      </div>
+   </form>
+
+@section scripts {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

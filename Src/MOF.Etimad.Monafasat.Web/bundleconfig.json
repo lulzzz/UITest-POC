@@ -1,0 +1,118 @@
+[
+   //{
+   //   "outputFileName": "wwwroot/Etimad-UI/assets/js/bundle.js",
+   //   "inputFiles": [
+   //      "wwwroot/Etimad-UI/assets/vendor/bootstrap-notify-master/bootstrap-notify.min.js",
+   //      "wwwroot/Etimad-UI/assets/js/core/popper.min.js",
+   //      "wwwroot/Etimad-UI/assets/js/plugins/moment.min.js",
+   //      "wwwroot/Etimad-UI/assets/js/plugins/bootstrap-datetimepicker.js",
+   //      //"wwwroot/Etimad-UI/assets/js/plugins/jquery.sharrre.js",
+   //      "wwwroot/Etimad-UI/assets/js/core/bootstrap-material-design.min.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/bootstrap-selectpicker.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/calendar/jquery.plugin.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/calendar/jquery.calendars.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/calendar/jquery.calendars.plus.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/calendar/jquery.calendars.picker.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/calendar/jquery.calendars.ummalqura.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/calendar/jquery.calendars.islamic.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/calendar/jquery.calendars-ar.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/calendar/jquery.calendars.picker-ar.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/calendar/jquery.calendars.ummalqura-ar.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/calendar/jquery.calendars.islamic-ar.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/calendar/calendar.template.js",
+   //      "wwwroot/Etimad-UI/assets/js/Alert-Message.js",
+   //      //"wwwroot/Etimad-UI/assets/js/vue-app/vue@2.5.2.js",
+   //      "wwwroot/Etimad-UI/assets/js/vue-app/vue.min.js",
+   //      "wwwroot/Etimad-UI/assets/js/vue-app/pagination.js",
+   //      //"wwwroot/Etimad-UI/assets/js/vue-app/paginationQTApplyOffer.js",
+   //      "wwwroot/Etimad-UI/assets/js/jquery.twbsPagination.js",
+   //      "wwwroot/Etimad-UI/assets/js/material-kit.min.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/calendar/javascriptUtils/DateConverterUtil.js",
+   //      "wwwroot/Etimad-UI/assets/js/etd-main.js",
+   //      "wwwroot/Etimad-UI/assets/js/axios.js",
+   //      "wwwroot/Etimad-UI/assets/js/common.js",
+   //      "wwwroot/Etimad-UI/assets/js/apiRequest/apiRequest.js",
+   //      "wwwroot/Etimad-UI/assets/js/jquery-validation/dist/jquery.validate.js",
+   //      "wwwroot/Etimad-UI/assets/js/jquery-validation-unobtrusive/jquery-validation-unobtrusive.js"
+
+   //   ],
+   //   "minify": {
+   //      "enabled": true,
+   //      "renameLocals": true
+   //   },
+   //   "sourceMap": true
+   //},
+   //{
+   //   "outputFileName": "wwwroot/Etimad-UI/assets/js/bundle-vistor.js",
+   //   "inputFiles": [
+   //      "wwwroot/Etimad-UI/assets/vendor/bootstrap-notify-master/bootstrap-notify.min.js",
+   //      "wwwroot/Etimad-UI/assets/js/core/popper.min.js",
+   //      "wwwroot/Etimad-UI/assets/js/core/bootstrap-material-design.min.js",
+   //      "wwwroot/Etimad-UI/assets/vendor/bootstrap-selectpicker.js",
+   //      "wwwroot/Etimad-UI/assets/js/Alert-Message.js",
+   //      //"wwwroot/Etimad-UI/assets/js/vue-app/vue@2.5.2.js",
+   //      "wwwroot/Etimad-UI/assets/js/vue-app/vue.min.js",
+   //      //"wwwroot/Etimad-UI/assets/js/vue-app/vue2-filters.min.js",
+   //      "wwwroot/Etimad-UI/assets/js/vue-app/pagination.js",
+   //      "wwwroot/Etimad-UI/assets/js/jquery.twbsPagination.js",
+   //      "wwwroot/Etimad-UI/assets/js/material-kit.min.js",
+   //      "wwwroot/Etimad-UI/assets/js/etd-main-visitor.js",
+   //      "wwwroot/Etimad-UI/assets/js/axios.js"
+   //   ],
+   //   "minify": {
+   //      "enabled": true,
+   //      "renameLocals": true
+   //   },
+   //   "sourceMap": true
+   //},
+   //{
+   //   "outputFileName": "wwwroot/Etimad-UI/assets/js/bundle-Charts.js",
+   //   "inputFiles": [
+   //      "wwwroot/Etimad-UI/assets/js/chartjs/Chart.bundle.min.js",
+   //      "wwwroot/Etimad-UI/assets/js/chartjs/utils.js"
+   //   ],
+   //   "minify": {
+   //      "enabled": true,
+   //      "renameLocals": true
+   //   },
+   //   "sourceMap": true
+   //},
+   //{
+   //   "outputFileName": "wwwroot/Etimad-UI/assets/js/bundle-validation.js",
+   //   "inputFiles": [
+   //      "wwwroot/Etimad-UI/assets/js/jquery-validation/dist/jquery.validate.js",
+   //      "wwwroot/Etimad-UI/assets/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"
+   //   ],
+   //   "minify": {
+   //      "enabled": true,
+   //      "renameLocals": true
+   //   },
+   //   "sourceMap": true
+   //},
+   //{
+   //   "outputFileName": "wwwroot/Etimad-UI/assets/js/fineUploderbundle.js",
+   //   "inputFiles": [
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/header.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/util.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/features.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/promise.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/button.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/ajax.requester.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/deletefile.ajax.requester.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/handler.base.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/window.receive.message.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/handler.form.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/handler.xhr.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/uploader.basic.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/dnd.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/uploader.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/jquery-plugin.js",
+   //      "wwwroot/Etimad-UI/assets/js/fin-uploader/instance.js"
+   //   ],
+   //   "minify": {
+   //      "enabled": true,
+   //      "renameLocals": true
+   //   },
+   //   "sourceMap": true
+   //}
+]

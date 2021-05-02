@@ -1,0 +1,594 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using Microsoft.Extensions.Hosting;
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env;
+@using Microsoft.Extensions.Options;
+@inject IOptionsSnapshot<RootConfiguration> rootConfiguration;
+@{
+   var _rootConfiguration = rootConfiguration.Value;
+   string idmUrl = _rootConfiguration.AuthorityConfiguration.AuthorityURL;
+   var beaconUrlHttps = _rootConfiguration.AdrumConfiguration.beaconUrlHttps;
+   var appKey = _rootConfiguration.AdrumConfiguration.appKey;
+   string fullname = null;
+   if (!true.Equals(ViewData["signed-out"]))
+   {
+      fullname = Context.User.Claims.FirstOrDefault(f => f.Type == "fullname")?.Value;
+   }
+   string selectedRole = (User.UserBranch() != 0) ? "1," + User.UserBranch().ToString() + "," + User.UserRole() : (User.SelectedCommittee() != 0) ? "2," + User.SelectedCommittee().ToString() + "," + User.UserRole() : "0,0," + User.UserRole();
+}
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+   public string GetAntiXsrfRequestToken()
+   {
+      return Xsrf.GetAndStoreTokens(Context).RequestToken;
+   }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="utf-8" />
+   <meta name="csrf-token" content="@GetAntiXsrfRequestToken()">
+   <link rel="icon" type="image/x-icon" href="~/Etimad-UI/assets/imgs/favicon.ico" />
+   <link rel="shortcut icon" type="image/x-icon" href="~/Etimad-UI/assets/imgs/favicon.ico" />
+   <link rel="icon" href="~/Etimad-UI/assets/imgs/favicon.ico" />
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+   <title>
+      @ViewBag.Title
+   </title>
+   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+   <!--     Fonts and icons     -->
+   <link href="~/Etimad-UI/assets/css/font-awesome.min.css" rel="stylesheet" />
+   <!-- CSS Just for demo purpose, don't include it in your project -->
+   <link href="~/Etimad-UI/assets/scss/Etimad/etd-style.min.css" rel="stylesheet" />
+   <link href="~/Etimad-UI/assets/scss/Etimad/NewAddedStyle.min.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/js/jquery-3.4.1.min.js"></script>
+</head>
+@{ var isArabic = !Context.Request.Cookies.ContainsKey("language") || Context.Request.Cookies["language"] == "ar-SA"; }
+<body class="landing-page sidebar-collapse @(isArabic ? "RTL" : "")">
+   <div id="loader" class="d-print-none" style="display: none;z-index: 10050;">
+      <div class="modal-backdrop fade in" style="z-index: 10060;"></div>
+      <div style="position: fixed; left: 50%; top: 30%; z-index: 10061;">
+         <div style="position: relative; left: -50%;">
+            <div class="waiting-modal">
+               <img alt="" src="/Etimad-UI/assets/imgs/loader.gif" />
+            </div>
+         </div>
+      </div>
+   </div>
+   <div id="LoadingSite" class="d-print-none">
+      <div class="container d-flex h-100">
+         <div class="row align-self-center w-100">
+            <div class="col-6 mx-auto text-center">
+               <svg style="width: 150px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 150 78">
+                  <defs>
+                     <clipPath id="b">
+                        <rect width="150" height="78" />
+                     </clipPath>
+                  </defs>
+                  @await Html.PartialAsync("~/Views/Shared/_Logo.cshtml")
+               </svg>
+               <div class="clearfix"></div>
+               <img alt="" src="~/Etimad-UI/assets/imgs/giphy.gif" class="ScaleImageUp2" style="max-width: 80px;" />
+            </div>
+         </div>
+      </div>
+   </div>
+   <a id="root" href='@Url.Content("~/")' style="display: none"></a>
+   <div class="">
+      <div class="">
+         @await Html.PartialAsync("_StatusMessage")
+      </div>
+   </div>
+   <div class="message-box-container container d-print-none">
+      <div class="row">
+         <div class="message-box col-xs-12">
+         </div>
+      </div>
+   </div>
+   <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@RenderSection("modalTitle", required: false)</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               @RenderSection("modalContent", required: false)
+            </div>
+            <div class="modal-footer">
+               @RenderSection("modalButtons", required: false)
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="modal fade" id="supplierModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document" style="max-width:1000px;">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierData</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body " id="supplierInfoPopUp">
+               <i>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Loading</i>
+            </div>
+            <div class="modal-footer">
+            </div>
+         </div>
+      </div>
+   </div>
+
+   @await Html.PartialAsync("_SessionTimeout")
+   <div class="modal fade" id="SelectDefaultRoleModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document" style="max-width:500px;">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.UsersResources.Messages.PleaseSelectDefaultRole</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <form asp-controller="Account" class="m-0" asp-action="SelectDefaultRole" method="post">
+               <div class="modal-body " id="SelectDefaultRolePopUp">
+                  <div id="branchesdiv">
+                     @Html.AntiForgeryToken()
+                     <select data-live-search="false" name="roleValue" id="roleValue" class="selectpicker " data-style="select-with-transition" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @foreach (var item in User.GetUserRolesList())
+                        {
+                           if (selectedRole == @item.Split("##")[0])
+                           {
+                              <option value="@item.Split("##")[0]" selected>@item.Split("##")[1]</option>
+                           }
+                           else
+                           {
+                              <option value="@item.Split("##")[0]">@item.Split("##")[1]</option>
+                           }
+                        }
+                     </select>
+                  </div>
+               </div>
+               <div class="modal-footer">
+                  <button class="btn btn-primary" type="submit">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+   <div id="notifyPanel" class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay d-print-none">
+      <div id="dw-s2" class="bmd-layout-drawer bg-faded" aria-expanded="false" aria-hidden="true">
+         <header>
+            <h4>@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.Notifications</h4>
+         </header>
+         <div class="noti-list">
+            @if (User.UserRoles().Count != 0)
+            {
+               <div id="navigationDiv">
+                  <div v-if="notifications && notifications.length > 0" v-for="(item, $index) in notifications">
+                     @await Html.PartialAsync("~/Views/Shared/_NotificationPanel.cshtml")
+                  </div>
+               </div>
+               <a href="/Dashboard/Index#notificationsPill" onclick="hideNotificationPanel();" class="d-block text-center btn btn-primary btn-link btn-sm">@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.LoadMoreNotifications</a>
+            }
+         </div>
+      </div>
+   </div>
+   <div id="" class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay d-print-none">
+      <div id="dw-s4" class="bmd-layout-drawer bg-faded" aria-expanded="false" aria-hidden="true">
+         <header>
+            <h4 class="text-dark-green text-center">التطبيقات</h4>
+         </header>
+         @foreach (var claim in User.Claims.Where(a => a.Type == "permission").ToList())
+         {
+            <a href="@claim.Value.Split(',')[1]" class="btn btn-block btn-outline-primary mb-1" style="padding: 5px;">
+               <img alt="" src="@idmUrl/img/@(claim.Value.Split(',')[2])" />
+               @claim.Value.Split(',')[0]
+            </a>
+         }
+      </div>
+   </div>
+   @await Html.PartialAsync("_userLinks")
+   <div class="bmd-layout-backdrop"></div>
+   @await Html.PartialAsync("_navHeader")
+   <div class="page-header header-filter d-print-none" style="transform: translate3d(0px, 0px, 0px) !important;">
+      <div class="container">
+         <div class="row">
+            <div class="col-md-8 ml-auto mr-auto">
+               @RenderSection("headerContent", required: false)
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="main main-raised">
+      @RenderSection("breadcrumb", false)
+      <div class="container">
+         <div class="section">
+            <div class="title">
+               <h2>@ViewBag.Title</h2>
+               <div class="etd-left-page-controls pull-right text-right">
+                  @RenderSection("pagecontrols", false)
+               </div>
+            </div>
+            <hr />
+            @RenderBody()
+         </div>
+      </div>
+   </div>
+   <footer class="footer footer-default d-print-none">
+      <div class="container">
+         <div class="float-md-right float-sm-none m-auto" style="max-width: 507px;">
+            <div class="logos">
+               <div class="row">
+                  <div class="col-5" style="max-width: 239px;">
+                     <img alt="" style="width:100%" src="~/Etimad-UI/assets/imgs/footerLogos.png" />
+                  </div>
+                  <div class="col-7" style="padding: 20px 0;font-size: 13px;">
+                     &copy;
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AllRightsText - @(DateTime.Now.Year)
+                  </div>
+               </div>
+            </div>
+         </div>
+         <nav class="float-md-left float-sm-none m-auto" style="max-width: 507px;">
+            <ul class=" text-center">
+               <li>
+                  <a href="https://etimad.sa/">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Etimad
+                  </a>
+               </li>
+               <li>
+                  <a href="/">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage
+                  </a>
+               </li>
+               <li>
+                  <a href="https://etimad.sa/ContactUs/Create">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ContactUs
+                  </a>
+               </li>
+               <li style="font-size:13px"> |  الرقم الموحد :19990</li>
+            </ul>
+         </nav>
+      </div>
+      <div class="bottom-controls d-xl-none d-lg-none d-md-none d-sm-none">
+         <div class="btn-group">
+            @if (!(User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.supplier) || User.IsInRole(RoleNames.MonafasatAdmin) || User.IsInRole(RoleNames.MonafasatAccountManager)
+|| User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersCheckManager)
+|| User.IsInRole(RoleNames.CustomerService)))
+            {
+               <a class="btn btn-primary btn-link btn-sm" href="/account/logout">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Signin </a>
+            }
+            else
+            {
+               @if (!User.IsInRole(RoleNames.MonafasatBlackListCommittee) && !User.IsInRole(RoleNames.supplier) && !User.IsInRole(RoleNames.MonafasatAccountManager))
+               {
+               }
+               @if (!(User.IsInRole(RoleNames.MonafasatAccountManager)))
+               {
+                  <button data-toggle="drawer" type="button" data-target="#dw-s2" rel="tooltip" class="btn btn-primary btn-link  btn-sm etd-notification-btn animated" data-original-title="" title="" onclick="loadNotifications()">
+                     <i class="material-icons">notifications</i> <span class="notificationNumberPanel badge badge-danger d-none" id="notificationNumber">0</span>
+                  </button>
+                  <button data-toggle="drawer" type="button" data-target="#dw-s4" rel="tooltip" class="btn btn-primary btn-link btn-sm" data-original-title="التطبيقات" title="التطبيقات">
+                     <i class="material-icons">apps</i>
+                  </button>
+               }
+            }
+         </div>
+      </div>
+      <div class="clearfix"></div>
+   </footer>
+   <script src="~/Etimad-UI/assets/js/bundle.min.js"></script>
+   @RenderSection("notification", required: false)
+   @RenderSection("scripts", required: false)
+   <script>
+      $(function () {
+         //setup ajax error handling
+         $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN': '@GetAntiXsrfRequestToken()' },
+            error: function (x, status, error) {
+               if (x.status == 403 || x.status == 401 || x.status == 0)
+                  window.location.href = "/account/logout";
+            }
+         });
+      });
+      $(document).ready(function () {
+         $('#supplierModal').modal('hide');
+         var id = window.location.href.split('#')[1];
+      });
+      function getSupplierInfo(supplierCR) {
+         $('#supplierInfoPopUp').html('@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Loading');
+         $('#supplierModal').modal('show');
+         $.get('/Tender/GetSupplierInfoByCR/' + supplierCR + '').done(function (result) {
+            $('#supplierInfoPopUp').html(result);
+         }).fail(function (e) {
+            if (e.responseText == "Logout") { return; }
+         });
+      }
+      function updateLanguage(language) {
+         setCookieValue('language', language);
+         window.location = window.location;
+      }
+      function delete_cookie(name) {
+         document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+      }
+      function setCookieValue(cookieName, cookieValue) {
+         delete_cookie(cookieName);
+         var d = new Date();
+         var hour = 2;
+         d.setTime(d.getTime() + (hour * 60 * 60 * 1000));
+         var cookieExpireDate = "expires=" + d.toString();
+         document.cookie = cookieName + "=" + cookieValue + "; " + cookieExpireDate;
+      }
+      function getCookie(cname) {
+         var name = cname + "=";
+         var decodedCookie = decodeURIComponent(document.cookie);
+         var ca = decodedCookie.split(';');
+         for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+               c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+               return c.substring(name.length, c.length);
+            }
+         }
+         return "";
+      };
+      $(function () {
+         setTimeout(function () { $(".alertHideMessage").hide(); }, 10000);
+      });
+   </script>
+   <style>
+      .VerificationCode::-webkit-outer-spin-button,
+      .VerificationCode::-webkit-inner-spin-button {
+         -webkit-appearance: none;
+         margin: 0;
+      }
+
+      .VerificationCode {
+         -moz-appearance: textfield;
+      }
+   </style>
+   @if (User.IsInRole(RoleNames.supplier))
+   {
+      <script>
+         $(function () {
+            $.get("/account/GetNotificationsCount").done(function (d) {
+               if (d === 0) {
+                  $('.notificationNumberPanel').addClass("d-none");
+                  $('.notificationNumberPanel').text("0");
+                  if ($("#noNotificationsDiv").length) {
+                     $("#noNotificationsDiv").show();
+                  }
+               } else {
+                  $('.notificationNumberPanel').removeClass("d-none");
+                  $('.notificationNumberPanel').text(d);
+                  if ($("#noNotificationsDiv").length) {
+                     $("#noNotificationsDiv").hide();
+                  }
+                  $('.etd-notification-btn').addClass('infinite delay-3s shake');
+               }
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+         });
+      </script>
+   }
+   @if (User.Identity.IsAuthenticated)
+   {
+      <script>
+         var navigationsObj = new Vue({
+            el: '#navigationDiv',
+            data: {
+               notifications: []
+            }
+         });
+         function loadNotifications() {
+            $('#notifyPanel').show();
+            $('#loader').show();
+            $.get("/account/NavNotificationAsync").done(function (d) {
+
+               $('#loader').hide();
+
+               navigationsObj.notifications = d;
+            }).fail(function () {
+               $('#loader').hide();
+            });
+         }
+      </script>
+   }
+   <script>
+      function onChange(id) {
+         this.selectedItem = id;
+         $('#branchForm').submit();
+      }
+      var agencyCodeList = [];
+      var logoLoaded = false;
+      var isCard = false;
+      function updateAgencyLogos(agencyCode) {
+         logoLoaded = true;
+         var agencycodes = '?';
+         agencyCodeList = [];
+         $('[name=agencylogo]').each(function () {
+            if (agencycodes.indexOf(this.dataset['logo']) < 0) {
+               if (!agencyCode || (this.dataset['logo'] && agencyCode != this.dataset['logo']))
+                  agencyCode = this.dataset['logo'];
+               agencyCodeList.push(agencyCode);
+               agencycodes += 'agencyCodes=' + agencyCode + '&';
+            }
+         });
+         agencycodes = agencycodes.substr(0, agencycodes.length - 1);
+         if (agencycodes != '' && agencycodes != '?') {
+            $.get('/Account/GetAgenciesLogoes' + agencycodes).done(function (result) {
+               $(agencyCodeList).each(function (i, e) {
+                  if (result[e] && result[e] != '') {
+                     $('[data-logo=' + e + "]").attr('src', result[e]);
+                     if ($('[name=agencylogo]').length == 1)
+                        $('[name=agencylogo]').attr('src', result[e]);
+                  }
+                  else {
+                     $('[data-logo=' + e + "]").attr('src', '/Etimad-UI/assets/imgs/capitol-building.png');
+                     if ($('[name=agencylogo]').length == 1)
+                        $('[name=agencylogo]').attr('src', '/Etimad-UI/assets/imgs/capitol-building.png');
+                  }
+               })
+            }).fail(function (e) {
+            });
+         }
+      }
+      $(".allownumeric").on("keypress keyup blur", function (event) {
+         $(this).val($(this).val().replace(/[^\d].+/, ""));
+         if ((event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+         }
+      });
+      $(".allownumericwithdecimal").on("keypress keyup blur", function (event) {
+         $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+         if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+         }
+      });
+      function DownLoadAttachment(fileNetReferenceId, fileName) {
+        // renewSession();
+         SessionExpireAlert();
+         window.open("/Upload/getfile/" + fileNetReferenceId + ":" + fileName, '_blank');
+      }
+      function OnQtableSuccess() {
+         AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+      }
+      function OnQtableFailure(e) {
+         AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', alertMessageType.Danger);
+      }
+      function OnQtableApplyOfferFailure(xhr, status, error) {
+         ////logout
+         if (xhr.status == 403 || xhr.status == 401) {
+            window.location.href = "/account/logout";
+         }
+         else if (xhr.status == 400) {
+            AlertFun(xhr.responseJSON.message, alertMessageType.Danger);
+         }
+         else {
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', alertMessageType.Danger);
+         }
+      }
+      function hideNotificationPanel() {
+         $("#notifyPanel").hide();
+      }
+   </script>
+   @if (env.IsProduction())
+   {
+      <!-- Google Tag Manager -->
+      <script>
+         (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+               'gtm.start':
+                  new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+               j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                  'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+         })(window, document, 'script', 'dataLayer', 'GTM-MSLTJXJ');</script>
+      <!-- End Google Tag Manager -->
+      <!-- Google Tag Manager (noscript) -->
+      <noscript>
+         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MSLTJXJ" title="" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+      </noscript>
+      <!-- End Google Tag Manager (noscript) -->
+
+
+
+
+
+
+
+   }
+
+   <script type="text/javascript">
+
+      var _timeout = parseInt(1200000);  //60 * 20 * 1000
+      var seconds = parseInt((_timeout) / 1000);
+      var timerf;
+      var logout;
+      var showmodal;
+      function SessionExpireAlert() {
+         renewSession();
+      seconds =  (_timeout) / 1000;
+      timerf=  setInterval(function () {
+         seconds--;
+            document.getElementById("seconds").innerHTML = seconds;
+    }, 1000);
+
+        showmodal=    setTimeout(function () {
+            $("#sessiontimeoutmodal").modal('show');
+        }, parseInt((_timeout) - 20000)); // 20 * 1000
+
+      logout =   setTimeout(function () {
+      window.location = '@(Url.ActionLink("Logout","Account"))';
+      }, parseInt(_timeout));
+      };
+      function renewSession() {
+         console.log("renewSession")
+
+         $.ajax({
+            url: "/Qualification/RenewSessionTime", async: false, success: function (result) {
+               resetSessionTimer();
+            }
+         });
+
+
+         //$.get('/Qualification/RenewSessionTime').success(function () {
+
+         //}).fail(function () {
+         //   alert('')
+         //});
+         //resetSessionTimer();
+      }
+
+      function resetSessionTimer() {
+         console.log("resetSessionTimer")
+        try {
+            if (timerf != undefined) {
+               clearInterval(timerf);
+            }
+
+            if (showmodal != undefined) {
+               clearTimeout(showmodal);
+            }
+
+            if (logout != undefined) {
+               clearTimeout(logout);
+            }
+           $("#sessiontimeoutmodal").modal('hide');
+
+
+         }
+         catch (e) {
+            console.log(e)
+         }
+      }
+   </script>
+   <script charset='UTF-8'>
+      window['adrum-start-time'] = new Date().getTime();
+      (function (config) {
+                  config.appKey = '@appKey';//'EUM-AAB-AVA';
+    //config.beaconUrlHttp = 'http://10.13.69.66:7001';
+                  config.beaconUrlHttps = '@beaconUrlHttps';//'https://preprodeumlb-appdynamics.mof.gov.sa';
+         //config.beaconUrlHttps = 'https://preprodeumlb-appdynamics.mof.gov.sa';
+         //config.adrumExtUrlHttps = '/Scripts/EUM-Files';
+         config.adrumExtUrlHttps = '/Etimad-UI/assets/js/EUM-Files';
+
+         config.xd = { enable: true };
+      })(window['adrum-config'] || (window['adrum-config'] = {}));
+   </script>
+   @*<script src="~/Scripts/EUM-Files/adrum.js"></script>*@
+   <script src="~/Etimad-UI/assets/js/EUM-Files/adrum.js"></script>
+
+</body>
+</html>
+

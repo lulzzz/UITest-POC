@@ -1,0 +1,122 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierBlockModel
+
+
+
+@{
+   ViewData["Title"] = "تعديل تفاصيل المنع";
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">الرئيسية</a></li>
+         <li class="breadcrumb-item active" aria-current="page">اللجان الفنية</li>
+      </ol>
+   </nav>
+
+}
+@Html.AntiForgeryToken()
+<form method="Post" action="" class="my-form">
+   <div class="row">
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="CommercialRegistrationNo" class="label bmd-label-static">رقم السجل التجاري<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="CommercialRegistrationNo" name="CommercialRegistrationNo" value="@(Model.CommercialRegistrationNo)" required>
+            @*<input type="hidden" id="CommitteeTypeIdString" name="CommitteeTypeIdString" value="@(ViewData["CommitteeTypeId"])">*@
+            <input type="hidden" id="SupplierBlockId" name="SupplierBlockId" value="@(ViewData["SupplierBlockId"])" value="@(Model.SupplierBlockId)">
+            <span class="bmd-help">ادخل رقم السجل التجاري </span>
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="CommercialSupplierName" class="label bmd-label-static"> اسم المورد التجاري </label>
+            <input type="text" class="form-control" id="CommercialSupplierName" name="CommercialSupplierName" value="@(Model.CommercialSupplierName)">
+            <span class="bmd-help">ادخل  اسم المورد التجاري </span>
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="ResolutionNumber" class="label bmd-label-static">رقم القرار</label>
+            <input type="number" class="form-control" id="ResolutionNumber" name="ResolutionNumber" value="@(Model.ResolutionNumber)">
+            <span class="bmd-help">ادخل رقم القرار </span>
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="BlockTypeId" class="label bmd-label-static">نوع المنع</label>
+            <select class="form-control" id="BlockTypeId" name="BlockTypeId" value="@(Model.BlockTypeId)">
+               <option value="1">دائم</option>
+               <option value="2">مؤقت</option>
+            </select>
+            <span class="bmd-help">ادخل رقم الفاكس</span>
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="BlockDetails" class="label bmd-label-static">تفاصيل المنع</label>
+            <input type="text" class="form-control" id="BlockDetails" name="BlockDetails" value="@(Model.BlockDetails)">
+            <span class="bmd-help">ادخل تفاصيل المنع </span>
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="BlockStartDate" class="label bmd-label-static">تاريخ بداية المنع</label>
+            <input type="date" class="form-control" id="BlockStartDate" name="BlockStartDate" value="@(Model.BlockStartDate)">
+            <span class="bmd-help">ادخل تاريخ بداية المنع </span>
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="BlockEndDate" class="label bmd-label-static">تاريخ نهاية المنع</label>
+            <input type="date" class="form-control" id="BlockEndDate" name="BlockEndDate" value="@(Model.BlockEndDate)">
+            <span class="bmd-help">ادخل  تاريخ نهاية المنع</span>
+         </div>
+      </div>
+
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="Violation" class="label bmd-label-static">نص المخالفة</label>
+            <input type="text" class="form-control" id="Violation" name="Violation" value="@(Model.Violation)">
+            <span class="bmd-help">ادخل نص المخالفة  </span>
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="Punishment" class="label bmd-label-static">نص العقوبة</label>
+            <input type="text" class="form-control" id="Punishment" name="Punishment" value="@(Model.Punishment)">
+            <span class="bmd-help">ادخل نص العقوبة</span>
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="OfficialBasisDefamation" class="label bmd-label-static">الأساس النظامي للتشهير</label>
+            <input type="text" class="form-control" id="OfficialBasisDefamation" name="OfficialBasisDefamation" value="@(Model.OfficialBasisDefamation)">
+            <span class="bmd-help">ادخل  الأساس النظامي للتشهير </span>
+         </div>
+      </div>
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="AttachmentId" class="label bmd-label-static">نسخة من قرار المنع </label>
+            @*<input type="file" class="form-control" id="AttachmentId" name="AttachmentId" value="@(Model.AttachmentId)">*@
+
+            <div class="row">
+               @Html.FileUploaderFor(m => m.AttachmentIdRef, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 4, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+               <span asp-validation-for="AttachmentIdRef" class="text-danger"></span>
+            </div>
+
+            <span class="bmd-help">ادخل نسخة من قرار المنع</span>
+         </div>
+      </div>
+      <div class="col-12 ">
+         <button class="btn btn-primary" type="submit">إرسال</button>
+         <button class="btn btn-danger" type="reset" onclick="window.location = '/Block?blockId=@(ViewData["blockId"])'">إلغاء</button>
+      </div>
+   </div>
+
+</form>
+@section scripts{
+
+<script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+<link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+
+}

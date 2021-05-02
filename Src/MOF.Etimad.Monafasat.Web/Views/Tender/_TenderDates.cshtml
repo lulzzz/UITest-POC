@@ -1,0 +1,391 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.TenderDatesModel
+<div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:10px;">
+   <ul class="list-group form-details-list">
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>@(Model.TenderName)</span>
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>@(string.IsNullOrEmpty(Model.ReferenceNumber) ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotFound : Model.ReferenceNumber)</span>
+
+            </div>
+         </div>
+      </li>
+      <li class="list-group-item">
+         <div class="row">
+            <div class="col-4 etd-item-title">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+            </div>
+            <div class="col-8 etd-item-info">
+               <span>@(string.IsNullOrEmpty(Model.TenderNumber) ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotFound : Model.TenderNumber)</span>
+            </div>
+         </div>
+      </li>
+   </ul>
+</div>
+
+@if (!Model.IsOldTender && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition || (Model.VersionId >= (int)Enums.ActivityVersions.Sprint7Activities && !Model.IsOldTender && Model.TenderTypeId != (int)Enums.TenderType.Competition))
+{
+
+
+   <div class="col-12">
+      <div class="card p-4">
+         <div class="row">
+            <div class="col-12">
+               <h4>الضمان البنكى</h4>
+            </div>
+            @if (Model.VersionId >= (int)Enums.ActivityVersions.Sprint7Activities && !Model.IsOldTender)
+            {
+               <div class="col-lg-4 col-sm-6 col-xs-12" v-show="tenderType != '@((int)Enums.TenderType.Competition)' && tenderType != '@((int)Enums.TenderType.NewDirectPurchase)'">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="FinalGuaranteePercentage" class="label bmd-label-static"> نسبة الضمان النهائي  <span> (لاتقل عن 5 % ولاتزيد عن 100%) </span></label><span class="text-danger">*</span>
+                     <input asp-for="FinalGuaranteePercentage" id="finalGuaranteePercentage" class="form-control allownumeric" type="number" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.FinalGuaranteeNotValidValue">
+                     <span asp-validation-for="FinalGuaranteePercentage" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12" v-show="tenderType != '@((int)Enums.TenderType.Competition)' && tenderType != '@((int)Enums.TenderType.NewDirectPurchase)'">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="AwardingStoppingPeriod" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <input asp-for="AwardingStoppingPeriod" id="finalGuaranteePercentage" class="form-control allownumeric" type="number">
+                     <span asp-validation-for="AwardingStoppingPeriod" class="text-danger"></span>
+                  </div>
+               </div>
+            }
+
+            <div class="col-lg-4 col-sm-6 col-xs-12" v-show="!isOldTender && tenderType != '@((int)Enums.TenderType.FirstStageTender)' && tenderType != '@((int)Enums.TenderType.Competition)'">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="NeedInitialGuarantee" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Guarantee</label>
+                  <div class="form-check">
+                     <label class="form-check-label">
+                        <input asp-for="NeedInitialGuarantee" name="NeedInitialGuarantee" class="form-check-input" type="radio" v-model="isNeedInitialGuarantee" id="primaryGuarantee" value="true">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PrimaryGuarantee
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                     <label class="form-check-label">
+                        <input asp-for="NeedInitialGuarantee" name="NeedInitialGuarantee" class="form-check-input" type="radio" id="noGuarantee" v-model="isNeedInitialGuarantee" value="false">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NoGuarantee
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                  </div>
+               </div>
+               <span asp-validation-for="NeedInitialGuarantee" class="text-danger"></span>
+            </div>
+
+            <div class="col-lg-4 col-sm-6 col-xs-12" id="divInitialGuaranteePercentage" v-show="isNeedInitialGuarantee == 'true' && !isOldTender && tenderType != '@((int)Enums.TenderType.FirstStageTender)' && tenderType != '@((int)Enums.TenderType.Competition)'">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="NeedInitialGuarantee" class="label bmd-label-static">نسبة الضمان الإبتدائي<span> (أكبر من أو يساوى 1% و اقل من أو يساوي 2% .) </span></label><span class="text-danger">*</span>
+                  <input asp-for="InitialGuaranteePercentage" id="initialGuaranteePercentage" class="form-control" type="number" step="0.01" placeholder="1"> @*step="0.01" min="1" max="2"*@
+                  <span asp-validation-for="InitialGuaranteePercentage" class="text-danger"></span>
+               </div>
+            </div>
+
+            <div class="col-lg-4 col-sm-6 col-xs-12" id="divInitialGuaranteeAddress" v-show="isNeedInitialGuarantee == 'true' && !isOldTender && tenderType != '@((int)Enums.TenderType.FirstStageTender)' && tenderType != '@((int)Enums.TenderType.Competition)'">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="InitialGuaranteeAddress" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input type="text" onchange="return blockSpecialChar(event)" asp-for="InitialGuaranteeAddress" maxlength="1024" name="InitialGuaranteeAddress" class="noSpecial form-control" id="tb_InitialGuaranteeAddress" />
+                  <span asp-validation-for="InitialGuaranteeAddress" class="text-danger"></span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+}
+<div class="col-12">
+   <div class="card p-4">
+      <div class="row">
+         <div class="col-12">
+            <h4>عناوين المنافسة</h4>
+         </div>
+         <div class="col-lg-6 col-sm-6 col-xs-12" id="divOffersOpeningAddress" v-show="tenderType != '@((int)Enums.TenderType.NewDirectPurchase)' && tenderType != '@((int)Enums.TenderType.FirstStageTender)' && tenderType != '@((int)Enums.TenderType.Competition)'">
+            <div class="form-group bmd-form-group" id="OffersOpeningAddressSlc">
+               <label asp-for="OffersOpeningAddressId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+               <div class="input-group-prepend">
+                  <select data-live-search="true" asp-for="OffersOpeningAddressId" name="OffersOpeningAddressId" id="offersOpeningAddress"
+                          asp-items="@(new SelectList(Model.OffersOpeningAddressList,"AddressId","AddressName"))" class="selectpicker p-0" data-style="select-with-transition" data-size="7">
+                     <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterOpenLocation</option>
+                  </select>
+                  <button type="button" class=" btn btn-primary btn-just-icon btn-sm" id="btnOffersOpening" @@click="showAddress()"><i class="material-icons">add</i> <div class="ripple-container"></div></button>
+               </div>
+
+            </div>
+            <div class="form-group bmd-form-group" id="OffersOpeningAddressDiv" style="display: none;">
+               <label asp-for="OffersOpeningAddress" class="label bmd-label-static col-lg-12"></label>
+               <input asp-for="OffersOpeningAddress" type="text" style="display: initial; width: 80%" class="form-control" name="OffersOpeningAddress" id="offersOpeningAddress">
+               <button type="button" class=" btn btn-primary btn-just-icon btn-sm" id="btnOffersOpeningHide" @@click="hideAddress()" hidden="hidden"><i class="material-icons">remove</i> <div class="ripple-container"></div></button>
+               <div>
+                  <span asp-validation-for="OffersOpeningAddress" class="text-danger"></span>
+               </div>
+            </div>
+            <span asp-validation-for="OffersOpeningAddressId" class="text-danger"></span>
+         </div>
+         <div class="col-lg-6 col-sm-6 col-xs-12">
+            <div class="form-group bmd-form-group">
+               <label asp-for="SupplierNeedSample" class="label bmd-label-static"></label>
+               <div class="form-check">
+                  <label class="form-check-label">
+                     <input asp-for="SupplierNeedSample" name="SupplierNeedSample" class="form-check-input" type="radio" id="SupplierNeedSamplerd" v-model="isSupplierNeedSample" value="true">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Yes
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+                  <label class="form-check-label">
+                     <input asp-for="SupplierNeedSample" name="SupplierNeedSample" class="form-check-input" checked type="radio" id="SupplierNeedSamplerd" v-model="isSupplierNeedSample" value="false">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.No
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+               </div>
+            </div>
+            <span asp-validation-for="SupplierNeedSample" class="text-danger"></span>
+         </div>
+
+
+         <div class="col-lg-4 col-sm-6 col-xs-12" id="SamplesDeliveryAddressDiv" v-show="isSupplierNeedSample == 'true'">
+            <div class="form-group bmd-form-group">
+               <label asp-for="SamplesDeliveryAddress" class="label bmd-label-static"></label><span class="text-danger">*</span>
+               <input type="text" onchange="return blockSpecialChar(event)" asp-for="SamplesDeliveryAddress" name="SamplesDeliveryAddress" class="noSpecial form-control" id="tb_SamplesDeliveryAddress" />
+               <span asp-validation-for="SamplesDeliveryAddress" class="text-danger"></span>
+            </div>
+         </div>
+
+         @if (!Model.IsOldTender)
+         {
+            <div class="col-lg-4 col-sm-6 col-xs-12" id="BuildingNameDiv" v-show="isSupplierNeedSample == 'true'">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="BuildingName" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input type="text" onchange="return blockSpecialChar(event)" asp-for="BuildingName" name="BuildingName" class="noSpecial form-control" id="tb_BuildingName" />
+                  <span asp-validation-for="BuildingName" class="text-danger"></span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12" id="FloarNumberDiv" v-show="isSupplierNeedSample == 'true'">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="FloarNumber" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input type="text" onchange="return blockSpecialChar(event)" asp-for="FloarNumber" name="FloarNumber" class="noSpecial form-control" id="tb_FloarNumber" />
+                  <span asp-validation-for="FloarNumber" class="text-danger"></span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12" id="DepartmentNameDiv" v-show="isSupplierNeedSample == 'true'">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="DepartmentName" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input type="text" onchange="return blockSpecialChar(event)" asp-for="DepartmentName" name="DepartmentName" class="noSpecial form-control" id="tb_DepartmentName" />
+                  <span asp-validation-for="DepartmentName" class="text-danger"></span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12" v-show="isSupplierNeedSample == 'true'">
+               <div class="form-group form-check etd-calendar-group">
+                  <label asp-for="DeliveryDate" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input asp-for="DeliveryDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask deliveryDate" id="deliveryDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+               </div>
+               <span class="badge badge-warning" id="deliveryDateVac" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+               <span asp-validation-for="DeliveryDate" class="text-danger"></span>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12" v-show="isSupplierNeedSample == 'true'">
+               <div class="form-group form-check etd-calendar-group">
+                  <label asp-for="DeliveryTime" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input asp-for="DeliveryTime" type="text" class="form-control timepicker deliveryDate" id="deliveryTime" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+                  <span asp-validation-for="DeliveryTime" class="text-danger"></span>
+               </div>
+            </div>
+         }
+
+
+      </div>
+   </div>
+
+   @if (Model.VersionId >= (int)Enums.ActivityVersions.Sprint7Activities && !Model.IsOldTender)
+   {
+      <div class="card p-4">
+         <div class="row">
+
+            <div class="col-12">
+               <h4>عنوان تسليم العروض</h4>
+            </div>
+
+
+            <div class="col-lg-4 col-sm-6 col-xs-12" v-show="showIsSameAddressCheckBox">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="IsSampleAddresSameOffersAddress" class="label bmd-label-static"></label>
+                  <div class="form-check">
+                     <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsSampleAddresSameOffersAddress" type="checkbox" v-model="isSampleAddresSameOffersAddress" name="IsSampleAddresSameOffersAddress" id="checkIsSampleAddresSameOffersAddress">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.IsSampleAddresSameOffersAddress
+                        <span class="form-check-sign">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                  </div>
+               </div>
+               <span asp-validation-for="IsSampleAddresSameOffersAddress" class="text-danger"></span>
+            </div>
+
+            <div class="col-lg-4 col-sm-6 col-xs-12" v-show="!isSampleAddresSameOffersAddress">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="OfferDeliveryAddress" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input type="text" onchange="return blockSpecialChar(event)" asp-for="OfferDeliveryAddress" name="OfferDeliveryAddress" class="noSpecial form-control" id="txtOfferDeliveryAddress" />
+                  <span asp-validation-for="OfferDeliveryAddress" class="text-danger"></span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12" v-show="!isSampleAddresSameOffersAddress">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="OfferBuildingName" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input type="text" onchange="return blockSpecialChar(event)" asp-for="OfferBuildingName" name="OfferBuildingName" class="noSpecial form-control" id="txtOfferBuildingName" />
+                  <span asp-validation-for="OfferBuildingName" class="text-danger"></span>
+               </div>
+            </div>
+
+            <div class="col-lg-4 col-sm-6 col-xs-12" v-show="!isSampleAddresSameOffersAddress">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="OfferFloarNumber" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input type="text" onchange="return blockSpecialChar(event)" asp-for="OfferFloarNumber" name="OfferFloarNumber" class="noSpecial form-control" id="txtOfferFloarNumber" />
+                  <span asp-validation-for="OfferFloarNumber" class="text-danger"></span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12" v-show="!isSampleAddresSameOffersAddress">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="OfferDepartmentName" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input type="text" onchange="return blockSpecialChar(event)" asp-for="OfferDepartmentName" name="OfferDepartmentName" class="noSpecial form-control" id="txtOfferDepartmentName" />
+                  <span asp-validation-for="OfferDepartmentName" class="text-danger"></span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12" v-show="!isSampleAddresSameOffersAddress">
+               <div class="form-group form-check etd-calendar-group">
+                  <label asp-for="OffersDeliveryDate" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input asp-for="OffersDeliveryDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask offersDeliveryDate" id="offersDeliveryDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+               </div>
+               <span class="badge badge-warning" id="offersDeliveryDateVac" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+               <span asp-validation-for="OffersDeliveryDate" class="text-danger"></span>
+            </div>
+
+            <div class="col-lg-4 col-sm-6 col-xs-12" v-show="!isSampleAddresSameOffersAddress">
+               <div class="form-group form-check etd-calendar-group">
+                  <label asp-for="OffersDeliveryTime" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input asp-for="OffersDeliveryTime" type="text" class="form-control timepicker offersDeliveryTime" id="offersDeliveryTime" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+                  <span asp-validation-for="OffersDeliveryTime" class="text-danger"></span>
+               </div>
+            </div>
+         </div>
+      </div>
+   }
+</div>
+
+
+
+<div class="col-12">
+   <div class="card p-4">
+      <div class="row">
+
+         <div class="col-12">
+            <h4>التواريخ</h4>
+         </div>
+         <div class="col-lg-4 col-sm-6 col-xs-12" id="divLastOfferEnqueryDate">
+            <div class="form-group form-check etd-calendar-group">
+               <label asp-for="LastEnqueriesDate" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+               <input asp-for="LastEnqueriesDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="lastEnquiesDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+               <span class="form-control-feedback">
+                  <i class="material-icons">calendar_today</i>
+               </span>
+            </div>
+            <span class="badge badge-warning" id="lastEnquiesDateVac" style="display:none">@res.TenderResources.ErrorMessages.WeekendDate </span>
+            <span asp-validation-for="LastEnqueriesDate" class="text-danger"></span>
+         </div>
+         <div class="col-lg-4 col-sm-6 col-xs-12" id="divLastOfferPresentationDate">
+            <div class="form-group form-check etd-calendar-group">
+               <label asp-for="LastOfferPresentationDate" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+               <input asp-for="LastOfferPresentationDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="lastOfferPressentationDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+            </div>
+            <span class="badge badge-warning" id="lastOfferPressentationDateVac" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+            <span asp-validation-for="LastOfferPresentationDate" class="text-danger"></span>
+         </div>
+         <div class="col-lg-4 col-sm-6 col-xs-12" id="divLastOfferPresentationTime">
+            <div class="form-group form-check etd-calendar-group">
+               <label asp-for="LastOfferPresentationTime" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+               <input asp-for="LastOfferPresentationTime" type="text" class="form-control timepicker" id="lastOfferPresentationTime" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time" />
+               <span asp-validation-for="LastOfferPresentationTime" class="text-danger"></span>
+            </div>
+         </div>
+         @if ((Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase && Model.OffersOpeningAddressId != null) || (Model.TenderTypeId != (int)Enums.TenderType.NewDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition))
+         {
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group form-check etd-calendar-group">
+                  <label asp-for="OffersOpeningDate" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input asp-for="OffersOpeningDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask offersOpeningDate" id="offersOpeningDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+               </div>
+               <span class="badge badge-warning" id="offersOpeningDateVac" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+               <span asp-validation-for="OffersOpeningDate" class="text-danger"></span>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group form-check etd-calendar-group">
+                  <label asp-for="OffersOpeningTime" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input asp-for="OffersOpeningTime" type="text" class="form-control timepicker offersOpeningDate" id="offersOpeningTime" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+                  <span asp-validation-for="OffersOpeningTime" class="text-danger"></span>
+               </div>
+            </div>
+         }
+         @if (Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender || Model.TenderTypeId == (int)Enums.TenderType.Competition)
+         {
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group form-check etd-calendar-group">
+                  <label asp-for="OffersCheckingDate" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input asp-for="OffersCheckingDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask offersCheckingDate" id="offersCheckingDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+               </div>
+               <span class="badge badge-warning" id="offersCheckingDateVac" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+               <span asp-validation-for="OffersCheckingDate" class="text-danger"></span>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group form-check etd-calendar-group">
+                  <label asp-for="OffersCheckingTime" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input asp-for="OffersCheckingTime" type="text" id="offersCheckingTime" class="form-control timepicker" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+                  <span asp-validation-for="OffersCheckingTime" class="text-danger"></span>
+               </div>
+            </div>
+         }
+
+         @if (Model.VersionId >= (int)Enums.ActivityVersions.Sprint7Activities && !Model.IsOldTender)
+         {
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group form-check etd-calendar-group">
+                  <label asp-for="AwardingExpectedDate" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input asp-for="AwardingExpectedDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask offersCheckingDate" id="offersCheckingDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+               </div>
+               <span class="badge badge-warning" id="offersCheckingDateVac" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+               <span asp-validation-for="AwardingExpectedDate" class="text-danger"></span>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group form-check etd-calendar-group">
+                  <label asp-for="StartingBusinessOrServicesDate" for="datepick" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <input asp-for="StartingBusinessOrServicesDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask offersCheckingDate" id="offersCheckingDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+               </div>
+               <span class="badge badge-warning" id="offersCheckingDateVac" style="display:none"> @res.TenderResources.ErrorMessages.WeekendDate </span>
+               <span asp-validation-for="StartingBusinessOrServicesDate" class="text-danger"></span>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <label class="label bmd-label-static">@res.TenderResources.DisplayInputs.StartingSendingEnquiries</label>
+
+               <span class="badge badge-warning"> @res.TenderResources.Messages.StartingSendingEnquiriesCalculated </span>
+            </div>
+         }
+
+
+      </div>
+   </div>
+
+</div>

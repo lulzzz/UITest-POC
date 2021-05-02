@@ -1,0 +1,66 @@
+<div id="tableContainer" class="card-body p-2">
+   <div v-if="QuantityTableItems && QuantityTableItems.length > 0" v-for="(table, $index) in QuantityTableItems">
+      <div class="TableNameSection" v-show="table.isReadOnly == true">
+         <div class="d-block">
+            <h5 class="title text-primary p-1 m-0">
+               <span class="tableName col">{{table.tableName}}</span>
+            </h5>
+         </div>
+      </div>
+      @{
+            <div class="row" v-html="QuantityTableItems[0].tableHtml">
+            </div>
+      }
+   </div>
+
+   <pagination :visible_pages="3" ref="vpaginator" :submit_form="true" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>
+<div id="javaScript"></div>
+<script>
+
+      function emptyValidationDiv() {
+         debugger;
+         $("#form0").find('.validation-error').html('');
+      }
+
+   $(document).ready(function () {
+
+      Tender = new Vue({
+         el: '#tableContainer',
+         data: {
+            totalCount: 0,
+            currentPage: 1,
+            QuantityTableItems: [],
+            pageSize: @((int)Enums.PageSize.Six),
+            resource_url: '/Offer/GetTableQuantityItemsOpenDetailsAsync?tenderId=@Model.TenderId&OfferId=@Model.OfferId&quantityTableId=@Model.TableId&formId=@Model.FormId&isReadOnly=@Model.IsReadOnly'
+         },
+         created: function () {
+            this.resource_url = '/Offer/GetTableQuantityItemsOpenDetailsAsync?tenderId=@Model.TenderId&OfferId=@Model.OfferId&quantityTableId=@Model.TableId&formId=@Model.FormId&isReadOnly=@Model.IsReadOnly';
+         },
+         methods: {
+            updateResource: function (data) {
+             //  debugger;
+               console.log(data);
+               this.QuantityTableItems = data;
+               if (@Model.TableId == 0 && $('#tableHeaderContainer_' + @Model.FormId + ' li').length == 0)
+                  $('#tableHeaderContainer_' + @Model.FormId).append('<li class="nav-item"><a class="nav-link text-center" href="#tableIndex_' + data[0].tableId + '" href="#tableIndex_' + data[0].tableId + '" onclick="changeTable(' + data[0].tenderId + ', ' + data[0].tableId + ', ' + data[0].formId + ')" data-toggle="tab">اسم الجدول</a></li>');
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+               $('#javaScript').html(data[0].javascript);
+             //  $('.qtableselectpicker').selectpicker('refresh');
+           console.log(data[0].isTableHasAlternative);
+            }
+         }
+         , watch: {
+            currentPage: function (newVal, old) {
+               debugger;
+               //this.currentPage = old;
+            }
+
+
+         }
+      });
+
+   });
+</script>

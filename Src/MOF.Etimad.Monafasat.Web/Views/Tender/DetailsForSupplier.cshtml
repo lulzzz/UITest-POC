@@ -1,0 +1,1056 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderDetailsModel
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+   string tenderIdString = Model.TenderIdString;
+   int tenderId = MOF.Etimad.Monafasat.SharedKernal.Util.Decrypt(Model.TenderIdString);
+   string tenderStatusIdString = Model.TenderStatusIdString;
+   int tenderStatus = MOF.Etimad.Monafasat.SharedKernal.Util.Decrypt(Model.TenderStatusIdString);
+   int tenderType = Model.TenderTypeId;
+   bool isFavourite = Model.IsFavouriteTender;
+   int? invitationId = Model.SupplierInvitation != null ? MOF.Etimad.Monafasat.SharedKernal.Util.Decrypt(Model.SupplierInvitation.InvitationIdString) : 0;
+   int? invitationStatusId = Model.SupplierInvitation != null ? MOF.Etimad.Monafasat.SharedKernal.Util.Decrypt(Model.SupplierInvitation.InvitationStatusIdString) : 0;
+   int supplierSubscriptionType = Model.SubscriptionTypeId;
+   var canAddEnquiry = (Model.LastEnqueriesDate >= Model.CurrentDate.Date && Model.TechnicalOrganizationId != null) ? true : false;
+   var isOldTenders = (Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects) ? true : false;
+
+}
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails;
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <a target="_blank" class="btn p-2 btn-outline-primary pull-left"
+         href="OpenTenderDetailsReport?tenderIdString=@tenderIdString"
+         title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails"
+         data-original-title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails" data-toggle="tooltip">
+         <i class="material-icons">assignment</i>   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails<div class="ripple-container"></div>
+      </a>
+      @if (supplierSubscriptionType == (int)Enums.SubscriptionType.Full || supplierSubscriptionType == (int)Enums.SubscriptionType.Partial2000)
+      {
+         <button class="btn btn-outline-primary p-2 pull-left"
+                 id="FavouriteButton" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Favorite"
+                 data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Favorite"
+                 onclick="ToggleFavourite()" data-toggle="tooltip">
+            <i class="material-icons">favorite</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Favorite<div class="ripple-container"></div>
+         </button>
+      }
+   </div>
+}
+@section modalTitle{
+   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+}
+@section modalContent{
+   <div class="col-xs-12 ModalElement" id="divRequestReason">
+      <div class="form-group bmd-form-group">
+         <label for="ExtendOfferDatesRequestReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.ExtendOfferDatesRequestReason</label><span class="text-danger">*</span>
+         <textarea class="form-control" id="txtRequestReason" name="ExtendOfferDatesRequestReason" placeholder="@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.ExtendOfferDatesRequestReason"></textarea>
+         <span class="h6 text-danger d-block" style="visibility:hidden" id="txtExtendOfferDatesRequestReasonValidation">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.PleaseEnterRequestReason</span>
+      </div>
+      <div class="form-group form-check etd-calendar-group">
+         <label for="ExtendOfferDatesRequestedDate datepick" class="label bmd-label-static"></label>التاريخ المطلوب<span class="text-danger">*</span>
+         <input id="RequestedDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+         <div class="pull-left">
+            <span class="bmd-help text-danger" style="visibility:hidden" id="ExtendOfferDatesRequestedDateValidation">الرجاء إدخال تاريخ التأجيل</span>
+         </div>
+      </div>
+      @*<div class="col-lg-4 col-sm-6 col-xs-12" id="divExtendOfferDatesRequestedTime">
+            <div class="form-group form-check etd-calendar-group">
+               <label for="ExtendOfferDatesRequestedTime datepick" class="label bmd-label-static"></label>الوقت المطلوب<span class="text-danger">*</span>
+               <input id="RequestedTime" type="text" class="form-control timepicker" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time" />
+               <div class="pull-left">
+                  <span class="bmd-help text-danger" style="visibility:hidden" id="ExtendOfferDatesRequestedTimeValidation">الرجاء إدخال وقت التأجيل</span>
+               </div>
+            </div>
+         </div>*@
+   </div>
+   <div class="form-check">
+      <label class="form-check-label text-dark-green" style="margin-bottom:10px">
+         <input class="form-check-input" type="checkbox" id="chConfirmSendRequest">
+         @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.ConfirmToSendRequest
+         <span class="form-check-sign">
+            <span class="check"></span>
+         </span>
+      </label>
+      <span class="h6 text-danger d-block" style="visibility:hidden" id="txtConfirmSendValidation">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.PleaseConfirmSendRequest</span>
+   </div>
+}
+@section modalButtons{
+   <button type="button" class="btn btn-primary btn-sm m-1" name="button" id="btnSendRequest"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>}
+<div class="modal fade" id="enquiryModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@res.EnquiryResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i>
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="row" id="divApprove">
+               <div class="col-sm-12 col-xs-12">
+                  <label id="" class="label bmd-label-static"> @res.EnquiryResources.Messages.EnquiryReplyMsg</label>
+               </div>
+               <div class="clearfix"></div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button" id="btnSendEnquiryConfirmation" onclick="sendEnquiryConfirmation()">@res.EnquiryResources.DisplayInputs.Send</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+<form id="detailsForm">
+   @Html.AntiForgeryToken()
+   @section breadcrumb
+      {
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails</li>
+         </ol>
+      </nav>
+   }
+   <div class="col-12">
+      <div class="clearfix"></div>
+      <div class="row">
+         <ul class="nav nav-pills nav-pills-icons" role="tablist">
+            <li class="nav-item">
+               <a class="nav-link active text-center show" id="basicStepTab" href="#d-1" role="tab" data-toggle="tab" aria-selected="true">
+                  <i class="material-icons">dashboard</i>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation
+               </a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link text-center" id="tenderDatesTab" href="#d-2" role="tab" data-toggle="tab" aria-selected="false">
+                  <i class="material-icons">schedule</i>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DetailsStep
+               </a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link text-center" id="relationStepTab" href="#d-3" role="tab" data-toggle="tab" aria-selected="false">
+                  <i class="material-icons">list</i>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep
+               </a>
+            </li>
+
+            @if (@*(Model.IsPurchased == true || invitationStatusId ==     (int)Enums.InvitationStatus.Approved) &&*@ /**/
+            Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding)
+             {
+               <li class="nav-item">
+                  <a class="nav-link text-center" id="quantitiesTableStepTab" href="#d-4" role="tab" data-toggle="tab" aria-selected="false">
+                     <i class="material-icons">table_chart</i>
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables
+                  </a>
+               </li>
+            }
+            @if (
+      (!User.IsInRole(RoleNames.supplier) && User.UserRoles().Count != 0)
+         ||
+      (User.IsInRole(RoleNames.supplier)/* && (isOldTenders) || (invitationStatusId == (int)Enums.InvitationStatus.Approved && Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase) || Model.IsPurchased == true)*/))
+            {
+               <li class="nav-item">
+                  <a class="nav-link text-center" id="attachmentsStepTab" href="#d-5" role="tab" data-toggle="tab" aria-selected="false">
+                     <i class="material-icons">attach_file</i>
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Attachment
+                  </a>
+               </li>
+            }
+            @if (supplierSubscriptionType == (int)Enums.SubscriptionType.Full || supplierSubscriptionType == (int)Enums.SubscriptionType.Partial150)
+            {
+               @if (invitationStatusId == (int)Enums.InvitationStatus.Approved || Model.IsPurchased == true || Model.TenderTypeId == (int)Enums.TenderType.PreQualification || (Model.TenderTypeId == (int)Enums.TenderType.Competition && Model.InvitationTypeId == (int)Enums.InvitationType.Public))
+               {
+                  <li class="nav-item">
+                     <a class="nav-link text-center" id="inquiriesStepTab" href="#d-6" role="tab" data-toggle="tab" aria-selected="false">
+                        <i class="material-icons">chat</i>
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Inquiry
+                     </a>
+                  </li>
+               }
+            }
+            @if (tenderStatus == (int)Enums.TenderStatus.OffersAwardedConfirmed && Model.SupplierHasRecievedOrExcludedOffer)
+            {
+               <li class="nav-item">
+                  <a class="nav-link text-center" id="awardingStepTab" href="#d-7" role="tab" data-toggle="tab" aria-selected="false">
+                     <i class="material-icons">people_outline</i>
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferAwardingResultAnnouncement
+                  </a>
+               </li>
+            }
+            @if ((tenderType == (int)Enums.TenderType.FirstStageTender || tenderType == (int)Enums.TenderType.ReverseBidding) && (tenderStatus == (int)Enums.TenderStatus.OffersCheckedConfirmed
+     || tenderStatus == (int)Enums.TenderStatus.OffersAwarding || tenderStatus == (int)Enums.TenderStatus.OffersAwardedRejected || tenderStatus == (int)Enums.TenderStatus.OffersAwardedPending
+     || tenderStatus == (int)Enums.TenderStatus.OffersAwardedConfirmed || tenderStatus == (int)Enums.TenderStatus.OffersInitialAwardedPending || tenderStatus == (int)Enums.TenderStatus.OffersInitialAwardedRejected
+     || tenderStatus == (int)Enums.TenderStatus.OffersInitialAwardedConfirmed || tenderStatus == (int)Enums.TenderStatus.Bidding || tenderStatus == (int)Enums.TenderStatus.BiddingApproved) && Model.SupplierHasOffer)
+            {
+               <li class="nav-item">
+                  <a class="nav-link text-center" id="checkingStepTab" href="#d-10" role="tab" data-toggle="tab" aria-selected="false">
+                     <i class="material-icons">people_outline</i>
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferCheckingResultAnnouncement
+                  </a>
+               </li>
+            }
+            <li class="nav-item">
+               <a class="nav-link text-center" id="tenderNewsStepTab" href="#d-8" role="tab" data-toggle="tab" aria-selected="false">
+                  <i class="fa fa-newspaper-o" aria-hidden="true"></i>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNews
+               </a>
+            </li>
+            @if (((invitationStatusId == (int)Enums.InvitationStatus.Approved && Model.TenderTypeId != (int)Enums.TenderType.LimitedTender && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender
+        && Model.TenderTypeId != (int)Enums.TenderType.FrameworkAgreement) || Model.IsPurchased == true || (Model.TenderTypeId == (int)Enums.TenderType.Competition && Model.InvitationTypeId == (int)Enums.InvitationType.Public)
+        || Model.TenderTypeId == (int)Enums.TenderType.PreQualification && tenderStatus != (int)Enums.TenderStatus.Canceled && tenderType != (int)Enums.TenderType.NationalTransformationProjects))
+            {
+               <li class="nav-item">
+                  <a class="nav-link text-center" id="communicationRequestTab" href="#d-9" role="tab" data-toggle="tab" aria-selected="true">
+                     <i class="material-icons">question_answer</i>
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommunicationRequest
+                  </a>
+               </li>
+            }
+            @if (Model.ConShowLocalContentValues)
+            {
+
+               <li class="nav-item">
+                  <a class="nav-link text-center" id="localContentTab" href="#d-11" role="tab" data-toggle="tab" aria-selected="false">
+                     <i class="material-icons">list</i>
+                     متطلبات المحتوي المحلي
+                  </a>
+               </li>
+            }
+
+         </ul>
+         <div class="tab-content  tab-space col-12 " style="padding:0">
+            <div class="tab-pane active animated fadeInLeft delay-1s show" id="d-1">
+               <div class="card">
+                  <div class="card-body" id="basicStepDiv">
+                     @Html.Partial("~/Views/Tender/DetailsPartials/_DetailsBasicStepContent.cshtml", Model)
+                  </div>
+               </div>
+            </div>
+            <div class="tab-pane animated fadeInLeft delay-1s" id="d-2">
+               <div class="card">
+                  <div class="card-body" id="datesDiv">
+                  </div>
+               </div>
+            </div>
+            <div class="tab-pane animated fadeInLeft delay-1s" id="d-3">
+               <div class="card">
+                  <div class="card-body" id="activityDiv">
+                  </div>
+               </div>
+            </div>
+            @if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding && supplierSubscriptionType != (int)Enums.SubscriptionType.Free@*&& (Model.IsPurchased == true || invitationStatusId == (int)Enums.InvitationStatus.Approved)*@)
+{
+<div class="tab-pane animated fadeInLeft delay-1s" id="d-4">
+   <div class="card">
+      <div class="card-body" id="quantitiesTableDiv">
+      </div>
+   </div>
+</div>
+}
+            <div class="tab-pane animated fadeInLeft  delay-1s" id="d-5">
+               <div class="card">
+                  <div class="card-body" id="attachmentsTableDiv">
+                  </div>
+               </div>
+            </div>
+            @if ((supplierSubscriptionType == (int)Enums.SubscriptionType.Full || supplierSubscriptionType == (int)Enums.SubscriptionType.Partial150) && supplierSubscriptionType != (int)Enums.SubscriptionType.Free)
+            {
+               if (Model.IsPurchased == true || invitationStatusId == (int)Enums.InvitationStatus.Approved || Model.TenderTypeId == (int)Enums.TenderType.PreQualification || (Model.TenderTypeId == (int)Enums.TenderType.Competition && Model.InvitationTypeId == (int)Enums.InvitationType.Public))
+               {
+                  <div class="tab-pane animated fadeInLeft delay-1s" id="d-6">
+                     <div class="card">
+                        <div class="card-body" id="inquiriesDiv">
+                        </div>
+                     </div>
+                  </div>
+               }
+            }
+            @if (tenderStatus == (int)Enums.TenderStatus.OffersAwardedConfirmed && Model.SupplierHasRecievedOrExcludedOffer)
+            {
+               <div class="tab-pane animated fadeInLeft delay-1s" id="d-7">
+                  <div class="card">
+                     <div class="card-body" id="awardingDiv">
+                     </div>
+                  </div>
+               </div>
+            }
+            @if ((tenderType == (int)Enums.TenderType.FirstStageTender || tenderType == (int)Enums.TenderType.ReverseBidding) && (tenderStatus == (int)Enums.TenderStatus.OffersCheckedConfirmed
+      || tenderStatus == (int)Enums.TenderStatus.OffersAwarding || tenderStatus == (int)Enums.TenderStatus.OffersAwardedRejected || tenderStatus == (int)Enums.TenderStatus.OffersAwardedPending
+      || tenderStatus == (int)Enums.TenderStatus.OffersAwardedConfirmed || tenderStatus == (int)Enums.TenderStatus.OffersInitialAwardedPending || tenderStatus == (int)Enums.TenderStatus.OffersInitialAwardedRejected
+      || tenderStatus == (int)Enums.TenderStatus.OffersInitialAwardedConfirmed || tenderStatus == (int)Enums.TenderStatus.Bidding || tenderStatus == (int)Enums.TenderStatus.BiddingApproved) && Model.SupplierHasOffer)
+            {
+               <div class="tab-pane animated fadeInLeft delay-1s" id="d-10">
+                  <div class="card">
+                     <div class="card-body" id="checkingDiv">
+                     </div>
+                  </div>
+               </div>
+            }
+            <div class="tab-pane animated fadeInLeft delay-1s" id="d-8">
+               <div class="card">
+                  <div class="card-body" id="tenderNewsDiv">
+                  </div>
+               </div>
+            </div>
+            @if (((invitationStatusId == (int)Enums.InvitationStatus.Approved && Model.TenderTypeId != (int)Enums.TenderType.LimitedTender && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.FrameworkAgreement)
+       || Model.IsPurchased == true || (Model.TenderTypeId == (int)Enums.TenderType.Competition && Model.InvitationTypeId == (int)Enums.InvitationType.Public) || Model.TenderTypeId == (int)Enums.TenderType.PreQualification
+       && tenderStatus != (int)Enums.TenderStatus.Canceled && tenderType != (int)Enums.TenderType.NationalTransformationProjects))
+            {
+               <div class="tab-pane animated fadeInLeft delay-1s" id="d-9">
+                  <div class="">
+                     <div class="card-body" id="communicationRequestDiv">
+                     </div>
+                  </div>
+               </div>
+            }
+            <div class="tab-pane animated fadeInLeft delay-1s" id="d-11">
+               <div class="">
+                  <div class="card-body" id="localContentDiv">
+                  </div>
+               </div>
+            </div>
+         </div>
+         @if (tenderStatus != (int)Enums.TenderStatus.Established && tenderStatus != (int)Enums.TenderStatus.Pending && tenderStatus != (int)Enums.TenderStatus.OffersAwardedConfirmed && Model.CanPurchase)
+         {
+            @if ((Model.IsSupplierBlocked != true && Model.IsTenderOwner == false && Model.LastOfferPresentationDate.HasValue && Model.LastOfferPresentationDate.Value > DateTime.Now) || Model.SupplierHasOffer == true || Model.IsPurchased)
+            {
+               <div class="col-12">
+                  <div class="row">
+                     <div class="card">
+                        <div class="card-body" id="purchaseDiv">
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            }
+         }
+         @if (Model.ShowInvitationReceipt)
+         {
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body" id="invitationBillDiv">
+                     </div>
+                  </div>
+               </div>
+            </div>
+         }
+         @if (Model.SupplierInvitation != null && Model.SupplierInvitation.InvitationStatusIdString == MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt((int)Enums.InvitationStatus.Rejected))
+         {
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="col-12">
+                           <h4 class="text-primary">سبب الرفض</h4>
+                           <p class="text-dark-green">
+                              @Model.RejectionReason
+                           </p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         }
+         <div class="col-12">
+            <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("Index", "Tender")'">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToAllTenders
+               <div class="ripple-container"></div>
+            </button>
+            <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="goBack()">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToPrevious
+               <div class="ripple-container"></div>
+            </button>
+         </div>
+      </div>
+   </div>
+</form>
+@if (tenderStatus == (int)Enums.TenderStatus.Approved)
+{
+   <div id="InvitationAcceptanceOrRejectBySupplier">
+      <input type="hidden" id="hfInvitationId" value="@invitationId" />
+      <div class="row">
+         <div class="col-12 form-group">
+            @if (invitationStatusId == (int)Enums.InvitationStatus.New && Model.SupplierInvitation.InvitationTypeId == (int)Enums.InvitationRequestType.Invitation && !Model.IsTenderOwner)
+            {
+               <button type="button" class="btn btn-primary" name="acceptBtn" @@click="showAcceptModalInvitation()" value="2" data-toggle="modal" data-target="#invitationModal">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmAcceptInvitation
+                  <div class="ripple-container"></div>
+               </button>
+               <button type="button" class="btn btn-danger" name="rejectBtn" @@click="showRejectModalInvitation()" value="3" data-toggle="modal" data-target="#invitationModal">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfrimRejectInvitation
+                  <div class="ripple-container"></div>
+               </button>
+            }
+            @if (invitationStatusId == (int)Enums.InvitationStatus.Approved && Model.SupplierInvitation.InvitationTypeId == (int)Enums.InvitationRequestType.Invitation && !Model.IsPurchased)
+            {
+               <button type="button" class="btn btn-danger" id="btnWithdrowInvitation" name="withdrowBtn" value="2" @@click="showWithdrawModalInvitation()" data-toggle="modal" data-target="#invitationModal">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgreeToWithdraw
+                  <div class="ripple-container"></div>
+               </button>
+            }
+
+            @if (Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase && Model.SupplierInvitation == null)
+            {
+               <button type="button" class="btn btn-primary" id="btnJoinTender" data-toggle="modal" data-target="#joinRequestModal">
+                  انضمام للمنافسة
+                  <div class="ripple-container"></div>
+               </button>
+            }
+         </div>
+      </div>
+   </div>
+   <div class="modal fade" id="invitationModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">تأكيد قبول الدعوة</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="" id="acceptDivInvitation">
+                  @if (Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects)
+                  {
+                     <div>
+                        تاكيد الموافقة على قبول الدعوة و سداد المقابل المالي للدعوة
+                     </div>
+                     <div class="col-12">
+                        <div class="form-check">
+                           <label class="form-check-label text-dark-green">
+                              <input class="form-check-input" type="checkbox" required id="cbApproveSeeConditions" />
+                              تم الاطلاع على شروط و احكام منصة إعتماد
+                              <span class="form-check-sign">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <div class="clearfix"></div>
+                           <span id="vdcbApprove" class="text-danger h6" style="display:none;">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.YouShouldReviewConditions</span>
+                        </div>
+                     </div>
+                     <div class="form-group col-12" v-show="canBuyBooklet">
+                        <div class="form-check">
+                           <label class="form-check-label" style="color: #00665e;">
+                              <input class="form-check-input" id="checkPayBooklet" @@change="addConditionsBookletPrice(payBooklet)" v-model="payBooklet" type="checkbox">
+                              دفع قيمة كراسة الشروط
+                              <span class="form-check-sign">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+                     <div class="col-12">
+                        <a href="/Account/Conditions" target="_blank"> <span class="btn-sm"> الشروط والاحكام</span> </a>
+                     </div>
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 <span id="spanFeesLable"> {{feesName}}</span>
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span id="spanfeesValue">
+                                    {{feesValue}}
+                                 </span>
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SARiyal
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  }
+               </div>
+               <div class="" id="withdrawDivInvitation">
+                  <div class="form-check">
+                     <label class="form-check-label text-dark-green">
+                        <input type="checkbox" class="form-check-input" id="chkIWithdrawInvitation" name="chkIWithdraw" />
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgreeToWithdraw
+                        <span class="form-check-sign">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                     <div class="p-2">
+                        <span style="display:none" class="bmd-help text-danger" id="chkIWithdrawValidationInvitation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseAgreeToWithdraw</span>
+                     </div>
+                  </div>
+                  <div class="form-group bmd-form-group" id="rejectDivInvitation">
+                     <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AreYouSureReject</label>
+                  </div>
+               </div>
+               <div class="" id="divRejectReasonInvitation">
+                  <p class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AreYouSureReject</p>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary btn-sm m-1" name="button" onclick="AcceptInvitationWithFees()" id="btnApproveConfirmationInvitation"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmApprove</button>
+               <button type="button" class="btn btn-primary btn-sm m-1" name="button" onclick="UpdateInvitation(@((int)Enums.InvitationStatus.Withdrawal))" id="btnWithdrawConfirmationInvitation"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmWithdraw</button>
+               <button type="button" class="btn btn-primary btn-sm m-1" name="button" onclick="UpdateInvitation(@((int)Enums.InvitationStatus.Rejected))" id="btnRejectConfirmationInvitation"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmReject</button>
+               <button type="button" class="btn btn-danger  btn-link btn-sm m-1" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+
+
+
+
+   <div class="modal fade" id="joinRequestModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">تأكيد قبول الانضمام</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="" id="acceptDivInvitation">
+                  @*<div>
+                        تاكيد الموافقة على قبول الدعوة و سداد المقابل المالي للدعوة
+                     </div>*@
+                  <div class="col-12">
+                     <div class="form-check">
+                        <label class="form-check-label text-dark-green">
+                           <input class="form-check-input" type="checkbox" required id="cbApproveJoinSeeConditions" />
+                           تم الاطلاع على شروط و احكام منصة إعتماد
+                           <span class="form-check-sign">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <div class="clearfix"></div>
+                        <span id="vdcbJoinApprove" class="text-danger h6" style="display:none;">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.YouShouldReviewConditions</span>
+                     </div>
+                  </div>
+                  <div class="col-12">
+                     <a href="/Account/Conditions" target="_blank"> <span class="btn-sm"> الشروط والاحكام</span> </a>
+                  </div>
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              <span id="spanFeesLable"> المقابل المالي للمنافسة </span>
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span id="spanfeesValue">
+                                 @Model.TenderInvitationFees
+                              </span>
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SARiyal
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary btn-sm m-1" name="button" onclick="JoinDirectPurhchaseTender()" id="btnConfirmationJoinRequest"> إتمام عملية الإنضمام</button>
+               <button type="button" class="btn btn-danger  btn-link btn-sm m-1" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+}
+@if (tenderStatus != (int)Enums.TenderStatus.Established && tenderStatus != (int)Enums.TenderStatus.Pending && tenderStatus != (int)Enums.TenderStatus.OffersAwardedConfirmed && Model.CanPurchase)
+{
+   @if ((Model.IsSupplierBlocked != true && Model.IsTenderOwner == false && Model.LastOfferPresentationDate.HasValue && Model.LastOfferPresentationDate.Value > DateTime.Now) || Model.SupplierHasOffer == true || Model.IsPurchased)
+   {
+      <script>
+         $('#loader').show();
+         $.get('/Tender/GetPurchaseBookViewComponenet?tenderIdStr=@tenderIdString&tenderStatusIdString=@Model.TenderStatusIdString', function (data) {
+            $("#purchaseDiv").html(data);
+            $('#loader').hide();
+         });
+      </script>
+   }
+}
+@if (Model.ShowInvitationReceipt)
+{
+   <script>
+      $('#loader').show();
+      $.get('/Tender/GetInvitationBillDetailsViewComponenet?tenderIdStr=@tenderIdString&tenderStatusIdString=@Model.TenderStatusIdString', function (data) {
+         $("#invitationBillDiv").html(data);
+         $('#loader').hide();
+      });
+   </script>
+}
+@section scripts{
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+   <script>
+      var token = $('#detailsForm input[name=__RequestVerificationToken]').val();
+      $('#tenderDatesTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetTenderDatesViewComponenet?tenderIdStr=' + '@tenderIdString', function (data) {
+            $("#datesDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+      $('#relationStepTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetRelationsDetailsViewComponenet?tenderIdStr=' + '@tenderIdString', function (data) {
+            $("#activityDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+      $('#quantitiesTableStepTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetQuantitiesTableViewComponenet?tenderIdStr=' + '@tenderIdString', function (data) {
+            $("#quantitiesTableDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+      $('#attachmentsStepTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetAttachmentsViewComponenet?tenderIdStr=' + '@tenderIdString', function (data) {
+            $("#attachmentsTableDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+      $('#inquiriesStepTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetEnquiryViewComponenet?tenderIdStr=@tenderIdString&canAddEnquiry=@canAddEnquiry', function (data) {
+            $("#inquiriesDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+      $('#communicationRequestTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetCommunicationRequestsViewComponenet?tenderIdStr=' + '@tenderIdString', function (data) {
+            $("#communicationRequestDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+      $('#localContentTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetTenderLocalContentDetailsViewComponenet?tenderIdStr=' + '@tenderIdString', function (data) {
+            $("#localContentDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+      function sendEnquiry() {
+         $("#txtEnquiryValidation").hide()
+         var enquiryValidation = $("#EnquiryName").val();
+         if (enquiryValidation.trim() == '') {
+            $("#txtEnquiryValidation").show();
+            return false;
+         }
+         $('#enquiryModal').modal('show');
+      }
+      function sendEnquiryConfirmation() {
+         var enquiryObj = {
+            TenderId: "@tenderId",
+            EnquirySendingDate: dateToString(new Date()),
+            EnquiryName: $("#EnquiryName").val(),
+         }
+         $('#LoadingSite').fadeIn();
+         $.post("/Enquiry/SendEnquiry",
+            {
+               enquiryObj: enquiryObj,
+               __RequestVerificationToken: token
+            }).done(function () {
+               $("#EnquiryName").val('');
+               $('#enquiryModal').modal('hide');
+               $('#LoadingSite').fadeOut();
+               AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+               // give user time to read the message
+               setTimeout(function () {
+                  window.location.reload();
+                  window.location.href = '@Url.Action("Details", "Tender", new { STenderId = @tenderIdString })' + '#d-6';
+               }, 1000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+      $('#awardingStepTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetAwardingViewComponenet?tenderIdStr=' + '@tenderIdString', function (data) {
+            $("#awardingDiv").html(data);
+            $('#loader').hide();
+            });
+      });
+      $('#checkingStepTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetCheckingResultsViewComponenet?tenderIdStr=' + '@tenderIdString', function (data) {
+            $("#checkingDiv").html(data);
+            $('#loader').hide();
+            });
+         });
+      $('#tenderNewsStepTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetTenderNewsViewComponenet?tenderIdStr=' + '@tenderIdString', function (data) {
+            $("#tenderNewsDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+      var isFavourite = '@isFavourite';
+      function printEnquiry(event) {
+         var elem = event.target.parentNode.parentNode.parentNode;
+         var div = document.createElement("div");
+         var originalContents = document.body.innerHTML;
+         div.appendChild(elem);
+         var printContents = div.innerHTML;
+         document.body.innerHTML = printContents;
+         window.print();
+         document.body.innerHTML = originalContents;
+      }
+      function ToggleFavourite() {
+         isFavourite = !isFavourite;
+         if (!isFavourite) {
+            $('#LoadingSite').fadeIn();
+            $.post('@Url.Action("DeleteTenderFromSupplierTendersFavouriteList", "Tender")', { TenderIdString: '@tenderIdString', __RequestVerificationToken: token })
+               .done(function () {
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.Messages.RemoveTenderFromFavourite', 'success');
+
+                  $("#FavouriteButton i").removeClass('text-danger');
+
+                  $("#FavouriteButton").prop('title', '');
+                  $("#FavouriteButton").prop('title', '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddToFavourite)');
+                  $('#LoadingSite').fadeOut();
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+         }
+         else {
+            $('#LoadingSite').fadeIn();
+            $.ajax({
+               type: "GET",
+               url: '@Url.Action("AddTenderToSupplierTendersFavouriteList", "Tender")',
+               data: { TenderIdString: '@tenderIdString' },
+               success: function () {
+
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.Messages.AddTenderToFavourite', 'success');
+                  $("#FavouriteButton i").addClass('text-danger');
+
+                  $("#FavouriteButton").prop('title', '');
+                  $("#FavouriteButton").prop('title', '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemoveFromFavourite)');
+                  $('#LoadingSite').fadeOut();
+               }, error: function (error) {
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               }
+            });
+         }
+      }
+      function goBack() {
+         var referrer = $.cookie("url");
+         var test = decodeURI(decodeURI(referrer));
+         if (test == '' || test == "undefined" || test === undefined) {
+
+            test = '/Tender/AllSuppliersTenders';
+         }
+         location.href = test;
+      }
+      $(document).ready(function () {
+         if ('@isFavourite' == 'True') {
+            $("#FavouriteButton i").addClass('text-danger');
+            $("#FavouriteButton").prop('title', '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemoveFromFavourite)');
+            isFavourite = true;
+         }
+         else {
+            $("#FavouriteButton").addClass('btn-outline-primary');
+            $("#FavouriteButton").prop('title', '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddToFavourite)');
+            isFavourite = false;
+         }
+         var lastOfferPresentationDateElement = document.getElementById("lastOfferPresentationDate");
+         if (lastOfferPresentationDateElement) {
+            if ($("#lastOfferPresentationDate").val()) {
+            }
+            else {
+               $("#remainingTime").hide();
+            }
+         }
+      });
+      $('.readMore').on('click', function () {
+         $("#subPurposSapn").prop("hidden", true);
+         $("#purposeSpan").prop("hidden", false);
+      });
+      $('.readLess').on('click', function () {
+         $("#subPurposSapn").prop("hidden", false);
+         $("#purposeSpan").prop("hidden", true);
+      });
+      $("#divRejectReason").hide();
+      var token = $('#detailsForm input[name=__RequestVerificationToken]').val();
+      if ('@(tenderStatus == (int)Enums.TenderStatus.Approved)' == 'True') {
+         var Tender = new Vue({
+            el: '#InvitationAcceptanceOrRejectBySupplier',
+            data: {
+               Tenders: [],
+               invitationFees: @Model.TenderInvitationFees,
+               purchaseFess: @Model.TenderPurchaseFees,
+               conditionalBookeltPrice: @Model.ConditionsBookletPrice,
+            },
+            methods: {
+               updateStatus: function (statusId) {
+                  var token = $('input[name=__RequestVerificationToken]').val();
+                  $.post('/Tender/UpdateInvitationStatus/', { invitationId: hfInvitationId.value, statusId: statusId, __RequestVerificationToken: token }).done(function () {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved)', 'success');
+                     window.location = '/Tender/SupplierTenders/';
+                  }).fail(function () {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.ErrorMessage)', 'danger');
+                  });
+               },
+               showAcceptModalInvitation: function () {
+                  if (financialCost.canBuyBooklet == false) {
+                     financialCost.payBooklet = false
+                     financialCost.addConditionsBookletPrice(true)
+                  }
+                  $('#divRejectReasonInvitation').hide();
+                  $('#withdrawDivInvitation').hide();
+                  $('#btnWithdrawConfirmationInvitation').hide();
+                  $('#btnRejectConfirmationInvitation').hide();
+                  $('#rejectDivInvitation').hide();
+                  $('#acceptDivInvitation').show();
+                  $('#btnApproveConfirmationInvitation').show();
+               },
+               showWithdrawModalInvitation: function () {
+                  $('#divRejectReasonInvitation').hide();
+                  $('#btnRejectConfirmationInvitation').hide();
+                  $('#rejectDivInvitation').hide();
+                  $('#acceptDivInvitation').hide();
+                  $('#btnApproveConfirmationInvitation').hide();
+                  $('#withdrawDivInvitation').show();
+                  $('#btnWithdrawConfirmationInvitation').show();
+               },
+               showRejectModalInvitation: function () {
+                  $('#divRejectReasonInvitation').show();
+                  $('#withdrawDivInvitation').hide();
+                  $('#btnWithdrawConfirmationInvitation').hide();
+                  $('#btnRejectConfirmationInvitation').show();
+                  $('#btnApproveConfirmationInvitation').hide();
+                  $('#rejectDivInvitation').show();
+                  $('#acceptDivInvitation').hide();
+               },
+               addConditionsBookletPrice: function () {
+                  if (this.payBooklet) {
+                     this.feesValue == this.conditionalBookeltPrice + this.invitationFees
+                  }
+                  else {
+                     this.feesValue = this.invitationFees
+                  }
+               }
+            }
+         });
+         var financialCost = new Vue({
+            el: '#invitationModal',
+            data: {
+               invitationFees: @Model.TenderInvitationFees,
+               purchaseFess: @Model.TenderPurchaseFees,
+               conditionalBookeltPrice: @Model.ConditionsBookletPrice,
+               payBooklet: true,
+               canBuyBooklet: @Model.CanBuyBooklet,
+               feesValue:@Model.ConditionsBookletPrice + @Model.TenderInvitationFees,
+               feesName: "المقابل المالى للدعوة + قيمة كراسة الشروط",
+            },
+            methods: {
+               addConditionsBookletPrice: function (item) {
+
+                  if (item) {
+                     this.feesValue = this.conditionalBookeltPrice + this.invitationFees;
+                     this.feesName = "المقابل المالى للدعوة + قيمة كراسة الشروط"
+                  }
+                  else {
+                     this.feesValue = this.invitationFees;
+                     this.feesName = "المقابل المالى للدعوة "
+                  }
+               }
+            }
+         });
+      }
+      UpdateInvitation = function (statusId) {
+         var token = $('input[name=__RequestVerificationToken]').val();
+         if (statusId === 2) {
+            $("#chkIAgreeValidationInvitation").hide();
+            if ($("#chkIAgreeInvitation").is(":checked") === false) {
+               $("#chkIAgreeValidationInvitation").show();
+               return false;
+            }
+         }
+         if (statusId === 4) {
+            $("#chkIWithdrawValidationInvitation").hide();
+            if ($("#chkIWithdrawInvitation").is(":checked") === false) {
+               $("#chkIWithdrawValidationInvitation").show();
+               return false;
+            }
+         }
+         $.post('/Tender/UpdateInvitationStatus/', { invitationId: hfInvitationId.value, statusId: statusId, __RequestVerificationToken: token }).done(function () {
+            $('#invitationModal').modal('hide');
+            $("#btnWithdrowInvitation").prop("disabled", true);
+            if (statusId === @((int)Enums.InvitationStatus.Approved)) {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.Messages.InvitationAccepted)', alertMessageType.Success);
+            }
+            if (statusId === @((int)Enums.InvitationStatus.Rejected)) {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.Messages.InvitationRejected)', alertMessageType.Success);
+            }
+            if (statusId === @((int)Enums.InvitationStatus.Withdrawal)) {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.Messages.WithdrawlSuccess)', alertMessageType.Success);
+            }
+            setTimeout(function () {
+               window.location = '@Url.Action("SupplierTenders", "Tender")';
+            }, 3000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         });
+      };
+      AcceptInvitationWithFees = function () {
+         if ($('#cbApproveSeeConditions').prop('checked') == false) {
+            $('#vdcbApprove').show();
+            return false;
+         }
+         else {
+            $('#vdcbApprove').hide();
+         }
+         $('#LoadingSite').fadeIn();
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $.post('/Tender/AcceptInvitationWithFeesAsync/', { Id: hfInvitationId.value, FeesValue: Tender.invitationFees, IsbuyingBooklet: financialCost.payBooklet, fessType:@((int)Enums.TenderFeesType.FinantialCostForInvitation), __RequestVerificationToken: token }).done(function () {
+            $('#invitationModal').modal('hide');
+            $("#btnWithdrowInvitation").prop("disabled", true);
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+               location.reload();
+            }, 3000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         });
+      };
+      JoinDirectPurhchaseTender = function () {
+         debugger
+         if ($('#cbApproveJoinSeeConditions').prop('checked') == false) {
+            $('#vdcbJoinApprove').show();
+            return false;
+         }
+         else {
+            $('#vdcbApprove').hide();
+         }
+         $('#LoadingSite').fadeIn();
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $.post('/Tender/JoinDirectPurchaseTenderAsync/', { tenderIdstring: '@tenderIdString', __RequestVerificationToken: token }).done(function () {
+            $('#joinRequestModal').modal('hide');
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+               location.reload();
+            }, 3000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         });
+      };
+       ReGenerateInvitationFeesBill = function () {
+         $('#LoadingSite').fadeIn();
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $.post('/Tender/AcceptInvitationWithFeesAsync/', { Id: hfInvitationId.value, FeesValue: Tender.invitationFees, IsbuyingBooklet: financialCost.payBooklet, fessType:@((int)Enums.TenderFeesType.FinantialCostForInvitation), __RequestVerificationToken: token }).done(function () {
+            $('#invitationModal').modal('hide');
+            $("#btnWithdrowInvitation").prop("disabled", true);
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+               location.reload();
+                  @*window.location = '@Url.Action("SupplierTenders", "Tender")';*@
+            }, 3000);
+         }).fail(function (error) {
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         });
+      };
+      $("#btnSendRequest").on("click", function () {
+         if ($('#chConfirmSendRequest').is(":checked") == false && $("#txtRequestReason").val().length == 0) {
+            $('#LoadingSite').fadeOut();
+            $('#txtConfirmSendValidation').css("visibility", "visible");
+            $('#txtExtendOfferDatesRequestReasonValidation').css("visibility", "visible");
+            return false;
+         }
+         if ($('#chConfirmSendRequest').is(":checked") == false) {
+            $('#LoadingSite').fadeOut();
+            $('#txtConfirmSendValidation').css("visibility", "visible");
+            return false;
+         }
+         if ($("#txtRequestReason").val().length == 0) {
+            $('#LoadingSite').fadeOut();
+            $('#txtExtendOfferDatesRequestReasonValidation').css("visibility", "visible");
+            return false;
+         }
+         if ($("#txtRequestReason").val().length > 2000) {
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.ErrorMessages.ExtendOffersDateRequestLenthValidation)', alertMessageType.Danger);
+            return false;
+         }
+         if ($("#RequestedDate") == null) {
+            $('#LoadingSite').fadeOut();
+            $('#ExtendOfferDatesRequestedDateValidation').css("visibility", "visible");
+            return false;
+         }
+         //if ($("#RequestedTime").val().trim() == '') {
+         //   $('#LoadingSite').fadeOut();
+         //   $('#ExtendOfferDatesRequestedTimeValidation').css("visibility", "visible");
+         //   return false;
+         //}
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("CreateSupplierExtendOfferDatesRequestAsync", "CommunicationRequest")',
+            {
+               tenderIdString: '@Model.TenderIdString',
+               requestReason: $("#txtRequestReason").val(),
+               requestedDate: $("#RequestedDate").val(),
+               requestedTime: $("#RequestedTime").val(),
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $("#myModal").modal("hide");
+               AlertFun('تم ارسال طلبك للجهة الحكومية وستقوم بالرد على طلبك, سيتم اشعاركم فور الرد', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@Url.Action("DetailsForSupplier", "Tender", new { STenderId =  Model.TenderIdString})';
+               }, 3000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      function AddExtendOfferPresDates() {
+         $('#txtConfirmSendValidation').css("visibility", "hidden");
+         $('#txtExtendOfferDatesRequestReasonValidation').css("visibility", "hidden");
+         $(".ModalElement").hide();
+         $("#divRequestReason").show();
+         $("#btnSendRequest").show();
+      }
+   </script>
+}

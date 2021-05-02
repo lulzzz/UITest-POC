@@ -1,0 +1,156 @@
+<div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="cardsresult">
+   <div class="row" v-if="announcements && announcements.length > 0">
+      <div class="monafasa-item col-xl-4 col-lg-4 col-md-6  col-sm-12 col-xs-12" v-for="(br, $index) in announcements">
+         <div class="card">
+            <div class="card-body">
+               @if (User.IsInRole(RoleNames.supplier))
+               {
+                  <div class="dropdown pull-right">
+                     <button class="btn btn-primary btn-link btn-just-icon" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options" data-toggle="dropdown" aria-expanded="false">
+                        <i class="material-icons">more_vert</i>
+                        <div class="ripple-container"></div>
+                     </button>
+                     <template v-if="br.isValidAnnouncement && br.hasApprovedOrPendingRequest">
+                        <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                           <a class="dropdown-item" :href="withdrowFromAnnouncementTemplate(br.announcementIdString)">
+                              <i class="material-icons">remove</i>@MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.WithdrawFromAnnouncementList
+                           </a>
+                        </div> 
+                     </template>
+                     <template v-if="br.isValidAnnouncement && !br.hasApprovedOrPendingRequest">
+                        <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                           <a class="dropdown-item" :href="addJoinRequestToAnnouncementTemplate(br.announcementIdString)">
+                              <i class="material-icons">add</i>انضمام إلى القائمة
+                           </a>
+                        </div>
+                     </template>
+
+                  </div>
+               }
+               <h5 class="text-dark-green m-0 p-0" style="overflow:hidden">
+                  <span>
+                     <img alt="" src="~/Etimad-UI/assets/imgs/logo-loading.gif" :data-logo="br.agencyCode" name="agencylogo" style="width: 56px;height:56px" onerror="this.src='/Etimad-UI/assets/imgs/capitol-building.png'" />
+                  </span>
+                  <a class="text-primary h5" style=" margin-right: 22px;display: table;" v-if="br.announcementName.length > 100" :href="detailsUrl(br.announcementIdString)">{{br.announcementName.substring(0, 100) + ' ...'}}</a>
+                  <a class="text-primary h5" style=" margin-right: 22px;display: table;" v-else :href="detailsUrl(br.announcementIdString)">{{br.announcementName}}</a>
+               </h5>
+               <div class="row">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.Agency
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.agencyName}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.ReferenceNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.referenceNumber}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.TenderTypeName
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.tenderTypeString}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.TemplateStatus
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.statusString}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.TemplateType
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.announcementTemplateSuppliersListTypeString}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.MainActivity
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.mainActivity}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item" v-show="br.lastDateForJoinRequests != ''">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.LastDateForJoinRequest
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.lastDateForJoinRequests}}<br />
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.PublishDate
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.publishedDateString}}<br />
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <div class="card-footer row">
+               <div class="col-md-12 text-right">
+                  <a :href="detailsUrl(br.announcementIdString)" class="btn btn-sm btn-primary">
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details
+                  </a>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row " v-else>
+      <div class="col-12 text-center">
+         @await Html.PartialAsync("~/Views/Shared/_NoData.cshtml")
+      </div>
+   </div>
+   <div class="col-12 m-5 m-auto">
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+</div>

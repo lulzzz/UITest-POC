@@ -1,0 +1,119 @@
+@model MOF.Etimad.Monafasat.ViewModel.CommitteeModel
+@using MOF.Etimad.Monafasat.SharedKernal;
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.BreadCrumbCommittee</li>
+      </ol>
+   </nav>
+}
+
+<form method="Post" id="committeesForm" action="" class="my-form">
+   @Html.AntiForgeryToken()
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  @if (Int32.Parse(Util.Decrypt(ViewData["CommitteeTypeId"])) == (int)Enums.CommitteeType.TechincalCommittee)
+                  {
+                     <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.AgencyName</label><span class="text-danger">*</span>
+                  }
+                  else
+                  {
+                     <label asp-for="CommitteeName" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  }
+                  <input type="text" class="form-control" maxlength="500" id="CommitteeName" asp-for="CommitteeName" value="@(Model.CommitteeName)">
+                  <input type="hidden" id="CommitteeTypeIdString" name="CommitteeTypeIdString" value="@(Model.CommitteeTypeIdString)">
+                  <input type="hidden" id="CommitteeIdString" name="CommitteeIdString" value="@(ViewData["CommitteeId"])">
+                  <span asp-validation-for="CommitteeName" class="text-danger"></span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="Address" class="label bmd-label-static"></label>
+                  <input type="text" class="form-control" maxlength="500" id="Address" asp-for="Address" value="@(Model.Address)">
+                  <span asp-validation-for="Address" class="text-danger"> </span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="Phone" class="label bmd-label-static"></label>
+                  <input type="tel" class="form-control allownumeric" id="Phone" maxlength="200" asp-for="Phone" value="@(Model.Phone)">
+                  <span id="validatePhone" style="display:none;" class="text-danger">@MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.ValidatePhone</span>
+               </div>
+            </div>
+        
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="Fax" class="label bmd-label-static"></label>
+                  <input type="text" class="form-control allownumeric" maxlength="200" id="Fax" asp-for="Fax" value="@(Model.Fax)">
+                  <span id="validateFax" style="display:none;" class="text-danger"> @MOF.Etimad.Monafasat.Resources.CommitteeResources.Messages.ValidateFax</span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="Email" class="label bmd-label-static"></label>
+                  <input type="email" class="form-control" id="Email" asp-for="Email" value="@(Model.Email)">
+
+                  <span asp-validation-for="Email" maxlength="100" class="text-danger"> </span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="PostalCode" class="label bmd-label-static"></label>
+                  <input type="text" class="form-control" maxlength="200" id="PostalCode" asp-for="PostalCode" value="@(Model.PostalCode)">
+                  <span asp-validation-for="PostalCode" class="text-danger"></span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="ZipCode" class="label bmd-label-static"></label>
+                  <input type="text" class="form-control" id="ZipCode" asp-for="ZipCode" value="@(Model.ZipCode)">
+                  <span asp-validation-for="ZipCode" maxlength="200" class="text-danger"></span>
+               </div>
+            </div>
+
+         </div>
+      </div>
+   </div>
+   <div class="col-12 ">
+      <button class="btn btn-primary" type="submit">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+      <button class="btn btn-danger" type="reset" onclick="window.location = '/committee/Index?committeeTypeId=@(Model.CommitteeTypeIdString)'">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+   </div>
+</form>
+
+@section Scripts {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+      $("#committeesForm").submit(function (event) {
+         var isvalidPhone = true;
+         var isvalidFax = true;
+         var phone = $("#Phone").val();
+         var fax = $("#Fax").val();
+         if (phone != "") {
+            if (phone.length != 10 || phone[0] != 0 || (phone[1] != 5 && phone[1] != 1)) {
+               isvalidPhone = false;
+               $("#validatePhone").show();
+            }
+            else {
+               $("#validatePhone").hide();
+            }
+         }
+         if (fax != "") {
+            if (fax.length != 10 || fax[0] != 0 || (fax[1] != 5 &&  fax[1] != 1)) {
+               isvalidFax = false;
+               $("#validateFax").show();
+            } else {
+               $("#validateFax").hide();
+            }
+         }
+         if (!(isvalidPhone && isvalidFax)) {
+            return false;
+         }
+      });
+   </script>
+}

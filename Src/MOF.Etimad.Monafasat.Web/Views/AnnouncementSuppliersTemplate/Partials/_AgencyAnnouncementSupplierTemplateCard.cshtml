@@ -1,0 +1,205 @@
+<div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="cardsresult">
+   <div class="row" v-if="announcements && announcements.length > 0">
+      <div class="monafasa-item col-xl-4 col-lg-4 col-md-6  col-sm-12 col-xs-12" v-for="(br, $index) in announcements">
+         <div class="card">
+            <div class="card-body">
+               <div class="dropdown pull-right">
+                  <button class="btn btn-primary btn-link btn-just-icon" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options" data-toggle="dropdown" aria-expanded="false">
+                     <i class="material-icons">more_vert</i>
+                     <div class="ripple-container"></div>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+
+                     <template policy="EditAnnouncementSuppliersTemplatePolicy">
+                        <a v-if="br.isUserAgency && br.isCreator && (br.statusId != @((int)Enums.AnnouncementSupplierTemplateStatus.Approved)  && br.statusId !=@((int)Enums.AnnouncementSupplierTemplateStatus.Ended))" @@click="EditAnnouncement(br.announcementIdString)" class="dropdown-item">
+                           <i class="material-icons">edit</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit
+                        </a>
+                     </template>
+                     <template policy="DeleteAnnouncementTemplatePolicy">
+                        <a v-if="br.isUserAgency && br.isCreator && (br.statusId != @((int)Enums.AnnouncementSupplierTemplateStatus.Approved) && br.statusId !=@((int)Enums.AnnouncementSupplierTemplateStatus.Ended))" class="dropdown-item" @@click="ShowDeleteModal(br.announcementIdString)">
+                           <i class="material-icons">clear</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete
+                        </a>
+                     </template>
+
+                     <template policy="PrintAnnouncementSuppliersTemplatePolicy">
+                        <a v-if="br.canReviewJoinRequests" @@click="joinRequests(br.announcementIdString)" class="dropdown-item">
+                           <i class="material-icons">people</i>طلبات الانضمام
+                        </a>
+                     </template>
+
+                     <template policy="CancelAnnouncementTemplatePolicy">
+                        <a v-if="br.isUserAgency && br.canCancel" @@click="CancelAnnouncement(br.announcementIdString)" policy="CancelAnnouncementTemplatePolicy" class="dropdown-item">
+                           <i class="material-icons">delete</i>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+                        </a>
+                     </template>
+
+                     <template policy="UpdateAnnouncementSuppliersTemplatePolicy">
+                        <a v-if="br.isUserAgency && br.canEditAnnouncementTemplate" @@click="EditApprovedTemplate(br.announcementIdString)" class="dropdown-item">
+                           <i class="material-icons">edit</i> تعديل
+                        </a>
+                     </template>
+                     <template policy="ExtendAnnouncementSuppliersTemplatePolicy">
+                        <a v-if="br.isUserAgency && br.canExtendAnnouncementTemplate" @@click="ExtendApprovedTemplate(br.announcementIdString)" class="dropdown-item">
+                           <i class="material-icons">edit</i> تمديد سريان القاائمة
+                        </a>
+                     </template>
+                     <template policy="UpdateAnnouncementSuppliersTemplatePolicy">
+                        <a v-if="!br.isUserAgency && br.canAddAnnouncementListToAgency" @@click="addToAgencyAnnouncmentList(br.announcementIdString)" class="dropdown-item">
+                           <i class="material-icons">add</i> إضافة القائمة الى قوائم الجهة
+                        </a>
+                     </template>
+
+                     <template policy="UpdateAnnouncementSuppliersTemplatePolicy">
+                        <a v-if="!br.isUserAgency && br.canRemoveAnnouncementListFromAgency" @@click="addToAgencyAnnouncmentList(br.announcementIdString)" class="dropdown-item">
+                           <i class="material-icons">remove</i> حذف القائمة من قوائم الجهة
+                        </a>
+                     </template>
+                  </div>
+               </div>
+
+               <h5 class="text-dark-green m-0 p-0" style="overflow:hidden">
+                  <a class="text-primary h5" style=" margin-right: 22px;display: table;" v-if="br.announcementName.length > 100" :href="detailsUrl(br.announcementIdString)">{{br.announcementName.substring(0, 100) + ' ...'}}</a>
+                  <a class="text-primary h5" style=" margin-right: 22px;display: table;" v-else :href="detailsUrl(br.announcementIdString)">{{br.announcementName}}</a>
+               </h5>
+               <div class="row">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item" v-if="!(br.isUserAgency)">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.Agency
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.agencyName}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     @if (User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.MonafasatAdmin))
+                     {
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyBranch
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    {{br.branchName}}
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                     }
+                     
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.ReferenceNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.referenceNumber}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.TemplateStatus
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.statusString}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.TemplateType
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.announcementTemplateSuppliersListTypeString}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.MainActivity
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.mainActivity}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.JoinRequestsCount
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.joinRequestsCount}}<br />
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.AcceptedJoinRequestsCount
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.acceptedJoinRequestsCount}}<br />
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.UsageCount
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.usageCount}}<br />
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.PublishDate
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.publishedDateString}}<br />
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            @await Html.PartialAsync("_AllAgencyASTCardFooterActions.cshtml")
+         </div>
+      </div>
+   </div>
+   <div class="row " v-else>
+      <div class="col-12 text-center">
+         @await Html.PartialAsync("~/Views/Shared/_NoData.cshtml")
+      </div>
+   </div>
+   <div class="col-12 m-5 m-auto">
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+</div>

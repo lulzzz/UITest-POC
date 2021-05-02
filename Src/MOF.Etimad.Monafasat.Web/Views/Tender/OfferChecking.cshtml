@@ -1,0 +1,95 @@
+@model MOF.Etimad.Monafasat.ViewModel.OfferCheckingDetailsModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOffer;
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+}
+@await Component.InvokeAsync("OfferFinancialDetails", new { offerId = Model.OfferId })
+<form id="offerChecking" method="post" action="/Offer/OfferChecking">
+   @Html.AntiForgeryToken()
+   <input asp-for="OfferId" type="hidden" value="@Model.OfferId" />
+   <input asp-for="TenderId" type="hidden" value="@Model.TenderId" />
+   <div class="row col-md-12">
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+         <div class="form-group has-success bmd-form-group">
+            <label class="label bmd-label-static">حالة العرض</label>
+            <select name="OfferAcceptanceStatusId" data-live-search="false" id="offerStatusId" class="selectpicker" required data-style="select-with-transition" @(User.IsInRole(RoleNames.OffersCheckManager) || (User.IsInRole(RoleNames.OffersCheckSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.OffersCheckedPending) ? "disabled" : "" )>
+               <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseStatus</option>
+               <option value="1">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferAccepted</option>
+               <option value="2">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferRejected</option>
+            </select>
+         </div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+         <div class="form-group has-success bmd-form-group">
+            <label class="label bmd-label-static">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ActivityDescription
+         </label>
+         <select name="OfferTechnicalEvaluationStatusId" data-live-search="false" id="technicalEvaluationId" required class="selectpicker" data-style="select-with-transition" @(User.IsInRole(RoleNames.OffersCheckManager) || (User.IsInRole(RoleNames.OffersCheckSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.OffersCheckedPending) ? "disabled" : "" )>
+            <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseStatus</option>
+            <option value="1"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Matched</option>
+            <option value="2"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NotMatched</option>
+         </select>
+      </div>
+   </div>
+</div>
+<div class="row">
+   <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <label for="notes" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Notes</label>
+         <input type="text" class="form-control" id="txtNotes" name="notes" @(User.IsInRole(RoleNames.OffersCheckManager) || (User.IsInRole(RoleNames.OffersCheckSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.OffersCheckedPending) ? "disabled" : "" ) />
+      </div>
+   </div>
+</div>
+<div class="row">
+   <button class="btn btn-primary" id="btnSubmit" type="submit"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveSend</button>
+</div>
+</form>
+@section scripts{
+   <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+   <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}
+<script src="~/Etimad-UI/assets/js/jquery.min.js"></script>
+<script type="text/javascript">
+   $("#btnSubmit").click(function ()
+   {
+      $("#technicalEvaluationId");
+      $('#LoadingSite').fadeIn();
+   });
+   $('#offerChecking').validate({
+         ignore: '',
+         rules: {
+            offerStatusId: {
+               required: true
+            },
+            technicalEvaluationId: {
+               required: true
+            }
+         },
+         messages: {
+            offerStatusId: {
+               required: '@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.TechnicalOrganizationRequired)'
+            },
+            technicalEvaluationId: {
+               required: '@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.EnterSamplesAdress)'
+
+            },
+         },
+         errorPlacement: function (error, element) {
+            error.css({ 'color':'red'});
+            error.insertAfter(element);
+         }
+    });
+
+
+
+      
+   if ('@((User.IsInRole(RoleNames.OffersCheckManager) || (User.IsInRole(RoleNames.OffersCheckSecretary) && Model.TenderStatusId==(int)Enums.TenderStatus.OffersCheckedPending)).ToString())' == 'True')
+   {
+      $('#technicalEvaluationId').prop('disabled', 'disabled');
+   }
+   else {
+      $('#technicalEvaluationId').prop('disabled', false);
+   }
+</script>

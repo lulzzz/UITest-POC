@@ -1,0 +1,155 @@
+@model MOF.Etimad.Monafasat.ViewModel.OfferModel
+@{
+   var count = 0;
+}
+@foreach (var template in Model.QuantityTableStepDTO?.TemplateFormDTOs)
+{
+   @foreach (var form in template.FormDTOs)
+   {
+      count++;
+      <div class="card-header" role="tab" id='headingOne@(count)'>
+         <h4 class="m-0 p-2">
+            <a data-toggle="collapse" name="collapseHeader" href="#collapse@(count)" aria-expanded="false" aria-controls="collapse@(count)" id="collapse_@form.FormId" data-tableId="@(form.Tables.Count > 0 ? form.Tables[0].TableId : 0)" onclick="loadTables(this, @Model.TenderId, @form.FormId)">
+               @(form.FormName + (string.IsNullOrEmpty(template.TemplateName) ? " " : (" - " + template.TemplateName)))
+               <i class="material-icons pull-left">keyboard_arrow_down</i>
+            </a>
+         </h4>
+      </div>
+      <div id="collapse@(count)" class="collapse" role="tabpanel" aria-labelledby='collapse@(count)' data-parent="#accordion">
+         <div class="row">
+            <div class="col-12">
+               <ul id="tableHeaderContainer_@form.FormId" class="nav nav-pills">
+                  @foreach (var table in form.Tables)
+                  {
+                     <li class="nav-item"><a class="nav-link text-center" id="tableIndex_@table.TableId" href="#tableIndex_@table.TableId" data-tableId="@table.TableId" onclick="submitForm(@form.FormId); changeTable(@Model.TenderId, @table.TableId, @form.FormId)" data-toggle="tab">@table.TableName</a></li>
+                  }
+               </ul>
+            </div>
+         </div>
+         @if ((Model.isLowBudgetFlow && Model.isUserisDirectPurchaseAssignedMember )||(User.IsInRole(RoleNames.OffersPurchaseSecretary) && ((Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile
+            && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking)) || (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles
+            && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialChecking)))))
+         {
+            <form asp-controller="Offer" asp-action="SaveCheckingQuantityItem"
+                  data-ajax-failure="OnQtableFailure" data-ajax-success="OnQtableSuccess" LoadingElementId="LoadingSite"
+                  data-ajax="true" data-ajax-method="POST" id="qtForm">
+               <div id="tableContainDiv_@(form.FormId)"></div>
+               <div id="SaveOfferChoiceDiv" class="text-right" style="background-color: #f3f3f3;padding: 8px 11px; margin-bottom:1rem" hidden>
+                  <button id="SaveOfferChoiceBtn" onclick="onSaveTable(this)" class="btn btn-primary btn-sm" type="submit">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save<span class="material-icons">save</span></button>
+               </div>
+            </form>
+         }
+         else
+         {
+            <div id="tableContainDiv_@(form.FormId)"></div>
+         }
+      </div>
+   }
+}
+@{ count++; }
+<div class="card-header" role="tab" id='headingOne@(count)'>
+   <h4 class="m-0 p-2">
+      <a data-toggle="collapse" name="collapseHeader" href="#collapseCostTable" aria-expanded="false" aria-controls="collapseCostTable" onclick="LoadCoastsTable(@Model.TenderId, 0, 0)">
+         جدول التكاليف
+         <i class="material-icons pull-left">keyboard_arrow_down</i>
+      </a>
+   </h4>
+</div>
+<div id="collapseCostTable" class="collapse" role="tabpanel" aria-labelledby='collapse@(count)' data-parent="#accordion">
+   <div class="row">
+      <div class="col-12">
+         <div id="collapseCostTable"></div>
+      </div>
+   </div>
+</div>
+<script>
+   function onSaveTable(e) {
+      $(e).closest('form').find('[name*="EditIsVerifiedMandatory"]').each(function () {
+         var t = $(this).closest('tr');
+            t.find('.validation-error').html('');
+         if (!$(t).find('input[type=radio][name*=IsDefault]').prop('checked')) {
+            t.find('[required]').removeAttr('required');
+         }
+         else {
+            if ($(t).find('[name*="EditIsVerifiedMandatory"]').length > 0 && !$(t).find('[name*="EditIsVerifiedMandatory"]')[0].hasAttribute('required'))
+               $(t).find('[name*="EditIsVerifiedMandatory"]').attr('required', '');
+            if ($(t).find('[name*="EditIsVerifiedMandatory"]').closest('td').find('[type=hidden][colid]').length > 0 && !$(t).find('[name*="EditIsVerifiedMandatory"]').closest('td').find('[type=hidden][colid]')[0].hasAttribute('required'))
+               $(t).find('[name*="EditIsVerifiedMandatory"]').closest('td').find('[type=hidden][colid]').attr('required', '');
+         }
+      });
+   }
+   function LoadCoastsTable(tenderId, tableId, formId) {
+      $('#loader').show();
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $.get('/Offer/GetCoastsTablForDirectPurchaseAsync?tenderId=' + tenderId + '&offerId=@Model.OfferId' + '&tableId=' + tableId + '&formId=' + formId + '&isReadOnly=true', {
+         __RequestVerificationToken: token,
+      }).done(function (data) {
+         $("#collapseCostTable").html(data);
+         $('#loader').hide();
+      }).fail(function () {
+         $('#loader').hide();
+         $('#LoadingSite').fadeOut();
+         AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+      });
+   }
+   function changeTable(tenderId, tableId, formId) {
+      $('#collapse_' + formId).attr('data-tableId', tableId);
+      Tender.resource_url = '/Offer/GetOfferTableQuantityItemsAsync?tenderId=' + tenderId + '&OfferId= @Model.OfferId' +'&quantityTableId=' + tableId + '&formId=' + formId + '&isReadOnly=@Model.QuantityTableStepDTO.IsReadOnly';
+   }
+   function loadTables(e, tenderId, formId) {
+      var tableId = $(e).attr('data-tableId');
+      if ($(e).attr('aria-expanded') == 'true') {
+         $("#tableContainDiv_" + formId).html('');
+         return;
+      }
+      else
+         $('a[name=collapseHeader][aria-expanded=true]').click();
+      $('#loader').show();
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $.post('/Offer/GetOfferQuantityTableViewComponent?tenderId=' + tenderId + '&offerId=@Model.OfferId' + '&tableId=' + tableId + '&formId=' + formId + '&isReadOnly=@Model.QuantityTableStepDTO.IsReadOnly', {
+         __RequestVerificationToken: token,
+      }).done(function (data) {
+         $("#tableContainDiv_" + formId).html(data);
+         $('#tableHeaderContainer_' + formId + ' li a').removeClass('active');
+         $('#tableHeaderContainer_' + formId + ' li a').removeClass('show');
+         $('#tableHeaderContainer_' + formId + ' li a[data-tableId=' + tableId + ']').addClass('active');
+         $('#tableHeaderContainer_' + formId + ' li a[data-tableId=' + tableId + ']').addClass('show');
+         $('#loader').hide();
+      }).fail(function () {
+         $('#LoadingSite').fadeOut();
+         AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+      });
+   }
+   function submitForm() {
+      return;
+   }
+   //Append New Row to Table Or replace Existing One
+   function AddEditRow(Data) {
+      var tableselector = "table[name = " + Data.tableId + "] tbody";
+      var EffectedRow = $(tableselector + " .EffectedRow_" + Data.tableId);
+      var MEffectedRow = $(tableselector + " .MEffectedRow_" + Data.tableId);
+      //replace Existing One  (Edit Row Or Altenaitv item)
+      if (EffectedRow.length > 0) {
+         $(EffectedRow).replaceWith(Data.formHtml);
+         $(MEffectedRow).find('#btnAlternative').hide();
+         $(MEffectedRow).removeClass(MEffectedRow);
+         $("table[name = " + Data.tableId + "]  .offerType_td").show();
+         $('.modal').modal('hide');
+      }
+      //Append New Row (new Item)
+      else {
+         var tableselector = "table[name = " + Data.tableId + "] tbody";
+         Data.formHtml = Data.formHtml.replace("tr_0", "tr_" + Data.itemNumber);
+         var cellsCount = $(tableselector + ' tr').first().find('td').length - 1;
+         Tender.totalCount += cellsCount;
+         if (Tender.totalCount > Tender.pageSize) {
+            var currentPage = Math.round((Tender.totalCount / Tender.pageSize)) + 1;
+            Tender.resource_url = Tender.resource_url + '&pageNumber=' + currentPage;
+            $('#tableIndex_' + Data.formTableId).click();
+         }
+         else
+            $(tableselector).append(Data.formHtml);
+         $('.modal').modal('hide');
+      }
+   }
+</script>

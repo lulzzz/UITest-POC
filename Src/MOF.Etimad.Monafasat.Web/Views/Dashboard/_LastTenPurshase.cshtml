@@ -1,0 +1,43 @@
+@{
+    string tenderNameResString = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName;
+    string noDataResString = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData;
+    string commercialSupplierNameResString = MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.CommercialSupplierName;
+    string purchaseDateResString = MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.PurchaseDate;
+    string purchaseTimeResString = MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.PurchaseTime;
+
+}
+<div class="table-responsive">
+   <table class="table table-striped text-center" aria-describedby="Last Purchases">
+      <thead>
+         <tr>
+            <th scope="col">#</th>
+            <th scope="col" style="width: 250px;">@Html.Raw(commercialSupplierNameResString)</th>
+            <th scope="col" style="width: 500px;">@Html.Raw(tenderNameResString)</th>
+            <th scope="col">@Html.Raw(purchaseDateResString)</th>
+            <th scope="col">@Html.Raw(purchaseTimeResString)</th>
+         </tr>
+      </thead>
+      <tbody v-if="LastTenPurshase && LastTenPurshase.length > 0">
+         <tr v-for="(item, $index) in LastTenPurshase">
+
+            <td data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td @@click="getSupplierInfo(item.commericalRegisterNo)" style="cursor:pointer" data-label="@Html.Raw(commercialSupplierNameResString)"> {{item.supplierName}} </td>
+            <td data-label="@Html.Raw(tenderNameResString)"> {{item.tenderName}} </td>
+            <td data-label="@Html.Raw(purchaseDateResString)"> <span v-if="item.purshaseDate!=null">{{item.purshaseDate.split('T')[0]}}</span> </td>
+            <td data-label="@Html.Raw(purchaseTimeResString)"><span v-if="item.purshaseDate!=null">{{item.purshaseTime}}</span> </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td align="center" style="text-align:center !important" colspan="5">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i>
+               <br>
+               @Html.Raw(noDataResString)
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <div style="display:none">
+      <pagination :visible_pages="0" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+</div>

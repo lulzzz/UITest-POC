@@ -1,0 +1,48 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationApplyDocumentsModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualificationDetails;
+
+   Layout = "~/Views/Shared/_Layout-Visitor.cshtml";
+}
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualificationDetails</li>
+      </ol>
+   </nav>
+}
+<div class="card">
+   <div class="card-body">
+      @await Component.InvokeAsync("PreQualificationPartialVisitorDetail", new { qualificationId = @Model.PreQualificationIdString })
+   </div>
+</div>
+<script>
+   $(function () {
+      $('form').submit(function () {
+         if ($(this).valid()) {
+            $('#LoadingSite').fadeIn();
+         }
+         else {
+            $('#LoadingSite').fadeOut();
+
+         }
+      });
+   });
+</script>
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/ViewsScripts/Qualification/ApplyPreQualificationDocument.js"></script>
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+}

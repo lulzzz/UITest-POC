@@ -1,0 +1,121 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Common\IDMService\**" />
+    <Compile Remove="Common\NotificationServices\Abstractions\**" />
+    <Compile Remove="Common\NotificationServices\Implementation\**" />
+    <Compile Remove="Interfaces\**" />
+    <Compile Remove="JobServices\Negotiation\**" />
+    <Compile Remove="MainServices\AssignUserCommittee\**" />
+    <Compile Remove="MainServices\BranchCommittee\**" />
+    <Compile Remove="MainServices\Mobile\**" />
+    <Compile Remove="MainServices\Notifay\Interfaces\**" />
+    <Compile Remove="Validators\**" />
+    <EmbeddedResource Remove="Common\IDMService\**" />
+    <EmbeddedResource Remove="Common\NotificationServices\Abstractions\**" />
+    <EmbeddedResource Remove="Common\NotificationServices\Implementation\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <EmbeddedResource Remove="JobServices\Negotiation\**" />
+    <EmbeddedResource Remove="MainServices\AssignUserCommittee\**" />
+    <EmbeddedResource Remove="MainServices\BranchCommittee\**" />
+    <EmbeddedResource Remove="MainServices\Mobile\**" />
+    <EmbeddedResource Remove="MainServices\Notifay\Interfaces\**" />
+    <EmbeddedResource Remove="Validators\**" />
+    <None Remove="Common\IDMService\**" />
+    <None Remove="Common\NotificationServices\Abstractions\**" />
+    <None Remove="Common\NotificationServices\Implementation\**" />
+    <None Remove="Interfaces\**" />
+    <None Remove="JobServices\Negotiation\**" />
+    <None Remove="MainServices\AssignUserCommittee\**" />
+    <None Remove="MainServices\BranchCommittee\**" />
+    <None Remove="MainServices\Mobile\**" />
+    <None Remove="MainServices\Notifay\Interfaces\**" />
+    <None Remove="Validators\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Common\SmsService.cs" />
+    <Compile Remove="MainServices\IDM\Abstraction\IIDMCommands.cs" />
+    <Compile Remove="MainServices\IDM\Abstraction\IIDMDomains.cs" />
+    <Compile Remove="MainServices\IDM\IDMCommands.cs" />
+    <Compile Remove="MainServices\IDM\Implementation\IDMDomains.cs" />
+    <Compile Remove="MainServices\Notifay\NotifayAppService.cs" />
+    <Compile Remove="MainServices\Notifay\NotifayCommands.cs" />
+    <Compile Remove="MainServices\Notifay\NotifayDomainService.cs" />
+    <Compile Remove="MainServices\Notifay\NotifayManager.cs" />
+    <Compile Remove="MainServices\Notifay\NotifayQueries.cs" />
+    <Compile Remove="MainServices\Tender\Implementation\TenderServiceQueries.cs" />
+    <Compile Remove="MainServices\Tender\Interfaces\ITenderJobSerivce.cs" />
+    <Compile Remove="MainServices\Tender\TenderDomainService.ConditionsTemplate.cs" />
+    <Compile Remove="MainServices\Tender\TenderJobSerivce.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="MOF.Etimad.Monafasat.Services.csproj.vspscc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="IdentityServer4" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Authorization">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.authorization\2.0.4\lib\netstandard2.0\Microsoft.AspNetCore.Authorization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.http.abstractions\2.0.1\lib\netstandard2.0\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MOF.Etimad.Monafasat.Core\MOF.Etimad.Monafasat.Core.csproj" />
+    <ProjectReference Include="..\MOF.Etimad.Monafasat.Data\MOF.Etimad.Monafasat.Data.csproj" />
+    <ProjectReference Include="..\MOF.Etimad.Monafasat.Integration\MOF.Etimad.Monafasat.Integration.csproj" />
+    <ProjectReference Include="..\MOF.Etimad.Monafasat.Resources\MOF.Etimad.Monafasat.Resources.csproj" />
+    <ProjectReference Include="..\MOF.Etimad.Monafasat.SharedKernel\MOF.Etimad.Monafasat.SharedKernel.csproj" />
+    <ProjectReference Include="..\MOF.Etimad.Monafasat.ViewModel\MOF.Etimad.Monafasat.ViewModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\Lo\" />
+    <Folder Include="Common\CheckTimeOfDaysService\" />
+    <Folder Include="TenderAPIServices\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <SonarQubeSetting Include="sonar.coverage.exclusions">
+      <Value>
+        **/MainServices/Reports/Implementation/ReportsService.cs
+      </Value>
+    </SonarQubeSetting>
+  </ItemGroup>
+  
+</Project>

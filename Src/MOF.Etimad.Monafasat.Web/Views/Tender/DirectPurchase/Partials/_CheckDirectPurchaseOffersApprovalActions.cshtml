@@ -1,0 +1,132 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderOffersModel
+@{
+   var actionName = User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary) ? "TenderIndexCheckingStage" : "TenderIndexCheckingDirectPuchaseStage";
+}
+<button id="backToCheck" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '/Tender/TenderIndexCheckingDirectPuchaseStage'">
+   العودة الى صفحة منافسات مرحلة الفحص
+   <div class="ripple-container"></div>
+</button>
+@if (User.IsInRole(RoleNames.OffersPurchaseSecretary) && Model.IsLowBudgetDirectPurchase == false)
+{
+   if (!Model.isOffersPreferenceChecked && Model.isApplyOfferPreference)
+   {
+      <button type="button" class="btn btn-primary pull-left" name="button" id="btnCalculatePreference">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CalculatePreference
+      </button> }
+   else
+   {
+      if ((Model.TenderStatusId == (int)Enums.TenderStatus.DirectPurchaseOffersChecking || Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking)
+         && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile
+         && Model.IsTenderTechnicalChecked && Model.IsTenderFinancialChecked)
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApprove" data-toggle="modal" data-target="#myModal">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+         </button>
+      }
+      else if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles
+         && Model.IsTenderTechnicalChecked)
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApproveTechTwoFiles" data-toggle="modal" data-target="#myModal">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+         </button>
+      }
+      if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialChecking && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles
+         && Model.IsTenderFinancialChecked)
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApproveFinancialTwoFiles" data-toggle="modal" data-target="#myModal">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+         </button>
+      }
+   }
+}
+@if (User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager))
+{
+   if (Model.IsLowBudgetDirectPurchase == true && Model.TenderStatusId == (int)Enums.TenderStatus.OffersChecking && Model.IsTenderTechnicalChecked && Model.IsTenderFinancialChecked)
+   {
+      if (!Model.isOffersPreferenceChecked && Model.isApplyOfferPreference)
+      {
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnCalculatePreference">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CalculatePreference
+         </button> }
+      else
+      {
+      <button type="button" class="btn btn-primary pull-left" name="button" id="btnlowbudgetApprove" data-toggle="modal" data-target="#myModal">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve
+      </button>
+      }
+   }
+
+}
+
+@if (User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary))
+{
+
+
+   @if (Model.TenderStatusId == (int)Enums.TenderStatus.Approved && (DateTime.Now > Model.CheckingDate) && Model.IsLowBudgetDirectPurchase == true)
+   {
+      <div class="col-12">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnCheckOffers" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOfferConfirmStage</button>
+
+      </div>
+   }
+
+}
+@if (User.IsInRole(RoleNames.OffersPurchaseManager))
+{
+   <div class="row" id="approval">
+      @if (Model.TenderStatusId == (int)Enums.TenderStatus.Approved && (DateTime.Now > Model.CheckingDate) && Model.IsLowBudgetDirectPurchase == false)
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnCheckOffers" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOfferConfirmStage</button>
+         </div>
+      }
+      @if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingPending && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnApprove" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Accept</button>
+            <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+         </div>
+      }
+      @if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingPending && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles)
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveTechTwoFiles" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Accept</button>
+            <button type="button" class="btn btn-danger pull-left" name="button" id="btnRejectTechTwoFiles" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+         </div>
+      }
+      @if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingPending && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles)
+      {
+         <div class="col-12">
+            <button type="button" class="btn btn-primary pull-left" name="button" id="btnApproveFinancialTwoFiles" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Accept</button>
+            <button type="button" class="btn btn-danger pull-left" name="button" id="btnRejectFinancialTwoFiles" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+         </div>
+      }
+   </div>
+}
+else if (User.IsInRole(RoleNames.OffersPurchaseSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingRejected || Model.TenderStatusId == (int)Enums.TenderStatus.BackForCheckingFromPlaint)
+   && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+{
+   <div class="row" id="approval">
+      <div class="col-12">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnReopenCheckOffers" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestartCheckOffers</button>
+      </div>
+   </div>
+}
+else if (User.IsInRole(RoleNames.OffersPurchaseSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingRejected || Model.TenderStatusId == (int)Enums.TenderStatus.BackForCheckingFromPlaint)
+   && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles)
+{
+   <div class="row" id="approval">
+      <div class="col-12">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnReopenCheckOffersTechTwoFiles" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestartCheckOffers</button>
+      </div>
+   </div>
+}
+else if (User.IsInRole(RoleNames.OffersPurchaseSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected
+   && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles)
+{
+   <div class="row" id="approval">
+      <div class="col-12">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnReopenCheckOffersFinancialTwoFiles" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RestartCheckOffers</button>
+      </div>
+   </div>
+}

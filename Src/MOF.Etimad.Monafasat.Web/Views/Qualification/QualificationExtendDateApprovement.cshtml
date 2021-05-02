@@ -1,0 +1,85 @@
+@model string
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+   string tenderIdString = Model;
+}
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ExtendDates;
+}
+<div class="modal fade" id="extendDatesModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="col-12 d-none" id="divExtendDatesRejectReason">
+               <div class="form-group bmd-form-group" style="padding-top:0">
+                  <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+                  <textarea class="form-control" rows="5" id="txtRejectionReasonExtendDate" name="RejectionReasonExtendDate" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason"></textarea>
+                  <div class="pull-left">
+                     <span class="bmd-help text-danger" id="txtExtendDateRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+                  </div>
+               </div>
+            </div>
+            <div class="form-group bmd-form-group" id="divVerficationCodeExtendDates">
+               <input type="text" class="form-control col-md-12" id="txtVerificationCodeExtendDate" name="VerificationCodeExtendDate" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+               <span class="bmd-help text-danger position-relative"   id="txtVerificationCodeExtendDateValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+               <br />
+               <p class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainingTime<span class=" text-danger" id="timerExtendDates"></span></p>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm" name="button" onclick="extendDateApprovalConfirmClick()" id="extendDateApprovalConfirm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmApprovingChange</button>
+            <button type="button" class="btn btn-primary btn-sm d-none" name="button" onclick="extendDateRejectConfirmClick()" id="extendDateRejectConfirm">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmRejectingChange</button>
+            <button type="button" class="btn btn-primary btn-sm m-1" name="button" id="btnResendVerificationCodeExtendDates"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+<form id="detailsForm">
+   @Html.AntiForgeryToken()
+   @section breadcrumb
+      {
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Qualification")">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Qualification</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ExtendDates</li>
+         </ol>
+      </nav>
+   }
+   <div class="col-12">
+      <div class="clearfix"></div>
+      <div class="row">
+         <div class="tab-content  tab-space col-12 " style="padding:0">
+            <div>
+               <div class="card">
+                  <div class="card-body" id="datesDiv">
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("Index", "Qualification")'">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToAllTenders
+      <div class="ripple-container"></div>
+   </button>
+</form>
+@section scripts{
+   <script>
+      $.get('/Tender/GetQualificationDatesChangesViewComponenet?tenderIdString=' + '@tenderIdString', function (data) {
+         $("#datesDiv").html(data);
+      });
+      var token = $('input[name=__RequestVerificationToken]').val();
+
+
+   </script>
+}

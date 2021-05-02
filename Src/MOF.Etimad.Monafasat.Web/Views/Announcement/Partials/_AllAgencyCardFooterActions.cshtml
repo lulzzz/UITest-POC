@@ -1,0 +1,16 @@
+<div class="card-footer row">
+   <div class="col-md-12 text-left">
+      <button type="button" @@click="redirectToDetail(br.announcementIdString)" class="btn btn-primary pull-right btn-sm">
+         @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.Details
+      </button>
+      <button type="button" v-if="'@User.UserRole()' == '@(RoleNames.DataEntry)'&& br.statusId == @((int)Enums.AnnouncementStatus.UnderCreation)" @@click="redirectToDetail(br.announcementIdString)" class="btn btn-primary pull-right btn-sm">
+         إرسال للإعتماد
+      </button>
+      <button type="button" v-if="'@User.UserRole()' == '@(RoleNames.DataEntry)' && br.statusId == @((int)Enums.AnnouncementStatus.Rejected)" @@click="redirectToDetail(br.announcementIdString)" class="btn btn-primary pull-right btn-sm">
+        إعادة فتح 
+      </button>
+      <button type="button" v-if="'@User.UserRole()' == '@(RoleNames.Auditer)' && br.statusId == @((int)Enums.AnnouncementStatus.Pending)" @@click="redirectToDetail(br.announcementIdString)" class="btn btn-primary pull-right btn-sm">
+         إعتماد
+      </button>
+   </div>
+</div>

@@ -1,0 +1,982 @@
+@model MOF.Etimad.Monafasat.ViewModel.SecondStageNegotiationModelcs
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SecondStageNegotiation;
+
+}
+@using res = MOF.Etimad.Monafasat.Resources
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@res.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item">@res.SharedResources.DisplayInputs.NegotiationRequest</li>
+         <li class="breadcrumb-item active" aria-current="page">@res.SharedResources.DisplayInputs.SecondStageNegotiation</li>
+      </ol>
+   </nav>
+}
+@section modalTitle{
+   @res.SharedResources.DisplayInputs.Confirm
+}
+@section modalContent{
+   <div class="col-xs-12" id="divRejectReason">
+      <div class="form-group bmd-form-group p-0">
+         <label for="RejectionReason" class="label bmd-label-static">@res.QualificationResources.DisplayInputs.RejectionReason</label>
+         <textarea class="form-control" id="txtRejectionReason" name="RejectionReason" placeholder="@res.QualificationResources.DisplayInputs.PleaseEnterRejectionReason"></textarea>
+         <div class="pull-left"><span style="display:none" class="bmd-help text-danger" id="txtRejectionReasonValidation">@res.QualificationResources.DisplayInputs.PleaseEnterRejectionReason</span></div>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divSendToApproveMessage"><div class="form-group bmd-form-group"><lable>@res.CommunicationRequest.Messages.SendNegotiationRequestForApprove</lable></div></div>
+}
+@section modalButtons{
+   <button type="button" class="btn btn-primary btn-sm" name="button" id="btnRejectCheckManagerConfirmation" onclick="RejectNegotiationSecondStageByCheckManagerAsync()"> @res.QualificationResources.DisplayInputs.RejectionConfirm</button>
+   <button type="button" class="btn btn-primary btn-sm" name="button" id="btnApproveCheckManagerConfirmation" onclick="ApproveNegotiationSecondStageByCheckManagerAsync()"> @res.SharedResources.DisplayInputs.Confirm</button>
+   <button type="button" class="btn btn-primary btn-sm" name="button" id="btnSendToApproveConfirmation" onclick="SendToApproveAsync()"> @res.SharedResources.DisplayInputs.Confirm </button>
+   <button type="button" class="btn btn-primary btn-sm" name="button" id="btnApproveUnitConfirmation" onclick="ApproveNegotiationSecondStageByUnitSecretaryAsync()"> @res.SharedResources.DisplayInputs.Confirm</button>
+   <button type="button" class="btn btn-primary btn-sm" name="button" id="btnRejectUnitConfirmation" onclick="RejectNegotiationSecondStageByUnitSecretaryAsync()"> @res.QualificationResources.DisplayInputs.RejectionConfirm </button>
+   <button type="button" class="btn btn-primary btn-sm" name="button" id="btnEditNegotiationInfoConfirmation" onclick="EditNegotiationInfoAsync()"> @res.SharedResources.DisplayInputs.Confirm </button>
+   <button type="button" class="btn btn-primary btn-sm" name="button" id="btnFinishNegotiationConfirmation" onclick="FinishNegotiationAsync()"> @res.SharedResources.DisplayInputs.Confirm </button>
+   <button type="button" class="btn btn-primary btn-sm" name="button" id="btnSupplierApprove" onclick="ApproveNegotiationSecondStageBySupplierAsync()"> @res.SharedResources.DisplayInputs.Confirm </button>
+   <button type="button" class="btn btn-primary btn-sm" name="button" id="btnSupplierReject" onclick="RejectNegotiationSecondStageBySupplierAsync()"> @res.SharedResources.DisplayInputs.Reject </button>
+   <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.SharedResources.DisplayInputs.Cancel</button>
+}
+<div id="app">
+   @Html.AntiForgeryToken()
+   <div class="modal fade" id="editModal" v-if="isEditAllowed == 1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.ModifyNegotiationItemModalTitle</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="form-group">
+                  <label class="label">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ItemName</label>
+                  <input type="text" class="form-control " v-model="editItem.name" readonly />
+               </div>
+               <div class="row">
+                  <div class="form-group col-md-6 col-xs-12">
+                     <label class="label">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Quantity</label>
+                     <input type="text" class="form-control " v-model="editItem.quantity" />
+                  </div>
+               </div>
+               <div class="form-group col-md-6 col-xs-12">
+                  <label class="label">     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Unit</label>
+
+                  <input type="text" readonly class="form-control " v-model="editItem.unit" />
+
+               </div>
+
+
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal" @@click="emptyEditobj()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CloseChange</button>
+               <button type="button" class="btn btn-primary" data-dismiss="modal" @@click="ReflectUpdate();">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   @*<div id="divQuantityTableData" class="row">*@
+   <div id="divQuantityTable">
+      @*@Html.Partial("~/Views/CommunicationRequest/Partial/_NegotiationQuantityTable.cshtml")*@
+   </div>
+   @if (1 == 1
+&& (Model.StatusId == (int)Enums.enNegotiationStatus.CheckManagerReject || Model.StatusId == (int)Enums.enNegotiationStatus.UnitSpecialistReject))
+   {
+      <div id="divRejectionReason">
+         <div class="card">
+            <div class="card-body">
+               <h3 class="text-primary">@res.TenderResources.DisplayInputs.RejectionReason</h3>
+               <h4>@Model.RejectionReason</h4>
+            </div>
+         </div>
+         @* <div class="row">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnEditNegotiation" onclick="EditNegotiationInfo()" data-toggle="modal" data-target="#myModal">@res.CommunicationRequest.DisplayInputs.EditInfo</button>
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnFinishOperation" onclick="FinishNegotiation()" data-toggle="modal" data-target="#myModal">@res.CommunicationRequest.DisplayInputs.FinishOperation</button>
+            </div>*@
+      </div>
+   }
+   @{
+
+
+      if (Model.StatusId != (int)Enums.enNegotiationStatus.New)
+      {
+         <div class="card">
+            <div class="card-body">
+               <h3 class="text-primary">@res.TenderResources.DisplayInputs.Status</h3>
+               <h4>@Model.StatusName</h4>
+            </div>
+         </div>
+      }
+
+   }
+
+
+   <div class="row">
+      <div class="col">
+         @*@if (User.IsInRole(RoleNames.OffersCheckSecretary) && (Model.StatusId == (int)Enums.enNegotiationStatus.New))
+            {*@
+         <div class="card " id="divbeforNegotiation" hidden>
+
+            <div class="card-body">
+               <div class="col-12">
+                  <h4 class="text-primary">@res.CommunicationRequest.DisplayInputs.OffersBeforeEdit</h4>
+               </div>
+
+            </div>
+
+
+            @Html.Partial("~/Views/CommunicationRequest/Partials/_OffersListBeforNegotiation.cshtml")
+
+         </div>
+
+         @*  }*@
+      </div>
+   </div>
+   <div class="col">
+      <div class="card" id="divafterNegotiation" hidden>
+
+         <div class="card-body">
+            <div class="col-12">
+               <h4 class="text-primary">@res.CommunicationRequest.DisplayInputs.OffersAfterEdit</h4>
+            </div>
+         </div>
+
+
+         <div class="">
+            @Html.Partial("~/Views/CommunicationRequest/Partials/_OffersListAfterNegotiation.cshtml")
+         </div>
+
+
+      </div>
+   </div>
+   @**@
+
+
+
+</div>
+<div id="app2" class="col-12">
+   @if (
+    !(User.IsInRole(RoleNames.OffersCheckSecretary)) &&
+   !(Model.StatusId == (int)Enums.enNegotiationStatus.New || Model.StatusId == (int)Enums.enNegotiationStatus.UnderUpdate || Model.StatusId == (int)Enums.enNegotiationStatus.CheckManagerReject) &&
+    !User.IsInRole(RoleNames.supplier)
+    )
+   {
+
+      <div class="row">
+         <div class="card">
+            <div class="card-body">
+               <div class="row">
+                  <div class="col-12">
+                     <h4 class="text-primary">@res.TenderResources.DisplayInputs.OffersList</h4>
+                  </div>
+               </div>
+            </div>
+            <div class="table-responsive">
+               <table id="OffersExtendValidityTable" class="table table-striped text-center">
+                  <thead class="text-center">
+                     <tr>
+                        <th scope="col" class="text-center">#</th>
+                        <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName</th>
+                        <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber</th>
+                        <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue</th>
+                        <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseStatus</th>
+                        <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+                     </tr>
+                  </thead>
+                  <tbody class="text-center" v-if="Offers && Offers.length > 0">
+                     <tr v-for="(offers, $index) in Offers">
+                        <td class="text-center" data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+                        <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName"> {{offers.commericalRegisterName}} </td>
+                        <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{offers.commericalRegisterNo}} </td>
+                        <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferValue"> {{offers.offerPrice}} </td>
+                        <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvitationPurchaseStatus">{{offers.invitationTypeName}}</td>
+                        <td data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+                           <div class="dropdown">
+                              <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i><div class="ripple-container"></div></button>
+                              <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                                 <a :href="viewOfferFiles(offers.offerIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferFiles</a>
+                                 <a v-if="offers.combinedSupplierCount = 1" :href="viewFinancialOffer(offers.combinedIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails</a>
+                                 <a v-if="offers.combinedSupplierCount > 1" :href="viewCombinedSupplier(offers.offerIdString)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails</a>
+                              </div>
+                           </div>
+                        </td>
+                     </tr>
+                  </tbody>
+                  <tbody v-else>
+                     <tr>
+                        <td class="text-center" colspan="9">
+                           <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                           <br />
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+               <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+            </div>
+         </div>
+      </div>
+
+   }
+</div>
+<div id="divActions">
+   @if (User.IsInRole(RoleNames.OffersCheckSecretary) && (Model.StatusId == (int)Enums.enNegotiationStatus.UnderUpdate || Model.StatusId == (int)Enums.enNegotiationStatus.CheckManagerReject || Model.StatusId == (int)Enums.enNegotiationStatus.UnitSpecialistReject))
+   { // Check Secretary Send To Approve/Reject by Check Manager
+      <button type="button" class="btn btn-primary pull-left" name="button" id="btnSendToApprove" onclick="SendToApprove()" data-toggle="modal" data-target="#myModal">
+         @res.QualificationResources.DisplayInputs.SendToApprove
+      </button>
+   }
+
+   @if (User.IsInRole(RoleNames.OffersCheckManager) && Model.StatusId == (int)Enums.enNegotiationStatus.CheckManagerPendingApprove)
+   {// Check Manager Reject/Approved and Send to Unit Secratary to Approve/Reject
+      <div class="col-12">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnApprove" onclick="ApproveByCheckManager()" data-toggle="modal" data-target="#myModal">@res.CommunicationRequest.DisplayInputs.Approved</button>
+         <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" onclick="RejectByCheckManager()" data-toggle="modal" data-target="#myModal">@res.CommunicationRequest.DisplayInputs.Reject</button>
+      </div>
+   }
+   @if ((User.IsInRole(RoleNames.UnitSecretaryUser) || User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2)) && Model.StatusId == (int)Enums.enNegotiationStatus.UnitSpecialestPendingApproved)
+   {// Unit Secratary Reject/Approved and Send to
+      <div class="col-12">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnUnitApprove" onclick="ApproveByUnitSecretary()" data-toggle="modal" data-target="#myModal">@res.CommunicationRequest.DisplayInputs.Approved</button>
+         <button type="button" class="btn btn-danger pull-left" name="button" id="btnUnitReject" onclick="RejectByUnitSecretary()" data-toggle="modal" data-target="#myModal">@res.CommunicationRequest.DisplayInputs.Reject</button>
+      </div>
+   }
+
+   @if (User.IsInRole(RoleNames.supplier) && Model.StatusId == (int)Enums.enNegotiationStatus.UnitSpecialistApproved)
+   {// Supplier Reject/Approved and Send to Check Secratary
+    //(int)Enums.enNegotiationStatus.UnderReview
+      <div class="col-12">
+         <button type="button" class="btn btn-primary pull-left" name="button" id="btnSupplierApprove" onclick="ApproveBySpplier()" data-toggle="modal" data-target="#myModal">@res.CommunicationRequest.DisplayInputs.Agree</button>
+         <button type="button" class="btn btn-danger pull-left" name="button" id="btnSupplierReject" onclick="RejectBySupplier()" data-toggle="modal" data-target="#myModal">@res.CommunicationRequest.DisplayInputs.Reject</button>
+      </div>
+   }
+
+
+   <button class="btn btn-outline-primary  pull-right" onclick="window.location ='@Url.Action("Details","Tender")'">
+      @res.SharedResources.DisplayInputs.BackButtonToMain
+      <div class="ripple-container"></div>
+   </button>
+   <div class="clearfix"></div>
+</div>
+@section scripts
+   {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+
+
+   <script>
+      var results = $("#Results");
+      var onBegin = function () {
+         debugger;
+
+         $('#LoadingSite').fadeIn();
+      };
+
+      var onComplete = function () {
+         debugger;
+
+
+         $('#LoadingSite').fadeOut();
+      };
+
+      var onSuccess = function (context) {
+         debugger;
+         Negotiation.Response = context;
+         if (context.data.isSaved) {
+            $('#divbeforNegotiation').show().removeAttr('hidden');
+            $("#Results" + context.tableId + "").html(context.htmlData);
+            AlertFun(context.message, alertMessageType.Success);
+                    }
+
+                    else {
+                        $('#divbeforNegotiation').show().removeAttr('hidden');
+                       $('#divafterNegotiation').show().removeAttr('hidden');
+                        AlertFun(context.message, alertMessageType.Danger);
+}
+         debugger;
+         console.log(context);
+
+      };
+      var DeleteQTable = function (tableId) {
+
+         $('#LoadingSite').fadeIn();
+
+         $.get('/CommunicationRequest/DeleteNegotiationTable/' + tableId, function (data) {
+            debugger;
+
+            if (data.isSaved) {
+               $("#Results" + tableId + "").html();
+               $('#divbeforNegotiation').show().removeAttr('hidden');
+               AlertFun(context.message, alertMessageType.Success);
+               $('#LoadingSite').fadeOut();
+
+            }
+
+            else {
+               $('#divbeforNegotiation').show().removeAttr('hidden');
+               $('#divafterNegotiation').show().removeAttr('hidden');
+               AlertFun(context.message, alertMessageType.Danger);
+               $('#LoadingSite').fadeOut();
+
+            }
+            debugger;
+            console.log(context);
+
+         });
+      }
+      function DeletehtmlRow(Data) {
+         var tableselector = "table[name=" + Data.tableId + "] tbody";
+         var EffectedRow = $(tableselector + " .EffectedRow_" + Data.tableId);
+         if (EffectedRow.length > 0) {
+            var rowId = $(EffectedRow).attr('id');
+            rowId = rowId.replace("tr_1_", "tr_");
+            $(tableselector + " #" + rowId).find('#btnAlternative').show();
+            $(EffectedRow).replaceWith("");
+         }
+         $('.modal').modal('hide');
+      }
+
+var onFailed = function (context) {
+         AlertFun(context, alertMessageType.Danger);
+                      };
+      var token = $('#app input[name=__RequestVerificationToken]').val()
+     $(document).ready(function () {
+
+            $("input[id^='btn_']").on('click', function () {
+               DeleteTables($(this).attr('data-tableid'));
+            })
+            $.ajax({
+               url: "/CommunicationRequest/GetNegotiationQuantityTablesComponent?negotiationId=@Model.NegotiationIdString",
+               cache: false,
+               global: false,
+               success: function (html) {
+                  debugger;
+                  $('#divQuantityTable').html(html);
+               }
+            })
+            function DeleteTables(tableId) {
+
+}
+            });
+      function onDeleteFailed(xhr, status, error) {
+         AlertFun(error, alertMessageType.Danger)
+      }
+      var token = "";
+        var Negotiation = new Vue({
+           el: '#app',
+           data: {
+              QuantityTables: [],
+
+              test: 0,
+              TestArr: [1, 2, 3],
+              editItem: { tableId: 0, id: 0, unit: '', quantity: 0, name: '', tenderQTItemId:''},
+              token: token ,
+              isEditAllowed:@((User.IsInRole(RoleNames.OffersCheckSecretary) && (Model.StatusId == (int)Enums.enNegotiationStatus.New || Model.StatusId == (int)Enums.enNegotiationStatus.UnderUpdate || Model.StatusId == (int)Enums.enNegotiationStatus.CheckManagerReject) )?1:0 ),
+              Response: {
+                 isSaved: false, oldOffersCompareGrid: [], newOffersCompareGrid: [], data: {}}
+           },
+           methods: {
+
+              formatPrice(value) {
+                 let val = (value / 1).toFixed(2).replace('.', ',')
+                 return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+              }, RedirectURL: function (ids, names) {
+              debugger;
+              window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+           },
+              ReflectUpdate: function () {
+                 //debugger;
+                 var valObj = this.QuantityTables.negotiationQuantityTableModels.filter(function (el, i) {
+                    if (el.id == Negotiation.editItem.tableId) {
+                       //debugger;
+                       Negotiation.QuantityTables.negotiationQuantityTableModels[i].negotiationQuantityTableItems.filter(function (elem, j) {
+                          if (elem.id == Negotiation.editItem.id) {
+                             Negotiation.QuantityTables.negotiationQuantityTableModels[i].negotiationQuantityTableItems[j].unit = Negotiation.editItem.unit;
+                             Negotiation.QuantityTables.negotiationQuantityTableModels[i].negotiationQuantityTableItems[j].quantity = Negotiation.editItem.quantity;
+                             console.log(Negotiation.QuantityTables.negotiationQuantityTableModels[i].negotiationQuantityTableItems);
+                             return elem;
+                          }
+                       })
+                    }
+                 })
+
+
+              },
+              ReflectDeleteTable: function (tableId) {
+                 //debugger;
+                 //debugger;
+                 if (this.QuantityTables.negotiationQuantityTableModels.length == 1) {
+                    AlertFun('@MOF.Etimad.Monafasat.Resources.CommunicationRequest.ErrorMessages.QuantityTableMustbeMoreThanone')
+                    return;
+                 }
+                 var valObj = this.QuantityTables.negotiationQuantityTableModels.filter(function (el, i) {
+                    if (el.id == tableId) {
+                       Negotiation.QuantityTables.negotiationQuantityTableModels.splice(i, 1)
+                       console.log(Negotiation.QuantityTables.negotiationQuantityTableModels[i])
+                      }
+                 })
+
+
+              },
+              ReflectDeleteItem: function (tableId,itemId) {
+                 //debugger;
+                 //debugger;
+                 var valObj = this.QuantityTables.negotiationQuantityTableModels.filter(function (el, i) {
+                    if (el.id == tableId) {
+                       //debugger;
+                       Negotiation.QuantityTables.negotiationQuantityTableModels[i].negotiationQuantityTableItems.filter(function (elem, j) {
+                          if (elem.id == itemId) {
+                             if (Negotiation.QuantityTables.negotiationQuantityTableModels[i].negotiationQuantityTableItems.length == 1) {
+                    AlertFun('@MOF.Etimad.Monafasat.Resources.CommunicationRequest.ErrorMessages.QuantityTableItemMustbeMoreThanone')
+                    return;
+                 }
+                             Negotiation.QuantityTables.negotiationQuantityTableModels[i].negotiationQuantityTableItems.splice(j, 1)
+                             console.log(Negotiation.QuantityTables.negotiationQuantityTableModels[i].negotiationQuantityTableItems);
+                             return elem;
+                          }
+                       })
+                    }
+                 })
+
+              },
+              emptyEditobj: function () {
+                 this.editItem.id = 0;
+                 this.editItem.tenderQTItemId = '';
+                 this.editItem.unit = '';
+                 this.editItem.quantity = 0;
+              },
+              @*removeTable: function (id) {
+                 $.get("/CommunicationRequest/RemoveQuantityTable/" + id).fail(function (error) {
+                    // $('#LoadingSite').fadeOut();
+                    if (error.responseText != "Logout") {
+                       AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                    }
+                    else if (error.responseText == "Logout") {
+                       window.location = '/account/logout'; return;
+                    }
+                 }).always(function () {
+                    $('#LoadingSite').fadeOut();
+                    Negotiation.emptyEditobj();
+                 });
+              },
+              removeItem: function (id) {
+                 $.get("/CommunicationRequest/RemoveQuantityTableItem/" + id)
+                    .done(function (data) {
+                       if (data.enMessageType == @MOF.Etimad.Monafasat.SharedKernel.Enums.enAjaxResponseMessageType.success) {
+                          AlertFun(data.message, alertMessageType.Success);
+                       }
+                    })
+                    .fail(function (error) {
+                       // $('#LoadingSite').fadeOut();
+                       if (error.responseText != "Logout") {
+                          AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                       }
+                       else if (error.responseText == "Logout") {
+                          window.location = '/account/logout'; return;
+                       }
+                    }).always(function () {
+                       $('#LoadingSite').fadeOut();
+                       Negotiation.emptyEditobj();
+                    });
+              },*@
+
+              DeleteQuantityItem: function (id) {
+                 $.get("/CommunicationRequest/DeleteNegotiationQuantityItem/" + id)
+                .done(function (data) {
+                    debugger;
+
+                 if (data.isSaved) {
+                       AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved', alertMessageType.Success);
+                    }
+                    else {
+                        AlertFun('@res.CommunicationRequest.ErrorMessages.EditChangedTheOrder', alertMessageType.Danger);
+}
+                 }).fail(function (error) {
+                    // $('#LoadingSite').fadeOut();
+                    if (error.responseText != "Logout") {
+                       AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                    }
+                    else if (error.responseText == "Logout") {
+                       window.location = '/account/logout'; return;
+                    }
+                 }).always(function () {
+                    $('#LoadingSite').fadeOut();
+                    Negotiation.emptyEditobj();
+                 });
+           },
+              UpdateQuantityItem: function (quantityItemId,qty) {
+                 $.post("/CommunicationRequest/UpdateNegotiationQuantityItem", {
+                    QuantityItemId: quantityItemId
+                    , QTY: qty,
+                    __RequestVerificationToken: this.token
+                 }).done(function (data) {
+                    debugger;
+                    Negotiation.Response = data;
+
+                    console.log(this.Response);
+                 if (data.isSaved) {
+                       AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved', alertMessageType.Success);
+                    }
+                    else {
+                        AlertFun('@res.CommunicationRequest.ErrorMessages.EditChangedTheOrder', alertMessageType.Danger);
+}
+                 }).fail(function (error) {
+                    // $('#LoadingSite').fadeOut();
+                    if (error.responseText != "Logout") {
+                       AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                    }
+                    else if (error.responseText == "Logout") {
+                       window.location = '/account/logout'; return;
+                    }
+                 }).always(function () {
+                    $('#LoadingSite').fadeOut();
+                    Negotiation.emptyEditobj();
+                 });
+           },
+              Save: function () {
+
+                 $('#LoadingSite').fadeIn();
+                 console.log("Before Save", this.QuantityTables);
+                 debugger;
+                 $.post("/CommunicationRequest/SaveSecondStageNegotiationQuantityTables", {
+                    Model: this.QuantityTables,
+                    __RequestVerificationToken: this.token
+                 }).done(function (data) {
+                    $('#LoadingSite').fadeOut();
+       //  $('#divafterNegotiation').hide();
+                    console.log("After Save", Negotiation.QuantityTables);
+                    debugger;
+                    Negotiation.Response = data;
+                    Negotiation.QuantityTables = data.secondStageNegotiationViewModel;
+                    if (data.isSaved) {
+                       $('#divbeforNegotiation').show().removeAttr('hidden');
+     AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved', alertMessageType.Success);
+                    }
+
+                    else {
+                       Negotiation.QuantityTables=  JSON.parse(localStorage.getItem("QuantityTables"));
+                       $('#divbeforNegotiation').show().removeAttr('hidden');
+                       $('#divafterNegotiation').show().removeAttr('hidden');
+                        AlertFun('@res.CommunicationRequest.ErrorMessages.EditChangedTheOrder', alertMessageType.Danger);
+}
+                 }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+
+                  //  $('#divbeforNegotiation').hide();
+                  //  $('#divafterNegotiation').hide();
+
+                    if (error.responseText != "Logout") {
+                       AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                    }
+                    else if (error.responseText == "Logout") {
+                       window.location = '/account/logout'; return;
+                    }
+                 }).always(function () {
+                    $('#LoadingSite').fadeOut();
+                    Negotiation.emptyEditobj();
+                 });
+              },
+              @*SaveQuantityItem: function () {
+                 $.post("/CommunicationRequest/SaveEditedItem", {
+                    QuantityItem: this.editItem,
+                    __RequestVerificationToken: this.token
+                 }).done(function (data) {
+                    if (data.enMessageType == @((int)MOF.Etimad.Monafasat.SharedKernel.Enums.enAjaxResponseMessageType.success)) {
+                       AlertFun(data.message, alertMessageType.Success);
+                    }
+                 }).fail(function (error) {
+                    // $('#LoadingSite').fadeOut();
+                    if (error.responseText != "Logout") {
+                       AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                    }
+                    else if (error.responseText == "Logout") {
+                       window.location = '/account/logout'; return;
+                    }
+                 }).always(function () {
+                    $('#LoadingSite').fadeOut();
+                    Negotiation.emptyEditobj();
+                 });
+              },
+              Save: function () {
+
+              },*@
+              SaveAndSend: function () {
+
+              },
+              Update: function (data) {
+                 this.QuantityTables = data;
+              },
+              fillEditModal: function (item,tableId) {
+                 this.editItem.id = item.id;
+                 this.editItem.unit = item.unit;
+                 this.editItem.tenderQTItemId = item.tenderQTItemId;
+                 this.editItem.quantity = item.quantity;
+                 this.editItem.name = item.name;
+                 this.editItem.tableId = ''+tableId+'';
+
+}
+        , viewOfferFiles: function (id) {
+                 return '/CommunicationRequest/OfferFiles/' + id;
+              },
+              viewFinancialOffer: function (id) {
+                 return '/CommunicationRequest/OfferDetail/' + id;
+              },
+              viewCombinedSupplier: function (id) {
+                 return '/CommunicationRequest/CombinedSuppliers/' + id;
+              }   },
+           created: function () {
+              // Get Data for quantity Table
+              @*$('#LoadingSite').fadeIn()
+              $.get("/CommunicationRequest/GetNegotiationQuantityTable/@Model.NegotiationIdString", function (data) {
+                 Negotiation.Update(data);
+                // localStorage.setItem("QuantityTables", JSON.stringify(Negotiation.QuantityTables));
+              }).done(function (result) {
+                  $('#LoadingSite').fadeOut();
+                 this.QuantityTables = result;
+                 console.log(this.QuantityTables)
+
+              }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                 if (error.responseText != "Logout") {
+                    AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                 }
+                 else if (error.responseText == "Logout") {
+                    window.location = '/account/logout'; return;
+                 }
+              }).always(function () {
+                 $('#LoadingSite').fadeOut();
+              });*@
+           }
+
+        });
+     //});
+
+        var app = new Vue({
+         el: "#app2",
+         data: {
+            // Begin Grid
+            Offers: [],
+            offer: {},
+            offers: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/CommunicationRequest/GetTenderOffersPagingAsync?tenderIdString=' + '@Model.TenderIdString',
+            queryString: '',
+            // End Grid
+         },
+         methods: {
+            updateResource: function (data) {
+               debugger;
+               console.log("Data  :" +  data);
+               this.Offers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            viewOfferFiles: function (id) {
+               return '/CommunicationRequest/OfferFiles/' + id;
+            },
+            viewFinancialOffer: function (id) {
+               return '/CommunicationRequest/OfferDetail/' + id;
+            },
+            viewCombinedSupplier: function (id) {
+               return '/CommunicationRequest/CombinedSuppliers/' + id;
+            },
+         }
+      });
+      function SendToApprove() {
+         $("#divRejectReason").hide();
+         $("#btnRejectCheckManagerConfirmation").hide();
+         $("#btnApproveCheckManagerConfirmation").hide();
+         $("#btnApproveUnitConfirmation").hide();
+         $("#btnRejectUnitConfirmation").hide();
+         $("#btnEditNegotiationInfoConfirmation").hide();
+         $("#btnFinishNegotiationConfirmation").hide();
+         $("#btnSupplierApprove").hide();
+         $("#btnSupplierReject").hide();
+         $("#btnSendToApproveConfirmation").show();
+
+      }
+
+      function SendToApproveAsync() {
+         if (true) {
+            //Negotiation.Response.data.isSaved
+       $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("SendToApproveNegotiationSecondStageByCheckManagerAsync", "CommunicationRequest")',
+            {
+               NegotiationIdString: '@Model.NegotiationIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.RequestSentToApprovedSuccessfully)', alertMessageType.Success);
+               window.location = '@Url.Action("CreateSecondStageNegotiation", "CommunicationRequest", new { NegotiationIdString = Model.NegotiationIdString })';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+               });
+         }
+         else
+            AlertFun("لابد الا يتغير ترتيب العروض قبل وبعد تعديل الكميات", alertMessageType.Danger);
+      }
+
+
+      function ApproveByCheckManager() {
+         $("#divSendToApproveMessage").hide();
+         $("#divRejectReason").hide();
+         $("#btnRejectCheckManagerConfirmation").hide();
+         $("#btnApproveCheckManagerConfirmation").show();
+         $("#btnApproveUnitConfirmation").hide();
+         $("#btnRejectUnitConfirmation").hide();
+         $("#btnSendToApproveConfirmation").hide();
+         $("#btnEditNegotiationInfoConfirmation").hide();
+         $("#btnFinishNegotiationConfirmation").hide();
+         $("#btnSupplierApprove").hide();
+         $("#btnSupplierReject").hide();
+      }
+
+      function ApproveNegotiationSecondStageByCheckManagerAsync() {
+       $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ApproveNegotiationSecondStageByCheckManagerAsync", "CommunicationRequest")',
+            {
+               NegotiationIdString: '@Model.NegotiationIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.RequestSentToApprovedSuccessfully)', alertMessageType.Success);
+               window.location = '@Url.Action("CreateSecondStageNegotiation", "CommunicationRequest", new { NegotiationIdString = Model.NegotiationIdString })';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+
+      function RejectByCheckManager() {
+         $("#divRejectReason").show();
+         $("#btnRejectCheckManagerConfirmation").show();
+         $("#btnApproveCheckManagerConfirmation").hide();
+         $("#btnApproveUnitConfirmation").hide();
+         $("#btnRejectUnitConfirmation").hide();
+         $("#btnSendToApproveConfirmation").hide();
+         $("#divSendToApproveMessage").hide();
+         $("#btnEditNegotiationInfoConfirmation").hide();
+         $("#btnFinishNegotiationConfirmation").hide();
+         $("#btnSupplierApprove").hide();
+         $("#btnSupplierReject").hide();
+      }
+
+      function RejectNegotiationSecondStageByCheckManagerAsync() {
+       $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("RejectNegotiationSecondStageByCheckManagerAsync", "CommunicationRequest")',
+            {
+               NegotiationIdString: '@Model.NegotiationIdString',
+               RejectionReason: $("#txtRejectionReason").val(),
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.RequestSentToApprovedSuccessfully)', alertMessageType.Success);
+               window.location = '@Url.Action("CreateSecondStageNegotiation", "CommunicationRequest", new { NegotiationIdString = Model.NegotiationIdString })';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+
+      function RejectByUnitSecretary() {
+         $("#divRejectReason").show();
+         $("#btnRejectUnitConfirmation").show();
+         $("#btnRejectCheckManagerConfirmation").hide();
+         $("#btnApproveCheckManagerConfirmation").hide();
+         $("#btnApproveUnitConfirmation").hide();
+         $("#btnSendToApproveConfirmation").hide();
+         $("#divSendToApproveMessage").hide();
+         $("#btnEditNegotiationInfoConfirmation").hide();
+         $("#btnFinishNegotiationConfirmation").hide();
+         $("#btnSupplierApprove").hide();
+         $("#btnSupplierReject").hide();
+      }
+
+      function RejectNegotiationSecondStageByUnitSecretaryAsync() {
+       $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("RejectNegotiationSecondStageByUnitSecretaryAsync", "CommunicationRequest")',
+            {
+               NegotiationIdString: '@Model.NegotiationIdString',
+               RejectionReason: $("#txtRejectionReason").val(),
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.RequestSentToApprovedSuccessfully)', alertMessageType.Success);
+               window.location = '@Url.Action("CreateSecondStageNegotiation", "CommunicationRequest", new { NegotiationIdString = Model.NegotiationIdString })';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+
+      function ApproveByUnitSecretary() {
+         $("#divRejectReason").hide();
+         $("#divSendToApproveMessage").hide();
+         $("#btnRejectUnitConfirmation").hide();
+         $("#btnRejectCheckManagerConfirmation").hide();
+         $("#btnApproveCheckManagerConfirmation").hide();
+         $("#btnApproveUnitConfirmation").show();
+         $("#btnRejectUnitConfirmation").hide();
+         $("#btnSendToApproveConfirmation").hide();
+         $("#btnEditNegotiationInfoConfirmation").hide();
+         $("#btnFinishNegotiationConfirmation").hide();
+         $("#btnSupplierApprove").hide();
+         $("#btnSupplierReject").hide();
+      }
+
+      function ApproveNegotiationSecondStageByUnitSecretaryAsync() {
+       $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ApproveNegotiationSecondStageByUnitSecretaryAsync", "CommunicationRequest")',
+            {
+               NegotiationIdString: '@Model.NegotiationIdString',
+               RejectionReason: $("#txtRejectionReason").val(),
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.RequestSentToApprovedSuccessfully)', alertMessageType.Success);
+               window.location = '@Url.Action("CreateSecondStageNegotiation", "CommunicationRequest", new { NegotiationIdString = Model.NegotiationIdString })';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+
+      function EditNegotiationInfo() {
+         $("#divRejectReason").hide();
+         $("#divSendToApproveMessage").hide();
+         $("#btnRejectCheckManagerConfirmation").hide();
+         $("#btnApproveCheckManagerConfirmation").hide();
+         $("#btnSendToApproveConfirmation").hide();
+         $("#btnApproveUnitConfirmation").hide();
+         $("#btnRejectUnitConfirmation").hide();
+         $("#btnFinishNegotiationConfirmation").hide();
+         $("#btnSupplierApprove").hide();
+         $("#btnSupplierReject").hide();
+         $("#btnEditNegotiationInfoConfirmation").show();
+      }
+
+
+      function EditNegotiationInfoAsync() {
+       $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("EditNegotiationInfoAsync", "CommunicationRequest")',
+            {
+               NegotiationIdString: '@Model.NegotiationIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.RequestSentToApprovedSuccessfully)', alertMessageType.Success);
+               window.location = '@Url.Action("CreateSecondStageNegotiation", "CommunicationRequest", new { NegotiationIdString = Model.NegotiationIdString })';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+
+      function FinishNegotiation() {
+         $("#divRejectReason").hide();
+         $("#divSendToApproveMessage").hide();
+         $("#btnRejectCheckManagerConfirmation").hide();
+         $("#btnApproveCheckManagerConfirmation").hide();
+         $("#btnSendToApproveConfirmation").hide();
+         $("#btnApproveUnitConfirmation").hide();
+         $("#btnRejectUnitConfirmation").hide();
+         $("#btnEditNegotiationInfoConfirmation").hide();
+         $("#btnSupplierApprove").hide();
+         $("#btnSupplierReject").hide();
+         $("#btnFinishNegotiationConfirmation").show();
+      }
+
+      function FinishNegotiationAsync() {
+       $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("FinishNegotiationAsync", "CommunicationRequest")',
+            {
+               NegotiationIdString: '@Model.NegotiationIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.RequestSentToApprovedSuccessfully)', alertMessageType.Success);
+               window.location = '@Url.Action("CreateSecondStageNegotiation", "CommunicationRequest", new { NegotiationIdString = Model.NegotiationIdString })';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+
+
+
+      function ApproveBySpplier() {
+         $("#divRejectReason").hide();
+         $("#divSendToApproveMessage").hide();
+         $("#btnRejectCheckManagerConfirmation").hide();
+         $("#btnApproveCheckManagerConfirmation").hide();
+         $("#btnSendToApproveConfirmation").hide();
+         $("#btnApproveUnitConfirmation").hide();
+         $("#btnRejectUnitConfirmation").hide();
+         $("#btnEditNegotiationInfoConfirmation").hide();
+         $("#btnSupplierApprove").show();
+         $("#btnSupplierReject").hide();
+         $("#btnFinishNegotiationConfirmation").hide();
+      }
+
+
+      function ApproveNegotiationSecondStageBySupplierAsync() {
+       $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ApproveNegotiationSecondStageBySupplierAsync", "CommunicationRequest")',
+            {
+               NegotiationIdString: '@Model.NegotiationIdString',
+               __RequestVerificationToken: token
+            }).done(function (res) {
+
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.RequestSentToApprovedSuccessfully)', alertMessageType.Success);
+               window.location = '@Url.Action("CreateSecondStageNegotiation", "CommunicationRequest", new { NegotiationIdString = Model.NegotiationIdString })';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+
+
+
+      function RejectBySupplier() {
+         $("#divRejectReason").hide();
+         $("#divSendToApproveMessage").hide();
+         $("#btnRejectCheckManagerConfirmation").hide();
+         $("#btnApproveCheckManagerConfirmation").hide();
+         $("#btnSendToApproveConfirmation").hide();
+         $("#btnApproveUnitConfirmation").hide();
+         $("#btnRejectUnitConfirmation").hide();
+         $("#btnEditNegotiationInfoConfirmation").hide();
+         $("#btnSupplierApprove").hide();
+         $("#btnSupplierReject").show();
+         $("#btnFinishNegotiationConfirmation").hide();
+      }
+
+
+      function RejectNegotiationSecondStageBySupplierAsync() {
+       $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("RejectNegotiationSecondStageBySupplierAsync", "CommunicationRequest")',
+            {
+               NegotiationIdString: '@Model.NegotiationIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.CommunicationRequest.Messages.RequestSentToApprovedSuccessfully)', alertMessageType.Success);
+               window.location = '@Url.Action("CreateSecondStageNegotiation", "CommunicationRequest", new { NegotiationIdString = Model.NegotiationIdString })';
+               $('#LoadingSite').fadeOut();
+            }).fail(function (e) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+   </script>
+}
+

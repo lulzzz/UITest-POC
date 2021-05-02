@@ -1,0 +1,238 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderInvitationDetailsModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@{
+    Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+    ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.JoinRequestDetails;
+}
+@section modalTitle{
+   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+}
+
+@section modalContent{
+   <div class="col-lg-4 col-sm-6 col-xs-12" id="divRejectReason">
+      <div class="form-group bmd-form-group">         
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AreYouSureToRejectJoiningRequest
+         <br>
+         <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+         <input type="text" class="form-control" id="txtRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason" />
+         <div class="pull-left">
+            <span style="display:none" class="bmd-help text-danger" id="txtRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+         </div>
+      </div>
+   </div>
+   <div id="divAcceptMsg">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierWillBeInvitedAreYouSure
+   </div>
+}
+@section modalButtons{
+   <button type="button" class="btn btn-link btn-success" name="button" id="btnRejectConfirmation"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionConfirm</button>
+   <button type="button" class="btn btn-link btn-success" name="button" id="btnApproveConfirmation"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</button>
+   <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item" aria-current="page"><a href="#">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.JoiningRequests</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.JoinRequestDetails</li>
+      </ol>
+   </nav>
+}
+<form id="myForm">
+   @Html.AntiForgeryToken()
+
+   <div class="col-12">
+      <div class="row">
+         <div class="card">
+            <div class="card-body">
+               <div class="row" id="basicDetials">
+                  <div class="col-12">
+                     <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.JoinRequestDetails</h4>
+                  </div>
+                  <div class="col-md-6 col-sm-12 col-xs-12">
+
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model.TenderName)</span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @(Model.TenderNumber)
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @(Model.CommericalName)
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @(Model.CommericalRegisterNo)
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+                  <div class="col-md-6 col-sm-12 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RequestDate
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @(Model.CreatedAt)
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RequestStatus
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 @if (Model.StatusId == 1)
+                                 {
+                                 <span>
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WaitingForApprove
+                                 </span>
+                                 }
+                                 else if (Model.StatusId == 2)
+                                 {
+                                 <span>
+                                    @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Accepted
+                                 </span>
+                                 }
+                                 else if (Model.StatusId == 3)
+                                 {
+                                 <span>
+                                    @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected
+                                 </span>
+                                 }
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="">
+
+      @Html.ActionLink(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton, "SuppliersJoiningRequest","Tender", new { tenderIdString = Model.TenderIdString }, new { @class = "btn btn-outline-primary btn-link pull-right" })
+      <div class="row" id="approval">
+         @if (Model.InvitationTypeId == (int)Enums.InvitationRequestType.Request && Model.InvitationStatusId == (int)Enums.InvitationStatus.New)
+         {
+            <div class="col-12">
+               <button type="button" class="btn btn-primary pull-left" name="button" id="btnApprove" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Accepted</button>
+               <button type="button" class="btn btn-danger pull-left" name="button" id="btnReject" data-toggle="modal" data-target="#myModal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Rejected</button>
+            </div>
+         }
+      </div>
+      <div class="clearfix"></div>
+   </div>
+</form>
+
+
+@section scripts{
+   <script>
+      $(document).ready(function () {
+         $("#btnApprove").on("click", function () {
+            $("#divRejectReason").hide();
+            $("#btnRejectConfirmation").hide();
+            $("#btnApproveConfirmation").show();
+            $("#divAcceptMsg").show();
+         });
+         $("#btnReject").on("click", function () {
+            $("#divRejectReason").show();
+            $("#btnRejectConfirmation").show();
+            $("#btnApproveConfirmation").hide();
+            $("#divAcceptMsg").hide();
+         });
+         $("#btnApproveConfirmation").on("click", function () {
+
+            var token = $('input[name=__RequestVerificationToken]').val();
+            $('#LoadingSite').fadeIn();
+            $.ajax({
+               type: "POST",
+               url: '@Url.Action("ApproveJoiningRequestStatus", "Tender")',
+               data: {
+                  invitationId: '@Model.InvitationId',
+                  statusId: '@((int)Enums.InvitationStatus.Approved)',
+                  __RequestVerificationToken: token
+               },
+               success: function () {
+
+                  AlertFun('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully', alertMessageType.Success);
+                  window.location = '@Url.Action("SuppliersJoiningRequest", "Tender", new { Model.TenderIdString })';
+                  $('#LoadingSite').fadeOut();
+               },
+               error: function () {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.ErrorMessage)', alertMessageType.Danger);
+               }
+            });
+         });
+         
+         $("#btnRejectConfirmation").on("click", function () {
+            $("#divRejectReason").show();
+            $("#btnRejectConfirmation").show();
+            $("#btnApproveConfirmation").hide();
+            var rejectionReason = $("#txtRejectionReason").val();
+            $("#txtRejectionReasonValidation").hide()
+            if (rejectionReason == '')
+            {
+               $("#txtRejectionReasonValidation").show();
+               return false;
+            }
+            var token = $('input[name=__RequestVerificationToken]').val();
+               $.ajax({
+                  type: "POST",
+                  url: '@Url.Action("RejectJoiningRequestStatus", "Tender")',
+                  data: { sInvitationId: '@ViewBag.SinvitationId', rejectionReason: rejectionReason, __RequestVerificationToken: token},
+                  success: function () {
+
+                     window.location = '@Url.Action("SuppliersJoiningRequest", "Tender", new { Model.TenderIdString})';
+                  },
+                  error: function () {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.ErrorMessage)', alertMessageType.Danger);
+                  }
+            });
+         });
+      });
+   </script>
+}

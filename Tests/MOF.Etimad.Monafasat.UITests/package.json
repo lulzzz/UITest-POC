@@ -1,0 +1,62 @@
+{
+  "name": "etimad-ui",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --verbose",
+    "start": "webpack-dev-server --mode development --open --entry ./js/index.js --output-filename ./dist/bundled.js",
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hidjou/js-form-validation-tutorial.git"
+  },
+  "keywords": [
+    "form validation",
+    "testing",
+    "webpack",
+    "jest"
+  ],
+  "author": "Ahmed Hadjou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hidjou/js-form-validation-tutorial/issues"
+  },
+  "homepage": "https://github.com/hidjou/js-form-validation-tutorial#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.22",
+    "aspnet-webpack": "^2.0.3",
+    "cross-env": "^5.2.1",
+    "css-loader": "^0.28.7",
+    "file-loader": "^1.1.4",
+    "jest": "^26.6.3",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6",
+    "ts-jest": "^26.5.5",
+    "typescript": "^4.2.4",
+    "vue-loader": "^13.0.5",
+    "vue-template-compiler": "^2.4.4",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1",
+    "webpack-hot-middleware": "^2.21.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "transform": {
+      "node_modules/variables/.+\\.(j|t)sx?$": "ts-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!variables/.*)"
+    ]
+  },
+  "dependencies": {
+    "@babel/core": "^7.13.16",
+    "@babel/preset-env": "^7.13.15",
+    "@babel/preset-typescript": "^7.13.0",
+    "jest-puppeteer": "^5.0.1",
+    "puppeteer": "^1.20.0"
+  },
+  "description": ""
+}

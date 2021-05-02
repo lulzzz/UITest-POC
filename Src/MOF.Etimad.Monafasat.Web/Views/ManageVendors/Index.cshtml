@@ -1,0 +1,540 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierInvitationModel
+@using MOF.Etimad.Monafasat.ViewModel;
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.MangeVendros;
+}
+@{
+   @section breadcrumb
+      {
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.MangeVendros</li>
+         </ol>
+      </nav>
+   }
+   @section pagecontrols{
+      <div class="dropdown">
+         <button type="button" id="toglGrid" onclick="toggleViewGrid('UserGrid')" class="btn p-2 btn-outline-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsMenu"><i class="material-icons">view_column</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsMenu</button>
+         <button type="button" id="toglCards" onclick="toggleViewCards('UserGrid')" class="btn p-2 btn-outline-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsCards"><i class="material-icons">view_quilt</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsCards</button>
+         <button id="searchBtnColaps" class="btn p-2 btn-outline-primary pull-right" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search" aria-controls="Search"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search<div class="ripple-container"></div></button>
+         @*<button class=" btn btn-outline-primary btn-link btn-just-icon" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.AddCommittee" onclick="window.location = '/Branch/createasync'"><i class="material-icons">add</i><div class="ripple-container"></div></button>*@
+      </div>
+
+   }
+
+   <style>
+      .monafasa-item > div.card {
+         height: calc(100% - 30px);
+      }
+
+      .search-expand {
+         font-size: 1rem;
+         border-bottom: 1px solid #29ad6f;
+         padding: 6px 2px;
+         margin: 12px 0;
+      }
+
+         .search-expand i {
+            transition: all .15s ease 0s;
+            transform: rotate(-180deg);
+         }
+
+         .search-expand.collapsed i {
+            transform: rotate(-0deg);
+         }
+   </style>
+
+   <form id="cSearchForm" class="form">
+      @Html.AntiForgeryToken()
+      <div id="UserGrid" class="etd-cards" v-cloak>
+         <div class="modal fade" id="confirmAdd" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddSupplierToFavouriteList  </h5>
+                     <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons">clear</i>
+                     </button>
+                  </div>
+                  <div class="modal-body">
+                     <div class="row" id="divSpecification">
+                        <div class="col-12">
+                           <div class="form-group bmd-form-group  p-0">
+                              <div id="SelectExistList" class="input-group-append">
+                                 <select data-live-search="true" id="ExistLists" class="selectpicker" data-style="select-with-transition" data-size="7">
+                                    <option value="0">>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.PleaseChoose</option>
+                                    <option v-for="item in FavouriteLists" :value="item.favouriteSupplierListId">{{item.name}}</option>
+                                 </select>
+                                 <input type="text" style="display:initial;width:80%" class="form-control" id="FavouriteListName" hidden="hidden">
+                                 <button type="button" class="btn p-2 btn-primary btn-sm" id="SwitchToAddNew"><i class="material-icons">add</i>@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.AddNewList<div class="ripple-container"></div></button>
+                              </div>
+                              <div id="AddNewList" class="d-none input-group-append">
+                                 <input type="text" class="form-control" placeholder="@MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.ListTitle" id="NewListName">
+                                 <button type="button" class="btn p-2 btn-primary" @@click="addNewItemToFavouriteListTransfer" id="SaveNewList"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+                                 <button type="button" class="btn p-2 btn-danger " id="SwitchToSelectExist"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="modal-footer">
+                     <button class="btn btn-primary btn-sm" type="button"id="addToFavouritesBtn" @@click="addToFavourites"value="">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+                     </button>
+                     <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+                     </button>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="clearfix"></div>
+         <div class="row tendar-navigation position-relative">
+            <div class="etd-sorting-cont">
+               <div class="dropdown position-absolute etd-sorting-btn">
+                  <button href="#sort" class="btn btn-primary btn-round btn-sm " data-toggle="dropdown" aria-expanded="false">
+                     <span class="d-block" data-toggle="tooltip" data-placement="top" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SortResult" data-container="body" data-original-title=" @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SortResult"><i class="material-icons">sort</i></span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="top-end">
+                     <h4 class="dropdown-header"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SortResult</h4>
+                     <div class="dropdown-divider"></div>
+
+                     <a href="#" class="dropdown-item" v-on:click="SortBySubmissionDate()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreationDate</a>
+                     <a href="#" class="dropdown-item" v-on:click="SortByCommercialRegistrationName()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName</a>
+                     <a href="#" class="dropdown-item" v-on:click="SortByCommercialRegistrationNumber()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber</a>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+
+         <div class="row" style="position:relative">
+            <div class="collapse col-lg-4 col-md-4 col-sm-12 col-xs-12 " id="Search">
+               @Html.Partial("~/Views/ManageVendors/Search/_IndexSearchForm.cshtml")
+            </div>
+            @*TODO filter buttons to show unassigned users or all*@
+            <div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="cardsresult">
+               @Html.Partial("_VendorCards.cshtml")
+            </div>
+            <div class="tableDiv col-md-12 col-sm-12 col-xs-12 animated  delay-2s" id="gridresult">
+               <div class="card">
+                  @Html.Partial("_VendorGrid")
+               </div>
+            </div>
+         </div>
+
+      </div>
+   </form>
+   <!--endtBody-->
+   @section scripts{
+      <script>
+         $(document).ready(function () {
+            $('li#menuLists').addClass('active');
+            $('li#menuLists a#menuManageVendors').addClass('active');
+
+         });
+         var commericalRegisterNo = 0;
+         var commericalRegisterName = "";
+         var FavouriteListId = 0;
+         var newFavouriteListIdTransfer = 0;
+
+         $(function () {
+            $("input").keypress(function (event) {
+               if (event.which == 13) {
+                  event.preventDefault();
+                  $("#searchBtn").click();
+               }
+            });
+         });
+         $('#searchBtnColaps').click(function () {
+            var _grid = $('#gridresult');
+            var _cards = $('#cardsresult');
+            if (_cards.hasClass('col-md-12')) {
+               _cards.removeClass('col-md-12');
+               _cards.addClass('col-md-8');
+               _grid.removeClass('col-md-12');
+               _grid.addClass('col-md-8');
+               _cards.find('.monafasa-item').removeClass('col-md-6');
+               _cards.find('.monafasa-item').addClass('col-md-12');
+               _cards.find('.monafasa-item').removeClass('col-lg-6');
+               _cards.find('.monafasa-item').addClass('col-lg-12');
+               _cards.find('.monafasa-item').removeClass('col-xl-4');
+               _cards.find('.monafasa-item').addClass('col-xl-6');
+
+            } else if (_cards.hasClass('col-md-8')) {
+               _cards.addClass('col-md-12');
+               _cards.removeClass('col-md-8 ');
+               _grid.addClass('col-md-12');
+               _grid.removeClass('col-md-8');
+               _cards.find('.monafasa-item').addClass('col-md-6');
+               _cards.find('.monafasa-item').removeClass('col-md-12');
+               _cards.find('.monafasa-item').addClass('col-lg-6');
+               _cards.find('.monafasa-item').removeClass('col-lg-12');
+               _cards.find('.monafasa-item').addClass('col-xl-4');
+               _cards.find('.monafasa-item').removeClass('col-xl-6');
+            }
+              $('#closeSearch').on("click",function () {
+              
+              $('#searchBtnColaps').click()
+            });
+         });
+         toggleViewGrid('UserGrid');
+         var grid = new Vue({
+            el: '#UserGrid',
+            data: {
+               Users: [],
+               selectedMainActivity: 0,
+               selectedSecondryActivity: 0,
+               selectedSubSecondryActivity: 0,
+               totalCount: 0,
+               currentPage: 1,
+               pageSize: @((int)Enums.PageSize.Six),
+               resource_url: '/ManageVendors/IndexPagingAsync?pageSize='+@((int)Enums.PageSize.Six),
+               queryString: '',
+               NotAssignedOnlyUserFlag: false,
+               agencyList: [],
+               branchesList: [],
+               createdByList: [],
+               approvedByList: [],
+               isAjaxMethodsCalled: false,
+               MainActitvities: [],
+               SecondaryActivities: [],
+               SubSecondaryActivities: [],
+               FavouriteSuppliersList: [],
+               FavouriteLists: [],
+               FavouriteSuppliers: [],
+               ac: {},
+               MainActivitiesId: 0,
+               ActivitesLevelId: 0,
+               sort: "",
+               sortDirection: ""
+            },
+            updated: function () {
+               $('select').selectpicker('refresh')
+               toggleViewOnLoad();
+            },
+            methods: {
+               getSupplierInfo: function (CR) {
+                  getSupplierInfo(CR);
+               },
+               setFaouriteUserId: function (commericalRegisterNumber, commericalName) {
+                  commericalRegisterNo = commericalRegisterNumber;
+                  commericalRegisterName = commericalName;
+                  FavouriteListId = 0;
+                  $("#ExistLists").val('0').change();
+                  $("#FavouriteListsSelect").val('0').change();
+               },
+               addToFavourites: function () {
+                  
+               if (FavouriteListId === -1) {
+                  if ($("#FavouriteListName").val() === "") {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterListName)', alertMessageType.Danger);
+                     return;
+                  }
+                  $.get("/Tender/AddFavouriteSupplierList?Name=" + $("#FavouriteListName").val(), function (data, status, response) {
+                     if (data.status === "error") {
+                     AlertFun(data.message, alertMessageType.Danger);
+                     }
+                     else {
+                        FavouriteListId = data.favouriteSupplierListId;
+                        AddSupplierToFavouriteList(true);
+                     }
+                  });
+               }
+               else {
+                  if (FavouriteListId === 0) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.PleseSelectAList)', alertMessageType.Danger);
+                     return;
+                  }
+                  $("#addToFavouritesBtn").attr("disabled", "disabled");
+                  AddSupplierToFavouriteList(true);
+                  $("#addToFavouritesBtn").removeAttr("disabled");
+               }
+               },
+               addNewItemToFavouriteListTransfer: function () {
+               if ($("#NewListName").val().trim() == "") {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterListName)', alertMessageType.Danger);
+                  return;
+               }
+                  $.get("/Tender/AddFavouriteSupplierList?Name=" + $("#NewListName").val(), function (data, status, response) {
+                     if (data.status === "error") {
+                     AlertFun(data.message, alertMessageType.Danger);
+                     }
+                     else {
+                        newFavouriteListIdTransfer = data.favouriteSupplierListId;
+                        FavouriteListId = data.favouriteSupplierListId;
+                        reloadNewList(data.favouriteSupplierListId);
+                     }
+                  });
+               },
+
+               findFavelist: function () {
+                  $.get("/Tender/GetFavouriteLists", function (data, status) {
+                     grid.FavouriteLists = data;
+                     setTimeout(function () {
+                        $('#FavouriteListsSelect').selectpicker('refresh');
+                     }, 1000);
+                  });
+               },
+               GetSecondryActitvitiesByParentId: function () {
+                  grid.selectedSubSecondryActivity = -1;
+                  grid.selectedSecondryActivity = -1;
+                  grid.SubSecondaryActivities = [];
+                  grid.SecondaryActivities = [];
+                  grid.UpdatebyActivitiesId();
+                  $.get("/ManageVendors/GetMainActivitiesByParentId?ParentId=" + grid.selectedMainActivity).done(function (res) {
+                     grid.SecondaryActivities = res;
+                  }).fail(function (err) {
+                     console.log("Error" + err);
+                  });
+               },
+               GetSubSecondryActitvitiesByParentId: function () {
+                  grid.SubSecondaryActivities = [];
+                  grid.selectedSubSecondryActivity = -1;
+                  grid.UpdatebyActivitiesId();
+                  $.get("/ManageVendors/GetMainActivitiesByParentId?ParentId=" + grid.selectedSecondryActivity).done(function (res) {
+
+                     grid.SubSecondaryActivities = res;
+                  }).fail(function (err) {
+                     console.log("Error" + err);
+                  });
+               },
+               UpdatebyActivitiesId: function () {
+                  if (grid.selectedSubSecondryActivity == -1) {
+                     if (grid.selectedSecondryActivity == -1) {
+                        grid.MainActivitiesId = (grid.selectedMainActivity == -1 ? 0 : grid.selectedMainActivity);
+                        grid.ActivitesLevelId = 1;
+                     } else {
+                        grid.MainActivitiesId = grid.selectedSecondryActivity;
+                        grid.ActivitesLevelId = 2;
+                     }
+                  }
+                  else {
+                     grid.MainActivitiesId = grid.selectedSubSecondryActivity;
+                     grid.ActivitesLevelId = 3;
+                  }
+               },
+               updateResource: function (data) {
+                  this.Users = data;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+                  this.sort = ""/*"CreatedAt"*/;
+                  this.sortDirection == "DESC";
+                  //if (window.location.href.split('?')[1] && !$('#Search').hasClass('show')) {
+                  //   $('#Search').addClass('show')
+                  //}
+                  toggleViewOnLoad();
+               },
+               toggleRolesText: function (index, flagDisplayMore) {
+                  var btnMoreId = "#showmorerolesBtn" + index;
+                  var btnLessId = "#showlessrolesBtn" + index;
+                  var pId = "#showmoreroles" + index;
+                  if (flagDisplayMore) {
+                     $(btnLessId).show();
+                     $(btnMoreId).hide();
+                     $(pId).show();
+                  } else {
+                     $(btnMoreId).show();
+                     $(btnLessId).hide();
+                     $(pId).hide();
+                  }
+               },
+               detailsUrl: function (params) {
+                  return '/ManageVendors/DetailsAsync?id=' + params;
+               },
+               updateData: function (data) {
+                  this.MainActitvities = data;
+               },
+               detailsUrl: function (userIdString) {
+                  return '/ManageVendors/DetailsAsync?userIdString=' + userIdString;
+               },
+               doSeach: function (flag) {
+                  $("#NotAssignedOnlyUserFlag").val(flag == true ? "1" : "0");
+                  this.NotAssignedOnlyUserFlag = flag;
+                  this.search();
+               },
+               SortBySubmissionDate: function () {
+                  if (this.sort = "CreatedAt") {
+                     if (this.sortDirection == "DESC")
+                        this.sortDirection = "ASC";
+                     else
+                        this.sortDirection = "DESC"
+                  }
+                  else {
+                     this.sort = "CreatedAt";
+                     this.sortDirection = "ASC";
+                  }
+                  this.search();
+               },
+               SortByCommercialRegistrationName: function () {
+                  if (this.sort = "SupplierName") {
+                     if (this.sortDirection == "DESC")
+                        this.sortDirection = "ASC";
+                     else
+                        this.sortDirection = "DESC"
+                  }
+                  else {
+                     this.sort = "SupplierName";
+                     this.sortDirection = "ASC";
+                  }
+                  this.search();
+               },
+               SortByCommercialRegistrationNumber: function () {
+                  if (this.sort = "SupplierNumber") {
+                     if (this.sortDirection == "DESC")
+                        this.sortDirection = "ASC";
+                     else
+                        this.sortDirection = "DESC"
+                  }
+                  else {
+                     this.sort = "SupplierNumber";
+                     this.sortDirection = "ASC";
+                  }
+                  this.search();
+               },
+               getTendersBySelectedPageSize: function () {
+                  this.pageSize = $('#itemsPerPage').val();
+                  this.search();
+               },
+               search: function () {
+                  
+                  this.queryString = $('#cSearchForm').serialize();
+                  this.resource_url = '/ManageVendors/IndexPagingAsync' + '?' + this.queryString + '&Sort=' + this.sort + '&SortDirection=' + this.sortDirection;
+               },
+               reset: function () {
+                  //MainActitvitiesList SecondaryActivitiesList   SubSecondaryActivitiesList   SubSecondaryActivitiesList
+
+                  $("#MainActitvitiesList, #SecondaryActivitiesList, #SubSecondaryActivitiesList, #SubSecondaryActivitiesList").val('');
+                  $("#MainActitvitiesList, #SecondaryActivitiesList, #SubSecondaryActivitiesList, #SubSecondaryActivitiesList").selectpicker("refresh");
+
+                  grid.MainActivitiesId = 0;
+                  grid.ActivitesLevelId = 0;
+                  this.SubSecondaryActivities = [];
+                  this.SecondaryActivities = [];
+                  $("#FavouriteSuppliersList").val('');
+                  setTimeout(function () {
+                     $("#MainActitvitiesList").val('');
+                     $("#SecondaryActivitiesList").val('');
+                     $("#SubSecondaryActivitiesList").val('');
+                     $("#MainActitvitiesList").selectpicker("refresh");
+                     $("#SecondaryActivitiesList").selectpicker("refresh");
+                     $("#SubSecondaryActivitiesList").selectpicker("refresh");
+                  }, 2000);
+                  $("#FavouriteSuppliersList").selectpicker("refresh");
+                  $("#txtCommericalRegisterNo").val("");
+                  $("#txtCommericalRegisterName").val("");
+                  $("#txtNationalId").val("");
+                  $("#txtEMail").val("");
+                  $("#txtActivityDescription").val("");
+
+                  this.queryString = $('#cSearchForm').serialize();
+
+                  $("#chkFavourite").prop("checked", false);
+                  this.resource_url = '/ManageVendors/IndexPagingAsync';
+               },
+               IsFavourite: function () {
+                  if ($("#chkFavourite").prop("checked", false)) {
+                     $("#chkFavourite").val(false);
+                  }
+                  else if ($("#chkFavourite").prop("checked", true)) {
+                     $("#chkFavourite").val(true);
+                  }
+               },
+               getDropDownData: function () {
+                  var self = this;
+                  this.isAjaxMethodsCalled = true;
+               },
+            },
+            mounted: function () {
+               this.getDropDownData();
+            },
+            created: function () {
+               $.get("/ManageVendors/GetMainActivitiesByParentId").done(function (res) {
+                  grid.updateData(res);
+               }).fail(function (err) {
+                  console.log("Error" + err);
+               });
+               $.get("/Tender/GetFavouriteLists", function (data, status) {
+                  console.log(data);
+                  grid.FavouriteSuppliersList = data;
+               });
+
+               this.findFavelist();
+            }
+         });
+
+        function AddSupplierToFavouriteList(refreshPage) {
+         if (commericalRegisterNo <= 0) {
+              AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.PleseSelectASupplier)', alertMessageType.Danger);
+            return;
+         }
+         if (commericalRegisterName === "") {
+              AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.PleseSelectASupplier)', alertMessageType.Danger);
+            return;
+         }
+         if (FavouriteListId <= 0) {
+              AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.PleseSelectAList)', alertMessageType.Danger);
+            return;
+         }
+         var token = $('input[name=__RequestVerificationToken]').val();
+         var obj = { commericalRegisterNo: commericalRegisterNo, commericalRegisterName: commericalRegisterName , favouriteSupplierListId: FavouriteListId, __RequestVerificationToken: token };
+
+         $.post('@Url.Action("AddSupplierToFavouriteSuppliersListAsync", "Tender")', obj)
+            .done(function (res) {
+               
+               if (res.status == 'success') {
+                  $("#confirmAdd").modal('hide');
+                  $("#FavouriteListsSelect").val('0');
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SuccessfulyDone)', alertMessageType.Success);
+                   window.location = '@Url.Action("index", "ManageVendors")';
+               } else {
+                  AlertFun(res.message, alertMessageType.Danger);
+               }
+            })
+            .fail(function (data, e, f) {
+               
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.Messages.ErrorMessage)', alertMessageType.Danger);
+             });
+      }
+         $("#FavouriteListsSelect").change(function () {
+            selectTheList();
+         });
+
+
+         $("#ExistLists").change(function () {
+            newFavouriteListIdTransfer = $("#ExistLists").val();
+            FavouriteListId = $("#ExistLists").val();
+         });
+
+         $('#SwitchToAddNew, #SwitchToSelectExist').click(function () {
+            $('#SelectExistList').toggleClass('d-none');
+            $('#AddNewList').toggleClass('d-none');
+
+         });
+
+         function selectTheList() {
+            FavouriteListId = $("#FavouriteListsSelect").val();
+            if (FavouriteListId > 0) {
+               $.get("/Tender/GetFavouriteSuppliersByListId?pageSize=10000&FavouriteSupplierListId=" + $("#FavouriteListsSelect").val(), function (data, status) {
+                  grid.FavouriteSuppliers = data.items;
+               });
+            }
+         }
+
+         function reloadNewList(favouriteSupplierListId) {
+            var listName = $('#NewListName').val();
+            $('#ExistLists').append('<option value=\"' + favouriteSupplierListId + '\">' + listName + '</option>');
+            $('#ExistLists').val(favouriteSupplierListId);
+            $('#ExistLists').selectpicker('refresh');
+            $('#SelectExistList').toggleClass('d-none');
+            $('#AddNewList').toggleClass('d-none');
+            $('#NewListName').val('');
+         }
+
+
+      </script>
+   }
+}

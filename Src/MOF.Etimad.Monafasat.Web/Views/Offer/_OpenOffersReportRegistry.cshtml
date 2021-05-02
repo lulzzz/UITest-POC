@@ -1,0 +1,122 @@
+@model List<MOF.Etimad.Monafasat.ViewModel.OfferDeatilsReportForTenderModel>
+<link rel="icon" href="~/Etimad-UI/assets/imgs/favicon.ico">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script>
+   document.title ='@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OffersRegisteryReport';
+   function printData() {
+      window.print();
+      window.close();
+   }
+   function saveData() {
+      var sourceHTML = document.getElementById("printDiv").innerHTML;
+
+      var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      var fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = 'document.doc';
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+   }
+</script>
+<button id="printButton" onclick="printData();" class="btn btn-success d-print-none" style="margin:20px;">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Print</button>
+<button id="saveButton" onclick="saveData();" class="btn btn-success d-save-none d-print-none" style="margin:20px;">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+<div id="printDiv" class="row" dir="rtl" style="margin:20px; text-align:right;">   
+   <h2 class="col-sm-12 text-center" style=" direction:rtl">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OffersRegisteryReport</h2>
+   <h6 class="col-sm-12 text-center" style="margin-top:20px; float:right; direction:rtl">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber : @Model?.FirstOrDefault()?.TenderNumber </h6>
+   <h6 class="col-sm-12 text-center" style=" direction:rtl">@Model?.FirstOrDefault()?.TenderName</h6>
+   <h6 class="col-sm-12 text-right" style="margin-top:20px;direction:rtl">
+      @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OpenEnvelopesDate : @Model?.FirstOrDefault()?.OpenOffersDate @if (Model?.FirstOrDefault()?.OpenOffersDate != null)
+      {@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CelenderType}
+   </h6>
+   <table class=" MsoNormalTable  col-sm-12 table text-center table-bordered" dir="rtl" border="1" cellspacing="3" cellpadding="0" aria-describedby="Open Offers Table">
+      <tr>
+         <th colspan="4" scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.SupplierInformation</th>
+         <th colspan="3" scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.DataOnTheWarranty</th>
+         <th colspan="5" scope="col">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferAttachments</th>
+      </tr>
+      <tr>
+         <td rowspan="2">م</td>
+         <td rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.SupplierName</td>
+         <td colspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferNumber</td>
+         <td colspan="3" rowspan="2" style="margin: 0px;padding:0px !important;text-align:center;">
+            <table class="table-borderless text-center" style="margin:0px !important" aria-describedby="warranty table">
+               <tr>
+                  <th id="warrantyAmount" style="border-left:1px solid #dee2e6;border-bottom:1px solid #dee2e6">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.WarrantyAmount</th>
+                  <th id="startingDate" style="border-left:1px solid #dee2e6;border-bottom:1px solid #dee2e6">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.StartingDate</th>
+                  <th id="bankName" rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BankName</th>
+               </tr>
+               <tr>
+                  <td style="border-left:1px solid #dee2e6">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.SecurityNumber</td>
+                  <td style="border-left:1px solid #dee2e6">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Percentage</td>
+               </tr>
+            </table>
+         </td>
+         <td rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CRValidityTo</td>
+         <td rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ZakatValidityTo</td>
+         <td rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ChamberJoiningValidity</td>
+         <td rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ConstructionCertificationValidity</td>
+         <td rowspan="2">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferLetter</td>
+      </tr>
+      <tr>
+         <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Date</td>
+      </tr>
+      @*Loop Over Data*@
+      @if (Model != null)
+      {
+         @for (int i = 0; i < Model.Count; i++)
+         {
+            <tr>
+               <td rowspan="2">@(i + 1)</td>
+               <td rowspan="2">@Model[i].SupplierName</td>
+               <td style="vertical-align: middle; border-bottom: 1px solid white;">@Model[i].OfferId</td>
+               <td colspan="4" rowspan="2" style="margin: 0px;padding:0px !important;text-align:center;">
+                  @if (Model[i].BankGuarantees != null)
+                  {
+                     for (int j = 0; j < Model[i].BankGuarantees.Count; j++)
+                     {
+                        <table class="table-borderless text-center" style="margin:0px !important">
+                           <tr>
+                              <td style="border-left:1px solid #dee2e6;border-bottom:1px solid #dee2e6">@Model[i].BankGuarantees[j]?.Amount</td>
+                              <td style="border-left:1px solid #dee2e6;border-bottom:1px solid #dee2e6">@Model[i].BankGuarantees[j]?.GuaranteeStartDate</td>
+                              <td rowspan="2">@Model[i].BankGuarantees[j]?.BankName</td>
+                           </tr>
+                           <tr>
+                              <td style="border-left:1px solid #dee2e6">@Model[i].BankGuarantees[j]?.GuaranteeNumber</td>
+                              <td style="border-left:1px solid #dee2e6">@Model[i].BankGuarantees[j]?.Percentage</td>
+                           </tr>
+                        </table>
+                     }
+                  }
+               </td>
+               <td rowspan="2">@Model[i].CommercialRegistrationValidity</td>
+               <td rowspan="2">@Model[i].ZekatCertificateValidity</td>
+               <td rowspan="2">@Model[i].ChamberJoiningValidity</td>
+               <td rowspan="2">@Model[i].ConstructionCertificationValidity</td>
+               <td rowspan="2">@Model[i].OfferLetter</td>
+            </tr>
+            <tr>
+               <td style="border-radius:0px">@Model[i].CreateDate</td>
+            </tr>
+         }
+      }
+   </table>
+   <div id="report" class="col-sm-12 d-print-block">
+      <h6 class="col-sm-12 text-right" style="margin-top:20px;"> @Model?.FirstOrDefault()?.TenderName  </h6>
+      <table class="col-s-m-12 text-center table table-borderless" style="direction:rtl">
+         <tr>
+            <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Memeber</td>
+            <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Memeber</td>
+            <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Memeber</td>
+            <td>@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.ChairmanOfTheOpenEnvelopesCommittee</td>
+         </tr>
+         <tr>
+            <td>..................................</td>
+            <td>..................................</td>
+            <td>..................................</td>
+            <td>..................................</td>
+         </tr>
+      </table>
+   </div>
+</div>

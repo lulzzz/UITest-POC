@@ -1,0 +1,26 @@
+@model InputMandatoryListViewModel
+
+<input type="hidden" class="form-control" asp-for="Id">
+<input type="checkbox" style="display: none;" class="form-control" asp-for="SendToApproval">
+
+<div class="col-sm-6 col-xs-12">
+   <div class="form-group bmd-form-group">
+      <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonNameAr<span class="text-danger">*</span></label>
+      <input type="text" class="form-control" asp-for="DivisionNameAr">
+      <span asp-validation-for="DivisionNameAr" class="text-danger" />
+   </div>
+</div>
+<div class="col-sm-6 col-xs-12">
+   <div class="form-group bmd-form-group">
+      <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonNameEn</label>
+      <input type="text" class="form-control" asp-for="DivisionNameEn">
+      <span asp-validation-for="DivisionNameEn" class="text-danger" />
+   </div>
+</div>
+<div class="col-sm-6 col-xs-12">
+   <div class="form-group bmd-form-group">
+      <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DivisonCode<span class="text-danger">*</span></label>
+      <input type="text" class="form-control" asp-for="DivisionCode" v-model="divisionCode">
+      <span asp-validation-for="DivisionCode" class="text-danger" />
+   </div>
+</div>

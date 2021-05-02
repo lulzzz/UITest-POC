@@ -1,0 +1,350 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.AnnouncementSuppliersTemplateJoinRequestsDetailsModel
+
+@{
+   ViewData["Title"] = "مراجعة طلب الانضمام";
+   //ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementTemplateDetails;
+
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page"><a asp-controller="AnnouncementSuppliersTemplate" asp-action="AnnouncementSuppliersTemplateJoinRequestsDetails" asp-route-AnnouncementId="@Model.AnnouncementIdString">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementTemplateDetails</a></li>
+         <li class="breadcrumb-item active" aria-current="page">مراجة طلبات الانضمام</li>
+      </ol>
+   </nav>
+}
+
+
+
+
+<div class="col-12" id="joinRequestReview">
+
+   <div class="modal fade" id="joinRequestModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">  تأكيد الحفظ</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="">
+                  <p>
+                     تأكيد نتيجة طلب الانضمام لقائمة الموردين
+                  </p>
+               </div>
+            </div>
+            <div class="modal-footer">
+
+               <button type="button" class="btn  btn-primary btn-sm m-1" name="button" id="btnSaveConfirmation" @@click="saveJoinRequestResult()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</button>
+
+               <button type="button" class="btn btn-danger  btn-link btn-sm m-1" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="">
+                     <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.BasicData</h4>
+                  </div>
+                  <div class="">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementSupplierTemplateName
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model.AnnouncementName)</span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CommercialNumber
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model.CommericalRegisterNo)</span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model.CommericalRegisterName)</span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 تفاصيل ملف المورد
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    <button type="button" class="btn btn-primary pull-left" name="button" id="getSupplierInfoBtn" @@click="getSupplierInfo(commericalRegisterNo)">ملف المورد</button>
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+
+                     </ul>
+                  </div>
+               </div>
+
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="">
+                     <h4 class="text-primary"> نتيجة طلب الانضمام</h4>
+                  </div>
+                  <ul class="list-group form-details-list">
+
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              حالة طلب الانضمام
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              @if (Model.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.Sent)
+                              {
+                                 <span>تحت المراجعة</span>
+                              }
+                              else
+                              {
+                                 <span> @(Model.JoinRequestStatusName)</span>
+                              }
+                           </div>
+                        </div>
+                     </li>
+
+                     @*<li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              نتيجة مراجعة طلب الانضمام
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>@(Model.JoinRequestStatus)</span>
+                           </div>
+                        </div>
+                     </li>*@
+
+                     @if (Model.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.PendingRejection || Model.JoinRequestStatusId == (int)Enums.AnnouncementTemplateJoinRequestStatus.Rejected)
+                     {
+
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model.RejectionReason)</span>
+                              </div>
+                           </div>
+                        </li>
+                     }
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Notes
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>@(Model.Notes)</span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+
+
+   <div class="row">
+      <div class="card">
+         <div class="card-body" id="attachemntsDiv">
+            <div class="row">
+
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="">
+                     <h4 class="text-primary">المرفقات المدخلة من المورد </h4>
+                  </div>
+                  @if (Model.Attachments.Any())
+                  {
+                     <div class="">
+
+                        <table aria-describedby=" المرفقات" class="table table-striped">
+                           <thead class="thead-dark">
+                              <tr>
+                                 <th scope="col">الرقم</th>
+                                 <th scope="col">اسم المرفق</th>
+                                 <th scope="col">المرفق</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              @{
+                                 int index = 0;
+                                 foreach (var item in Model.Attachments)
+                                 {
+                                    <tr>
+                                       <td class="text-center text-success">
+                                          <strong>@(++index) </strong>
+                                       </td>
+                                       <td class="text-center text-success">@item.Name</td>
+                                       <td class="text-center text-success">
+                                          <a href="#" onclick="RedirectURL('@item.FileNetReferenceId','@item.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm" style="white-space: normal;">
+                                             <i class="material-icons">insert_drive_file</i>  @item.Name
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 }
+                              }
+                           </tbody>
+                        </table>
+                     </div>
+                  }
+                  else
+                  {
+                     <h4> لا يوجد مرفقات</h4>
+                  }
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div>
+
+
+      <form id="joinForm" method="POST" asp-controller="AnnouncementSuppliersTemplate" asp-action="SaveJoinRequestResult" autocomplete="off">
+         <input asp-for="JoinRequestId" id="hdnJoinRequestId" type="hidden" />
+         <input asp-for="RequestResultId" id="hdnRequestResultId" type="hidden" />
+         <input asp-for="AnnouncementIdString" id="hdnAnnouncementIdString" type="hidden" />
+
+         @Html.AntiForgeryToken()
+         
+         <div v-show="'@Model.JoinRequestStatusId' != '@((int)Enums.AnnouncementTemplateJoinRequestStatus.Rejected)' && '@Model.JoinRequestStatusId' != '@((int)Enums.AnnouncementTemplateJoinRequestStatus.Accepted)'" class="col-lg-4 col-sm-6 col-xs-12">
+            <div class="form-group bmd-form-group">
+               <label asp-for="RequestResultId" class="label bmd-label-static"></label>
+               <div class="form-check">
+                  <label class="form-check-label">
+                     <input asp-for="RequestResultId" name="RequestResultId" class="form-check-input" type="radio" id="acceptedRequestResultId" v-model="requestResult" value="@((int)Enums.AnnouncementTemplateJoinRequestStatus.PendingAcceptance)">
+                     مقبول
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+                  <label class="form-check-label">
+                     <input asp-for="RequestResultId" name="RequestResultId" class="form-check-input" type="radio" id="rejectedRequestResultId" v-model="requestResult" value="@((int)Enums.AnnouncementTemplateJoinRequestStatus.PendingRejection)">
+                     مرفوض
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+               </div>
+            </div>
+            <span asp-validation-for="RequestResultId" class="text-danger"></span>
+         </div>
+         <div>
+            <label v-show="requestResult == '@((int)Enums.AnnouncementTemplateJoinRequestStatus.Accepted)'">مقبول</label>
+            <label v-show="requestResult == '@((int)Enums.AnnouncementTemplateJoinRequestStatus.Rejected)'">مرفوض</label>
+         </div>
+         <div class="row">
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" v-show="requestResult == '@((int)Enums.AnnouncementTemplateJoinRequestStatus.PendingRejection)' || requestResult == '@((int)Enums.AnnouncementTemplateJoinRequestStatus.Rejected)'">
+               <div class="form-group bmd-form-group p-2">
+
+                  <label asp-for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+                  <textarea asp-for="RejectionReason" class="form-control" maxlength="2000" rows="5" id="txtRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason"></textarea>
+                  <div class="clearfix">
+                     <span class="text-danger" id="txtRejectionReasonValidation" style="display:none;">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+                     <br />
+                  </div>
+               </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group p-0">
+                  <label asp-for="Notes" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Notes</label>
+                  <textarea asp-for="Notes" class="form-control" maxlength="2000" rows="5"></textarea>
+               </div>
+            </div>
+         </div>
+
+         <div>
+            <button v-show="requestResult != '@((int)Enums.AnnouncementTemplateJoinRequestStatus.Rejected)' && requestResult != '@((int)Enums.AnnouncementTemplateJoinRequestStatus.Accepted)'" type="button" class="btn btn-primary pull-left" name="button" id="btnSave" @@click="showSaveModal()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save</button>
+         </div>
+
+      </form>
+   </div>
+</div>
+
+<div class="row" id="approval">
+   <div class="col-12 ">
+      <a class="btn btn-outline-primary btn-link pull-right"  asp-controller="AnnouncementSuppliersTemplate" asp-action="AnnouncementSuppliersTemplateJoinRequestsDetails"  asp-route-AnnouncementId="@Model.AnnouncementIdString">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+   </div>
+</div>
+
+
+@section scripts{
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+
+   <script>
+      function RedirectURL(ids, names) {
+         window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+      }
+   </script>
+   <script>
+       var app = new Vue({
+          el: '#joinRequestReview',
+          data: {
+             joinRequestIdString: '@Model.JoinRequestIdString',
+             announcmentIdString: '@Model.AnnouncementIdString',
+             requestResult: '@Model.RequestResultId',
+             commericalRegisterNo: '@Model.CommericalRegisterNo'
+          },
+          watch: {
+             requestResult: function () {
+                $("#hdnRequestResultId").val(this.requestResult);
+             }
+          },
+          methods: {
+             getSupplierInfo: function (CR) {
+                getSupplierInfo(CR);
+             },
+             showSaveModal: function () {
+                if (this.requestResult == @((int)Enums.AnnouncementTemplateJoinRequestStatus.PendingRejection) && $("#txtRejectionReason").val().trim() == "") {
+                   $("#txtRejectionReasonValidation").show();
+                   return;
+                }
+                   $("#joinRequestModal").modal("show");
+             },
+             saveJoinRequestResult: function () {
+                document.getElementById("joinForm").submit();
+             }
+          }
+      });
+
+
+   </script>
+}
+
+
+
+

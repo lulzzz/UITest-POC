@@ -1,0 +1,89 @@
+@using System
+@model MOF.Etimad.Monafasat.ViewModel.AttachmentsModel
+@using MOF.Etimad.Monafasat.SharedKernel
+@{
+   ViewBag.Title = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditeAttachments;
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+      </ol>
+   </nav>
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+
+   .card-body > .col.col-11 {
+      width: 100% !important;
+      padding: 0;
+      float: none;
+      max-width: 100%;
+      flex: 100%;
+   }
+</style>
+
+<link href="~/css/fin-uploader.css" rel="stylesheet" />
+@using (Html.BeginForm())
+{
+   @*<input type="hidden" id="ModuleType" value="1" />*@
+   @Html.AntiForgeryToken()
+   <div class="card">
+      <div class="card-body">
+         <input asp-for="TenderIDString" type="hidden" />
+         <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+         @Html.Partial("_TenderAttachmentsUpdate")
+         <div class="clearfix"></div>
+      </div>
+
+   </div>
+   <div>
+      <button type="submit" id="btnSave" class="btn btn-primary">
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveUpdates
+      </button>
+      <a asp-action="Index" asp-controller="Tender" class="btn btn-outline-primary btn-link pull-right">
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+      </a>
+   </div>
+
+}
+
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+      var changeObj = new Vue({
+         el: "#changeDiv",
+         data: {
+         },
+         methods: {
+            removeItem: function (item) {
+               $('#LoadingSite').fadeIn();
+               $.post('@Url.Action("RemoveAttachmentChangeByIdAsync", "Tender")', {
+                  attachmentId : item
+               }).done(function () {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DeletedSuccessfully)', alertMessageType.Success);
+                  window.location.reload();
+                  }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     if (error.responseText != "Logout") {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                  });
+            }
+         }
+      })
+   </script>
+}
+

@@ -1,0 +1,194 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.TenderPlaintDatailsModel
+
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails;
+}
+<style>
+   .agencyLogo {
+      border-radius: 100%;
+      border: 2px solid #ccc;
+      padding: 5px;
+      width: 56px;
+   }
+</style>
+<div class="row" id="basicDetials">
+   <div class="col-12">
+      <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation<img class="pull-right agencyLogo" src="~/Etimad-UI/assets/imgs/capitol-building.png" alt="image description"/></h4>
+   </div>
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <h5 class="text-dark-green">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AwardedSuppliersList</h5>
+         @foreach (var item in Model.AwardedSupplierList)
+         {
+            <ul class="list-group form-details-list">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+
+                           @item.Name
+
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingValue
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @item.Value
+                        </span>
+                     </div>
+                  </div>
+               </li>
+            </ul>
+         }
+         <ul class="list-group form-details-list">
+            @if (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager))
+            {
+
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.TenderName)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.TenderNumber)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.ReferenceNumber)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+
+            }
+
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingType
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.TenderAwardingTypeName)
+                     </span>
+                  </div>
+               </div>
+            </li>
+
+
+
+            @if (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.SecretaryGrievanceCommittee) || User.IsInRole(RoleNames.ManagerGrievanceCommittee))
+            {
+
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.PlaintsNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.PlaintsNumber)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+
+            }
+            @if (User.IsInRole(RoleNames.SecretaryGrievanceCommittee) || User.IsInRole(RoleNames.ManagerGrievanceCommittee))
+            {
+
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.EscalatedPlaintsNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.EscalatedPlaintsNumber)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+
+            }
+
+            @if (User.IsInRole(RoleNames.supplier))
+            {
+               @if (!string.IsNullOrEmpty(Model.Notes))
+               {
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           ملاحظات
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @(Model.Notes)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+               }
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+                        التقييم الفني
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>
+                           @(Model.TechnicalEvaluation)
+                        </span>
+                     </div>
+                  </div>
+               </li>
+               @if (!string.IsNullOrEmpty(Model.OfferRejectionReason))
+               {
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           سبب رفض العرض
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>
+                              @(Model.OfferRejectionReason)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+               }
+
+            }
+         </ul>
+         <input type="hidden" id="lastOfferPresentationDate" value="@Model.TenderIdString" />
+   </div>
+</div>

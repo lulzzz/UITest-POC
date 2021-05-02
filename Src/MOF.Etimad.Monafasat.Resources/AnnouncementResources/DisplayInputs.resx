@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActiveAnnouncements" xml:space="preserve">
+    <value>الإعلانات النشطة فقط</value>
+  </data>
+  <data name="ActivityDescription" xml:space="preserve">
+    <value>وصف النشاط</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="AgencyName" xml:space="preserve">
+    <value>اسم الجهة</value>
+  </data>
+  <data name="AllAnnouncement" xml:space="preserve">
+    <value>جميع الإعلانات</value>
+  </data>
+  <data name="AllAnnouncementTemplate" xml:space="preserve">
+    <value>اعلانات قوائم الموردين</value>
+  </data>
+  <data name="AnnouncementDetails" xml:space="preserve">
+    <value>تفاصيل الإعلان</value>
+  </data>
+  <data name="AnnouncementDuration" xml:space="preserve">
+    <value>مدة الإعلان عن المنافسة</value>
+  </data>
+  <data name="AnnouncementName" xml:space="preserve">
+    <value>اسم الإعلان</value>
+  </data>
+  <data name="AnnouncementPeriod" xml:space="preserve">
+    <value>مدة الإعلان عن المنافسة</value>
+  </data>
+  <data name="AnnouncementPublishDate" xml:space="preserve">
+    <value>تاريخ نشر الإعلان</value>
+  </data>
+  <data name="AnnouncementResult" xml:space="preserve">
+    <value>نتائج الإعلان</value>
+  </data>
+  <data name="Announcements" xml:space="preserve">
+    <value>الإعلانات</value>
+  </data>
+  <data name="AnnouncementStatus" xml:space="preserve">
+    <value>حالة الإعلان</value>
+  </data>
+  <data name="AnnouncementSupplierTemplateName" xml:space="preserve">
+    <value>اسم القائمة</value>
+  </data>
+  <data name="AnnouncementTemplateDetails" xml:space="preserve">
+    <value>تفاصيل القائمة</value>
+  </data>
+  <data name="AnnouncementTemplateSuppliersListType" xml:space="preserve">
+    <value>نوع القائمة</value>
+  </data>
+  <data name="AnnouncementType" xml:space="preserve">
+    <value>نوع الإعلان</value>
+  </data>
+  <data name="ApprovedByText" xml:space="preserve">
+    <value>إعتمدة من قبل</value>
+  </data>
+  <data name="Areas" xml:space="preserve">
+    <value>المناطق</value>
+  </data>
+  <data name="AuditedBy" xml:space="preserve">
+    <value>اعتمدت بواسطة</value>
+  </data>
+  <data name="BranchName" xml:space="preserve">
+    <value>اسم الفرع</value>
+  </data>
+  <data name="CancelAnnouncementSupplierTemplate" xml:space="preserve">
+    <value>عند التأكيد سيتم إلغاء القائمة ولن تكون سارية للاستعمال</value>
+  </data>
+  <data name="CancelationReason" xml:space="preserve">
+    <value>سبب التوقف عن استخدام القائمة</value>
+  </data>
+  <data name="CategoryField" xml:space="preserve">
+    <value>مجال التصنيف</value>
+  </data>
+  <data name="CommercialRegistrationNumber" xml:space="preserve">
+    <value>رقم السجل التجاري</value>
+  </data>
+  <data name="ConstructionWorks" xml:space="preserve">
+    <value>أعمال الإنشاء</value>
+  </data>
+  <data name="Countries" xml:space="preserve">
+    <value>الدول</value>
+  </data>
+  <data name="CreateAnnouncement" xml:space="preserve">
+    <value>إنشاء/تحرير إعلان</value>
+  </data>
+  <data name="CreateAnnouncementTemplate" xml:space="preserve">
+    <value>إنشاء/تحرير إعلان قائمة الموردين</value>
+  </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>انشأت بواسطة</value>
+  </data>
+  <data name="CreatedByText" xml:space="preserve">
+    <value>انشاءت عن طريق</value>
+  </data>
+  <data name="CreationDetails" xml:space="preserve">
+    <value>تفاصيل الإنشاء</value>
+  </data>
+  <data name="DateLocation" xml:space="preserve">
+    <value>التواريخ واماكن التنفيذ</value>
+  </data>
+  <data name="Dates" xml:space="preserve">
+    <value>المواعيد</value>
+  </data>
+  <data name="Descriptions" xml:space="preserve">
+    <value>وصف استخدامات القائمة</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="EffectiveListDate" xml:space="preserve">
+    <value>تاريخ السريان للقائمة</value>
+  </data>
+  <data name="EffectiveListTime" xml:space="preserve">
+    <value>وقت انتهاء القائمة</value>
+  </data>
+  <data name="ExecutionLocation" xml:space="preserve">
+    <value>مكان التنفيذ</value>
+  </data>
+  <data name="ExtendAnnouncementSupplierTemplateConfirmationMessage" xml:space="preserve">
+    <value>عند التأكيد سيتم إعادة نشر اعلان للتسجيل بالقائمة لجميع الموردين</value>
+  </data>
+  <data name="ExtendAnnouncementTemplate" xml:space="preserve">
+    <value>تمديد سريان القائمة </value>
+  </data>
+  <data name="GeneralList" xml:space="preserve">
+    <value>عامة</value>
+  </data>
+  <data name="GovAgencyInfo" xml:space="preserve">
+    <value>معلومات الجهة الحكومية</value>
+  </data>
+  <data name="InactiveAnnounements" xml:space="preserve">
+    <value>الإعلانات المنتهية فقط</value>
+  </data>
+  <data name="InsideKSA" xml:space="preserve">
+    <value>مكان التنفيذ</value>
+  </data>
+  <data name="IntroAboutAnnouncementTemplate" xml:space="preserve">
+    <value>تعريف القائمة</value>
+  </data>
+  <data name="IntroAboutTender" xml:space="preserve">
+    <value>تعريف عن المنافسة</value>
+  </data>
+  <data name="IsEffectiveList" xml:space="preserve">
+    <value>تحديد مدة السريان للقائمة</value>
+  </data>
+  <data name="IsRequiredAttachmentToJoinList" xml:space="preserve">
+    <value>مطلوب مرفقات</value>
+  </data>
+  <data name="JoinAnnouncement" xml:space="preserve">
+    <value>طلب انضمام للمنافسة</value>
+  </data>
+  <data name="JoinRequestsCount" xml:space="preserve">
+    <value>عدد طلبات الانضمام</value>
+  </data>
+  <data name="JoinRequestsList" xml:space="preserve">
+    <value>قائمة طلبات الانضمام</value>
+  </data>
+  <data name="LastJoinDate" xml:space="preserve">
+    <value>اخر موعد لتقديم طلبات الانضمام للمنافسة</value>
+  </data>
+  <data name="MaintenanceOperationActions" xml:space="preserve">
+    <value>أعمال الصيانة والتشغيل</value>
+  </data>
+  <data name="MyAnnouncements" xml:space="preserve">
+    <value>إعلاناتى</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>لا</value>
+  </data>
+  <data name="OnlyActiveAnnouncements" xml:space="preserve">
+    <value>الإعلانات النشطة</value>
+  </data>
+  <data name="OnlyEndedAnnouncements" xml:space="preserve">
+    <value>الإعلانات المنتهية</value>
+  </data>
+  <data name="PrivateList" xml:space="preserve">
+    <value>خاصة</value>
+  </data>
+  <data name="PublishDate" xml:space="preserve">
+    <value>تاريخ النشر</value>
+  </data>
+  <data name="PurchaseMethodBasedOnAnnouncement" xml:space="preserve">
+    <value>أسلوب الشراء بناء على نتائج الإعلان</value>
+  </data>
+  <data name="ReferenceNumber" xml:space="preserve">
+    <value>الرقم المرجعى للإعلان</value>
+  </data>
+  <data name="RelationStep" xml:space="preserve">
+    <value>مجال التصنيف والانشطة</value>
+  </data>
+  <data name="RequestStatus" xml:space="preserve">
+    <value>حالة طلب الانضمام</value>
+  </data>
+  <data name="RequiredAttachment" xml:space="preserve">
+    <value>المرفقات المطلوبة</value>
+  </data>
+  <data name="RequirementConditionsToJoinList" xml:space="preserve">
+    <value>الشروط الازمة للانضمام للقائمة</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="SupportingDocuments" xml:space="preserve">
+    <value>الملفات الداعمة</value>
+  </data>
+  <data name="TemplateExtendMechanism" xml:space="preserve">
+    <value>آلية تجديد القائمة</value>
+  </data>
+  <data name="TenderActivities" xml:space="preserve">
+    <value>أنشطة المنافسة</value>
+  </data>
+  <data name="TenderActivity" xml:space="preserve">
+    <value>نشاط المنافسة</value>
+  </data>
+  <data name="TenderTypeName" xml:space="preserve">
+    <value>نوع المنافسة</value>
+  </data>
+  <data name="UnderOperationAnnouncements" xml:space="preserve">
+    <value>إعلانات تحت الانشاء</value>
+  </data>
+  <data name="UpdateAnnouncementSupplierTemplate" xml:space="preserve">
+    <value>تحرير إعلان قائمة الموردين</value>
+  </data>
+  <data name="UpdateAnnouncementSupplierTemplateConfirmationMessage" xml:space="preserve">
+    <value>عند التأكيد سيتم تحديث القائمة</value>
+  </data>
+  <data name="WithdrawAnnouncementRequest" xml:space="preserve">
+    <value>سحب طلب الإنضمام</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>نعم</value>
+  </data>
+</root>

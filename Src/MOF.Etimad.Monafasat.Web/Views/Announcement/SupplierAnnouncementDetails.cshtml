@@ -1,0 +1,190 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.SupplierAnnouncementDetailsModel
+@{
+   ViewBag.Title = res.AnnouncementResources.DisplayInputs.Details;
+   if (string.IsNullOrEmpty(User.UserRole()))
+      Layout = "_Layout-Visitor";
+
+}
+@section breadcrumb
+{
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@res.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         @if (User.UserRole() == "")
+         {
+            <li class="breadcrumb-item active" aria-current="page"><a asp-controller="Announcement" asp-action="AllVisitorAnnouncements">@res.AnnouncementResources.DisplayInputs.Announcements</a></li>
+         }
+         else
+         {
+            <li class="breadcrumb-item active" aria-current="page"><a asp-controller="Announcement" asp-action="AllSupplierAnnouncements">@res.AnnouncementResources.DisplayInputs.Announcements</a></li>
+
+         }
+         <li class="breadcrumb-item active" aria-current="page">@res.AnnouncementResources.DisplayInputs.AnnouncementDetails</li>
+      </ol>
+   </nav>
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <a target="_blank" class="btn p-2 btn-outline-primary pull-left"
+         href="OpenAnnouncementDetailsReport?announcementIdString=@Model.AnnouncementIdString"
+         title="تفاصيل الإعلان"
+         data-original-title="تفاصيل الإعلان" data-toggle="tooltip">
+         <i class="material-icons">assignment</i>   تفاصيل الإعلان<div class="ripple-container"></div>
+      </a>
+   </div>
+}
+<ul class="nav nav-pills nav-pills-icons" role="tablist">
+   <li class="nav-item">
+      <a class="nav-link active text-center show" href="#d-1" role="tab" data-toggle="tab" aria-selected="true">
+         <i class="material-icons">dashboard</i> 
+         @res.TenderResources.DisplayInputs.MainInformation
+      </a>
+   </li>
+   <li class="nav-item">
+      <a class="nav-link text-center show" href="#d-2" role="tab" data-toggle="tab" aria-selected="true">
+         <i class="material-icons">schedule</i> 
+         @res.AnnouncementResources.DisplayInputs.DateLocation
+      </a>
+   </li>
+   <li class="nav-item">
+      <a class="nav-link text-center show" href="#d-3" role="tab" data-toggle="tab" aria-selected="true">
+         <i class="material-icons">list</i> 
+         @res.TenderResources.DisplayInputs.RelationStep
+      </a>
+   </li>
+</ul>
+<div id="actionsDiv">
+   <div class="tab-content tab-space col-12" style="padding:0">
+      <div class="tab-pane active animated fadeInLeft delay-1s show" id="d-1">
+         @await Html.PartialAsync("~/Views/Announcement/Partials/_BasicData.cshtml")
+      </div>
+      <div class="tab-pane animated fadeInLeft delay-1s show" id="d-2">
+         @await Html.PartialAsync("~/Views/Announcement/Partials/_DateLocation.cshtml")
+      </div>
+      <div class="tab-pane animated fadeInLeft delay-1s show" id="d-3">
+         @await Html.PartialAsync("~/Views/Announcement/Partials/_RelationStep.cshtml")
+      </div>
+   </div>
+   <div>
+      @{
+         if (User.IsInRole(RoleNames.supplier))
+         {
+            if (!Model.hasJoinRequest && Model.AnnouncementStatusId == (int)Enums.AnnouncementStatus.Approved)
+            {
+               <button type="button" class="btn btn-info" id="btnWithdrowInvitation" name="withdrowBtn" value="2" data-toggle="modal" data-target="#joinRequestConfirmation">
+                  @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.JoinAnnouncement
+                  <div class="ripple-container"></div>
+               </button>
+               <div class="modal fade" id="joinRequestConfirmation" tabindex="-1" role="dialog">
+                  <div class="modal-dialog" role="document">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <h5 class="modal-title">  @MOF.Etimad.Monafasat.Resources.AnnouncementResources.Messages.AgreeJoinRequestConfirm</h5>
+                           <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                              <i class="material-icons">clear</i> 
+                           </button>
+                        </div>
+                        <div class="modal-body">
+                           <div class="">
+                              <p>
+                                 @MOF.Etimad.Monafasat.Resources.AnnouncementResources.Messages.JoinRequestMessage
+                              </p>
+                           </div>
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" class="btn btn-primary btn-sm m-1" name="button" @@click="sendRequesttoJoinTender()"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</button>
+                           <button type="button" class="btn btn-danger  btn-link btn-sm m-1" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            }
+            else if (Model.JoinRequestStatusId == (int)Enums.AnnouncementJoinRequestStatus.Sent && Model.AnnouncementStatusId == (int)Enums.AnnouncementStatus.Approved)
+            {
+               <button type="button" class="btn btn-danger" id="btnWithdrowInvitation" name="withdrowBtn" value="2" data-toggle="modal" data-target="#withdrawRequestConfirmation">
+                  @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.WithdrawAnnouncementRequest
+                  <div class="ripple-container"></div>
+               </button>
+               <div class="modal fade" id="withdrawRequestConfirmation" tabindex="-1" role="dialog">
+                  <div class="modal-dialog" role="document">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <h5 class="modal-title"> @MOF.Etimad.Monafasat.Resources.AnnouncementResources.Messages.ConfirmWithdraw</h5>
+                           <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                              <i class="material-icons">clear</i> 
+                           </button>
+                        </div>
+                        <div class="modal-body">
+                           <div class="form-check">
+                              <label class="form-check-label text-dark-green">
+                                 <input class="checkbox" type="checkbox" v-model="agreeReport" />
+                                 @MOF.Etimad.Monafasat.Resources.AnnouncementResources.Messages.AgreeOnWithdraw
+                              </label>
+                           </div>
+                           <div class="col-md-3">
+                           </div>
+                           <div class="col-md-9" v-show="isPressed && !agreeReport">
+                              <span class="h6 text-danger d-block mt-0">@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseAgree</span>
+                           </div>
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" class="btn btn-primary btn-sm m-1" name="button" @@click="withdrawRequesttoJoinTender()"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</button>
+                           <button type="button" class="btn btn-danger  btn-link btn-sm m-1" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            }
+         }
+      }
+   </div>
+</div>
+@section scripts{
+   <script>
+      $(document).ready(function () {
+      setTimeout(function () {
+         updateAgencyLogos('@Model.AgencyCode');
+      }, 1000);
+      });
+      var tender = new Vue({
+         el: '#actionsDiv',
+         data: {
+            agreeReport: false,
+            isPressed: false,
+            tender: { agencyCode: '@Model.AgencyCode' }
+         },
+         methods: {
+            sendRequesttoJoinTender: function () {
+               $('#LoadingSite').fadeIn();
+               $.post('@Url.Action("JoinAnnouncement", "Announcement")', { announcmentIdString: '@Model.AnnouncementIdString' })
+                  .done(function (e) {
+                     $('#LoadingSite').fadeOut();
+                     window.location.href = window.location.href;
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                  }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  });
+            },
+            withdrawRequesttoJoinTender: function () {
+               this.isPressed = true;
+               if (!this.agreeReport) {
+
+                  return false;
+               }
+               $('#LoadingSite').fadeIn();
+               $.post('@Url.Action("WithdrawJoinRequest", "Announcement")', { announcmentIdString: '@Model.AnnouncementIdString' })
+                  .done(function (e) {
+                     $('#LoadingSite').fadeOut();
+                     window.location.href = window.location.href;
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                  }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  });
+            }
+         }
+      });
+   </script>
+}

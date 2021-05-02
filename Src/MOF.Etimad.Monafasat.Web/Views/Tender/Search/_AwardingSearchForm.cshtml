@@ -1,0 +1,69 @@
+<div class="card card-body">
+   <div class="text-right">
+      <button id="closeSearch" type="button" class="btn btn-sm btn-link btn-default pull-right p-1">
+         <i class="material-icons">close</i> 
+
+      </button>
+   </div>
+   <div class="row">
+      @if (!User.UserIsVRO())
+      {
+         @if (User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary))
+         {
+            <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType</label>
+                  <input type="text" class="form-control" id="TenderNumber" value="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NewDirectPurchase" readonly />
+               </div>
+            </div>
+         }
+         else
+         {
+            <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType </label>
+                  <select data-live-search="false" id="TenderTypeId" class="selectpicker" name="TenderTypeId" data-search="TenderTypeId" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType" data-style="select-with-transition" v-model="selectedTypeList">
+                     <option v-for="item in typeList" :value="item.tenderTypeId">{{item.tenderTypeName}}</option>
+                  </select>
+               </div>
+            </div>
+         }
+
+      }
+      else
+      {
+         <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="form-group bmd-form-group">
+               <label class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType</label>
+               <input type="text" class="form-control" value="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NationalTransformationProjects" readonly />
+            </div>
+         </div>
+      }
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName </label>
+            <input type="text" id="TenderName" name="TenderName" data-search="TenderName" maxlength="50" autocomplete="off" class="form-control">
+         </div>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="publisher" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber </label>
+            <input type="text" id="TenderNumber" name="TenderNumber" data-search="TenderNumber" maxlength="50" autocomplete="off" class="form-control">
+         </div>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+         <div class="form-group bmd-form-group">
+            <label for="ReferenceNumber" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber</label>
+            <input type="text" class="form-control" id="txtReferenceNumber" data-search="ReferenceNumber" name="ReferenceNumber" maxlength="50" />
+         </div>
+      </div>
+   </div>
+   <div class="input-group-prepend pull-left etd-search-btn">
+      <button type="button" class="btn btn-primary btn-block text-center btn-sm" id="searchBtn" name="button" @@click="search()">
+         <i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+      </button>
+      <button type="reset" class="btn btn-block text-center btn-sm" name="button" @@click="clear($event)">
+         <i class="material-icons">close</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+      </button>
+   </div>
+</div>

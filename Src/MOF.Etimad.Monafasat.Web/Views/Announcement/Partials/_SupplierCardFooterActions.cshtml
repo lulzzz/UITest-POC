@@ -1,0 +1,12 @@
+<div class="card-footer row">
+
+   <div class="col-md-9 text-left">
+      </div>
+   <div class="col-md-3 text-left"> 
+      @*<a :href = "offerDataDetails(tender.offerIdString)" class="btn btn-info pull-right btn-sm" v-if="(tender.supplierHasOffer == true && tender.lastOfferPresentationDate >= tender.currentDate && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved))">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OfferDataDetails<div class="ripple-container"></div></a>*@
+      <a href="#" v-if="br.joinRequestStatusId ==@((int)Enums.AnnouncementJoinRequestStatus.Sent)  && br.announcementStatusId == @((int)Enums.AnnouncementStatus.Approved)" @@click="Withdraw(br.announcementIdString)" class="btn btn-danger pull-right btn-sm">
+         @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.WithdrawAnnouncementRequest
+      </a>
+      <div class="ripple-container"></div>
+   </div>
+   </div>

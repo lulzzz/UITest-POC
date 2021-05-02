@@ -1,0 +1,244 @@
+@model MOF.Etimad.Monafasat.ViewModel.GetConditionTemplateModel
+
+@{
+
+   if (string.IsNullOrEmpty(Model.OffersEvaluationCriteria))
+   {
+      Model.OffersEvaluationCriteria = @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.OffersEvaluationCriteriaMessage;
+   }
+
+   if (string.IsNullOrEmpty(Model.OffersChecking))
+   {
+      Model.OffersChecking = @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.OffersCheckingTemplateMessage;
+   }
+
+}
+<div class="row">
+   <div class="col-12">
+      <h4 class=" text-primary mt-0 mb-0">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirimJoiningTheTender </h4>
+   </div>
+   <div class="col-lg-12">
+      <div class="form-group bmd-form-group">
+         <div class="form-check">
+            <label class="form-check-label text-dark-green">
+               <input class="form-check-input" type="checkbox" id="chkJoiningTheTenderSection" onchange="return toggleConfirimJoiningTheTenderSection()" />
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.HideConfirimJoiningTheTenderSection
+               <span class="form-check-sign">
+                  <span class="check"></span>
+               </span>
+            </label>
+         </div>
+      </div>
+   </div>
+
+   <div class="col-lg-6 col-sm-6 col-xs-12" id="JoiningTheTenderSectionTemplateIdDiv">
+      <div class="form-group bmd-form-group">
+         <label></label>
+         <input asp-for="ConfirimJoiningTheTender" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.JoiningTheTenderPlaceholder" class="form-control" />
+         <span asp-validation-for="ConfirimJoiningTheTender" class="text-danger"></span>
+      </div>
+   </div>
+   @if (Model.VersionId >= (int)Enums.ActivityVersions.Sprint7Activities)
+   {
+      <div class="col-lg-6 col-sm-6 col-xs-12" id="divParticipationConfirmationLetterDate">
+         <div class="form-group form-check etd-calendar-group">
+            <label asp-for="ParticipationConfirmationLetterDate" for="datepick" class="label bmd-label-static"></label>
+            <input asp-for="ParticipationConfirmationLetterDate" type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="txtParticipationConfirmationLetterDate" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Date" />
+         </div>
+      </div>}
+
+   <div class="col-12 my-3">
+      <hr />
+   </div>
+   <div class="col-12">
+      <h4 class=" text-primary">   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuestionsAndFAQ</h4>
+   </div>
+
+   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <label class="label bmd-label-static noSpecial"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MaxTimeToAnswerQuestions </label><span class="text-danger">*</span>
+         <input asp-for="MaxTimeToAnswerQuestions" class="form-control" onchange="return blockSpecialChar(event)" />
+         <span asp-validation-for="MaxTimeToAnswerQuestions" class="text-danger"></span>
+      </div>
+   </div>
+   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <label class="label bmd-label-static noSpecial"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AlternativeEmailForCommuncation</label><span class="text-danger">*</span>
+         <input asp-for="AlternativeEmailForCommuncation" maxlength="500" class="form-control" onchange="return blockSpecialChar(event)" />
+         <span asp-validation-for="AlternativeEmailForCommuncation" class="text-danger"></span>
+      </div>
+   </div>
+   <div class="col-12 my-3">
+      <hr />
+   </div>
+   <div class="col-12">
+      <h4 class=" text-primary">   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersDocuments</h4>
+      <br />
+   </div>
+   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <div class="form-group bmd-form-group p-0 TechnicalDocumentSection">
+         <input type="hidden" asp-for="TechnicalOfferDocuments" id="TechnicalDocHidArr" />
+         <label class="label bmd-label-static noSpecial">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TechnicalDocumentsList </label><span class="text-danger">*</span>
+         <div class="input-group mb-3">
+
+            <input type="text" maxlength="2000" id="TechnicalDoc" class="form-control" placeholder="على الجهة تحديد وثائق العرض الفني المطلوبة" aria-label="" aria-describedby="basic-addon1">
+            <div class="input-group-prepend">
+               <button onclick="addToString('TechnicalDocHidArr','TechnicalDoc', 'technicalDocList')" class="btn btn-primary btn-sm pull-right" type="button">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Add</button>
+            </div>
+         </div>
+      </div>
+      <div class="scrollVerticalTable">
+         <table class="table table-striped TechnicalDocumentSection" aria-describedby="preparing offers table">
+            <thead>
+               <tr>
+                  <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NameOfDocument </th>
+                  <th scope="col"></th>
+               </tr>
+            </thead>
+            <tbody id="technicalDocList">
+               @{
+                  var tData = Model.TechnicalOfferDocuments?.Split('#');
+                  for (int i = 0; i < tData?.Length; i++)
+                  {
+                     if (!string.IsNullOrEmpty(tData[i]))
+                     {
+                        <tr id="@i">
+                           <td>@tData[i]</td>
+                           <td class="text-right"><button class="btn btn-danger btn-sm " onclick="removeFromString('TechnicalDocHidArr','technicalDocList','@i')" type="button">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</button></td>
+                        </tr>
+                     }
+                  }
+               }
+            </tbody>
+         </table>
+      </div>
+
+   </div>
+   @if (Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding)
+   {
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+         <div class="form-group bmd-form-group p-0 FinancialDocumentSection">
+            <input type="hidden" asp-for="FinancialOfferDocuments" id="FinanceDocHidArr" />
+            <label class="label bmd-label-static noSpecial">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FinancialDocumentsList </label><span class="text-danger">*</span>
+            <div class="input-group mb-3">
+
+               <input type="text" maxlength="2000" id="FinanceDoc" class="form-control" placeholder="على الجهة تحديد وثائق العرض المالي المطلوبة" aria-label="" aria-describedby="basic-addon1">
+               <div class="input-group-prepend">
+                  <button onclick="addToString('FinanceDocHidArr','FinanceDoc', 'financialDocList')" class="btn btn-primary btn-sm pull-right" type="button">إضافة</button>
+               </div>
+            </div>
+         </div>
+
+         <div class="scrollVerticalTable">
+            <table class="table table-striped FinancialDocumentSection">
+               <thead>
+                  <tr>
+                     <th>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NameOfDocument</th>
+                     <th></th>
+                  </tr>
+               </thead>
+               <tbody id="financialDocList">
+                  @{
+                     var fData = Model.FinancialOfferDocuments?.Split('#');
+                     for (int i = 0; i < fData?.Length; i++)
+                     {
+                        if (!string.IsNullOrEmpty(fData[i]))
+                        {
+                           <tr id="@i">
+                              <td>@fData[i]</td>
+                              <td class="text-right"><button class="btn btn-danger btn-sm" onclick="removeFromString('FinanceDocHidArr','financialDocList','@i')" type="button">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</button></td>
+                           </tr>
+                        }
+                     }
+                  }
+               </tbody>
+            </table>
+         </div>
+      </div>
+   }
+   <div class="col-12 my-3">
+      <hr />
+   </div>
+   <div class="col-12">
+      <h4 class=" text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentStyle </h4>
+   </div>
+   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="form-group bmd-form-group ">
+         <label class="label bmd-label-static noSpecial" for="AgencyDecalration"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentStyle </label><span class="text-danger">*</span>
+         <textarea asp-for="DocumentStyle" class="form-control" rows="6" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.Messages.CoordinationRequirements"></textarea>
+      </div>
+   </div>
+   <div class="col-12">
+      <h4 class=" text-primary">فحص  العروض </h4>
+   </div>
+   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <label class="label bmd-label-static noSpecial"> مدة السماح لاستكمال الشهادات 	إذا لم يقدم صاحب العرض مع عرضه أيا من الشهادات المطلوبة، أو أن الشهادة المقدمة منتهية الصلاحية ( لا تزيد عن 10 أيام)</label><span class="text-danger">*</span>
+         <input asp-for="AllowancePeriodToAddOffersIfNotAddedBeofre" class="form-control " onchange="return blockSpecialChar(event)" />
+         <span asp-validation-for="AllowancePeriodToAddOffersIfNotAddedBeofre" class="text-danger"></span>
+      </div>
+      <br />
+   </div>
+   @if (Model.VersionId >= (int)Enums.ActivityVersions.Sprint7Activities)
+   {
+      <div class="col-12">
+         <h4 class=" text-primary">تقييم العروض  </h4>
+      </div>
+
+      <div class="col-12">
+         <div class="form-group bmd-form-group">
+            <label asp-for="OffersEvaluationCriteria" class="label bmd-label-static noSpecial"> </label>
+            <input asp-for="OffersEvaluationCriteria" class="form-control" onchange="return blockSpecialChar(event)" />
+            <span asp-validation-for="OffersEvaluationCriteria" class="text-danger"></span>
+         </div>
+         <div class="h6 text-danger"></div>
+
+      </div>
+      <div class="col-12">
+         <div class="form-group bmd-form-group">
+            <label asp-for="OffersChecking" class="label bmd-label-static noSpecial"> </label>
+            <input asp-for="OffersChecking" class="form-control" onchange="return blockSpecialChar(event)" />
+            <span asp-validation-for="OffersChecking" class="text-danger"></span>
+         </div>
+         <div class="h6 text-danger"></div>
+
+      </div>
+
+   }
+   <div class="col-12">
+      <h4 class=" text-primary">توقيع العقد </h4>
+   </div>
+
+   <div class="col-12">
+      <div class="form-group bmd-form-group">
+         <label asp-for="AllowedOfferSiningDays" class="label bmd-label-static noSpecial"> </label><span class="text-danger">*</span>
+         <input asp-for="AllowedOfferSiningDays" class="form-control" onchange="return blockSpecialChar(event)" />
+         <span asp-validation-for="AllowedOfferSiningDays" class="text-danger"></span>
+      </div>
+      <div class="h6 text-danger">الفترة المتاحة بالايام لتوقيع العقد بعد تقديم الضمان الابتدائي من تاريخ الانتظار</div>
+
+   </div>
+
+   <div class="col-12">
+      <h4 class=" text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WritePrice  </h4>
+   </div>
+   <div class="col-12">
+      <div class="form-group bmd-form-group">
+         <label asp-for="WritePrice" class="label bmd-label-static noSpecial"> </label>
+         <textarea id="txtWritePrice" asp-for="WritePrice" class="form-control" rows="6"> </textarea>
+      </div>
+      <div class="h6 text-danger">يحق للجهة حذف أو تعديل هذا الجزء من الفقرة</div>
+      <button class="btn btn-sm btn-default" type="button" onclick="restoreWritePriceText()">استرجاع النص الافتراضي</button>
+   </div>
+   <div class="col-12 my-3">
+      <hr />
+   </div>
+
+</div>
+<div class="row">
+   <div class="col mt-3">
+      <button class="btn btn-default" type="button" onclick="prevTab()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+      <button class="btn btn-primary pull-right" id="btnAddEditPreparingOffers" type="button">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveContinue</button>
+   </div>
+</div>

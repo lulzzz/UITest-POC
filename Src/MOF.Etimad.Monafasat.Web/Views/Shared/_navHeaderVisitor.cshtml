@@ -1,0 +1,92 @@
+@using Microsoft.Extensions.Options;
+@inject IOptionsSnapshot<RootConfiguration> rootConfiguration;
+@{
+    string fullname = null;
+    if (!true.Equals(ViewData["signed-out"]))
+    {
+       fullname = Context.User.Claims.FirstOrDefault(f => f.Type == "fullname")?.Value;
+    }
+    var _rootConfiguration = rootConfiguration.Value;
+    bool showOldMonafasatLink = _rootConfiguration.OldMonafasatConfiguration.ShowLink;
+    string oldMonafasatURL = _rootConfiguration.OldMonafasatConfiguration.VisitorLinkUrl;
+}
+@{ var isArabic = !Context.Request.Cookies.ContainsKey("language") || Context.Request.Cookies["language"] == "ar-SA"; }
+<nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg bmd-drawer-f-l bmd-drawer-overlay d-print-none" color-on-scroll="50" id="sectionsNav">
+   <div class="container">
+      <div class="p-0 col-1 navbar-translate">
+         <button class="navbar-toggler pull-left" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"></span>
+         </button>
+         <a class="padd0 navbar-brand pull-left mr-auto" href="@Url.Action("RedirectToEtimad","Account")">
+            <svg style="width: 100px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 150 78">
+               <defs>
+                  <style type="text/css" xmlns="http://www.w3.org/2000/svg">
+                     .b {
+                        fill: #29ad6f;
+                     }
+                     .c {
+                        fill: #00665e;
+                     }
+                     .navbar-transparent .b {
+                        fill: rgb(255, 255, 255);
+                     }
+                  </style>
+                  <clipPath id="b">
+                     <rect width="150" height="78" />
+                  </clipPath>
+               </defs>
+               @await Html.PartialAsync("~/Views/Shared/_Logo.cshtml")
+            </svg>
+         </a>
+      </div>
+      <div class="collapse navbar-collapse">
+         <ul class="navbar-nav ml-auto">
+            <li class="dropdown nav-item" id="menuAllSuppliersTendersForVisitor">
+               <a href="/Tender/AllTendersForVisitor" class="nav-link">
+                  <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AllTenders
+               </a>
+            </li>
+            <li class="dropdown nav-item" id="menuPreQualifications">
+               <a href="/Qualification/QualificationsForVisitor" class="nav-link">
+                  <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Qualification
+               </a>
+            </li>
+            <li class="dropdown nav-item" id="menuVisitorAnnouncements">
+               <a href="/Announcement/AllVisitorAnnouncements" class="nav-link">
+                  <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AllAnnouncement
+               </a>
+            </li>
+            <li class="dropdown nav-item" id="menuAllSuppliersSupplierTemplates">
+               <a href="/AnnouncementSuppliersTemplate/AllSupplierAnnouncementSupplierTemplates" class="nav-link">
+                  <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.AnnouncementSuppliersTemplate
+               </a>
+            </li>
+            @if (showOldMonafasatLink)
+            {
+               <li class="dropdown nav-item d-xl-none d-lg-none d-md-none d-sm-none">
+                  <a href="@oldMonafasatURL" class=" nav-link ">
+                     <i class="material-icons">link</i>
+                     الانتقال إلى نظام المنافسات القديم
+                  </a>
+               </li>
+            }
+         </ul>
+      </div>
+      <div class="left-controls pull-right">
+         <div class="btn-group">
+            @if (showOldMonafasatLink)
+            {
+               <a href="@oldMonafasatURL" class="btn btn-outline-primary btn-link btn-sm d-none d-sm-block" style="border-color:#fff; border-radius:4px;">
+                  <i class="material-icons">link</i> 
+                  الانتقال إلى نظام المنافسات القديم
+               </a>
+            }
+            <a class="btn btn-primary btn-link btn-sm" href="/Dashboard/Index">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Login</a>
+         </div>
+      </div>
+   </div>
+</nav>
+

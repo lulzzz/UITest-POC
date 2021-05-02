@@ -1,0 +1,299 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderValueToTypesModel
+@{
+    ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderValueToTypesReport;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</li>
+      </ol>
+   </nav>
+}
+
+@section pagecontrols{
+   <div class="dropdown">
+      <span data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search<"><button id="searchBtnColaps" class="btn btn-outline-primary btn-link btn-just-icon" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search"><i class="material-icons">search</i></button></span>
+
+
+   </div>
+}
+<div class="clearfix"></div>
+<form class="form">
+
+   <div class="collapse" id="Search">
+      <div class="card card-body">
+         <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group has-success bmd-form-group">
+                  <label for="statusList" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency</label>
+                  <select data-live-search="false" id="agencyId" class="selectpicker" data-style="select-with-transition" v-model="AgencyId">
+                     <option value=""> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectAgency</option>
+                     <option value="1">1</option>
+                     <option value="2">2</option>
+                     <option value="3">3</option>
+                     <option value="4">4</option>
+                  </select>
+               </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group has-success bmd-form-group">
+                  <label for="statusList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyBranch</label>
+                  <select data-live-search="false" id="agencyBeanchId" class="selectpicker" data-style="select-with-transition" v-model="AgencyBeanchId">
+                     <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectAgencyBranch</option>
+                     <option value="1">1</option>
+                     <option value="2">2</option>
+                     <option value="3">3</option>
+                     <option value="4">4</option>
+                  </select>
+               </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group form-check etd-calendar-group">
+                  <label for="datepick" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SubmtionDate </label>
+                  <div class="input-group-prepend">
+                     <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="FromCreatedDate" id="fromCreatedDate" placeholder="من">
+                     <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask m-1" name="ToCreatedDate" id="toCreatedDate" placeholder="إلى">
+                  </div>
+               </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group has-success bmd-form-group">
+                  <label for="statusList" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectCondtionsBookletPrice</label>
+                  <select data-live-search="false" id="conditionsBookletPrice" class="selectpicker" data-style="select-with-transition" v-model="ConditionsBookletPrice">
+                     <option value=""> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SelectCondtionsBookletPrice</option>
+                     <option value="@((int)Enums.ConitionalBookletPriceList.LessThanMilion)">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LessThanMilion</option>
+                     <option value="@((int)Enums.ConitionalBookletPriceList.MoreThanMilion)">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MoreThanMilion </option>
+                     <option value="@((int)Enums.ConitionalBookletPriceList.MoreThanFifeMilion)"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MoreThanFiveMilion</option>
+                     <option value="@((int)Enums.ConitionalBookletPriceList.MoreThanTenMilion)">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MoreThanTenMilion</option>
+                     <option value="@((int)Enums.ConitionalBookletPriceList.MoreThanFiftyMilion)">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MoreThanFiftyMilion</option>
+                  </select>
+               </div>
+            </div>
+         </div>
+         <div class="input-group-prepend pull-left etd-search-btn col-md-6">
+            <button type="button" class="btn btn-primary btn-block text-center btn-sm" id="searchBtn" name="button">
+               <i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+            </button>
+            <button type="reset" class="btn btn-block text-center btn-sm" name="button" @@click="clear">
+               <i class="material-icons">close</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+            </button>
+         </div>
+         <input type="hidden" id="hdnto" />
+         <input type="hidden" id="hdnfrom" />
+      </div>
+   </div>
+
+
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-md-8 col-sm-12 col-xs-12">
+               <div id="container" style="width: 100%;">
+                  <canvas id="canvas"></canvas>
+               </div>
+            </div>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+               <div class="row">
+                  <div class="col-md-12 col-sm-6 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-12 etd-item-title text-center">
+
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PublicTendersValue
+                              </div>
+                              <div class="col-12 etd-item-info text-center h4">
+                                 <span id="publicTenderValue"></span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+                  <div class="col-md-12 col-sm-6 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-12 etd-item-title text-center">
+
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DirectPurchaseTendersValue
+                              </div>
+                              <div class="col-12 etd-item-info text-center h4">
+                                 <span id="directPurchaseValue"></span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+
+
+
+            </div>
+         </div>
+
+      </div>
+   </div>
+
+
+
+</form>
+@section scripts{
+   <script src="~/javascriptUtils/DateConverterUtil.js"></script>
+   <script>
+      $(document).ready(function () {
+         GetData();
+      })
+
+      $("#searchBtn").on("click", function () {
+         GetData();
+      });
+
+      function GetData() {
+         var GregorianStart;
+         var GregorianEnd;
+         var startDate = "";
+         var endDate = "";
+         if ($("#fromCreatedDate").val() != "") {
+            var i = $("#fromCreatedDate").val().split('/');
+            if ($('input[name="cb_from"]:checked').length > 0) {
+               $("#hdnfrom").val(i[0] + ',' + i[1] + ',' + i[2] + ',' + 'G');
+               startDate = $("#fromCreatedDate").val();
+            }
+            else {
+               $("#hdnfrom").val(i[0] + ',' + i[1] + ',' + i[2] + ',' + 'H');
+               startDate = convertUmmalquraToGregorian($("#fromCreatedDate").val());
+            }
+
+            var GregorianStart = new Date(startDate);
+
+         }
+
+         if ($("#toCreatedDate").val() != "") {
+            var x = $("#toCreatedDate").val().split('/');
+            if ($('input[name="cb_to"]:checked').length > 0) {
+               $("#hdnto").val(x[0] + ',' + x[1] + ',' + x[2] + ',' + 'G');
+               endDate = $("#toCreatedDate").val();
+            }
+            else {
+               $("#hdnto").val(x[0] + ',' + x[1] + ',' + x[2] + ',' + 'H');
+               endDate = convertUmmalquraToGregorian($("#toCreatedDate").val());
+            }
+            var GregorianEnd = new Date(endDate)
+         }
+
+         if (startDate != "" && endDate != "") {
+
+
+            if (GregorianStart > GregorianEnd) {
+               AlertFun('تاريخ النهاية يجب ان ]كون أكبر من تاريخ البداية', 'danger');
+
+               return false;
+            }
+         }
+         var queryString = '';
+         queryString = 'AgencyId=' + $("#agencyId").val() + '&AgencyBeanchId=' + $("#agencyBeanchId").val() + '&FromCreatedDateString=' + $("#hdnfrom").val() + '&ToCreatedDateString=' + $("#hdnto").val() + '&ConditionsBookletPrice=' + $("#conditionsBookletPrice").val();
+         $.ajax({
+            type: "Get",
+            url: "/Reports/TenderValuesToTypesReportAsync?" + queryString,
+            //data: JSON.stringify(obj),
+            //dataType: 'json',
+            //contentType: 'application/json'
+         }).done(function (data) {
+            $("#publicTenderValue").text(data.publicTendersValue);
+            $("#directPurchaseValue").text(data.directPurchaseValue);
+            CharData(data.publicTendersValue, data.directPurchaseValue)
+         }).fail(function (e) {
+            alert("fail");
+            //$('#LoadingSite').fadeOut();
+         });
+      }
+
+      function CharData(publicTenders, directPurchaseValue) {
+
+         var color = Chart.helpers.color;
+         var barChartData = {
+            //labels: ['شراء مباشر', 'منافسة عامة'],
+            datasets: [{
+               label: 'شراء مباشر',
+               backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
+               borderColor: window.chartColors.green,
+               borderWidth: 1,
+               data: [
+                  publicTenders
+             //      parseFloat($("#publicTenderValue").text())
+               ]
+            },
+            {
+               label: 'منافسة عامة',
+               backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+               borderColor: window.chartColors.blue,
+               borderWidth: 1,
+               data: [
+                  directPurchaseValue
+                //  parseFloat($("#directPurchaseValue").text())
+               ]
+            }]
+
+         };
+
+         var directvalue = parseFloat($("#publicTenderValue").text())
+      var ctx = document.getElementById('canvas').getContext('2d');
+      window.myBar = new Chart(ctx, {
+         type: 'bar',
+         data: barChartData,
+         options: {
+            responsive: true,
+            legend: {
+               position: 'top',
+            },
+            title: {
+               display: true,
+               text:'تقرير قيمة المنافسات بالنسبه لنوعها'
+            }
+         }
+      });
+
+      };
+    
+
+   </script>
+}
+@*<script type="text/javascript">
+      var Tender = new Vue({
+         el: '#TenderGrid',
+         data: {
+            Tenders:[],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 4,
+            resource_url: '/Tender/IndexPagingAsync',
+         },
+         methods: {
+
+            updateResource: function (data) {
+               this.Tenders = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+         }
+      })
+      function GetTenderData() {
+         $.ajax({
+            type: "Get",
+            url: "/Tender/SaveSupplierAttachments",
+            data: JSON.stringify(obj),
+            dataType: 'json',
+            contentType: 'application/json'
+         }).done(function (data) {
+            app2.attachments = data;
+            $('#myModal2').hide();
+            $('#LoadingSite').fadeOut();
+         }).fail(function (e, s, r) {
+            //alert("fail");
+            $('#LoadingSite').fadeOut();
+         });
+      }
+   </script>*@

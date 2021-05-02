@@ -1,0 +1,196 @@
+@model MOF.Etimad.Monafasat.ViewModel.BranchCommitteeModel
+
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AssignCommittees;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb"> 
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Branch")">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Branches</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.AssignCommittees</li>
+      </ol>
+   </nav>
+}
+<form method="POST">
+   <div class="row" id="divBranches">
+      <div class="modal fade" id="DeleteConfirmationModal" tabindex="-1" role="dialog">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title">
+                     @MOF.Etimad.Monafasat.Resources.BranchResources.Messages.ConfirmDeletion
+                  </h5>
+                  <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                     <i class="material-icons">clear</i>
+                  </button>
+               </div>
+               <div class="modal-body">
+                  <p>
+                     @MOF.Etimad.Monafasat.Resources.BranchResources.Messages.ConfirmSupplierDeletion
+                     <input type="hidden" name="hiddenValueCommittee" id="hiddenValueCommittee" value="" />
+                  </p>
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-primary btn-sm" id="SaveModel" onclick="confirmDelete()">    @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Deleted    </button>
+                  <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Cancel</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <input type="hidden" id="BranchId" name="BranchId" value="@Model.BranchId" />
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+         <div class="card">
+            <div class="card-body">
+               <div>
+                  <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.BranchDetails</h4>
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.BranchName
+                           </div> <div class="col-8 etd-item-info"><span>@(Model.BranchName)</span></div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+               <div>
+                  <div class="" id="divUserName">
+                     <div class="form-group bmd-form-group">
+                        <label asp-for="CommitteeName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.CommitteeName</label><span class="text-danger">*</span>
+
+                        <input type="hidden"  asp-for="CommitteeIdsString" v-model="CommitteeIds" />
+                        <select data-live-search="true"  multiple v-model="selectedCommittees"
+                                asp-items="@(new SelectList(Model.Committees,"CommitteeId","CommitteeName"))" class="selectpicker" data-style="select-with-transition" data-size="7">
+                           <option value="">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseChoose </option>
+                        </select>
+                        <span asp-validation-for="CommitteeIdsString" class="text-danger"></span>
+                     </div>
+                  </div>
+                  <div>
+                     <button type="submit" class=" btn btn-primary btn-sm">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+                     </button>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+         <div class="card">
+            <table id="CommitteeTable" class="table table-striped text-center" aria-describedby="Committees Table">
+               <thead class="text-center">
+                  <tr>
+                     <th scope="col" class="text-center">#</th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.CommitteeName </th>
+                     <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Operations </th>
+                  </tr>
+               </thead>
+               <tbody class="text-center" v-if="branches && branches.length > 0">
+                  <tr v-for="(branch, index) in branches">
+                     <td class="text-center">
+                        {{index + 1}}
+                     </td>
+                     <td class="text-center">
+                        {{branch.name}}
+                     </td>
+                     <td class="text-center">
+                        <div style="text-align: center;">
+                           <button type="button" @@click=showDialog(branch.id) class="btn-sm btn btn-danger btn-round btn-just-icon"><i class="material-icons">remove</i><div class="ripple-container"></div></button>
+                        </div>
+                     </td>
+                  </tr>
+               </tbody>
+               <tbody v-else>
+                  <tr>
+                     <td colspan="9" class="text-center">
+                        <i class="text-primary material-icons" style="font-size:3rem">report</i>
+                        <br />
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+            <pagination :visible_pages="3" ref="vpaginator" :resource_url="committeeresource_url" @@update="updateCommitteeResource"></pagination>
+         </div>
+      </div>
+   </div>
+
+   <div>
+      <button class="btn btn-outline-primary btn-link pull-right" type="button" onclick="window.location = '@Url.Action("Index", "Branch")'">
+         @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BackButton
+         <div class="ripple-container"></div>
+      </button>
+      <div class="clearfix"></div>
+   </div>
+</form>
+<script>
+   function confirmDelete() {
+      Join.confirmDelete();
+   }
+</script>
+@section scripts {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+   var Join = new Vue({
+      el: '#divBranches',
+      data: {
+         branches: [],
+         CommitteeIds:[],
+            selectedCommittees: [],
+         totalCount: 0,
+         currentPage: 1,
+         enquiryIdString: '',
+         pageSize: 10,
+            committeeresource_url: "/Branch/GetBranchCommitteesAsync?branchId=@Model.BranchId",
+      },
+      watch: {
+         selectedCommittees: function (val) {
+            this.CommitteeIds = val;
+         }
+      },
+      methods: {
+         updateCommitteeResource: function (data) {
+            this.branches = data;
+            this.totalCount = this.totalCount;
+            this.currentPage = this.$refs.vpaginator.currentPage;
+            this.pageSize = this.$refs.vpaginator.pageSize;
+         },
+         removeCommittee: function (committeeid,  index) {
+            this.branches.splice(index, 1);
+            var token = $('input[name=__RequestVerificationToken]').val();
+            $.post('/Branch/RemoveAssignedCommitteeAsync', { committeeid: committeeid,branchId:@Model.BranchId, __RequestVerificationToken: token }).done(function (result) {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success)
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+               });
+            setTimeout(function () {
+               location.reload();  //Refresh page
+            }, 2000);
+         }, confirmDelete: function () {
+            $('#DeleteConfirmationModal').modal('hide');
+            var committeeid = $(".modal-body #hiddenValueCommittee").val();
+            $(".modal-body #hiddenValueCommittee").val("");
+            var token = $('input[name=__RequestVerificationToken]').val();
+            $.post('/Branch/RemoveAssignedCommitteeAsync', { committeeid: committeeid,branchId:@Model.BranchId, __RequestVerificationToken: token }).done(function (result) {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success)
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+               });
+            setTimeout(function () {
+               location.reload();  //Refresh page
+            }, 2000);
+         }, showDialog: function (committeeId, ) {
+            if (typeof (committeeId) !== "undefined" && committeeId !== "") {
+               $("#DeleteConfirmationModal #hiddenValueCommittee").val(committeeId);
+               $("#DeleteConfirmationModal").modal("show");
+            }
+         },
+      }
+   })
+   </script>
+}

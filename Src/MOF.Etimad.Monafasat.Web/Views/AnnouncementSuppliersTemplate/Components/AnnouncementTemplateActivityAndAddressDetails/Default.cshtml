@@ -1,0 +1,196 @@
+@model MOF.Etimad.Monafasat.ViewModel.AnnouncementTemplateActivityAndAreaDetailsModel
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementTemplateDetails;
+   var tenderExecutionPlace = (Model != null && Model.InsideKSA != null) ? (Model.InsideKSA == true ? MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InsideKSA : @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OutsideKSA) : "";
+
+}
+<style>
+   .agencyLogo {
+      border-radius: 100%;
+      border: 2px solid #ccc;
+      padding: 5px;
+      width: 56px;
+   }
+</style>
+<div class="row"> 
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <div class="">
+         <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Addresses</h4>
+      </div>
+      <div class="">
+         <ul class="list-group form-details-list">
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ExecutionPlace
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @tenderExecutionPlace
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @if (Model.Areas != null && Model.Areas.Count > 0)
+                     {
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Areas
+                     }
+                     else
+                     {
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Countries
+                     }
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <ol>
+                        @if (Model.Areas != null && Model.Areas.Count > 0)
+                        {
+                           @foreach (var areaItem in Model.Areas)
+                           {
+                              <li> @areaItem.Name</li>
+                           }
+                        }
+                        else
+                        {
+                           @if (Model.Countries != null && Model.Countries.Count > 0)
+                           {
+                              @foreach (var countryItem in Model.Countries)
+                              {
+                                 <li> @countryItem.Name</li>
+                              }
+                           }
+                        }
+                     </ol>
+                  </div>
+               </div>
+            </li>
+
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EstablishingActions
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <ol>
+                        @if (Model.ConstructionWorks != null)
+                        {
+                           @foreach (var constructionWorkItem in Model.ConstructionWorks)
+                           {
+                              <li> @constructionWorkItem.Name</li>
+                           }
+                        }
+                     </ol>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MaintenanceOperationActions
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <ol>
+                        @if (Model.MaintenanceOperationActions != null)
+                        {
+                           @foreach (var maintenanceWorkItem in Model.MaintenanceOperationActions)
+                           {
+                              <li> @maintenanceWorkItem.Name</li>
+                           }
+                        }
+                     </ol>
+                  </div>
+               </div>
+            </li>
+
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderActivity
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <ol>
+                        @if (Model.TenderActivities != null)
+                        {
+                           @foreach (var activityItem in Model.TenderActivities)
+                           {
+                              <li>@activityItem.Name</li>
+                           }
+                        }
+                     </ol>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.ActivityDescription
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @Model.ActivityDescription
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.Details
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @Model.Details
+                     </span>
+                  </div>
+               </div>
+            </li>
+
+         </ul>
+      </div>
+   </div>
+   @if (!User.IsInRole(RoleNames.supplier) && Model.IsCreatedByAgncy)
+   {
+
+
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <div class="">
+         <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentsAttachments</h4>
+      </div>
+      <div class="">
+         <ul class="list-group form-details-list">
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.SupportingDocuments
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     @if (Model.Attachments.Count > 0)
+                     {
+                        @foreach (var item in Model.Attachments)
+                        {
+                           <a href="#" onclick="RedirectURL('@item.FileNetReferenceId','@item.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                              @item.Name
+                           </a>
+                        }
+                     }
+                     else
+                     {
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.Messages.NoDataFound
+                     }
+                  </div>
+               </div>
+            </li>
+         </ul>
+      </div>
+   </div>
+   }
+
+</div>
+<script>
+ function RedirectURL(ids, names) {
+      window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+   }
+
+</script>

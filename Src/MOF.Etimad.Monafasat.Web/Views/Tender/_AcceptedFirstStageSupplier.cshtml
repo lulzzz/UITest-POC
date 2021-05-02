@@ -1,0 +1,53 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+
+<div class="card">
+   <div class="" id="SuppliersGrid" v-cloak>
+      <div class="card-body">
+         <div class="tab-content tab-space col-12">
+            <div class="tab-pane active show" id="regSupplier">
+               <div class="row">
+                  <div class="col-lg-12  col-md-12 col-sm-12 col-xs-12">
+                     <h5 class="text-primary">@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendInvitationsForAcceptedSuppliersInTenderFirstStage)</h5>
+                     <div class="table-responsive" style="min-height:100px">
+                        <table id="InvitedSuppliersTable" class="table  table-striped text-center"    summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow" >
+                           <thead class="text-center">
+                              <tr>
+                                 <th scope="col" class="text-center">#</th>
+                                 <th scope="col" class="text-center">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)</th>
+                                 <th scope="col" class="text-center">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)</th>
+                              </tr>
+                           </thead>
+                           <tbody class="text-center" v-if="QualifiedSuppliers && QualifiedSuppliers.length > 0">
+                              <tr v-for="(Supplier, $index) in QualifiedSuppliers">
+                                 <td class="text-center" data-label="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)"> {{$index +1}} </td>
+                                 <td class="text-center" data-label="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)"> {{Supplier.crName}} </td>
+                                 <td class="text-center" data-label="@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)"> {{Supplier.crNumber}} </td>
+                              </tr>
+                           </tbody>
+                           <tbody v-else>
+                              <tr>
+                                 <td colspan="9" class="text-center">
+                                    @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData)
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                        <pagination :visible_pages="3" ref="vpaginator" :resource_url="AcceptedFirstStageSuppliersResource_url" @@update="updateAcceptedFirstStageSuppliersResource"></pagination>
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-12 form-group">
+                     <button type="button" id="btnSendInvitationsForQualified" class="btn btn-primary" name="button" @@click="SendInvitationsForQualifiedSuppliers">
+                        @Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveSend)
+                        <div class="ripple-container"></div>
+                     </button>
+                     <button class="btn btn-default" id="btnPriviousYY">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+                  </div>
+                  @*<a class="btn btn-info text-left" href="TenderIndexUnderOperationsStage">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Continue</a>*@
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

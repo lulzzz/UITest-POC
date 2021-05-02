@@ -1,0 +1,402 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddPlaintRequest" xml:space="preserve">
+    <value>طلب التظلم</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>أيام</value>
+  </data>
+  <data name="DiscountAmount" xml:space="preserve">
+    <value>قيمة التخفيض</value>
+  </data>
+  <data name="ExtendOffersReason" xml:space="preserve">
+    <value>سبب طلب تمديد سريان العروض</value>
+  </data>
+  <data name="ExtendOffersValidity" xml:space="preserve">
+    <value>تمديد سريان العروض</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>ساعات</value>
+  </data>
+  <data name="NegotiationInfo" xml:space="preserve">
+    <value>معلومات التفاوض</value>
+  </data>
+  <data name="NegotiationReason" xml:space="preserve">
+    <value>سبب التفاوض</value>
+  </data>
+  <data name="NewOffersExpiryDate" xml:space="preserve">
+    <value>تاريخ انتهاء مدة سريان العروض الجديد</value>
+  </data>
+  <data name="OffersDuration" xml:space="preserve">
+    <value>مدة سريان العروض</value>
+  </data>
+  <data name="PreviewOffers" xml:space="preserve">
+    <value>معاينة</value>
+  </data>
+  <data name="PlaintReason" xml:space="preserve">
+    <value>سبب تقديم التظلم</value>
+  </data>
+  <data name="ReductionLetterrefId" xml:space="preserve">
+    <value>خطاب التخفيض</value>
+  </data>
+  <data name="ReplyReceivingDurationDays" xml:space="preserve">
+    <value>مدة استقبال الرد (ايام)</value>
+  </data>
+  <data name="ReplyReceivingDurationTime" xml:space="preserve">
+    <value>مدة استقبال الرد (ساعات)</value>
+  </data>
+  <data name="SendToApprove" xml:space="preserve">
+    <value>إرسال للإعتماد</value>
+  </data>
+  <data name="SupplierExtendOfferDatesRequest" xml:space="preserve">
+    <value>طلب تأجيل تقديم العروض</value>
+  </data>
+  <data name="SupplierReplyPeriod" xml:space="preserve">
+    <value>مدة استقبال رد المورد</value>
+  </data>
+  <data name="SupplierReplyPeriodDays" xml:space="preserve">
+    <value>مدة استقبال رد المورد(أيام)</value>
+  </data>
+  <data name="SupplierReplyPeriodHours" xml:space="preserve">
+    <value>مدة استقبال رد المورد(ساعات)</value>
+  </data>
+  <data name="NegotiationFirstStage" xml:space="preserve">
+    <value>تفاوض مرحلة أولى</value>
+  </data>
+  <data name="DiscountPercentage" xml:space="preserve">
+    <value>نسبة التخفيض</value>
+  </data>
+  <data name="OfferAmount" xml:space="preserve">
+    <value>قيمة العرض</value>
+  </data>
+  <data name="OfferAmountDiscount" xml:space="preserve">
+    <value>القيمة بعد التخفيض</value>
+  </data>
+  <data name="RemainingPeriod" xml:space="preserve">
+    <value>المدة المتبقية</value>
+  </data>
+  <data name="RequestType" xml:space="preserve">
+    <value>نوع الطلب</value>
+  </data>
+  <data name="SupplierRelplyPeriod" xml:space="preserve">
+    <value>مدة استقبال الرد</value>
+  </data>
+  <data name="Agree" xml:space="preserve">
+    <value>موافق</value>
+  </data>
+  <data name="ConfirmAgreeDisAgree" xml:space="preserve">
+    <value>تأكيد  الرد على التخفيض</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>يوم</value>
+  </data>
+  <data name="Hour" xml:space="preserve">
+    <value>ساعة</value>
+  </data>
+  <data name="NotAgree" xml:space="preserve">
+    <value>غير موافق</value>
+  </data>
+  <data name="OfferInfo" xml:space="preserve">
+    <value>معلومات العرض</value>
+  </data>
+  <data name="TimeEnded" xml:space="preserve">
+    <value>لقد انتهى الوقت</value>
+  </data>
+  <data name="PlaintsNumber" xml:space="preserve">
+    <value>عدد طلبات التظلم</value>
+  </data>
+  <data name="PlaintRequestrReview" xml:space="preserve">
+    <value>مراجعة طلب تظلم</value>
+  </data>
+  <data name="PlaintDetails" xml:space="preserve">
+    <value>تفاصيل طلب التظلم</value>
+  </data>
+  <data name="StartNegotiation" xml:space="preserve">
+    <value>بدأ التفاوض</value>
+  </data>
+  <data name="DecidedProcedure" xml:space="preserve">
+    <value>الإجراء التصحيحى المتخذ</value>
+  </data>
+  <data name="EscalatePlaint" xml:space="preserve">
+    <value>تصعيد التظلم</value>
+  </data>
+  <data name="DeleteExtendOffersRequest" xml:space="preserve">
+    <value>حذف طلب سريان العروض</value>
+  </data>
+  <data name="EditExtendOffersRequest" xml:space="preserve">
+    <value>تعديل طلب سريان العروض</value>
+  </data>
+  <data name="ConfirmEditRequest" xml:space="preserve">
+    <value>تأكيد تعديل الطلب</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>اعتماد</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>رفض</value>
+  </data>
+  <data name="AllSuppliers" xml:space="preserve">
+    <value>جميع الموردين</value>
+  </data>
+  <data name="SpecificSuppliers" xml:space="preserve">
+    <value>موردين معينين</value>
+  </data>
+  <data name="Suppliers" xml:space="preserve">
+    <value>الموردين</value>
+  </data>
+  <data name="SuppliersLists" xml:space="preserve">
+    <value>قائمة الموردين المتقدمين</value>
+  </data>
+  <data name="EscalatedPlaintsNumber" xml:space="preserve">
+    <value> عدد طلبات تصعيد التظلم</value>
+  </data>
+  <data name="AgencyRequests" xml:space="preserve">
+    <value>طلبات الجهة</value>
+  </data>
+  <data name="AgencyRequestStatus" xml:space="preserve">
+    <value>حالة الطلب</value>
+  </data>
+  <data name="AgencyRequestType" xml:space="preserve">
+    <value>نوع الطلب</value>
+  </data>
+  <data name="SuppliersRequests" xml:space="preserve">
+    <value>طلبات الموردين</value>
+  </data>
+  <data name="CreateRequest" xml:space="preserve">
+    <value>إنشاء طلب</value>
+  </data>
+  <data name="ExtendOffersDates" xml:space="preserve">
+    <value>تأجيل عروض</value>
+  </data>
+  <data name="ExtendOfferValidity" xml:space="preserve">
+    <value>تمديد سريان العروض</value>
+  </data>
+  <data name="Inquiry" xml:space="preserve">
+    <value>استفسار</value>
+  </data>
+  <data name="Negotiate" xml:space="preserve">
+    <value>تفاوض</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="PleaseEnterRequestReason" xml:space="preserve">
+    <value>الرجاء إدخال سبب طلب تأجيل تقديم العروض</value>
+  </data>
+  <data name="ConfirmToSendRequest" xml:space="preserve">
+    <value>التأكيد على ارسال الطلب</value>
+  </data>
+  <data name="PleaseConfirmSendRequest" xml:space="preserve">
+    <value>الرجاء التاكيد على إرسال الطلب</value>
+  </data>
+  <data name="OffersValidityDays" xml:space="preserve">
+    <value>مدة سريان العروض (أيام)</value>
+  </data>
+  <data name="Plaint" xml:space="preserve">
+    <value>تظلم</value>
+  </data>
+  <data name="InitialGuarantee" xml:space="preserve">
+    <value>نسخة الضمان الابتدائي</value>
+  </data>
+  <data name="RequestDetails" xml:space="preserve">
+    <value>تفاصيل الطلب</value>
+  </data>
+  <data name="AmountAfterDiscount" xml:space="preserve">
+    <value>القيمة بعد التخفيض</value>
+  </data>
+  <data name="ModifyNegotiationItemModalTitle" xml:space="preserve">
+    <value>تعديل صنف </value>
+  </data>
+  <data name="EditInfo" xml:space="preserve">
+    <value>تعديل المعلومات</value>
+  </data>
+  <data name="FinishOperation" xml:space="preserve">
+    <value>انهاء العملية</value>
+  </data>
+  <data name="OffersAfterEdit" xml:space="preserve">
+    <value>ترتيب العروض  بعد التفاوض</value>
+  </data>
+  <data name="OffersBeforeEdit" xml:space="preserve">
+    <value>ترتيب العروض قبل التفاوض</value>
+  </data>
+  <data name="EstimatedValue" xml:space="preserve">
+    <value>القيمة التقديرية</value>
+  </data>
+  <data name="EstimatedValueLetters" xml:space="preserve">
+    <value>القيمة التقديرية (كتابة)</value>
+  </data>
+  <data name="PlaintEscalationReview" xml:space="preserve">
+    <value>مراجعة تصعيد طلب تظلم</value>
+  </data>
+  <data name="ExtendOfferDatesRequestReason" xml:space="preserve">
+    <value>سبب تأجيل تقديم العروض</value>
+  </data>
+  <data name="EscalationsRequests" xml:space="preserve">
+    <value>طلبات تصعيد التظلم</value>
+  </data>
+  <data name="EscalationsNumber" xml:space="preserve">
+    <value>عدد طلبات تصعيد التظلم</value>
+  </data>
+  <data name="ProjectNumber" xml:space="preserve">
+    <value>رقم المشروع /البرنامج / البند</value>
+  </data>
+  <data name="EscalationDate" xml:space="preserve">
+    <value>تاريخ تصعيد طلب التظلم</value>
+  </data>
+  <data name="PlaintRequestApplyDate" xml:space="preserve">
+    <value>تاريخ تقديم طلب التظلم</value>
+  </data>
+  <data name="DiscountRatio" xml:space="preserve">
+    <value>نسبة الخصم</value>
+  </data>
+  <data name="RequiredDisountRatio" xml:space="preserve">
+    <value>الرجاء ادخال نسبة مئويه صحيحه للخصم</value>
+  </data>
+  <data name="test" xml:space="preserve">
+    <value>ew</value>
+  </data>
+  <data name="Minute" xml:space="preserve">
+    <value>دقيقة</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>دقائق</value>
+  </data>
+  <data name="RejectionReason" xml:space="preserve">
+    <value>أدخل سبب الرفض</value>
+  </data>
+  <data name="EscalationStatus" xml:space="preserve">
+    <value>حالة تصعيد التظلم</value>
+  </data>
+  <data name="NegotiationSecondStage" xml:space="preserve">
+    <value>تفاوض مرحلة ثانية</value>
+  </data>
+  <data name="EscalationNotes" xml:space="preserve">
+    <value>ملاحظات تصعيد التظلم</value>
+  </data>
+  <data name="EscalationsRequest" xml:space="preserve">
+    <value>طلب تصعيد التظلم</value>
+  </data>
+  <data name="PlaintNotes" xml:space="preserve">
+    <value>ملاحظات التظلم</value>
+  </data>
+  <data name="DesiredOffersAmount" xml:space="preserve">
+    <value>القيمة المستهدفة للعروض</value>
+  </data>
+</root>

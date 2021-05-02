@@ -1,0 +1,16 @@
+pipeline{
+     agent {label 'build-agent'}  
+    stages{
+      
+        stage ('Build') {
+                
+              steps {
+                 bat """
+                    dotnet build ${WORKSPACE}/Src/MOF.Etimad.Monafasat.WebApi/MOF.Etimad.Monafasat.WebApi.csproj
+                    dotnet build ${WORKSPACE}/Src/MOF.Etimad.Monafasat.Web/MOF.Etimad.Monafasat.Web.csproj
+                 """
+              }
+          }
+
+    }
+}

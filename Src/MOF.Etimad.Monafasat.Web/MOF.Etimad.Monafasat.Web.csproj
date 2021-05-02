@@ -1,0 +1,1318 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+   <PropertyGroup>
+      <!-- Exclude the project from analysis -->
+      <SonarQubeExclude>true</SonarQubeExclude>
+   </PropertyGroup>
+
+   <PropertyGroup Label="Globals">
+      <SccProjectName>SAK</SccProjectName>
+      <SccProvider>SAK</SccProvider>
+      <SccAuxPath>SAK</SccAuxPath>
+      <SccLocalPath>SAK</SccLocalPath>
+      <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
+   </PropertyGroup>
+
+   <PropertyGroup>
+      <TargetFramework>netcoreapp3.1</TargetFramework>
+      <LangVersion>7.1</LangVersion>
+      <ApplicationIcon />
+      <OutputType>Exe</OutputType>
+      <StartupObject />
+      <AddRazorSupportForMvc>True</AddRazorSupportForMvc>
+      <PreserveCompilationReferences>true</PreserveCompilationReferences>
+      <PreserveCompilationContext>true</PreserveCompilationContext>
+      <UserSecretsId>f3222813-91da-4b97-84a2-c079ed3227ab</UserSecretsId>
+   </PropertyGroup>
+
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <Optimize>false</Optimize>
+      <DebugType>full</DebugType>
+      <DebugSymbols>true</DebugSymbols>
+   </PropertyGroup>
+
+   <ItemGroup>
+      <Compile Remove="Authorization\APIs\**" />
+      <Compile Remove="Authorization\Extensions\**" />
+      <Compile Remove="EntitiesProxy\**" />
+      <Compile Remove="Views\Offer\Components\NegotiationQuantityTablesViewComponent\**" />
+      <Compile Remove="Views\Tender\Components\MoreBasicDetails\**" />
+      <Compile Remove="Views\Tender\Components\OfferDetails - Copy\**" />
+      <Compile Remove="Views\Tender\Components\InvitationBillDetailsViewComponenet\**" />
+      <Compile Remove="wwwroot\css\**" />
+      <Compile Remove="wwwroot\Etimad-UI\assets\demo\**" />
+      <Compile Remove="wwwroot\Etimad-UI\assets\img\**" />
+      <Compile Remove="wwwroot\Etimad-UI\assets\js\fusioncharts\**" />
+      <Compile Remove="wwwroot\Etimad-UI\assets\lib\**" />
+      <Compile Remove="wwwroot\Etimad-UI\assets\vendor\DateTimePicker\**" />
+      <Compile Remove="wwwroot\fonts\**" />
+      <Compile Remove="wwwroot\img\**" />
+      <Compile Remove="wwwroot\javascriptUtils\**" />
+      <Compile Remove="wwwroot\lib\**" />
+      <Compile Remove="wwwroot\Temp\**" />
+      <Content Remove="Authorization\APIs\**" />
+      <Content Remove="Authorization\Extensions\**" />
+      <Content Remove="EntitiesProxy\**" />
+      <Content Remove="Views\Offer\Components\NegotiationQuantityTablesViewComponent\**" />
+      <Content Remove="Views\Shared\Components\AwardingDetails\**" />
+      <Content Remove="Views\Shared\Components\Tender\**" />
+      <Content Remove="Views\Tender\Components\MoreBasicDetails\**" />
+      <Content Remove="Views\Tender\Components\OfferDetails - Copy\**" />
+      <Content Remove="Views\Tender\Components\InvitationBillDetailsViewComponenet\**" />
+      <Content Remove="wwwroot\css\**" />
+      <Content Remove="wwwroot\Etimad-UI\assets\demo\**" />
+      <Content Remove="wwwroot\Etimad-UI\assets\img\**" />
+      <Content Remove="wwwroot\Etimad-UI\assets\js\fusioncharts\**" />
+      <Content Remove="wwwroot\Etimad-UI\assets\lib\**" />
+      <Content Remove="wwwroot\Etimad-UI\assets\vendor\DateTimePicker\**" />
+      <Content Remove="wwwroot\fonts\**" />
+      <Content Remove="wwwroot\img\**" />
+      <Content Remove="wwwroot\javascriptUtils\**" />
+      <Content Remove="wwwroot\lib\**" />
+      <Content Remove="wwwroot\Temp\**" />
+      <EmbeddedResource Remove="Authorization\APIs\**" />
+      <EmbeddedResource Remove="Authorization\Extensions\**" />
+      <EmbeddedResource Remove="EntitiesProxy\**" />
+      <EmbeddedResource Remove="Views\Offer\Components\NegotiationQuantityTablesViewComponent\**" />
+      <EmbeddedResource Remove="Views\Shared\Components\AwardingDetails\**" />
+      <EmbeddedResource Remove="Views\Shared\Components\Tender\**" />
+      <EmbeddedResource Remove="Views\Tender\Components\MoreBasicDetails\**" />
+      <EmbeddedResource Remove="Views\Tender\Components\OfferDetails - Copy\**" />
+      <EmbeddedResource Remove="Views\Tender\Components\InvitationBillDetailsViewComponenet\**" />
+      <EmbeddedResource Remove="wwwroot\css\**" />
+      <EmbeddedResource Remove="wwwroot\Etimad-UI\assets\demo\**" />
+      <EmbeddedResource Remove="wwwroot\Etimad-UI\assets\img\**" />
+      <EmbeddedResource Remove="wwwroot\Etimad-UI\assets\js\fusioncharts\**" />
+      <EmbeddedResource Remove="wwwroot\Etimad-UI\assets\lib\**" />
+      <EmbeddedResource Remove="wwwroot\Etimad-UI\assets\vendor\DateTimePicker\**" />
+      <EmbeddedResource Remove="wwwroot\fonts\**" />
+      <EmbeddedResource Remove="wwwroot\img\**" />
+      <EmbeddedResource Remove="wwwroot\javascriptUtils\**" />
+      <EmbeddedResource Remove="wwwroot\lib\**" />
+      <EmbeddedResource Remove="wwwroot\Temp\**" />
+      <None Remove="Authorization\APIs\**" />
+      <None Remove="Authorization\Extensions\**" />
+      <None Remove="EntitiesProxy\**" />
+      <None Remove="Views\Offer\Components\NegotiationQuantityTablesViewComponent\**" />
+      <None Remove="Views\Shared\Components\AwardingDetails\**" />
+      <None Remove="Views\Shared\Components\Tender\**" />
+      <None Remove="Views\Tender\Components\MoreBasicDetails\**" />
+      <None Remove="Views\Tender\Components\OfferDetails - Copy\**" />
+      <None Remove="Views\Tender\Components\InvitationBillDetailsViewComponenet\**" />
+      <None Remove="wwwroot\css\**" />
+      <None Remove="wwwroot\Etimad-UI\assets\demo\**" />
+      <None Remove="wwwroot\Etimad-UI\assets\img\**" />
+      <None Remove="wwwroot\Etimad-UI\assets\js\fusioncharts\**" />
+      <None Remove="wwwroot\Etimad-UI\assets\lib\**" />
+      <None Remove="wwwroot\Etimad-UI\assets\vendor\DateTimePicker\**" />
+      <None Remove="wwwroot\fonts\**" />
+      <None Remove="wwwroot\img\**" />
+      <None Remove="wwwroot\javascriptUtils\**" />
+      <None Remove="wwwroot\lib\**" />
+      <None Remove="wwwroot\Temp\**" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <Compile Remove="Config.cs" />
+      <Compile Remove="Helpers\ADHelper.cs" />
+      <Compile Remove="Helpers\Extensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\AjaxOptions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\CustomHtmlGenerator.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\EncryptionHelper.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\ButtonExtentions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\CaptchaExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\ChartExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\CheckBoxExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\ColumnExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\Extensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\GoogleMapsExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\HtmlContentExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\HtmlHelperExt.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\LinkExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\ModalExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\RadioButtonExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\RowExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\SecureListExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\SelectExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\SignatureExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\TabsExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\TextInputExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\Extensions\WizardExtensions.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\InsertionMode.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\DefaultTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\DisposableTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\FormDisplayTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\InputGroupAddonTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\InputGroupTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\ItemsRowTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\ModalBodyTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\ModalContainerTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\ModalContentTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\ModalFooterTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\ModalHeaderTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\ModalTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\ParagraphTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\SpanTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\TabNavBarHeaderTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\TabNavBarTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\TabPanelsContainerTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\TabPanelTagBuilder.cs" />
+      <Compile Remove="Helpers\HtmlHelpers\TagBuilders\TabsContainerTagBuilder.cs" />
+      <Compile Remove="Helpers\MCI-Alerts.cs" />
+      <Compile Remove="Infrastructure\AppClaimsPrincipal.cs" />
+      <Compile Remove="Infrastructure\CustomAuthMiddleware.cs" />
+      <Compile Remove="Infrastructure\HttpContextExtensions.cs" />
+      <Compile Remove="Infrastructure\HttpRequestExtensions.cs" />
+      <Compile Remove="Infrastructure\JSONReader.cs" />
+      <Compile Remove="Infrastructure\MemoryCacheSessionStore.cs" />
+      <Compile Remove="Infrastructure\XDOpenIdAuthHandler.cs" />
+      <Compile Remove="ViewComponents\Offer\ApplyOfferComponent.cs" />
+      <Compile Remove="ViewComponents\Offer\BasicOfferTenderInfo.cs" />
+      <Compile Remove="ViewComponents\Tender\MoreBasicDetailsViewComponent.cs" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <Content Remove="Views\Announcement\AnnouncementSupplierDetails.cshtml" />
+      <Content Remove="Views\Committee\JoinCommitteeAndTenders.cshtml" />
+      <Content Remove="Views\CommunicationRequest\CreateSecondStageNegotiation.cshtml" />
+      <Content Remove="Views\ManageVendors\DetailsAsync.cshtml" />
+      <Content Remove="Views\Offer\Components\ApplyOfferComponent\Default.cshtml" />
+      <Content Remove="Views\Offer\OfferFilesAsync - Copy.cshtml" />
+      <Content Remove="Views\Offer\_ApplyOfferQuantitiyTable.cshtml" />
+      <Content Remove="Views\Qualification\Components\PreQualificationDates\Default.cshtml" />
+      <Content Remove="Views\Qualification\DetailsPartials\_DetailsAddressesStepContent.cshtml" />
+      <Content Remove="Views\Qualification\DetailsPartials\_DetailsBasicStepContent.cshtml" />
+      <Content Remove="Views\Qualification\search\_IndexSupplierSearchForm - Copy.cshtml" />
+      <Content Remove="Views\Qualification\search\_IndexSupplierSearchForm.cshtml" />
+      <Content Remove="Views\Qualification\search\_IndexUnderOperationSearchForm - Copy.cshtml" />
+      <Content Remove="Views\Shared\_Layout.cshtml" />
+      <Content Remove="Views\Tender\AllTenders.cshtml" />
+      <Content Remove="Views\Tender\CreateAsync.cshtml" />
+      <Content Remove="Views\Tender\DetailsPartials\_UnitManagerApproval.cshtml" />
+      <Content Remove="Views\Tender\DetailsPartials\_UnitSecretaryApproval.cshtml" />
+      <Content Remove="Views\Tender\DetailsPartials\_UnitSecretaryLevelTwoApproval.cshtml" />
+      <Content Remove="Views\Tender\dsd.cshtml" />
+      <Content Remove="Views\Tender\EstimationValue.cshtml" />
+      <Content Remove="Views\Tender\MyTendersAsync.cshtml" />
+      <Content Remove="Views\Tender\Partials\_OfferDetailsForTenderOffers.cshtml" />
+      <Content Remove="Views\Tender\TenderCountToTypesReport.cshtml" />
+      <Content Remove="Views\Tender\TenderStageIndex.cshtml" />
+      <Content Remove="Views\Tender\TenderValuesToTypesReport.cshtml" />
+      <Content Remove="Views\Tender\_IndexTenderActions.cshtml" />
+      <Content Remove="wwwroot\Etimad-UI\assets\js\jquery.js" />
+      <Content Remove="wwwroot\Etimad-UI\assets\js\jquery.twbsPagination.js" />
+      <Content Remove="wwwroot\Etimad-UI\assets\vendor\calendar\calendar.rar" />
+      <Content Remove="wwwroot\favicon.ico" />
+      <Content Remove="wwwroot\icon.jpg" />
+      <Content Remove="wwwroot\icon.png" />
+      <Content Remove="wwwroot\ViewsScripts\Announcement\AnnouncementSupplierDetails.js" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <None Remove="MOF.Etimad.Monafasat.Web.csproj.vspscc" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <Content Include="Views\Tender\Components\InvitationBillDetailsViewComponenet\Default.cshtml">
+         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+   </ItemGroup>
+
+   <!--<ItemGroup>
+    <Compile Remove="Features\**\*.cshtml" />
+    <Content Remove="Features\**\*.cshtml" />
+    <EmbeddedResource Remove="Features\**\*.cshtml" />
+    <None Remove="Features\**\*.cshtml" />
+  </ItemGroup>-->
+
+   <ItemGroup>
+      <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
+      <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
+      <PackageReference Include="BuildWebCompiler" Version="1.12.405" />
+      <PackageReference Include="EPPlus" Version="4.5.3.2" />
+      <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.0" />
+      <!--<PackageReference Include="identityserver4" Version="3.0.2" />-->
+      <!--<PackageReference Include="identityserver4.accesstokenvalidation" Version="3.0.1" />-->
+      <PackageReference Include="jQuery" Version="3.3.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.0" />
+      <!--<PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />-->
+      <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.1.2" />-->
+      <!--<PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.2.8" />-->
+      <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />-->
+      <PackageReference Include="Microsoft.AspNetCore.NodeServices" Version="3.1.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.4.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.4.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
+      <!--<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />-->
+      <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
+      <PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="4.1.0" />
+      <PackageReference Include="Microsoft.Owin.Security.Cookies" Version="4.1.0" />
+      <PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.1.0" />
+      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+      <PackageReference Include="NLog" Version="4.6.8" />
+      <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.0" />
+      <PackageReference Include="ReflectionIT.Mvc.Paging" Version="4.0.0" />
+      <PackageReference Include="System.Net.Http.Formatting.Extension" Version="5.2.3" />
+      <PackageReference Include="vue" Version="2.5.16" />
+      <PackageReference Include="Xunit.Priority" Version="1.0.10" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
+      <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.0" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <None Include="Views\CommunicationRequest\AddPlaintRequest.cshtml" />
+      <None Include="Views\CommunicationRequest\CheckEscalationRequests.cshtml" />
+      <None Include="Views\CommunicationRequest\CheckPlaintEscalationData.cshtml" />
+      <None Include="Views\CommunicationRequest\CheckPlaintRequestData.cshtml" />
+      <None Include="Views\CommunicationRequest\CheckPlaintRequests.cshtml" />
+      <None Include="Views\CommunicationRequest\Components\TenderDetailsForExtendOffers\Default.cshtml" />
+      <None Include="Views\CommunicationRequest\Components\TenderDetailsForPlaint\Default.cshtml" />
+      <None Include="Views\CommunicationRequest\Components\VendorPlaintRequest\Default.cshtml" />
+      <None Include="Views\CommunicationRequest\Negotiation.cshtml" />
+      <None Include="Views\CommunicationRequest\CreateNegotiationRequest.cshtml" />
+      <None Include="Views\CommunicationRequest\CreateSupplierExtendOfferDatesRequest.cshtml" />
+      <None Include="Views\CommunicationRequest\EscalatedTenders.cshtml" />
+      <None Include="Views\CommunicationRequest\ExtendOffersValidity.cshtml" />
+      <None Include="Views\CommunicationRequest\ExtendOffersValiditySupplier.cshtml" />
+      <None Include="Views\CommunicationRequest\ExtendTenderDates.cshtml" />
+      <None Include="Views\CommunicationRequest\Index.cshtml" />
+      <None Include="Views\CommunicationRequest\OfferDetail.cshtml" />
+      <None Include="Views\CommunicationRequest\OfferFiles.cshtml" />
+      <None Include="Views\CommunicationRequest\Partials\_ExtendOffersTenderDetails.cshtml" />
+      <None Include="Views\CommunicationRequest\Partials\_ExtendOffersValiditySupplierDetails.cshtml" />
+      <None Include="Views\CommunicationRequest\Partials\_ExtendOfferValidityForm.cshtml" />
+      <None Include="Views\CommunicationRequest\Partials\_OffersExtendValidityGrid.cshtml" />
+      <None Include="Views\CommunicationRequest\Partials\_OffersListAfterNegotiation.cshtml" />
+      <None Include="Views\CommunicationRequest\Partials\_OffersListBeforNegotiation.cshtml" />
+      <None Include="Views\CommunicationRequest\Partials\_SupplierExtendOffersPresentationDatesDetails.cshtml" />
+      <None Include="Views\CommunicationRequest\Partials\_SupplierQuantitiesTable.cshtml" />
+      <None Include="Views\CommunicationRequest\Partials\_TenderDates.cshtml" />
+      <None Include="Views\CommunicationRequest\Partials\_TenderEscalationsGrid.cshtml" />
+      <None Include="Views\CommunicationRequest\Partials\_TenderPlaintsGrid.cshtml" />
+      <None Include="Views\CommunicationRequest\Partials\_CombinedSuppliersActions.cshtml" />
+      <None Include="Views\CommunicationRequest\Partial\_CreateFirstStageNegotiation.cshtml" />
+      <None Include="Views\CommunicationRequest\Partial\_NegotiationQuantityTable.cshtml" />
+      <None Include="Views\CommunicationRequest\Partial\_NegotiationSupplierOfferInfo.cshtml" />
+      <None Include="Views\CommunicationRequest\Partial\_NegotiationSupplierTenderInfo.cshtml" />
+      <None Include="Views\CommunicationRequest\Partial\_NegotiationTenderInfo.cshtml" />
+      <None Include="Views\CommunicationRequest\Partial\_OffersAfterDiscountPreview.cshtml" />
+      <None Include="Views\CommunicationRequest\Partial\_PreviewFirstStageNegotiation.cshtml" />
+      <None Include="Views\CommunicationRequest\SupplierExtendOfferDates.cshtml" />
+      <None Include="Views\CommunicationRequest\SupplierNegotiation.cshtml" />
+      <None Include="Views\CommunicationRequest\CombinedSuppliers.cshtml" />
+      <None Include="Views\CommunicationRequest\VendorPlaintRequestData.cshtml" />
+      <None Include="Views\Offer\ApplyOffer.cshtml" />
+      <None Include="Views\Offer\ApplyOfferOpening.cshtml" />
+      <None Include="Views\Offer\ApplyTechnicalOffer.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_Attachments.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_AttachmentViewer.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_Combinders.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_OfferFinantcialDetailsDirectPurchase.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_OfferFinantialDetails.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_OffersFinantialChecking.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_OffersTechnicalChecking.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_OfferTechnicalDetails.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_QuanitityTables.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_QuantityTable.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_QuantityTableFull.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_TenderInfo.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_TwoFilesOffersTechnicalChecking.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_TwoFilesOfferTechnicalDetails.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_CombinedSuppliers.cshtml" />
+      <None Include="Views\Offer\CheckOffer\Partials\_CombinedSuppliersActions.cshtml" />
+      <None Include="Views\Offer\Components\OfferAttachmentsDetails\Default.cshtml" />
+      <None Include="Views\Offer\Components\OfferAttachmentsUpdate\Default.cshtml" />
+      <None Include="Views\Offer\Components\OfferSummary\Default.cshtml" />
+      <None Include="Views\Offer\Components\QuantityTableItems\Default.cshtml" />
+      <None Include="Views\Offer\Components\QuantityTables\Default.cshtml" />
+      <None Include="Views\Offer\CreateAsync.cshtml" />
+      <None Include="Views\Offer\DetailsAsync.cshtml" />
+      <None Include="Views\Offer\DirectPurchase\DirectPurchaseCheckingOneFile.cshtml" />
+      <None Include="Views\Offer\DirectPurchase\DirectPurchaseFinancialChecking.cshtml" />
+      <None Include="Views\Offer\DirectPurchase\DirectPurchaseTechnicalChecking.cshtml" />
+      <None Include="Views\Offer\DirectPurchase\CombinedSuppliersDetailsDirectPurchase.cshtml" />
+      <None Include="Views\Offer\EditAsync.cshtml" />
+      <None Include="Views\Offer\Index.cshtml" />
+      <None Include="Views\Offer\OfferAwarding.cshtml" />
+      <None Include="Views\Offer\OfferChecking.cshtml" />
+      <None Include="Views\Offer\OfferDetail.cshtml" />
+      <None Include="Views\Offer\OfferOpeningData.cshtml" />
+      <None Include="Views\Offer\OffersFilesUpload.cshtml" />
+      <None Include="Views\Offer\OpenOffers.cshtml" />
+      <None Include="Views\Offer\Partial\ApplyOffer\_ApplyOfferActions.cshtml" />
+      <None Include="Views\Offer\Partial\ApplyOffer\_ApplyOfferAttachments.cshtml" />
+      <None Include="Views\Offer\Partial\ApplyOffer\_ApplyOfferModals.cshtml" />
+      <None Include="Views\Offer\Partial\ApplyOffer\_ApplyOfferQuantityTables.cshtml" />
+      <None Include="Views\Offer\Partial\ApplyOffer\_ApplyTechnicalOfferAttachments.cshtml" />
+      <None Include="Views\Offer\Partial\ApplyOffer\_TechnicalOfferBasicActions.cshtml" />
+      <None Include="Views\Offer\Partial\OpenningOffers\_AddQuantityTable.cshtml" />
+      <None Include="Views\Offer\Partial\OpenningOffers\_AttachmentViewer.cshtml" />
+      <None Include="Views\Offer\Partial\OpenningOffers\_CombinedSuppliersActions.cshtml" />
+      <None Include="Views\Offer\Partial\OpenningOffers\_QuantityTable.cshtml" />
+      <None Include="Views\Offer\Partial\TenderTowFilesFinancialDetails\_Certificates.cshtml" />
+      <None Include="Views\Offer\Partial\TenderTowFilesTechnicalChecking\_Certificates.cshtml" />
+      <None Include="Views\Offer\Partial\TenderTowFilesTechnicalChecking\_CrData.cshtml" />
+      <None Include="Views\Offer\Partial\TenderTowFilesTechnicalChecking\_Specifications.cshtml" />
+      <None Include="Views\Offer\Partial\TenderTowFilesTechnicalChecking\_VisitAndPurchase.cshtml" />
+      <None Include="Views\Offer\SuppliersReport.cshtml" />
+      <None Include="Views\Offer\TenderTowFilesEvaluateFinancialDetails.cshtml" />
+      <None Include="Views\Offer\TenderTowFilesFinancialCheck.cshtml" />
+      <None Include="Views\Offer\_TenderTowFilesFinancialDetails.cshtml" />
+      <None Include="Views\Offer\TenderTowFilesTechnicalChecking.cshtml" />
+      <None Include="Views\Offer\TenderTowFilesTechnicalDetails.cshtml" />
+      <None Include="Views\Offer\TenderTowFilesCombinedSuppliersCheckingStage.cshtml" />
+      <None Include="Views\Offer\CombinedSuppliersCheckingStage.cshtml" />
+      <None Include="Views\Offer\_ApplyOfferCombinedInvitation.cshtml" />
+      <None Include="Views\Offer\_ApplyOfferPartial.cshtml" />
+      <None Include="Views\Offer\_AttachmentsGrid.cshtml" />
+      <None Include="Views\Offer\_OpenOffersReportForCheckingCommittee.cshtml" />
+      <None Include="Views\Offer\_OpenOffersReportRegistry.cshtml" />
+      <None Include="Views\Offer\_OpenOffersSupplierReport.cshtml" />
+      <None Include="Views\Offer\_SupplierQuantityTableItemForm.cshtml" />
+      <None Include="Views\Offer\_SuppliersReportGrid.cshtml" />
+      <None Include="Views\Qualification\Components\AcceptedPrequalificationSuppliers\Default.cshtml" />
+      <None Include="Views\Qualification\Components\Approval\Default.cshtml" />
+      <None Include="Views\Qualification\Components\PreQualificationAttachments\Default.cshtml" />
+      <None Include="Views\Qualification\Components\PreQualificationDetail\Default.cshtml" />
+      <None Include="Views\Qualification\Components\PreQualificationPartialDetail\Default.cshtml" />
+      <None Include="Views\Qualification\Components\QualificationSupplierDocumentAttachment\Default.cshtml" />
+      <None Include="Views\Qualification\DetailsPartials\_DetailsAttachmentsStepContent.cshtml" />
+      <None Include="Views\Qualification\DetailsPartials\_DetailsDatesStepContent.cshtml" />
+      <None Include="Views\Qualification\DetailsPartials\_DetailsForUnderOperationsStageHead.cshtml" />
+      <None Include="Views\Qualification\DetailsPartials\_DetailsInvitationInfoStepContent.cshtml" />
+      <None Include="Views\Qualification\Home\About.cshtml" />
+      <None Include="Views\Qualification\Home\Contact.cshtml" />
+      <None Include="Views\Qualification\Home\Index.cshtml" />
+      <None Include="Views\Qualification\Partials\_CheckingStageQualificationCardFooter.cshtml" />
+      <None Include="Views\Qualification\Partials\_PreQualificationGridSorts.cshtml" />
+      <None Include="Views\Qualification\Partials\_PreQualificationIndexCheckingStageActions.cshtml" />
+      <None Include="Views\Qualification\Partials\_PreQualificationIndexUnderOperationsStageActions.cshtml" />
+      <None Include="Views\Qualification\Partials\_QualificationAttachments.cshtml" />
+      <None Include="Views\Qualification\Partials\_QualificationBasicData.cshtml" />
+      <None Include="Views\Qualification\Partials\_QualificationDates.cshtml" />
+      <None Include="Views\Qualification\Partials\_QualificationRelationData.cshtml" />
+      <None Include="Views\Qualification\Partials\_QualificationsGridSorts.cshtml" />
+      <None Include="Views\Qualification\Partials\_QualificationStatus.cshtml" />
+      <None Include="Views\Qualification\Partials\_QualificationAttachment.cshtml" />
+      <None Include="Views\Qualification\Partials\_TenderDates.cshtml" />
+      <None Include="Views\Qualification\Partials\_UnderOperationQualificationCardFooter.cshtml" />
+      <None Include="Views\Qualification\search\_IndexCheckingStageSearchForm.cshtml" />
+      <None Include="Views\Qualification\search\_IndexSearchForm.cshtml" />
+      <None Include="Views\Shared\Components\BasicOfferTenderInfo\Default.cshtml" />
+      <None Include="Views\Shared\Components\Pager\Paging.cshtml" />
+      <None Include="Views\Tender\Components\AwardingDetails\Default.cshtml" />
+      <None Include="Views\Tender\Components\RelatedTendersViewComponent\Default.cshtml" />
+      <None Include="Views\Tender\Components\QuantitiesTable\Default.cshtml" />
+      <None Include="Views\Tender\DirectPurchase\CheckDirectPurchaseOffers.cshtml" />
+      <None Include="Views\Tender\DirectPurchase\Partials\_CheckDirectPurchaseOffersApprovalActions.cshtml" />
+      <None Include="Views\Tender\DirectPurchase\Partials\_ModalActions.cshtml" />
+      <None Include="Views\Tender\DirectPurchase\Partials\_ModalContent.cshtml" />
+      <None Include="Views\Tender\DirectPurchase\Partials\_OfferDetailsForCheckDirectPurchaseTenderOffers.cshtml" />
+      <None Include="Views\Tender\DirectPurchase\Partials\_TenderDetailsForCheckDirectPurchaseTenderOffers.cshtml" />
+      <None Include="wwwroot\Etimad-UI\assets\.DS_Store" />
+      <None Include="wwwroot\Etimad-UI\assets\css\material-kit.css.map" />
+      <None Include="wwwroot\Etimad-UI\assets\fonts\Bahij_TheSansArabic-Plain.woff2" />
+      <None Include="wwwroot\Etimad-UI\assets\fonts\bootstrap\glyphicons-halflings-regular.woff2" />
+      <None Include="wwwroot\Etimad-UI\assets\fonts\fontawesome-webfont.svg" />
+      <None Include="wwwroot\Etimad-UI\assets\fonts\fontawesome-webfont.woff2" />
+      <None Include="wwwroot\Etimad-UI\assets\fonts\glyphicons-halflings-regular.svg" />
+      <None Include="wwwroot\Etimad-UI\assets\fonts\glyphicons-halflings-regular.woff2" />
+      <None Include="wwwroot\Etimad-UI\assets\imgs\etd-logo.svg" />
+      <None Include="wwwroot\Etimad-UI\assets\js\Alert-Message.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\core\bootstrap-material-design.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\core\jquery.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\core\popper.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\etd-main.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\jquery-validation\dist\additional-methods.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\jquery-validation\dist\additional-methods.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\jquery-validation\dist\jquery.validate.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\jquery-validation\dist\jquery.validate.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\jquery-validation\LICENSE.md" />
+      <None Include="wwwroot\Etimad-UI\assets\js\material-kit.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\material-kit.js.map" />
+      <None Include="wwwroot\Etimad-UI\assets\js\material-kit.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\plugins\bootstrap-datetimepicker.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\plugins\jquery.sharrre.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\plugins\moment.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\plugins\nouislider.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\uploader.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\vue-app\App.vue" />
+      <None Include="wwwroot\Etimad-UI\assets\js\vue-app\main.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\vue-app\pagination.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\vue-app\select.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\vue-app\vue%402.5.2.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\vue-app\vue-multiselect%402.0.8.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\js\vue-app\vue2-filters.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\lib\signalr\dist\browser\signalr.js">
+         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Include="wwwroot\Etimad-UI\assets\lib\signalr\dist\browser\signalr.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\Etimad\etd-style.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\Etimad\_bootstrap-select.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\Etimad\_custom.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\Etimad\_font-face.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\Etimad\_forms.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\Etimad\_mixins.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\Etimad\_variables.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\bootstrap-grid.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\bootstrap-reboot.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\bootstrap.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_alert.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_background-variant.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_badge.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_border-radius.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_box-shadow.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_breakpoints.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_buttons.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_caret.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_clearfix.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_float.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_forms.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_gradients.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_grid-framework.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_grid.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_hover.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_image.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_list-group.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_lists.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_nav-divider.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_navbar-align.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_pagination.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_reset-text.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_resize.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_screen-reader.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_size.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_table-row.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_text-emphasis.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_text-hide.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_text-truncate.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_transition.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\mixins\_visibility.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_align.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_background.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_borders.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_clearfix.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_display.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_embed.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_flex.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_float.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_position.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_screenreaders.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_sizing.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_spacing.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_text.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\utilities\_visibility.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_alert.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_badge.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_breadcrumb.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_button-group.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_buttons.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_card.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_carousel.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_close.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_code.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_custom-forms.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_dropdown.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_forms.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_functions.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_grid.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_images.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_input-group.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_jumbotron.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_list-group.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_media.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_mixins.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_modal.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_nav.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_navbar.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_pagination.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_popover.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_print.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_progress.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_reboot.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_root.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_tables.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_tooltip.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_transitions.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_type.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_utilities.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\bootstrap\scss\_variables.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\cards\_card-carousel.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\cards\_card-login.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\cards\_card-plain.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_alert.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_animations.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_breakpoints.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_buttons.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_colored-shadows.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_drawer.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_forms.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_hover.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_layout.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_navbar-colors.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_navs.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_type.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\mixins\_utilities.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\plugins\_plugin-datetime-picker.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\plugins\_plugin-nouislider.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_body.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_bootstrap-material-design-base.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_bootstrap-material-design.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_brand.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_buttons.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_card.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_carousel.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_code.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_colors-map.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_colors.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_custom-forms.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_drawer.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_dropdown.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_forms.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_layout.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_list-group.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_menu.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_modals.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_nav.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_pagination.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_shadow.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_snackbar.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_spacing.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_state.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_tables.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_tooltip.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\variables\_type.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_alerts.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_badges.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_buttons.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_cards.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_carousel.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_checkboxes.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_core-bootstrap.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_custom-forms.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_drawer.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_dropdown.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_example-pages.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_footers.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_forms.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_headers.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_images.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_info-areas.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_input-group.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_layout.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_list-group.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_misc.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_mixins.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_modal.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_nav.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_navbar.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_pagination.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_pills.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_popover.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_progress.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_radios.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_reboot.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_responsive.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_ripples.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_switches.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_tabs.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_togglebutton.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_tooltip.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_type.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\scss\material-kit\_variables.scss" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\bootstrap-notify-master\.gitignore" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\bootstrap-notify-master\bootstrap-notify.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\bootstrap-notify-master\bootstrap-notify.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\bootstrap-notify-master\Gruntfile.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\bootstrap-notify-master\LICENSE" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\bootstrap-notify-master\package.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\bootstrap-notify-master\README.md" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\bootstrap-notify-master\test_meteor.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\bootstrap-selectpicker.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\calendar\javascriptUtils\DateConverterUtil.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\jquery-validation\dist\additional-methods.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\jquery-validation\dist\additional-methods.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\jquery-validation\dist\jquery.validate.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\jquery-validation\dist\jquery.validate.min.js" />
+      <None Include="wwwroot\Etimad-UI\assets\vendor\jquery-validation\LICENSE.md" />
+      <None Include="wwwroot\Etimad-UI\components\inputs.js" />
+      <None Include="wwwroot\Etimad-UI\components\stepper.js" />
+      <None Include="wwwroot\FileTemplate\QuantatyTableTemplate.xlsx" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <Content Update="appsettings.json">
+         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Content>
+      <Content Update="nlog.config">
+         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Views\Account\_OperationCodeGrid.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\AnnouncementSuppliersTemplate\AnnouncementSuppliersTemplateDetails.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\AnnouncementSuppliersTemplate\AddPublicListToAgencyAnnouncementLists.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\AnnouncementSuppliersTemplate\CancelAnnouncementSuppliersTemplate.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\AnnouncementSuppliersTemplate\AnnouncementJoinRequestReview.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\AnnouncementSuppliersTemplate\AnnouncementSuppliersTemplateDetailsForSuppliers.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\AnnouncementSuppliersTemplate\Components\AnnouncementJoinRequestViewComponenet\Default.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\AnnouncementSuppliersTemplate\Components\AnnouncementListDetail\Default.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\AnnouncementSuppliersTemplate\Components\AnnouncementTendersDetail\Default.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\AnnouncementSuppliersTemplate\Components\AnnouncementDescription\Default.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\AnnouncementSuppliersTemplate\Components\AnnouncementBasicDetail\Default.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\AnnouncementSuppliersTemplate\Components\AnnouncementTemplateActivityAndAddressDetails\Default.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Announcement\Partials\_AnnouncementDetailsForPrint.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Announcement\Partials\_SupplierAnnouncementsSearchForm.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Announcement\Partials\_RelationStep.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Announcement\Partials\_DateLocation.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Announcement\Partials\_BasicData.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Announcement\Partials\_SupplierAnnouncementsGrid.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Authorization\SupplierHasNoCR.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Block\GetAdminBlockList - Copy.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Block\GetAgencyExceptedModel.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Block\EditAgency.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Block\_VerificationCode.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Branch\AssignCommitteesToBranch.cshtml">
+         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Branch\AssignUsersToBranch.cshtml">
+         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Branch\Create.cshtml">
+         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Branch\CreateAsync.cshtml">
+         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Branch\EditAsync.cshtml">
+         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Branch\Index.cshtml">
+         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Branch\_BranchCards.cshtml">
+         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Branch\_BranchListActions.cshtml">
+         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="Views\Branch\_BranchGrid.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Committee\_CommitteesGrid.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\CommunicationRequest\Components\OfferAttachmentsDetails\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\CommunicationRequest\Components\TenderDetailsForEscalation\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\CommunicationRequest\CreateNegotiationFirstStage.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\CommunicationRequest\CreateNegotiation.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\CommunicationRequest\OfferNegotiationFiles.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Dashboard\Index.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Dashboard\Unit\UnitUsersDashboardIndexAsync.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Dashboard\_SupplierSummaryPill.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Dashboard\_OpenOffersAlert.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Dashboard\_NotificationPanel.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Dashboard\_PreQualificationProcessNeedsActionGrid.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\ManageUsersAssignation\EditAsync.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\ManageUsersAssignation\Index.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\ManageUsersAssignation\_UsersCard.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\ManageUsersAssignation\_UserListActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\ManageVendors\Index.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\ManageVendors\search\_IndexSearchForm.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\ManageVendors\_VendorCards.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\ManageVendors\_VendorGrid.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\MandatoryList\_Form.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\MandatoryList\_FormRazor.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\MandatoryList\_Grid.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\MandatoryList\_ListActions.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\MandatoryList\_ProductForm.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\MandatoryList\_ProductFormRazor.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\MandatoryList\_ProductItem.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\MandatoryList\_ProductItemsDetails.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\MandatoryList\_SearchForm.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\Awarding\Partials\_QuantitiesTablesForAwarding.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\Components\OfferAttachmentsDetailsDisplay\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\FinancialOfferDetails.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\Components\OfferAttachmentsDetailsForDirectPurchaseComponent\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\Components\OpeningQuantityTablesComponent\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\Components\QualificationSupplierIDMInfo\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\DirectPurchase\_CombinedSuppliersActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\DirectPurchase\_DirectPurchaseOfferCheckingFinancialDetails.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\DirectPurchase\DirectPurchaseOfferChecking.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\DirectPurchase\_OffersFinantialCheckingResultAndActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\DirectPurchase\_OffersTechnicalCheckingResultAndActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\OfferCheckingDetailsForAwarding.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\OpenOffersDetailsForAwarding.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\Partial\OpenningOffers\_CombinedSuppliersDetailsReadOnly.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\Partial\OpenningOffers\_CombinedSuppliersDetails.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\Partial\_AttachmentViewer.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\Partial\_OfferAttachmentDetailsPartial.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\Partial\_OffersFinantialCheckingResultAndActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\Partial\_OffersTechnicalCheckingResultAndActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\VRO\VROOfferFinantialChecking.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\VRO\VROOffersTechnicalChecking.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\_Attachments.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\_InvitedUnregisteredSuppliersGrid.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Offer\_UnRegisteredSuppliersInvitation.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\PrePlanning\AddEditPrePlanning.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\PrePlanning\Details.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\PrePlanning\Index.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\PrePlanning\_PrePlanningListActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\PrePlanning\_PrePlanningsCard.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\PrePlanning\_PrePlanningsGrid.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\CheckPreQualification.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\AnnouncementSuppliersTemplate\Components\AnnouncementSuppliersTemplateDetail\Default.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Components\LargeQualificationSupplierDetails\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Components\MediumQualificationSupplierDetails\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Components\SmallQualificationSupplierDetails\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Components\SmallConfigQualificationDetails\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Components\MediumConfigQualificationDetails\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Components\LargeConfigQualificationDetails\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Components\PreQualificationPartialVisitorDetail\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Components\PreQualificationPartialDetail\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Components\PreQualificationDetail\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Components\QualificationSupplierDocumentAttachment\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Partials\_LargeConfigQualification.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\_OpenQualificationDetailsReport.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Partials\_SmallSupplierConfigData.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Partials\_MediumSupplierConfigData.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Partials\_LargeSupplierConfigData.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Partials\_SmallConfigQualification.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\PreQualificationChecking.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\PreQualificationVisitorDetails.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\QualificationAttachmentsChangesApprovement.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\_PreQualificationsOffersCheckConfirmGrid.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\Partials\_SupplierProjectConfigData.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\PreQualificationDetails.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Shared\Components\TenderQuantityTableChanges\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Shared\Components\TenderQuantityTable\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Shared\_SessionTimeout.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Shared\_AnnouncementAgencyLogo.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Shared\_Layout-Visitor.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Shared\_navHeaderVisitor.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Shared\_NotificationPanel.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Shared\_AgencyLogo.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Components\TenderLocalContentDetails\Default.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Components\TenderLocalContentValues\Default.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\ConditionTemplate\_LocalContentRequirements.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\ConditionTemplate\_Tabs.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\ConditionTemplate\_Header.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\ConditionTemplate\_PreparingOffers.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\ConditionTemplate\_Introduction.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\ConditionTemplate\_TechnicalDeclerations.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\ConditionTemplate\_DescriptionAndConditions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DirectPurchase\Partials\_LowBudgetCancelTenderActions.cshtml">
+        <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\QuantitiesTableTemplate.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\ConditionTemplate\UpdateConditionsTemplate.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\AllSuppliersTendersForVisitor.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Components\AttachmentsWithoutChanges\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Components\CommunicationRequestsViewComponenet\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Components\InvitationsViewComponent\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Components\TenderBasicDetails\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Components\QuantitiesTableWithoutChanges\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Components\TenderDatesWithoutChanges\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DirectPurchase\Partials\_TenderGridDirectPurchaseCheckStage.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DirectPurchase\Partials\_TenderIndexAwardingDiretPurchaseStageActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DirectPurchase\Partials\_ModalActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DirectPurchase\Partials\_ModalContent.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DirectPurchase\Partials\_CheckingTenderDirectPurchaseCardFooter.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DirectPurchase\Partials\_AwardingTenderForDirectPurchaseCardFooter.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DirectPurchase\Partials\_TenderIndexCheckingDirectPurchaseActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DirectPurchase\Partials\_TenderDetailsForCheckDirectPurchaseTenderOffers.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DirectPurchase\Partials\_OfferDetailsForCheckDirectPurchaseTenderOffers.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DirectPurchase\Partials\_CheckDirectPurchaseOffersApprovalActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Partials\_UnRegisteredSuppliersInvitation.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Search\_AllSuppliersTendersSearchForm.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\TenderQuantitiesTableUpdates.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Search\_TenderNegotiationSearchForm.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Qualification\QualificationExtendDateApprovement.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\TenderIndexAwardingStageForDirectPurchase.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DirectPurchase\TenderIndexCheckingDirectPuchaseStage.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Unit\DetailsForUnit.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DetailsForAll.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DetailsForSupplier.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DetailsForUnderOperations.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\TenderAttachmentsChangesApprovement.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\TenderExtendDateApprovement.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\TenderQuantityTableChangesApprovement.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\DetailsForVisitor.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Partials\_AwardingOperationStageFooterActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Unit\Partials\_TenderGridUnitStage.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Unit\Partials\_UnitManagerApproval.cshtml">
+         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Content>
+      <Content Update="Views\Tender\Unit\Partials\_UnitBusinessManagerApproval.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Unit\TenderIndexUnitStage.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\VRO\Partials\_VROCheckingStageActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\VRO\_VROTenderStatus.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_QuantityTablesChangesCreate.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_QuantityTablesCreate.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_TenderDatesExtention.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_InvitedSuppliersGridInCombined.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_SuppliersGridForCombined.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_TenderCardContentForIndex.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Partials\_TenderQuantityTableChange.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Partials\_TenderAttachmentChange.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Partials\_OppeningOperationStageFooterActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Partials\_UnderOperationStageFooterActions.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Search\_IndexSearchForm.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Partials\_TenderCardStatus.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_SupplierAwardingReport.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_CountAndCloseAppliedOffers.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_OffersReport.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Shared\_Layout-ETD.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Components\InvitationActions\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\Components\PurchaseBookViewComponent\Default.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_AwardingReport.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_OpenTenderAdvDetailsReport.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_PrintTenderReceiptReport.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_OpenTenderDetailsReport.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_SupplierTenderCardForVisitor.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_InvitationStatuses.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\VRO\_TenderGridVROCreatedByAgency.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_TenderStatuses.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_TenderAdModel.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_DetailsForUnderOperationApproval.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_VendorGrid.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_TenderGridAwardStage.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_TenderGridCheckStage.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_TenderGridOpenStage.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+      <Content Update="Views\Tender\_TenderGridUnderOperation.cshtml">
+         <Pack>$(IncludeRazorContentInPack)</Pack>
+      </Content>
+   </ItemGroup>
+
+   <ItemGroup>
+      <Folder Include="APIs\ViewModels\" />
+      <Folder Include="Authorization\AnnouncementSuppliersTemplate\Requirement\" />
+      <Folder Include="ViewComponents\AnnouncementBasicDetail\" />
+      <Folder Include="ViewComponents\AnnouncementDescription\" />
+      <Folder Include="Views\Account\Partial\" />
+      <Folder Include="Views\Offer\Components\ApplyOfferComponent\" />
+      <Folder Include="Views\Qualification\Components\PreQualificationDates\" />
+      <Folder Include="Views\Tender\Components\NewFolder\" />
+      <Folder Include="wwwroot\Etimad-UI\assets\css\" />
+      <Folder Include="wwwroot\Etimad-UI\assets\fonts\bootstrap\" />
+      <Folder Include="wwwroot\Etimad-UI\assets\js\core\" />
+      <Folder Include="wwwroot\Etimad-UI\assets\js\chartjs\" />
+      <Folder Include="wwwroot\Etimad-UI\assets\js\counter\" />
+      <Folder Include="wwwroot\Etimad-UI\assets\js\plugins\" />
+      <Folder Include="wwwroot\StaticFIles\LocalContent\" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <ProjectReference Include="..\MOF.Etimad.Monafasat.Core\MOF.Etimad.Monafasat.Core.csproj" />
+      <ProjectReference Include="..\MOF.Etimad.Monafasat.Resources\MOF.Etimad.Monafasat.Resources.csproj" />
+      <ProjectReference Include="..\MOF.Etimad.Monafasat.SharedKernel\MOF.Etimad.Monafasat.SharedKernel.csproj" />
+      <ProjectReference Include="..\MOF.Etimad.Monafasat.ViewModel\MOF.Etimad.Monafasat.ViewModel.csproj" />
+   </ItemGroup>
+
+   <ItemGroup>
+      <TypeScriptCompile Include="wwwroot\Etimad-UI\assets\vendor\bootstrap-notify-master\typings\bootstrap-notify\notify.d.ts" />
+   </ItemGroup>
+   <ItemGroup>
+      <SonarQubeSetting Include="sonar.coverage.exclusions">
+         <Value>
+            **/*.js
+         </Value>
+      </SonarQubeSetting>
+   </ItemGroup>
+</Project>

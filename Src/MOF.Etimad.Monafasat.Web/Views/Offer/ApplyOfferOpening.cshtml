@@ -1,0 +1,339 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using MOF.Etimad.Monafasat.SharedKernel
+@using Microsoft.Extensions.Options;
+@inject IOptionsSnapshot<RootConfiguration> rootConfiguration;
+@model MOF.Etimad.Monafasat.ViewModel.OfferModel
+@{
+   var _rootConfiguration = rootConfiguration.Value;
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails;
+   var localContentManualForCommittee = _rootConfiguration.LocalContentFilesConfiguration.LocalContentManualForCommittee;
+}
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.FinancialOfferDetails</li>
+      </ol>
+   </nav>
+}
+<ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+   @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+   {
+      if (!(Model.TenderTypeId == (int)Enums.TenderType.Competition || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender))
+      {
+         <li class="nav-item">
+            <a class="nav-link active" href="#financialOfferDetails" role="tab" data-toggle="tab">
+               <i class="material-icons">table_chart</i>
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails
+            </a>
+         </li>
+      }
+   }
+   @if (!Model.IsSolidarity)
+   {
+      <li class="nav-item">
+         <a class="nav-link " href="#documentsAttachments" role="tab" data-toggle="tab" id="documentsAttachmentsTab">
+            <i class="material-icons">assignment</i>
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentsAttachments
+         </a>
+      </li>
+   }
+   else
+   {
+      <li class="nav-item">
+         <a asp-action="CombinedSuppliersDetails" asp-controller="Offer" asp-route-tenderIdString="@Model.TenderIdString" asp-route-offeridString="@Model.OfferIdString" class="nav-link ">
+            <i class="material-icons">assignment</i>
+            @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CombinedSuppliers
+         </a>
+      </li>
+   }
+</ul>
+<div class="tab-content tab-space p-0">
+   <div class="tab-pane active" id="financialOfferDetails">
+      @if (!(Model.TenderTypeId == (int)Enums.TenderType.Competition || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender))
+      {
+         @if (Model.OfferPresentationWayId.HasValue && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile)
+         {
+            <div class="card">
+               <div class="card-body">
+                  <div class="col-12">
+                     <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.QuantityTables</h4>
+                  </div>
+                  <div class="col-12">
+
+                     @if (Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects)
+                     {
+                        <ul class="list-group form-details-list">
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-12 col-md-4 etd-item-title">
+                                    @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MandatoryList
+                                 </div>
+                                 <div class="col-12 col-md-8  etd-item-info">
+                                    <span>
+                                       <a target="_blank" href="/Tender/GetAllMandatoryListProductsForExport" rel="lightbox" alt="عرض الملف" title="عرض الملف">
+                                          @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DownloadThisFile
+                                       </a><br />
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                        </ul>
+                        <ul class="list-group form-details-list">
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-12 col-md-4 etd-item-title">
+                                    @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FinancialMarketCompanies
+                                 </div>
+                                 <div class="col-12 col-md-8  etd-item-info">
+                                    <span>
+                                       <a target="_blank" href="~/StaticFiles/قائمة الشركات المدرجة في السوق المالي.xlsx" rel="lightbox" alt="عرض الملف" title="عرض الملف">
+                                          @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DownloadThisFile
+                                       </a><br />
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                        </ul>
+                        <ul class="list-group form-details-list">
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-12 col-md-4 etd-item-title">
+                                    الدليل الإرشادي لتطبيق المعادلات الحسابية الخاصة بأفضليات المحتوى المحلى
+                                 </div>
+                                 <div class="col-12 col-md-8  etd-item-info">
+                                    <span>
+                                       <a target="_blank" href="@localContentManualForCommittee" rel="lightbox" alt="عرض الملف" title="عرض الملف">
+                                          @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DownloadThisFile
+                                       </a><br />
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                        </ul>
+                     }
+                  </div>
+                  <div class="col-12">
+                     <div class="card-collapse" style="border:1px solid #ccc;border-radius:6px;overflow:hidden;">
+                        @Html.Partial("~/Views/Offer/Partial/OpenningOffers/_QuantityTablesOpening.cshtml", Model.QuantityTableStepDTO)
+                     </div>
+                  </div>
+               </div>
+            </div>
+         }
+         @if (Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.CurrentTender)
+         {
+            <div class="card">
+               <div class="card-body">
+                  <h5 class="title text-primary">@res.OfferResources.DisplayInputs.DiscountAndNotes</h5>
+                  @if (User.IsInRole(RoleNames.OffersOppeningSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppening)
+                  {
+                     <form action="/Offer/SaveDiscountNotes" data-ajax="true" data-ajax-mode="replace" id="DiscountNotes" method="post" data-ajax-success="saveDiscountSuccess">
+                        <input type="hidden" asp-for="OfferIdString" id="hdOfferId" />
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                           <div class="col-md-6  col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.Discount</label>
+                                 <input class="form-control" asp-for="Discount" id="discount" />
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.Notes</label>
+                                 <textarea class="form-control " asp-for="DiscountNotes" id="Notes" rows="5"></textarea>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col">
+                              <button type="submit" class="btn btn-primary">@res.SharedResources.DisplayInputs.Save</button>
+                           </div>
+                        </div>
+                     </form>
+                  }
+                  else
+                  {
+                     <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.Discount</label>
+                              <label class="form-control">@Model.Discount</label>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.Notes</label>
+                              <label class="form-control">@Model.DiscountNotes</label>
+                           </div>
+                        </div>
+                     </div>
+                  }
+               </div>
+            </div>
+         }
+      }
+   </div>
+   @if (!Model.IsSolidarity)
+   {
+      <div class="tab-pane " id="documentsAttachments">
+         @if (User.IsInRole(RoleNames.OffersOppeningSecretary) && ( Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppening || Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalOppening))
+         {
+            @await Component.InvokeAsync("OfferAttachmentsUpdate", new { combinedId = Model.CombinedIdString })
+            <div class="row">
+               <div class="col">
+                  @if (User.IsInRole(RoleNames.OffersOppeningSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppening || Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalOppening)
+                  {
+                     <button type="button" onclick="SaveData()" class="btn btn-primary">
+                        @res.SharedResources.DisplayInputs.Save
+                     </button>
+                  }
+               </div>
+            </div>
+         }
+         else
+         {
+            @await Component.InvokeAsync("OfferAttachmentsDetails", new { combinedId = Model.CombinedIdString })
+         }
+      </div>
+   }
+   <div class="row">
+      <div class="col">
+         <a class="btn btn-outline-primary btn-link pull-right" asp-action="OpenTenderOffers" asp-controller="Tender" asp-route-tenderIdString="@Model.TenderIdString">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+         </a>
+      </div>
+   </div>
+</div>
+@section scripts{
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   <script>
+      var attachmentss = [];
+   @if (Model != null && Model.Attachment != null)
+   {
+      @:attachmentss = @Html.Raw(Json.Serialize(Model.Attachment));
+   }
+      $(document).ajaxError(function () {
+         AlertFun("حدث خطا غير متوقع ", alertMessageType.Danger);
+         $('#LoadingSite').fadeIn();
+
+      });
+      $(document).ready(function () {
+         GetOpeningTables();
+      });
+      function saveDiscountSuccess() {
+         AlertFun('@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.DataSaved', alertMessageType.Success);
+      }
+      function submitForm(formId) {
+         $("#tableContainDiv_" + formId).find("#form0").submit();
+      }
+      function GetOpeningTables() {
+         var token = $('input[name=__RequestVerificationToken]').val();
+         var allowEdit = false;
+               @if (User.IsInRole(RoleNames.OffersOppeningSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppening || Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalOppening)) {
+                        <text>
+         allowEdit = true;
+                      </text>
+               }
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            type: "GET",
+            url: "/Offer/GetopeningQuantityTablesComponent",
+            data: { offerIdString: "@Model.OfferIdString", allowEdit: allowEdit, __RequestVerificationToken: token },
+            cache: false,
+            global: false,
+            success: function (html) {
+               $('#divQuantityTable').html(html);
+               $('#LoadingSite').fadeOut();
+            }
+         })
+      }
+      function addNewTable() {
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            url: '/Offer/GetEmptyForm',
+            type: "GET",
+            data: { offerIdString: "@Model.OfferIdString", tenderIdString: "@Model.TenderIdString" },
+            dataType: "html",
+            success: function (data) {
+               $('#divNewQuantityTable').append(data);
+               $('#LoadingSite').fadeOut();
+            }
+         });
+      }
+      function editTableName(e) {
+      }
+      function SaveData() {
+         debugger;
+         $('#LoadingSite').fadeIn();
+         var obj = {};
+         obj.OfferIDString = $('#hdOfferId').val();
+         obj.CombinedIdString = $('#hdCombinedIdString').val();
+         //Attachmets Details
+         var objAtt = {};
+               @if (User.IsInRole(RoleNames.OffersOppeningSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOppening || Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalOppening) && Model.CombinedSupplierModel.Count() == 1)
+               {
+              <text>
+         objAtt.OfferLetterNumber = $("#OfferLetterNumber").val();
+         objAtt.offerLetterDate = $("#offerLetterDate").val();
+         objAtt.CombinedIdString = $("#CombinedIdString").val();
+         objAtt.SpecificationsFiles = vueObj.Specifications;
+         objAtt.BankGuaranteeFiles = vueObj.BankGuarantees;
+         objAtt.OfferLetterNumber = $("#OfferLetterNumber").val();
+         objAtt.IsOfferLetterAttached = $("input[name='IsOfferLetterAttached']:checked").val();
+         objAtt.IsChamberJoiningAttached = $("input[name='IsChamberJoiningAttached']:checked").val();
+         objAtt.IsChamberJoiningValid = $("input[name='IsChamberJoiningValid']:checked").val();
+         objAtt.IsCommercialRegisterAttached = $("input[name='IsCommercialRegisterAttached']:checked").val();
+         objAtt.IsCommercialRegisterValid = $("input[name='IsCommercialRegisterValid']:checked").val();
+         objAtt.IsOfferCopyAttached = $("input[name='IsOfferCopyAttached']:checked").val();
+         objAtt.IsPurchaseBillAttached = $("input[name='IsPurchaseBillAttached']:checked").val();
+         objAtt.IsSaudizationAttached = $("input[name='IsSaudizationAttached']:checked").val();
+         objAtt.IsSaudizationValidDate = $("input[name='IsSaudizationValidDate']:checked").val();
+         objAtt.IsSocialInsuranceAttached = $("input[name='IsSocialInsuranceAttached']:checked").val();
+         objAtt.IsSocialInsuranceValidDate = $("input[name='IsSocialInsuranceValidDate']:checked").val();
+         objAtt.IsVisitationAttached = $("input[name='IsVisitationAttached']:checked").val();
+         objAtt.IsZakatAttached = $("input[name='IsZakatAttached']:checked").val();
+         objAtt.IsZakatValidDate = $("input[name='IsZakatValidDate']:checked").val();
+         objAtt.IsBankGuaranteeAttached = $("input[name='IsBankGuaranteeAttached']:checked").val();
+         objAtt.IsSpecificationAttached = $("input[name='IsSpecificationAttached']:checked").val();
+         objAtt.IsSpecificationValidDate = $("input[name='IsSpecificationValidDate']:checked").val();
+         objAtt.OfferIdString = "@Model.OfferIdString";
+         objAtt.CombinedIdString = "@Model.CombinedIdString";
+             </text>
+            }
+         //
+         var insertObj = {};
+         insertObj.quantityTables = app.QuantitiesTables;
+         insertObj.model = obj;
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $.post('@Url.Action("SaveOpeningOfferFinancialDetails", "Offer")',
+            {
+               tables: insertObj,
+               model: objAtt,
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               window.location = "/Tender/OpenTenderOffers?tenderIdString=@Model.TenderIdString";
+            }).fail(function (e) {
+               $('#LoadingSite').fadeOut();
+               AlertFun(e.responseJSON.message, alertMessageType.Danger);
+            });
+      }
+   </script>
+}
+
+

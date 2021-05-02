@@ -1,0 +1,98 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@{
+   ViewData["Title"] = @res.EnquiryResources.DisplayInputs.AddEnquiry;
+   int tenderId = ViewBag.tenderId;
+   string tenderdString = @MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(tenderId);
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@res.EnquiryResources.DisplayInputs.Enquiries</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@res.EnquiryResources.DisplayInputs.AddEnquiry</li>
+      </ol>
+   </nav>
+}
+@Html.AntiForgeryToken()
+<div class="clearfix"></div>
+<div class="card">
+   <div class="card-body">
+      <div class="form-group bmd-form-group">
+         <label for="EnquiryName" class="label bmd-label-static">@res.EnquiryResources.DisplayInputs.EnquiryText</label>
+         <textarea id="EnquiryName" name="EnquiryName" rows="3" autocomplete="off" class="form-control" title="@res.EnquiryResources.DisplayInputs.EnterEnquiry"></textarea>
+         <div class="pull-left">
+            <span class="bmd-help text-danger" id="txtEnquiryValidation" style="display:none;">@res.EnquiryResources.DisplayInputs.EnterEnquiry</span>
+            <br />
+         </div>
+         <button type="button" class="btn btn-primary btn-sm  etd-search-btn" id="btnSend">@res.EnquiryResources.DisplayInputs.Send</button>
+         <button class="btn btn-outline-primary btn-sm btn-link pull-right etd-search-btn" onclick="window.location = '@Url.Action("SupplierEnquiriesOnTender", "Enquiry", new { id = @tenderdString})'">
+            @MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Back
+         </button>
+      </div>
+   </div>
+</div>
+
+@section modalTitle{
+   @res.EnquiryResources.DisplayInputs.Confirm
+}
+@section modalContent{
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divSendMessage">
+      <div class="form-group">
+         <span class="text-primary h5">
+            @res.EnquiryResources.Messages.EnquiryReplyMsg
+         </span>
+      </div>
+   </div>
+}
+
+@section modalButtons{
+   <button type="button" class="btn btn-sm btn-primary m-1" name="button" id="btnSendConfirmation"> @res.EnquiryResources.DisplayInputs.Send  </button>
+   <button type="button" class="btn btn-danger btn-link m-1" data-dismiss="modal">@res.EnquiryResources.DisplayInputs.Cancel</button>
+}
+@section scripts{
+   <script>
+
+      $("#btnSend").on("click", function () {
+         var enquiryValidation = $("#EnquiryName").val();
+         if (enquiryValidation == '') {
+            $("#txtEnquiryValidation").show();
+            return false;
+         }
+         $('#myModal').modal('show');
+      });
+
+      $(document).ready(function () {
+         $("#btnSendConfirmation").on("click", function () {
+            var enquiryObj = {
+               TenderId: @tenderId,
+               EnquirySendingDate: dateToString(new Date()),
+               EnquiryName: $("#EnquiryName").val(),
+            }
+            var token = $('input[name=__RequestVerificationToken]').val();
+            $('#LoadingSite').fadeIn();
+            $.post("/Enquiry/SendEnquiry",
+               {
+               enquiryObj: enquiryObj,
+               __RequestVerificationToken: token
+               }).done(function () {
+                  $('#myModal').modal('hide');
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                  setTimeout(function () {
+                  window.location = '@Url.Action("SupplierEnquiriesOnTender", "Enquiry", new { id = @tenderdString })';
+                  }, 3000);
+               }).fail(function (error) { 
+                  $('#myModal').modal('hide');
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            }); 
+      });
+   </script>
+}

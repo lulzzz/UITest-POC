@@ -1,0 +1,70 @@
+@{
+   string selectedRole = (User.UserBranch() != 0) ? "1," + User.UserBranch().ToString() + "," + User.UserRole() : (User.SelectedCommittee() != 0) ? "2," + User.SelectedCommittee().ToString() + "," + User.UserRole() : "0,0," + User.UserRole();
+}
+<div class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay d-print-none">
+   <div id="dw-s3" class="bmd-layout-drawer bg-faded" aria-expanded="false" aria-hidden="true">
+      <header>
+         <h6><i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 2em;float: right; color: #29ad6f;margin: 4px;"></i>@User.FullName()</h6>
+         @if (User.UserRoles().Count != 0)
+         {
+            @if (!(User.IsInRole(RoleNames.supplier)) || User.IsSemiGovAgency() == true || User.UserCategory() == (int)Enums.IDMUserCategory.GovVendor || User.UserCategory() == (int)Enums.IDMUserCategory.VRO)
+            {
+               <form id="branchForm" asp-controller="Account" class="m-0" asp-action="ChangeUserRole" method="post">
+                  <div id="branchesdiv">
+                     @Html.AntiForgeryToken()
+                     <select data-live-search="false" name="roleValue" id="roleValue" class="selectpicker " onchange="onChange(this.key)" data-style="select-with-transition" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @foreach (var item in User.GetUserRolesList())
+                        {
+                           if (selectedRole == @item.Split("##")[0])
+                           {
+                              <option value="@item.Split("##")[0]" selected>@item.Split("##")[1]</option>
+                           }
+                           else
+                           {
+                              <option value="@item.Split("##")[0]">@item.Split("##")[1]</option>
+                           }
+                        }
+                     </select>
+                  </div>
+               </form>
+               if (!User.IsInRole(RoleNames.UnAssingedUser))
+               {
+                  <button type="button" class="btn btn-sm btn-primary text-center" data-toggle="modal" data-target="#SelectDefaultRoleModal">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.SelectDefaultRole</button>
+               }
+            }
+         }
+      </header>
+      <div class="user-links d-print-none">
+         @if (!User.IsInRole(RoleNames.CustomerService) || !User.IsInRole(RoleNames.MonafasatAccountManager))
+         {
+            if (!User.IsInRole(RoleNames.UnAssingedUser))
+            {
+               <a class="btn btn-sm btn-block btn-primary btn-link" href="/dashboard/index">
+                  <i class="material-icons">dashboard</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Dashboard
+               </a>
+            }
+         }
+         @if (!User.IsInRole(RoleNames.CustomerService) || !User.IsInRole(RoleNames.MonafasatAccountManager))
+         {
+            <a class="btn btn-sm btn-block btn-primary btn-link" asp-action="NotificationSetting" asp-controller="account">
+               <i class="material-icons">assignment_ind</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProfileSettings
+            </a>
+         }
+         @if (User.UserCategory() == (int)Enums.IDMUserCategory.PrivateSector)
+         {
+            <a class="btn btn-sm btn-block btn-primary btn-link" href="/account/changeComericalRegisteration">
+               <i class="material-icons">how_to_reg</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisteration
+            </a>
+         }
+         else if (User.UserCategory() == (int)Enums.IDMUserCategory.Agency || User.UserCategory() == (int)Enums.IDMUserCategory.VRO)
+         {
+            <a class="btn btn-sm btn-block btn-primary btn-link" href="/account/changeAgency">
+               <i class="material-icons">how_to_reg</i> تغيير الجهة
+            </a>
+         }
+         <a class="btn btn-sm btn-block btn-primary btn-link" href="/account/logout">
+            <i class="material-icons">exit_to_app</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Logout
+         </a>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,219 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.VROOffersTechnicalCheckingViewModel
+@{
+   ViewData["Title"] = @res.OfferResources.DisplayInputs.OfferChecking;
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item" aria-current="page"><a href="@Url.Action("TenderIndexCheckingStage", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckStageTenders</a></li>
+         <li class="breadcrumb-item" aria-current="page"><a href="@Url.Action("CheckTenderOffers", "Tender", new { tenderIdString = Model.TenderIdString })">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOfferDetails</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"].ToString()</li>
+      </ol>
+   </nav>
+}
+<form id="offerChecking" method="post" asp-controller="Offer" asp-action="VROOffersTechnicalChecking" autocomplete="off">
+   @Html.AntiForgeryToken()
+   <input asp-for="OfferIdString" type="hidden" value="@Model.OfferIdString" />
+   <input asp-for="TenderIdString" type="hidden" value="@Model.TenderIdString" />
+   <input asp-for="TenderTypeId" type="hidden" value="@Model.TenderTypeId" />
+   @if (User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersTechnicalChecking || Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersCheckingAndTechnicalEval))
+   {
+      <div class="row col-md-12">
+         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <div class="form-group has-success bmd-form-group">
+               <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.OfferStatus</label><span class="text-danger">*</span>
+               <select asp-for="OfferAcceptanceStatusId" name="OfferAcceptanceStatusId" data-live-search="false" id="offerStatusId" class="selectpicker" data-style="select-with-transition">
+                  <option value="">--@res.OfferResources.Messages.SelectStatus--</option>
+                  <option value="1">@res.OfferResources.DisplayInputs.AccepteOffer</option>
+                  <option value="2">@res.OfferResources.DisplayInputs.RejectedOffer</option>
+               </select>
+            </div>
+            <span class="bmd-help text-danger" id="spanOfferAcceptance">@res.OfferResources.ErrorMessages.SelectOfferStatus</span>
+         </div>
+         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <div class="form-group has-success bmd-form-group">
+               <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.TechnicalEvaluation </label><span class="text-danger">*</span>
+               <select asp-for="OfferTechnicalEvaluationStatusId" name="OfferTechnicalEvaluationStatusId" data-live-search="false" id="technicalEvaluationId" class="selectpicker" data-style="select-with-transition">
+                  <option value="">--@res.OfferResources.Messages.SelectStatus --</option>
+                  <option value="1"> @res.OfferResources.DisplayInputs.Matching</option>
+                  <option value="2">  @res.OfferResources.DisplayInputs.NotMatching</option>
+               </select>
+            </div>
+            <span class="bmd-help text-danger" id="spanOfferTechnicalEvaluation">@res.OfferResources.ErrorMessages.SelectTechnicalEvaluation </span>
+         </div>
+         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <div class="form-group has-success bmd-form-group">
+               <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.TechnicalWeight  </label><span class="text-danger">*</span>
+               <input name="TechnicalEvaluationLevel" asp-for="TechnicalEvaluationLevel" type="number" class="form-control" />
+            </div>
+            <span class="bmd-help text-danger" id="spanOfferTechnicalWeight">@res.OfferResources.ErrorMessages.EnterTechnicalWeight </span>
+         </div>
+      </div>
+      @*<div class="row" id="divRejectionReason">
+         <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="form-group bmd-form-group">
+               <label for="ConditionsBookletPrice" id="lblRejectionReason" class="label bmd-label-static">@res.SharedResources.DisplayInputs.RejectedReason</label><span class="text-danger">*</span>
+               <input asp-for="RejectionReason" type="text" class="form-control" id="txtRejectionReason" name="RejectionReason" />
+               <span id="RejectionReasonSpan" class="bmd-help text-danger position-relative" style="display:none"> @res.QualificationResources.ErrorMessages.EnterRejectedReason</span>
+            </div>
+         </div>
+      </div>*@
+      <div class="row">
+         <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="form-group bmd-form-group">
+               <label for="ConditionsBookletPrice" class="label bmd-label-static">@res.SharedResources.DisplayInputs.Notes</label><span class="text-danger">*</span>
+               <input asp-for="Notes" type="text" class="form-control" id="txtNotes" name="Notes" />
+            </div>
+            <span class="bmd-help text-danger" id="NotesSpan">@res.OfferResources.ErrorMessages.EnterNotes </span>
+         </div>
+      </div>
+   }
+   else
+   {
+      <div class="row col-md-12">
+         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <div class="form-group has-success bmd-form-group">
+               <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.OfferStatus</label><span class="text-danger">*</span>
+               <select asp-for="OfferAcceptanceStatusId" name="OfferAcceptanceStatusId" data-live-search="false" id="offerStatusId" class="selectpicker" data-style="select-with-transition" disabled>
+                  <option value="">--@res.OfferResources.Messages.SelectStatus--</option>
+                  <option value="1">@res.OfferResources.DisplayInputs.AccepteOffer</option>
+                  <option value="2">@res.OfferResources.DisplayInputs.RejectedOffer</option>
+               </select>
+            </div>
+            <span class="bmd-help text-danger" id="spanOfferAcceptance">@res.OfferResources.ErrorMessages.SelectOfferStatus</span>
+         </div>
+         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <div class="form-group has-success bmd-form-group">
+               <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.TechnicalEvaluation </label><span class="text-danger">*</span>
+               <select asp-for="OfferTechnicalEvaluationStatusId" name="OfferTechnicalEvaluationStatusId" data-live-search="false" id="technicalEvaluationId" class="selectpicker" data-style="select-with-transition" disabled>
+                  <option value="">--@res.OfferResources.Messages.SelectStatus --</option>
+                  <option value="1"> @res.OfferResources.DisplayInputs.Matching</option>
+                  <option value="2">  @res.OfferResources.DisplayInputs.NotMatching</option>
+               </select>
+            </div>
+            <span class="bmd-help text-danger" id="spanOfferTechnicalEvaluation">@res.OfferResources.ErrorMessages.SelectTechnicalEvaluation </span>
+         </div>
+         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <div class="form-group has-success bmd-form-group">
+               <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.TechnicalWeight  </label><span class="text-danger">*</span>
+               <label> : @Model.TechnicalEvaluationLevel</label>
+            </div>
+            <span class="bmd-help text-danger" id="spanOfferTechnicalWeight">@res.OfferResources.ErrorMessages.EnterTechnicalWeight </span>
+         </div>
+      </div>
+      @*<div class="row" id="divRejectionReason">
+         <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="form-group bmd-form-group">
+               <label for="ConditionsBookletPrice" class="label bmd-label-static">@res.SharedResources.DisplayInputs.RejectedReason</label>
+               <label> : @Model.RejectionReason</label>
+            </div>
+         </div>
+      </div>*@
+      <div class="row">
+         <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+            <div class="form-group bmd-form-group">
+               <label for="ConditionsBookletPrice" class="label bmd-label-static">@res.SharedResources.DisplayInputs.Notes</label>
+               <label> : @Model.Notes</label>
+            </div>
+         </div>
+      </div>
+   }
+   @if ((User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersTechnicalChecking || Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersCheckingAndTechnicalEval)))
+   {
+      <br/>
+      <div class="row">
+         <button class="btn btn-primary" id="btnSave" type="submit">@res.SharedResources.DisplayInputs.SaveAndSubmit</button>
+      </div>
+   }
+   <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("VROTenderChecking","Tender", new { tenderIdString = Model.TenderIdString })'">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+      <div class="ripple-container"></div>
+   </button>
+</form>
+
+@if (User.IsInRole(RoleNames.OffersOpeningAndCheckManager) || (User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && (Model.TenderStatusId != (int)Enums.TenderStatus.VROOffersTechnicalChecking && Model.TenderStatusId != (int)Enums.TenderStatus.VROOffersCheckingAndTechnicalEval)))
+{
+   <script type="text/javascript">
+      $(document).ready(function () {
+         @*if (@Model.OfferTechnicalEvaluationStatusId == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer) || $('#technicalEvaluationId option:selected').val() == "") {
+              $('#divRejectionReason').attr('hidden', true);
+         }*@
+         $('#offerStatusId').attr('disabled', true);
+         $('#technicalEvaluationId').attr('disabled', true);
+         $('#txtNotes').attr('disabled', true);
+         $('.selectpicker').selectpicker('refresh');
+
+         $("#btnSave").click(function () {
+            if ($('#offerStatusId').val() == "") {
+               $("#spanOfferAcceptance").show()
+               return false;
+            }
+            else if ($('#technicalEvaluationId').val() == "") {
+               $("#spanOfferTechnicalEvaluation").show()
+               return false;
+            }
+         });
+      })
+   </script>
+}
+else
+{
+   <script type="text/javascript">
+      $(document).ready(function () {
+         @*if (@Model.OfferTechnicalEvaluationStatusId == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer) || $('#technicalEvaluationId option:selected').val() == "") {
+              $('#divRejectionReason').attr('hidden', true);
+         }*@
+         $("#btnSave").click(function () {
+            if ($('#offerStatusId').val() == "") {
+               $("#spanOfferAcceptance").show()
+               return false;
+            }
+            if ($('#technicalEvaluationId').val() == "") {
+               $("#spanOfferTechnicalEvaluation").show()
+               return false;
+            }
+
+            if ($('#TechnicalEvaluationLevel').val() == "") {
+               $("#spanOfferTechnicalWeight").show()
+               return false;
+            }
+
+            @*if ($('#technicalEvaluationId').val() == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer) &&  $('#txtRejectionReason').val() == "") {
+               $("#RejectionReasonSpan").show()
+               return false;
+            }
+
+            if ($('#technicalEvaluationId').val() == "" && $('#txtRejectionReason').val() == "") {
+               $("#RejectionReasonSpan").show()
+               $("#spanOfferTechnicalEvaluation").show()
+               return false;
+            }*@
+
+            if ($('#txtNotes').val().trim() == "") {
+               $("#NotesSpan").show()
+               return false;
+            }
+         });
+
+         @*$("#technicalEvaluationId").change(function () {
+            var technicalEvaluationVal = $('#technicalEvaluationId option:selected').val();
+            if (technicalEvaluationVal == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)) {
+               $('#divRejectionReason').attr('hidden', false);
+               $("#spanOfferTechnicalEvaluation").hide()
+            }
+            if (technicalEvaluationVal == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer) || technicalEvaluationVal == "") {
+               $('#divRejectionReason').attr('hidden', true);
+               $('#txtRejectionReason').val(null);
+               $("#spanOfferTechnicalEvaluation").hide()
+            }
+         });*@
+
+      })
+   </script>
+}
+
+

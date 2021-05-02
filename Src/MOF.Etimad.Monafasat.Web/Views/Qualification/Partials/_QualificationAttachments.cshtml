@@ -1,0 +1,25 @@
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationSavingModel
+@using res = MOF.Etimad.Monafasat.Resources;
+
+<div class="col-12">
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group p-0">
+                     <label asp-for="Attachments" class="label bmd-label-static"></label>
+                     @Html.FileUploaderFor(m => m.AttachmentReference, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: true, allowedExtensions: new List<string> { "pdf", "zip" })
+                   @*  <span asp-validation-for="AttachmentReference" class="text-danger"></span>*@
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div>
+   <button type="button" class="btn btn-default  prev-tab" onclick="prevTab()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+   <button type="button" class="btn btn-primary  next-tab" onclick="nextTab()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+</div>
+

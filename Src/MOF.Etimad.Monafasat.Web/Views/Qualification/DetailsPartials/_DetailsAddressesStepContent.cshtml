@@ -1,0 +1,65 @@
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationDetailsModel
+@{
+ var tenderExecutionPlace = (Model != null && Model.InsideKSA != null) ? (Model.InsideKSA == true ? MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InsideKSA : @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OutsideKSA) : "";
+}
+   <div class="tab-pane animated bounceInLeft  delay-1s" id="d-3">
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ExecutionPlace
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @tenderExecutionPlace
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @if (Model.Areas != null && Model.Areas.Count > 0)
+                     {
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Areas
+                     }
+                     else
+                     {
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Countries
+                     }
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <ol>
+                                    @if (Model.Areas != null && Model.Areas.Count > 0)
+                        {
+                                    @foreach (var areaItem in Model.Areas)
+                           {
+                                    <li> @areaItem.Name</li>
+                           }
+                        }
+                        else
+                        {
+                                    @if (Model.Countries != null && Model.Countries.Count > 0)
+                           {
+                                    @foreach (var countryItem in Model.Countries)
+                              {
+                                    <li> @countryItem.Name</li>
+                              }
+                           }
+                        }
+                                 </ol>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>

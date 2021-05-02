@@ -1,0 +1,102 @@
+@model MOF.Etimad.Monafasat.ViewModel.ManageUsersAssignationModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using MOF.Etimad.Monafasat.ViewModel;
+@{
+   List<RoleModel> rolesFilter = ViewBag.Roles;
+}
+
+   <div class="card card-body">
+      <div class="text-right">
+         <button id="closeSearch" type="button" class="btn btn-sm btn-link btn-default pull-right p-1">
+            <i class="material-icons">close</i> 
+
+         </button>
+      </div>
+      <div class="row">
+         <div class="col-12" style="    ">
+            <a class="search-expand d-block collapsed" data-toggle="collapse" href="#basicInfo" role="button" aria-expanded="false" aria-controls="basicInfo">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation <i class="material-icons pull-right">keyboard_arrow_up</i> </a>
+            <div class="collapse multi-collapse" id="basicInfo">
+               <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <input type="text" class="form-control" id="txtUserName" name="Name" maxlength="50" placeholder="@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.UserName">
+                        <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.EnterUserName</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <input type="text" class="form-control" id="txtNationalId" name="NationalId" maxlength="50" placeholder="@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.NationalId">
+                        <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.EnterNationalId</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <input type="text" class="form-control" id="txtMobileNumber" name="MobileNumber" maxlength="50" placeholder="@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.MobileNumber">
+                        <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.EnterMobileNumber</span>
+                     </div>
+                  </div>
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group bmd-form-group">
+                        <input type="text" class="form-control" id="txtEmail" name="Email" maxlength="50" placeholder="@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Email">
+                        <span class="bmd-help">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.EnterEmail</span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         @if (!(User.IsInRole(RoleNames.UnitManagerUser) || User.IsInRole(RoleNames.UnitBusinessManagement) || User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2)))
+         {
+            <div class="col-12">
+               <a class="search-expand d-block collapsed" data-toggle="collapse" href="#role" role="button" aria-expanded="false" aria-controls="role">@MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.Roles<i class="material-icons pull-right">keyboard_arrow_up</i> </a>
+               <div class="collapse multi-collapse" id="role">
+                  <div class="form-group bmd-form-group">
+                     <select name="RoleName" id="RoleName" class="selectpicker" data-live-search="true" data-style="select-with-transition">
+                        <option value="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All </option>
+                        @for (int i = 0; i < rolesFilter.Count(); i++)
+                        {
+                           <option value="@rolesFilter[i].RoleName">@rolesFilter[i].RoleNameAr</option>
+                        }
+                     </select>
+                     <input type="hidden" id="NotAssignedOnlyUserFlag" name="NotAssignedOnlyUserFlag" v-model="NotAssignedOnlyUserFlag" />
+                  </div>
+               </div>
+            </div>
+         }
+
+         <div class="col-12" v-show="NotAssignedOnlyUserFlag == false">
+            <a class="search-expand d-block collapsed" data-toggle="collapse" href="#agency" role="button" aria-expanded="false" aria-controls="agency">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agencies<i class="material-icons pull-right">keyboard_arrow_up</i></a>
+            <div class="collapse multi-collapse" id="agency">
+
+               @if (User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.UnitManagerUser) || User.IsInRole(RoleNames.UnitBusinessManagement) || User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2))  //   الجهة الحكومية تظهر فقط لمدير الحساب فى اعتماد
+               {
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group has-success bmd-form-group">
+                        <label for="agencyId" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agencies</label>
+                        <select data-live-search="true" id="agencyId" name="AgencyId" class="selectpicker" @@change="updateBranches();" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All" data-style="select-with-transition">
+                           <option :value="item.agencyCode" v-for="item in agencyList">{{item.nameArabic}}</option>
+                        </select>
+                     </div>
+                  </div>
+               }
+               <div v-show="NotAssignedOnlyUserFlag == false">
+                  <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+                     <div class="form-group has-success bmd-form-group">
+                        <label for="branchId" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Branches</label>
+                        <select data-live-search="true" id="branchId" name="BranchId" class="selectpicker" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.All" data-style="select-with-transition">
+                           <option :value="item.id" v-for="item in branchesList">{{item.name}}</option>
+                        </select>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="input-group-prepend pull-left etd-search-btn">
+         <button type="button" class="btn btn-primary btn-block text-center btn-sm" id="searchBtn" name="button" @@click="search">
+            <i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search
+         </button>
+         <button type="reset" class="btn btn-block text-center btn-sm" name="reset" @@click="reset">
+            <i class="material-icons">close</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Clear
+         </button>
+      </div>
+   </div>

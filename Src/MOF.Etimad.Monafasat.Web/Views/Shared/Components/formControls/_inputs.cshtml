@@ -1,0 +1,35 @@
+<template id="Etd-input-box">
+   <div class="form-group bmd-form-group">
+      <label for="publisher" class="label bmd-label-static"> {{title}}  <span v-if="requierd" class="text-danger">*</span></label>
+      <input v-bind:type="inptype" class="form-control" id="publisher" v-bind:requierd="requierd" v-bind:disabled="disabled" v-bind:value="value" v-on:input="$emit('input', $event.target.value)">
+      @*<span class="bmd-help">We'll never share your email with anyone else.</span>*@
+   </div>
+</template>
+<template id="Etd-input-radio-checkbox">
+   <div class="form-group bmd-form-group">
+      <label for="name" class="label bmd-label-static"> {{title}}  <span v-if="requierd" class="text-danger">*</span></label>
+      <div class="form-check">
+         <label class="form-check-label" v-for="(opt, index) in options"  v-on:change="$emit('change', selectedOption,index)">
+            <input class="form-check-input" v-bind:type="inptype" v-bind:name="name" v-model="selectedOption"  v-bind:value="opt.value" v-bind:requierd="requierd" v-bind:disabled="disabled"  v-bind:checked="opt.checked === true">
+            {{opt.title}}
+            
+            <span class="circle" v-if="inptype == 'radio'">
+               <span class="check"></span>
+            </span>
+         
+            <span class="form-check-sign"  v-if="inptype != 'radio'">
+               <span class="check"></span>
+            </span>
+         </label>
+    
+      </div>
+   </div>
+</template>
+<template id="Etd-select">
+   <div class="form-group bmd-form-group">
+      <label  class="label bmd-label-static">{{title}}   <span v-if="requierd" class="text-danger">*</span></label>
+      <select class="form-control" v-model="selectedOption" v-on:change="$emit('change', selectedOption)">
+         <option :value="opt.value" v-for="opt in options" v-bind:selected="opt.selected == true">{{opt.title}}</option>
+      </select>
+   </div>
+</template>

@@ -1,0 +1,132 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderDetailsModel
+@{
+   Layout = "~/Views/Shared/_Layout-Visitor.cshtml";
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails;
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <a target="_blank" class="btn p-2 btn-outline-primary pull-left"
+         href="OpenTenderDetailsReportForVisitor?tenderIdString=@Model.TenderIdString"
+         title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails"
+         data-original-title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails" data-toggle="tooltip">
+         <i class="material-icons">assignment</i>   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails<div class="ripple-container"></div>
+      </a>
+   </div>
+}
+<form id="detailsForm">
+   <div class="col-12">
+      <div class="clearfix"></div>
+      <div class="row">
+         <ul class="nav nav-pills nav-pills-icons" role="tablist">
+            <li class="nav-item">
+               <a class="nav-link active text-center show" href="#d-1" role="tab" data-toggle="tab" aria-selected="true">
+                  <i class="material-icons">dashboard</i> 
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation
+               </a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link text-center" id="tenderDatesTab" href="#d-2" role="tab" data-toggle="tab" aria-selected="false">
+                  <i class="material-icons">schedule</i> 
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DetailsStep
+               </a>
+            </li>
+            <li class="nav-item">
+               <a class="nav-link text-center" id="relationStepTab" href="#d-3" role="tab" data-toggle="tab" aria-selected="false">
+                  <i class="material-icons">list</i> 
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep
+               </a>
+            </li>
+            @if (Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects)
+            {
+               <li class="nav-item">
+                  <a class="nav-link text-center" id="attachmentsTab" href="#d-5" role="tab" data-toggle="tab" aria-selected="false">
+                     <i class="material-icons">attach_file</i> 
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Attachment
+                  </a>
+               </li>
+            }
+         </ul>
+         <div class="tab-content  tab-space col-12 " style="padding:0">
+            <div class="tab-pane active animated fadeInLeft  delay-1s show" id="d-1">
+               <div class="card">
+                  <div class="card-body">
+                     @Html.Partial("~/Views/Tender/DetailsPartials/_DetailsBasicStepContent.cshtml", Model)
+                  </div>
+               </div>
+            </div>
+            <div class="tab-pane animated fadeInLeft  delay-1s" id="d-2">
+               <div class="card">
+                  <div class="card-body" id="datesDiv">
+                  </div>
+               </div>
+            </div>
+            <div class="tab-pane animated fadeInLeft delay-1s" id="d-3">
+               <div class="card">
+                  <div class="card-body" id="activityDiv">
+                  </div>
+               </div>
+            </div>
+            <div class="tab-pane animated fadeInLeft  delay-1s" id="d-5">
+               <div class="card">
+                  <div class="card-body" id="attachmentDiv">
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("AllTendersForVisitor", "Tender")'">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToAllTenders
+      <div class="ripple-container"></div>
+   </button>
+</form>
+@section scripts{
+   <script>
+      $('#tenderDatesTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetTenderDatesViewComponenet?tenderIdStr=' + '@Model.TenderIdString', function (data) {
+            $("#datesDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+      $('#relationStepTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetRelationsDetailsViewComponenet?tenderIdStr=' + '@Model.TenderIdString', function (data) {
+            $("#activityDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+      $('#attachmentsTab').click(function () {
+         $('#loader').show();
+         $.get('/Tender/GetAttachmentsViewComponenet?tenderIdStr=' + '@Model.TenderIdString', function (data) {
+            $("#attachmentDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+      function goBack() {
+         var referrer = document.referrer;
+           window.location = referrer
+      }
+      $(document).ready(function () {
+         //var activeTab = window.location.href.split('#')[1];
+         //$('a[href=#' + activeTab + ']').click();
+         var lastOfferPresentationDateElement = document.getElementById("lastOfferPresentationDate");
+         if (lastOfferPresentationDateElement) {
+            if ($("#lastOfferPresentationDate").val()) {
+            }
+            else {
+               $("#remainingTime").hide();
+            }
+         }
+      });
+      $('.readMore').on('click', function () {
+         $("#subPurposSapn").prop("hidden", true);
+         $("#purposeSpan").prop("hidden", false);
+      });
+      $('.readLess').on('click', function () {
+         $("#subPurposSapn").prop("hidden", false);
+         $("#purposeSpan").prop("hidden", true);
+      });
+      $("#divRejectReason").hide();
+   </script>
+}

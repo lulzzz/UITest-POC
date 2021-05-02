@@ -1,0 +1,184 @@
+@model MOF.Etimad.Monafasat.ViewModel.QualificationSupplierDataReviewViewModel
+
+
+<div class="">
+   <ul class="nav nav-pills">
+      <li class="nav-item "><a class="nav-link text-center active show" href="#section1" data-toggle="tab">القدرات الفنية والإدارية</a></li>
+      <li class="nav-item"><a class="nav-link text-center " href="#section2" data-toggle="tab">القدرات المالية</a></li>
+   </ul>
+</div>
+<div class="tab-content tab-space p-0">
+   <div class="tab-pane active show" id="section1">
+      <div class="row">
+
+         @for (int i = 0; i < Model.lstQualificationSupplierTechDataModel.Count; i++)
+         {
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <ul class="list-group form-details-list p-0">
+
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @Model.lstQualificationSupplierTechDataModel[i].QualificationItemName
+
+                        </div>
+                        <div class="col-8 etd-item-info">
+
+                           <ul class="list-group form-details-list p-0">
+
+                              @if (@Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.InsuranceOfGeneralCommercialResponsibility ||
+                         @Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.InsuranceOfProfessionalCompensation ||
+                         @Model.lstQualificationSupplierTechDataModel[i].QualificationItemId == (Int32)Enums.QualificationEvaluationItems.LiabilityInsurance)
+                              {
+                                 <li class="list-group-item">
+                                    <div class="row">
+                                       <div class="col-4 etd-item-title">
+
+                                          @Model.lstQualificationSupplierTechDataModel[i].QualificationItemName
+                                       </div>
+                                       <div class="col-8 etd-item-info">
+                                          @Model.lstQualificationSupplierTechDataModel[i].SupplierValueString
+                                          @if ((Model.TenderStatusId != (int)Enums.TenderStatus.Approved
+                                       && Model.TenderStatusId != (int)Enums.TenderStatus.DocumentChecking
+                                       && Model.TenderStatusId != (int)Enums.TenderStatus.DocumentCheckPending
+                                       && Model.TenderStatusId != (int)Enums.TenderStatus.DocumentCheckRejected) && Model.lstQualificationSupplierTechDataModel[i].QualificationItemId != (int)Enums.QualificationEvaluationItems.NumberOfSaudiEmployees)
+                                          {
+                                             <div>
+                                                <br />
+                                                @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AcquiredPoints: @Model.lstQualificationSupplierTechDataModel[i].PointValue
+                                             </div>
+                                          }
+                                       </div>
+                                    </div>
+                                 </li>
+                                 <li class="list-group-item">
+                                    <div class="row">
+                                       <div class="col-4 etd-item-title">
+
+                                          مقدم التأمين
+                                       </div>
+                                       <div class="col-8 etd-item-info">
+                                          @Model.lstQualificationSupplierTechDataModel[i].InsuranceProvider
+                                       </div>
+                                    </div>
+                                 </li>
+                                 <li class="list-group-item">
+                                    <div class="row">
+                                       <div class="col-4 etd-item-title">
+
+                                          مستوى التغطية
+                                       </div>
+                                       <div class="col-8 etd-item-info">
+                                          @Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverage
+                                       </div>
+                                    </div>
+                                 </li>
+                                 <li class="list-group-item">
+                                    <div class="row">
+                                       <div class="col-4 etd-item-title">
+                                          تاريخ النهاية
+                                       </div>
+                                       <div class="col-8 etd-item-info">
+                                          @Model.lstQualificationSupplierTechDataModel[i].InsuranceCoverageEndDateStr
+                                       </div>
+                                    </div>
+                                 </li>
+                              }
+                              else
+                              {
+                                 <li>
+                                    <span> @Model.lstQualificationSupplierTechDataModel[i].SupplierValueString</span>
+                                 </li>
+                              }
+                              @if (@Model.lstQualificationSupplierTechDataModel[i].lstQualificationConfigurationAttachmentModel != null && @Model.lstQualificationSupplierTechDataModel[i].lstQualificationConfigurationAttachmentModel.Count > 0)
+                              {
+                                 <li class="list-group-item">
+                                    <div class="row">
+                                       <div class="col-4 etd-item-title">
+                                          المرفقات
+                                       </div>
+                                       <div class="col-8 etd-item-info">
+                                          @foreach (var file in Model.lstQualificationSupplierTechDataModel[i].lstQualificationConfigurationAttachmentModel)
+                                          {
+
+                                             <a href="#" onclick="RedirectURL('@file.FileReferenceId','@file.FileName'); return false;" target="_blank" class="btn btn-outline-primary btn-sm" style="white-space: normal;">
+                                                <i class="material-icons">insert_drive_file</i> 
+                                                @file.FileName
+                                             </a>
+                                          }
+                                       </div>
+                                    </div>
+                                 </li>
+                              }
+                           </ul>
+
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+         }
+      </div>
+
+      @Html.Partial("_SupplierProjectConfigData.cshtml")
+
+   </div>
+   <div class="tab-pane" id="section2">
+
+      <div class="row">
+         <div class="col">
+            <h5 class="text-primary">البيانات المالية</h5>
+            <div class="table-responsive">
+               <table class="table table-bordered table-striped" aria-describedby="Finicial Info">
+                  <caption>البيانات المالية</caption>
+                  <thead style="background: #29ad6f38;">
+                     <tr>
+                        <th  id="thdata143" >
+                           البيانات المالية لآخر 3 سنوات مالية
+                        </th>
+                        <th  id="thCurrentYear146" >
+                           @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CurrentYear
+                        </th>
+
+                        <th  id="thpreviousYear150" >
+                           @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.previousYear
+                        </th>
+                        <th  id="thBeforePreviousYear153" >
+                           @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.BeforePreviousYear
+                        </th>
+                     </tr>
+                     <tr>
+                        <th colspan="4" id="thbudget157" >
+                           بيان الميزانية العمومية
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     @foreach (var item in Model.QualificationSupplierDataYearly)
+                     {
+                        <tr>
+                           <th  id="thName167" >
+                              <label class="label bmd-label-static">@item.Name</label>
+                           </th>
+                           <th  id="thCurrentYear170" >
+                              <label>@item.CurrentYear</label>
+                           </th>
+                           <th  id="thYear1173" >
+                              <label>@item.Year1</label>
+                           </th>
+                           <th  id="thYear2176" >
+                              <label>@item.Year2</label>
+                           </th>
+                        </tr>
+                     }
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+
+   </div>
+</div>
+
+
+

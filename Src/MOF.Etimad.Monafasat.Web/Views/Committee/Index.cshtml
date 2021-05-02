@@ -1,0 +1,177 @@
+
+@model MOF.Etimad.Monafasat.ViewModel.CommitteeModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using MOF.Etimad.Monafasat.SharedKernal;
+
+@{
+   string PlaceholderName = (Int32.Parse(Util.Decrypt(ViewData["CommitteeTypeId"])) == (int)Enums.CommitteeType.TechincalCommittee) ? MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.AgencyName : MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.CommitteeName;
+   string requiredMessage = (Int32.Parse(Util.Decrypt(ViewData["CommitteeTypeId"])) == (int)Enums.CommitteeType.TechincalCommittee) ? MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.EnterAgencyName : MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.EnterCommitteeName;
+
+   @section breadcrumb
+      {
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.BreadCrumbCommittee</li>
+         </ol>
+      </nav>
+   }
+   @section pagecontrols{
+      <div class="dropdown">
+         <button type="button" id="toglGrid" onclick="toggleViewGrid('CommitteeGrid')" class="btn p-2 btn-outline-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsMenu"><i class="material-icons">view_column</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsMenu</button>
+         <button type="button" id="toglCards" onclick="toggleViewCards('CommitteeGrid')" class="btn p-2 btn-outline-primary pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsCards"><i class="material-icons">view_quilt</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ViewAsCards</button>
+         <button class="btn p-2 btn-outline-primary" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search" aria-controls="Search"><i class="material-icons">search</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search<div class="ripple-container"></div></button>
+         <button class="btn p-2 btn-outline-primary" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.AddCommittee" onclick="window.location = '/committee/createasync?CommitteeTypeId=@(ViewData["CommitteeTypeId"])'">
+            <i class="material-icons">add</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Add<div class="ripple-container"></div>
+         </button>
+      </div>
+   }
+
+   <form id="cSearchForm" class="form">
+      @Html.AntiForgeryToken()
+      <div id="CommitteeGrid" v-cloak>
+
+         <div class="modal fade" id="DeleteCommitteConfirmationModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title">
+                        @MOF.Etimad.Monafasat.Resources.BranchResources.Messages.ConfirmDeletion
+                     </h5>
+                     <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons">clear</i>
+                     </button>
+                  </div>
+                  <div class="modal-body">
+                     <p>
+                        @MOF.Etimad.Monafasat.Resources.BranchResources.Messages.ConfirmSupplierDeletion
+                        <input type="hidden" name="hiddenValue" id="hiddenValue" value="" />
+                     </p>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-link btn-success" id="SaveModel" @@click="confirmDelete">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+                     <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Cancel</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="collapse form-newsletter col-12" id="Search">
+            <div class="card card-body">
+               <div class="row">
+                  <div class="col-lg-4 col-sm-6 col-xs-12 form form-newsletter">
+                     <div class="form-group bmd-form-group pull-left">
+                        <input type="text" class="form-control" id="txtCommitteeName" name="CommitteeName" maxlength="50" placeholder="@PlaceholderName">
+                        <input type="hidden" name="CommitteeTypeIdString" value="@(ViewData["CommitteeTypeId"])" />
+                        <span class="bmd-help">@requiredMessage</span>
+                     </div>
+                     <div class="input-group-prepend">
+                        <button type="button" class="btn btn-primary btn-just-icon" name="button" @@click="search" style="margin-right:10px;">
+                           <i class="material-icons">search</i>
+                           <div class="ripple-container"></div>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-just-icon" name="reset" @@click="reset" style="margin-right:10px;">
+                           <i class="material-icons">clear</i>
+                           <div class="ripple-container"></div>
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="clearfix"></div>
+         <div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="cardsresult">
+            @Html.Partial("_CommitteesCard.cshtml")
+         </div>
+         <div class="tableDiv col-md-12 col-sm-12 col-xs-12 animated  delay-2s" id="gridresult">
+            <div class="card">
+               @Html.Partial("_CommitteesGrid.cshtml")
+            </div>
+         </div>
+      </div>
+   </form>
+
+   <!--endtBody-->
+   @section scripts{
+      <script>
+         $(function () {
+            toggleViewGrid('CommitteeGrid');
+         });
+      var grid = new Vue({
+         el: '#CommitteeGrid',
+         data: {
+            Committees: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/Committee/IndexPagingAsync?CommitteeTypeIdString=@(ViewData["CommitteeTypeId"])',
+            queryString: ''
+         },
+         methods: {
+            updateResource: function (data) {
+               this.Committees = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            detailsUrl: function (params) {
+               return '/Committee/DetailsAsync?id=' + params;
+            },
+            editUrl: function (params) {
+               return '/Committee/EditAsync?id=' + params;
+            },
+            deleteUrl: function (committeeId) {
+               return '/Committee/DeleteAsync?committeeIdString=' + committeeId + '&committeeTypeIdString=' + '@(ViewData["CommitteeTypeId"])';
+            },
+            showDialog: function (id) {
+               if (typeof (id) !== "undefined" && id !== "") {
+                  $("#DeleteCommitteConfirmationModal #hiddenValue").val(id);
+                  $("#DeleteCommitteConfirmationModal").modal("show");
+               }
+            },
+               confirmDelete: function () {
+                  $('#DeleteCommitteConfirmationModal').modal('hide');
+                  var committeeId = $("#hiddenValue").val();
+                  $(".modal-body #hiddenValue").val("");
+                  var token = $('input[name=__RequestVerificationToken]').val();
+
+              $.ajax({
+              type: "POST",
+              url: '@Url.Action("DeleteAsync", "Committee")',
+              data: { committeeIdString: committeeId, committeeTypeIdString: '@(ViewData["CommitteeTypeId"])', __RequestVerificationToken: token },
+                 success: function (data) {
+                    if (data.status.trim() == "success") {
+                       AlertFun(data.message, alertMessageType.Success)
+                       setTimeout(function () {
+                          grid.$refs.vpaginator.fetchData(grid.resource_url);
+                       }, 2000);
+                    } else {
+                       AlertFun(data.message, alertMessageType.Danger);
+                    }
+                 },
+              error: function () {
+                 $('#LoadingSite').fadeOut();
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ExpiredActivationCode)', alertMessageType.Danger);
+                  }
+              });
+
+            },
+            addUser: function (committeeId, roleName) {
+               return '/Committee/AssignUsers?committeeIdString=' + committeeId+'';
+            },
+            joinCommitteeToTender: function (committeeId, roleName) {
+               return '/Committee/LinkTendersToCommittees?committeeIdString=' + committeeId;
+            },
+            search: function () {
+               this.queryString = $('form').serialize();
+               this.resource_url = '/Committee/IndexPagingAsync' + '?' + this.queryString;
+            },
+            reset: function () {
+               $("#txtCommitteeName").val("");
+               this.resource_url = '/Committee/IndexPagingAsync?CommitteeTypeIdString=@(ViewData["CommitteeTypeId"])';
+            }
+         }
+      });
+      </script>
+   }
+}

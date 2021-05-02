@@ -1,0 +1,64 @@
+@{
+   int tableIndex = 0;
+}
+<div class="col-12">
+   <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.QuantitiesTalblesAfterChange </h4>
+</div>
+<div class="clearfix"></div>
+<div class="card-collapse col-12">
+   @if (Model != null)
+   {
+      @foreach (var table in Model.QuantitiesTablesChanges)
+      {
+         <div class="card-header" role="tab" id="headingOne">
+
+            <div class="mb-0">
+               <a class="collapse p-1 collapsed" data-toggle="collapse" href="#edited@(tableIndex)" aria-expanded="false" aria-controls="@tableIndex">
+                  <i class="material-icons pull-left">keyboard_arrow_down</i> 
+                  @if (table.TableChangeStatusId == (int)Enums.TableChangeStatus.Add)
+                  {
+                     <span class="badge badge-primary pull-right  m-1"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Add</span>
+                  }
+                  else if (table.TableChangeStatusId == (int)Enums.TableChangeStatus.Edit)
+                  {
+                     <span class="badge badge-warning pull-right  m-1"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EditTable</span>
+                  }
+                  else if (table.TableChangeStatusId == (int)Enums.TableChangeStatus.Delete)
+                  {
+                     <span class="badge badge-danger pull-right  m-1"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</span>
+                  }
+                  @table.Name
+               </a>
+            </div>
+         </div>
+         <div id="edited@(tableIndex)" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="table-responsive">
+               <table class="table table-striped"    summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow" >
+                  <thead style="background-color: #e0efe8;">
+                     <tr>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ItemName </th>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Quantity</th>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Unit</th>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details</th>
+                        <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBooklet</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     @foreach (var item in table.QuantitiesTableItems)
+                     {
+                        <tr>
+                           <td>@item.Name</td>
+                           <td>@item.Quantity</td>
+                           <td>@item.Unit</td>
+                           <td>@item.Details</td>
+                           <td><a href="#" onclick="RedirectURL('@item.ItemAttachmentId','@item.ItemAttachmentName');return false;"> @item.ItemAttachmentName </a></td>
+                        </tr>
+                     }
+                  </tbody>
+               </table>
+            </div>
+         </div>
+         tableIndex++;
+      }
+   }
+</div>

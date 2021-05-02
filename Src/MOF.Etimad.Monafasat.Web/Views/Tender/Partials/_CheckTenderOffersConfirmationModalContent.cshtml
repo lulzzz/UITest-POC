@@ -1,0 +1,179 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderDetailsCheckingStageModel
+
+<div class="row">
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divLC">
+      <div class="form-check">
+         <label class="form-check-label text-dark-green" style="margin-bottom:10px">
+            <input class="form-check-input" type="checkbox" id="chLCValue">
+            تقر لجنة فحص العروض بالالتزام بأحكام لائحة تفضيل المحتوى المحلي والمنشآت الصغيرة والمتوسطة المحلية والشركات المدرجة في السوق المالية في الاعمال والمشتريات التي تنطبق على هذه المنافسة
+            <span class="form-check-sign">
+               <span class="check"></span>
+            </span>
+         </label>
+         <span class="h6 text-danger d-block mt-0" id="txtApproveLC" style="display:none !important">@MOF.Etimad.Monafasat.Resources.SharedResources.Messages.PleaseAgree</span>
+      </div>
+   </div>
+
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divRejectReason">
+      <div class="form-group bmd-form-group p-0">
+         <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+         <textarea type="text" class="form-control" rows="5" id="txtRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason"></textarea>
+         <div class="pull-left">
+            <span style="display:none" class="bmd-help text-danger" id="txtRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divSendToApproveMessage">
+      <div class="form-group bmd-form-group">
+         <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckApproveRequestWillSent</lable>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divTechnicalApproveMessage">
+      <div class="form-group bmd-form-group">
+         <lable>سيتم اعتماد التقييم الفنى للمنافسة</lable>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divReopenMessage">
+      <div class="form-group bmd-form-group">
+         <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WillReopen</lable>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divOpenCheckMessage">
+      <div class="form-group bmd-form-group">
+         <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.WillConfirmOpen</lable>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divEndOpenFinantialOffersStage">
+      <div class="form-group bmd-form-group">
+         <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.Messages.WilEndOpenFinantialOffersStage</lable>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divApproveMessage">
+      <div class="form-group bmd-form-group">
+         <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfrimCheckResults</lable>
+      </div>
+      <br />
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divFinancialCheckkMessage">
+      <div class="form-group bmd-form-group">
+         <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AFinancailConfirmationRequestWillBeSent</lable>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divFinancialOpeningMessage">
+      <div class="form-group bmd-form-group">
+         <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FinancailOpeningConfirmation</lable>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divAreYouSure">
+      <div class="form-group bmd-form-group">
+         <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SendTechnicalEvaluationToApprove</lable>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divNewBiddingRound">
+      <label>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterNewRoundInformation</label>
+      <div class="row">
+
+         <div class="col-12">
+            <div class="form-group form-check etd-calendar-group">
+               <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingDate</label>
+               <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="biddingDate" name="guaranteeStartDateguaranteeStartDate" placeholder="" value="">
+            </div>
+         </div>
+         <div class="col-sm-6 col-xs-6">
+            <div class="form-group form-check etd-calendar-group">
+               <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingStartTime</label>
+               <input type="text" id="biddingStartTime" class="form-control timepicker" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+            </div>
+         </div>
+         <div class="col-sm-6 col-xs-6">
+            <div class="form-group form-check etd-calendar-group">
+               <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingEndTime</label>
+               <input type="text" id="biddingEndTime" class="form-control timepicker" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+            </div>
+         </div>
+         <div class="col-12">
+            <div class="form-group form-check etd-calendar-group">
+               <label class="label text-dark-green bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingDuration: </label>
+               <label id="biddingDuration" class="label bmd-label-static text-dark-green"></label>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-12 col-sm-12 col-xs-12 ModalElement" id="divInspectionDateTime">
+      @if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalOppeningConfirmed)
+      {
+         <label class="text-dark-green">الرجاء إدخال تاريخ ووقت فحص العروض الفنية</label>
+      }
+      else if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStageApproved)
+      {
+         <label class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterInspectionDateTime</label>
+      }
+      else
+      {
+         <label class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterInspectionDateTime</label>
+      }
+      <div class="row">
+         <div class="col-sm-6 col-xs-12">
+            <div class="form-group form-check etd-calendar-group">
+               @if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalOppeningConfirmed)
+               {
+                  <label for="datepick" class="label bmd-label-static">تاريخ فحص العروض الفنية</label>
+               }
+               else if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStageApproved)
+               {
+                  <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FinancialOffersCheckingDate</label>
+               }
+               else
+               {
+                  <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersCheckingDate</label>
+               }
+               <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="checkingDate" name="checkingDate" placeholder="" value="">
+            </div>
+            <div class="pull-left">
+               <span style="display:none" class="bmd-help text-danger" id="txtCheckingDateValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterOffersCheckingData</span>
+            </div>
+            <br />
+         </div>
+         <div class="col-sm-6 col-xs-6">
+            <div class="form-group form-check etd-calendar-group">
+               @if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalOppeningConfirmed)
+               {
+                  <label for="datepick" class="label bmd-label-static">تاريخ فحص العروض الفنية</label>
+               }
+               else if (Model.TenderStatusId == (int)Enums.TenderStatus.OffersOpenFinancialStageApproved)
+               {
+                  <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FinancialOffersCheckingTime</label>
+               }
+               else
+               {
+                  <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersCheckingTime</label>
+               }
+               <input type="text" id="checkingTime" class="form-control timepicker" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+            </div>
+            <div class="pull-left">
+               <span style="display:none" class="bmd-help text-danger" id="txtCheckingTimeValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterOffersCheckingTime</span>
+            </div>
+            <br />
+         </div>
+         <div class="col-lg-12 col-sm-12 col-xs-12" id="divCheckingDateNotes">
+            <div class="form-group bmd-form-group p-0">
+               <label for="CheckingDateNotes" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Notes</label>
+               <textarea type="text" class="form-control" rows="5" id="txtCheckingDateNotes" name="CheckingDateNotes"></textarea>
+            </div>
+         </div>
+      </div>
+
+   </div>
+
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divConfirmApprove">
+      <input type="text" class="form-control" id="txtverificationCode" name="verificationCode" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+      <div class="pull-left">
+         <span class="bmd-help text-danger position-relative" id="txtverificationCodeValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+      </div>
+
+      <br />
+      <p id="divTimer" class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainingTime<span class=" text-danger" id="timer"></span></p>
+   </div>
+</div>
+
+

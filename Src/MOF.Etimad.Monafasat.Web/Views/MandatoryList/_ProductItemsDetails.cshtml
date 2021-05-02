@@ -1,0 +1,89 @@
+@model MandatoryListProductViewModel
+
+<div class="card-collapse" style="border: 1px solid #ccc;border-radius: 6px;overflow: hidden;">
+   <div class="card-header" role="tab" id="headingOne1">
+      <h4 class="m-0 p-2">
+         <a data-toggle="collapse" name="collapseHeader" href="#collapse + @Model.Id" aria-expanded="false" aria-controls="collapse + @Model.Id" class="collapsed">
+            (<b>@Model.CSICode - @ViewData["DivisionCode"]</b>) - @Model.NameAr
+            <i class="material-icons pull-left">keyboard_arrow_down</i>
+         </a>
+      </h4>
+   </div>
+   <div id="collapse + @Model.Id" class="collapse" role="tabpanel" aria-labelledby="collapse + @Model.Id" data-parent="#accordion">
+      <div class="col-12">
+         <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.CSICode
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>@Model.CSICode - @ViewData["DivisionCode"]</span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.NameAr
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>@Model.NameAr</span>
+
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.NameEn
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>@Model.NameEn</span>
+
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.PriceCelling
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>@Model.PriceCelling</span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DescriptionAr
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span> @Model.DescriptionAr</span>
+
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.DescriptionEn
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>@Model.DescriptionEn</span>
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

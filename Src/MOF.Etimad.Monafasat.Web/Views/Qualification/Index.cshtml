@@ -1,0 +1,603 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Qualification;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Qualification</li>
+      </ol>
+   </nav>
+}
+@section pagecontrols{
+   <div class="dropdown">
+      <span class="d-block pull-left" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search"><button id="searchBtnColaps" class="btn p-2 btn-outline-primary" data-toggle="collapse" href="#Search" role="button" aria-expanded="false" aria-controls="Search"><i class="material-icons">search</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</button></span>
+   </div>
+}
+<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">تاكيد</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="row" id="divApprove">
+               <div class="form-group">
+                  <label id="" class="label bmd-label-static">هناك طلب إلغاء بإنتظار الإعتماد وسوف يتم حذفه</label>
+               </div>
+
+               <div class="clearfix"></div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button" id="btnApprove">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Confirm</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+<form class="form">
+   <input type="hidden" id="hdnCreationDate" />
+   <div id="QualificationGrid" class="etd-cards" v-cloak>
+      @section modalTitle{
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.DeleteQualification
+      }
+      @section modalContent{
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ConfirmDelete
+      }
+      @section modalButtons{
+         <input type="hidden" id="hiddenDelete" value="" />
+         <button type="button" onclick="removeQualification()" class="btn btn-sm btn-primary">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</button>
+         <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+      }
+      <div class="clearfix"></div>
+      <div class="row tendar-navigation position-relative" style="min-height:0px;">
+         <ul class="nav nav-pills nav-pills-teal col-md-8 col-sm-12 col-xs-12">
+            <li class="nav-item active" @@click="getAllTenders()"><a class="nav-link active" href="#" data-toggle="tab"><i class="material-icons pull-left" style="padding:0 3px">layers</i> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AllQualifications</a></li>
+            <li class="nav-item" @@click="getCurrentTenders()"><a class="nav-link" href="#" data-toggle="tab"><i class="material-icons pull-left" style="padding:0 3px">layers</i> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ActiveQualification</a></li>
+            <li class="nav-item" @@click="getFinishedTenders()"><a class="nav-link" href="#" data-toggle="tab"><i class="material-icons pull-left" style="padding:0 3px">layers</i> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.EndedQualification</a></li>
+         </ul>
+         <div class="col-md-4 col-sm-12 col-xs-12">
+            @if (User.IsInRole(RoleNames.DataEntry))
+            {
+               <a class="btn btn-lg btn-primary pull-right m-0  d-sm-block d-none " asp-action="SavePreQualification" asp-controller="Qualification" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AddQualification">
+                  <i class="material-icons">add</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddQualification
+               </a>
+               <a class="btn btn-lg btn-primary text-center pull-right m-1 btn-block d-sm-none d-inline-block" asp-action="SavePreQualification" asp-controller="Qualification" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.AddQualification">
+                  <i class="material-icons">add</i>  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AddQualification
+               </a>
+            }
+         </div>
+         <div class="etd-sorting-cont">
+            @Html.Partial("~/Views/Qualification/Partials/_QualificationsGridSorts.cshtml")
+         </div>
+      </div>
+      <div class="row" style="position:relative">
+         <div class="collapse col-lg-4 col-md-4 col-sm-12 col-xs-12 " id="Search">
+            @Html.Partial("~/Views/Qualification/Search/_IndexSearchForm.cshtml")
+         </div>
+         <div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="cardsresult">
+            <div class="row" v-if="Tenders && Tenders.length > 0">
+               <div class="monafasa-item col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12" v-for="(tender, $index) in Tenders">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="row">
+                           <div class="agncy_logo col-12">
+                              <div class="dropdown pull-right">
+                                 <button class="btn btn-primary btn-link btn-just-icon" title="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i> <div class="ripple-container"></div></button>
+                                 <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                                    @Html.Partial("~/Views/Qualification/Partials/_PreQualificationIndexUnderOperationsStageActions.cshtml")
+                                 </div>
+                              </div>
+                              <h5 class="text-dark-green m-0 p-0" style="overflow:hidden">
+                                 <span>
+                                    @Html.Partial("_AgencyLogo")
+                                 </span>
+                                 <a data-toggle="tooltip" class="text-primary h5" data-placement="top" title="" data-container="body" v-bind:data-original-title="[tender.qualificationName]" :href="detailsIndex(tender.tenderIdString, tender.tenderStatusIdString)">{{tender.qualificationName.length > 40 ?  tender.qualificationName.substring(0,40) + '...' :tender.qualificationName }}</a>
+                                
+                              </h5>
+                              <div class="row">
+                                 <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 p-2">
+                                    @Html.Partial("~/Views/Qualification/Partials/_QualificationStatus.cshtml")
+                                 </div>
+                                 <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 p-2">
+                                   
+                                       <template v-if="tender.lastOfferPresentationDate">
+                                          <div class="progress pull-right" :data-percentage="percentageLeft(tender.submitionDate,tender.lastOfferPresentationDate,tender.remainingDays,tender.remainingHours)">
+                                             <span class="progress-left">
+                                                <span class="progress-bar"></span>
+                                             </span>
+                                             <span class="progress-right">
+                                                <span class="progress-bar"></span>
+                                             </span>
+                                             <div class="progress-value">
+                                                @Html.Partial("~/Views/Shared/_ElapsedTime.cshtml")
+                                             </div>
+                                          </div>
+                                       </template>
+                                       @*<template v-else>
+         </template>
+         <p class="text-center ">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletPrice</p>
+         <p class="text-center text-primary h5">{{tender.conditionsBookletPrice | currency('')}} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Riyal</p>*@
+                                 
+                                 </div>
+                               
+                              </div>
+                           </div>
+                           <div class="clearfix"></div>
+                           @Html.Partial("_QualificationCardContent.cshtml")
+                        </div>
+                     </div>
+                     <div class="card-footer row">
+                        @Html.Partial("Partials/_UnderOperationQualificationCardFooter.cshtml")
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-12" v-else>
+               @Html.Partial("~/Views/Shared/_NoData.cshtml")
+            </div>
+         </div>
+         <div class="col-12 m-5 m-auto">
+            <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+         </div>
+      </div>
+   </div>
+   <div class="clearfix"></div>
+</form>
+<!--endtBody-->
+@section scripts{
+   @*<script src="~/Etimad-UI/assets/vendor/calendar/javascriptUtils/DateConverterUtil.js"></script>*@
+   <script>
+      $(document).ready(function () {
+         //toggle active class in main menu
+         //$('#mainMenu').find('li a.active').removeClass('active');
+         $('li#menuAllQualification a').addClass('active');
+      });
+      var QualificationGrid = document.getElementById('QualificationGrid');
+      var cardsCont = document.getElementById('cardsresult');
+      $(function () {
+         $("input").keypress(function (event) {
+            if (event.which == 13) {
+               event.preventDefault();
+               $("#searchBtn").click();
+            }
+         });
+         toggleViewCards();
+         $('#searchBtnColaps').click(function () {
+            if (!Tender.isAjaxMethodsCalled) {
+               Tender.getDropDownData();
+            }
+            var _cards = $('#cardsresult');
+            if (_cards.hasClass('col-md-12')) {
+               _cards.removeClass('col-md-12');
+               _cards.addClass('col-md-8');
+               _cards.find('.monafasa-item').removeClass('col-md-6');
+               _cards.find('.monafasa-item').addClass('col-md-12');
+               _cards.find('.monafasa-item').removeClass('col-lg-6');
+               _cards.find('.monafasa-item').addClass('col-lg-12');
+               _cards.find('.monafasa-item').removeClass('col-xl-4');
+               _cards.find('.monafasa-item').addClass('col-xl-6');
+            } else if (_cards.hasClass('col-md-8')) {
+               _cards.addClass('col-md-12');
+               _cards.removeClass('col-md-8 ');
+               _cards.find('.monafasa-item').addClass('col-md-6');
+               _cards.find('.monafasa-item').removeClass('col-md-12');
+               _cards.find('.monafasa-item').addClass('col-lg-6');
+               _cards.find('.monafasa-item').removeClass('col-lg-12');
+               _cards.find('.monafasa-item').addClass('col-xl-4');
+               _cards.find('.monafasa-item').removeClass('col-xl-6');
+            }
+              $('#closeSearch').on("click",function () {
+              
+              $('#searchBtnColaps').click()
+            });
+         });
+      });
+      function toggleViewCards() {
+         cardsCont.classList.remove('fadeOut');
+         cardsCont.classList.add('bounceInLeft');
+      }
+      function toggleViewGrid() {
+         cardsCont.classList.remove('bounceInLeft');
+         cardsCont.classList.add('fadeOut');
+      }
+      function removeQualification() {
+
+         var id = $("#hiddenDelete").val();
+         $.get('/Qualification/Delete?TenderIdString=' + id).done(function () {
+            window.location = '/Qualification/Index/';
+         });
+      }
+      $("#btnApprove").on("click", function () {
+      
+         $('#cancelModal').modal('hide');
+         window.location = '/Qualification/CheckPreQualification?tenderIdString=' + Tender.selectedTenderIdString;
+      });
+
+      var Tender = new Vue({
+         el: '#QualificationGrid',
+         data: {
+            Tenders: [],
+            qualificationStatusList: [],
+            areasList: [],
+            selectedAgency: '',
+            agencyList: [],
+            branchesList: [],
+            selectedBranch: '',
+            selectedCreatedByUser: '',
+            createdByList: [],
+            selectedApprovedByUser: '',
+            approvedByList: [],
+            selectedDAtaEntry: '',
+            dataEntryList: [],
+            financialYearList: [],
+            selectedStatus: '',
+            selectedFinancialYear: '',
+            selectedAreaList: [],
+            selectedTenderId: 0,
+            selectedTypeId: 0,
+            selectedRowStatus: '',
+            selectedTenderIdString: '',
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: @((int)Enums.PageSize.Six),
+            resource_url: '/Qualification/IndexPagingAsync?pageSize='+@((int)Enums.PageSize.Six),
+            queryString: '',
+            sort: "CreatedAt",
+            sortDirection: "DESC",
+            dataEntry: '@RoleNames.DataEntry',
+            auditor: '@RoleNames.Auditer',
+            checkSecretry: '@RoleNames.PreQualificationCommitteeSecretary',
+            checkManger: '@RoleNames.PreQualificationCommitteeManager',
+            offercheckSecretry: '@RoleNames.OffersCheckSecretary',
+            offercheckManger: '@RoleNames.OffersCheckManager',
+            directPurchaseSecretry: '@RoleNames.OffersPurchaseSecretary',
+            directPurchaseManager: '@RoleNames.OffersPurchaseManager',
+            purshaseSpecialist : '@RoleNames.PurshaseSpecialist',
+            type:"All"
+         },
+         methods: {
+            getAllTenders: function () {
+               this.type = "All";
+               this.search();
+            },
+            getCurrentTenders: function () {
+
+               this.type = "Current";
+               this.search();
+            },
+            getFinishedTenders: function () {
+               this.type = "Finished";
+               this.search();
+            },
+            QualificationOffersRegistryReport: function (tenderIdString) {
+               return '/Qualification/QualificationOffersRegistryReport?qualificationIdString=' + tenderIdString;
+            },
+            PrequalificationTechnicalExamination: function (tenderIdString) {
+               return '/Qualification/PrequalificationTechnicalExamination?PreQualificationIdString=' + tenderIdString;
+            },
+            getDropDownData: function () {
+               $.get('/Qualification/GetStatusAsync').done(function (result) {
+                  Tender.qualificationStatusList = result;
+                  setTimeout(function () {
+                     $('#qualificationStatusList').selectpicker('refresh');
+                  }, 1000);
+               });
+               $.get('/Qualification/GetAreasAsync').done(function (result) {
+                  Tender.areasList = result;
+                  setTimeout(function () {
+                     $('#areaList').selectpicker('refresh');
+                  }, 1000);
+               });
+               $.get('/Qualification/GetFinancialYear', null, function (result) {
+                  Tender.financialYearList = result;
+                  setTimeout(function () {
+                     $('#financialYear').selectpicker('refresh');
+                  }, 1000);
+               });
+               $.get('/Qualification/GetAllDataEntryUsersAsync', null, function (result) {
+                  Tender.createdByList = result;
+                  setTimeout(function () {
+                     $('#createdBy').selectpicker('refresh');
+                  }, 1000);
+               });
+               $.get('/Qualification/GetAllAuditorUsersAsync', null, function (result) {
+
+                  Tender.approvedByList = result;
+                  setTimeout(function () {
+                     $('#approvedBy').selectpicker('refresh');
+                  }, 1000);
+               });
+               $.get('/Qualification/GetAllAgenciesAsync').done(function (result) {
+                  Tender.agencyList = result;
+                  setTimeout(function () {
+                     $('#agencyId').selectpicker('refresh');
+                  }, 1000);
+               });
+               $.get('/Qualification/GetAllBranchesByAgencyCode').done(function (result) {
+                   ;
+                  Tender.branchesList = result;
+                  setTimeout(function () {
+                     //if (url.searchParams.get('BranchId')) {
+                        //$('#branchId').selectpicker('val', url.searchParams.get('BranchId'));
+                     //}
+                      ;
+                     $('#branchId').selectpicker('refresh');
+                  }, 1000);
+               });
+               this.isAjaxMethodsCalled = true;
+            },
+         AttachmentsApproval: function (id) {
+            return '/Qualification/QualificationAttachmentsChangesApprovement?tenderIdString=' + id;
+         },
+            percentageLeft: function (pubDate, lastDate, remainingDays, remainingHours) {
+               return calculateCardPercentage(pubDate, lastDate, remainingDays, remainingHours);
+            },
+            updateResource: function (data) {
+
+               data.forEach(function (item) {
+                  if (item.submitionDate) {
+                     item.submitionDate = item.submitionDate.slice(0, 10); //.split('T')[0]
+                     item.submitionDate = item.submitionDate == "0001-01-01" ? false : (item.tenderStatusId == 1 ? " " : item.submitionDate);
+                  }
+               });
+               this.Tenders = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+               setTimeout(function () {
+                  updateAgencyLogos();
+               }, 1000);
+            },
+            detailsUrl: function (id, statusId, displayOnlyMode) {
+            
+               if (displayOnlyMode == undefined) {
+                  displayOnlyMode = true;
+               }
+               window.location= '/Qualification/PreQualificationDetails?QualificationId=' + id;
+            },
+            detailsIndex: function (id, statusId, displayOnlyMode) {
+        
+               if (displayOnlyMode == undefined) {
+                  displayOnlyMode = true;
+               }
+               return '/Qualification/PreQualificationDetails?QualificationId=' + id;
+            },
+            OffersReport: function (tenderId) {
+               return '/Qualification/OffersReport?tenderIdString=' + tenderId;
+            },
+             showOpenOffersReport: function(tenderStatus, isPurchased, invitationStatusId) {
+              return (tenderStatus != @Html.Raw((int)Enums.TenderStatus.UnderEstablishing) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Established)&&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Pending) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Rejected)&&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Canceled) &&
+                  tenderStatus != @Html.Raw((int)Enums.TenderStatus.Approved));
+            },
+            ExtendDateApproval: function (id) {
+               return '/Qualification/QualificationExtendDateApprovement?tenderIdString=' + id;
+            },
+            viewTenderOffersDetails: function (tenderId) {
+               return '/Qualification/OpenTenderOffers?tenderIdString=' + tenderId + "&actionName=details";
+            },
+            cancelLink: function (STenderId) {
+               window.location = '/Qualification/CancelQualification?STenderId=' + STenderId;
+            },
+            UpdateDate: function (tenderId) {
+               return '/Qualification/ExtendQualificationDatesAsync?tenderIdString=' + tenderId;
+            },
+            UpdateAttachments: function (tenderId) {
+               return '/Qualification/QualificationAttachmentsUpdates?id=' + tenderId;
+            },
+            UpdateCommittees: function (tenderId) {
+               return '/Qualification/EditCommitteesAsync?id=' + tenderId;
+            },
+            UpdateAreas: function (tenderId) {
+               return '/Qualification/EditAreasAsync?id=' + tenderId;
+            },
+            reOpenOffers: function (tenderId) {
+               return '/Qualification/PreQualificationApproval?qualificationIdString=' + tenderId;
+            },
+            UpdateSamplesDeliveryAddress: function (tenderId) {
+               return '/Qualification/BasicStep?id=' + tenderId;
+            },
+            ApprovementAction: function (id) {
+
+               window.location = '/Qualification/PreQualificationApproval?qualificationIdString=' + id;
+            },
+            PostQualificationApprovementAction: function (id) {
+               window.location = '/Qualification/PostQualificationApproval?qualificationIdString=' + id;
+            },
+            openCountAndCloseOffersReports: function (tenderId) {
+               return '/Qualification/CountAndCloseAppliedOffers?tenderIdString=' + tenderId;
+            },
+            checkPostQualificationOffers: function (tenderId) {
+
+               window.location = '/Qualification/CheckPostQualification?tenderIdString=' + tenderId;
+            },
+            ConfirmCheckPostQualificationOffers: function (tenderId) {
+               window.location = '/Qualification/CheckPostQualification?tenderIdString=' + tenderId;
+            },
+            UpdateDate: function (tenderId) {
+               return '/Qualification/ExtendQualificationDatesAsync?tenderIdString=' + tenderId;
+            },
+            UpdateAttachments: function (tenderId) {
+               return '/Qualification/QualificationAttachmentsUpdates?id=' + tenderId;
+            },
+            checkOffersPopup: function (tenderId) {
+              
+               Tender.selectedTenderIdString = tenderId; 
+            },
+            checkTenderOffers: function (tenderId) {
+            
+               window.location = '/Qualification/CheckPreQualification?tenderIdString=' + tenderId;
+            },
+            reopenCheckTenderOffers: function (tenderId) {
+               window.location = '/Qualification/CheckPreQualification?tenderIdString=' + tenderId;
+            },
+            confirmCheckOffersCheck: function (tenderId) {
+               window.location = '/Qualification/CheckPreQualification?tenderIdString=' + tenderId;
+            },
+            awardTenderOffers: function (tenderId) {
+               return '/Qualification/AwardTenderOffers?tenderIdString=' + tenderId;
+            },
+            reOpenRejecterdTender: function (tenderId) {
+               return '/Qualification/TenderAwarding?tenderIdString=' + tenderId;
+            },
+            confirmAwardOffersAward: function (tenderId) {
+               return '/Qualification/TenderAwarding?tenderIdString=' + tenderId;
+            },
+            invitationUrl: function (tenderId) {
+               return '/Qualification/SendTenderInvitations?tenderIdString=' + tenderId;
+            },
+            tenderAwarding: function (tenderId) {
+               return '/Qualification/TenderAwarding?tenderIdString=' + tenderId;
+            },
+            joiningRequest: function (tenderId) {
+               return '/Qualification/SuppliersJoiningRequest?tenderIdString=' + tenderId;
+            },
+            editUrl: function (tenderId) {
+              
+               window.location = '/Qualification/SavePreQualification/' + tenderId;
+            },
+            EditPostQualification: function (tenderId) {
+               window.location =  '/Qualification/CreatePostQualification?postQualificationIdString=' + tenderId;
+            },
+            fillHiddenIdForDelete: function (tenderIdString) {
+               $("#hiddenDelete").val(tenderIdString);
+            },
+            remove: function (TenderIdString) {
+
+               $.get('/Qualification/Delete?TenderIdString=' + TenderIdString).done(function () {
+                  window.location.href = '/Tender/Index';
+               });
+            },
+            openAwardOffersReport: function (tenderId) {
+               return '/Qualification/AwardingReport?tenderIdString=' + tenderId;
+            },
+            suppliersReport: function (tenderId) {
+               return '/Offer/SuppliersReport?tenderIdString=' + tenderId;
+            },
+            SortBySubmissionDate: function () {
+               if (this.sort = "CreatedAt") {
+                  if (this.sortDirection == "DESC")
+                     this.sortDirection = "ASC";
+                  else
+                     this.sortDirection = "DESC"
+               }
+               else {
+                  this.sort = "CreatedAt";
+                  this.sortDirection = "ASC";
+               }
+               this.search();
+            },
+            getTendersBySelectedPageSize: function () {
+
+               this.pageSize = $('#itemsPerPage').val();
+               this.search();
+            },
+            search: function () {
+
+                this.queryString = '';
+               var createdDate = "";
+               this.queryString = this.queryString + '&TenderStatusId=' + this.selectedStatus + '&AgencyCode=' + this.selectedAgency + '&BranchId=' + this.selectedBranch + '&TenderTypeId=' + this.selectedTypeId + '&TenderName=' + $('#TenderName').val()
+                  + '&ReferenceNumber=' + $('#ReferenceNumber').val() + '&TenderTypeString=' + $('#hdnTenderTypeString').val() + '&FinancialYear=' + this.selectedFinancialYear
+                  + '&CreatedBy='+ this.selectedCreatedByUser + '&ApprovedBy=' + this.selectedApprovedByUser + '&TenderAreasIdString=' + this.selectedAreaList
+                  + '&Sort=' + this.sort + '&SortDirection=' + this.sortDirection + '&PageSize=' + this.pageSize;
+               if (this.type == "All") {
+                  this.queryString = this.queryString + '&TenderStatusId=' + this.selectedStatus;
+                   this.resource_url = '/Qualification/IndexPagingAsync' + '?' + this.queryString;
+               }
+               else if (this.type == "Current") {
+                  this.queryString = this.queryString +  '&PageSize=' + this.pageSize + '&NotInStatusId=' + @((int)Enums.TenderStatus.DocumentCheckConfirmed);
+                   this.resource_url = '/Qualification/IndexPagingAsync' + '?' + this.queryString;
+               }
+               else if (this.type == "Finished")
+               {
+                  this.queryString = this.queryString + '&TenderStatusIdsString=@((int)Enums.TenderStatus.DocumentCheckConfirmed)';
+                   this.resource_url = '/Qualification/IndexPagingAsync' + '?' + this.queryString;
+               }
+
+            },
+            clear: function (event) {
+               $("#TenderTypeId, #financialYear, #qualificationStatusList, #areaList, #agencyId , #branchId , #createdBy, #approvedBy").val('');
+               $("#TenderTypeId, #financialYear, #qualificationStatusList, #areaList, #agencyId , #branchId , #createdBy, #approvedBy").selectpicker("refresh");
+               this.selectedCreatedByUser = '';
+               this.selectedApprovedByUser = '';
+               this.selectedAgency = '';
+               this.selectedBranch = '';
+               this.selectedStatus = '';
+               this.selectedFinancialYear = '';
+               this.selectedAreaList = [];
+               this.selectedTypeId = '';
+               //$("#TenderTypeId").val("");
+               $("#TenderName").val("");
+               $("#ReferenceNumber").val("");
+               $("#createdAt").val("");
+               $("#hdnCreationDate").val("");
+               this.searchAfterClear();
+            },
+            searchAfterClear: function () {
+               this.queryString = "";
+               this.queryString = this.queryString + '&TenderStatusId=' + this.selectedStatus + '&AgencyCode=' + this.selectedAgency + '&BranchId=' + this.selectedBranch + '&TenderTypeId=' + this.selectedTypeId + '&TenderName=' + $('#TenderName').val()
+                  + '&ReferenceNumber=' + $('#ReferenceNumber').val() + '&TenderTypeString=' + $('#hdnTenderTypeString').val() + '&FinancialYear=' + this.selectedFinancialYear
+                  + '&CreatedBy='+ this.selectedCreatedByUser + '&ApprovedBy=' + this.selectedApprovedByUser + '&TenderAreasIdString=' + this.selectedAreaList
+                  + '&Sort=' + this.sort + '&SortDirection=' + this.sortDirection + '&PageSize=' + this.pageSize;
+               if (this.type == "All") {
+                  this.queryString = this.queryString + '&TenderStatusId=' + this.selectedStatus;
+               }
+               else if (this.type == "Current") {
+                  this.queryString = this.queryString +  '&PageSize=' + this.pageSize + '&NotInStatusId=' + @((int)Enums.TenderStatus.DocumentCheckConfirmed);
+               }
+               else if (this.type == "Finished")
+               {
+                  this.queryString = this.queryString + '&TenderStatusIdsString=@((int)Enums.TenderStatus.DocumentCheckConfirmed)';
+               }
+               this.resource_url = '/Qualification/IndexPagingAsync' + '?' + this.queryString;
+            },
+            check: function (s, a) {
+               if (s == a)
+                  return true;
+               else
+                  return false;
+            }
+         },
+         updated: function () {
+            $("#TenderTypeId, #statusList, #areaList, #agencyId , #createdBy, #approvedBy").val(null);
+            var _cards = $('#cardsresult');
+            if (_cards.hasClass('col-md-12')) {
+               _cards.find('.monafasa-item').addClass('col-md-6');
+               _cards.find('.monafasa-item').removeClass('col-md-12');
+               _cards.find('.monafasa-item').addClass('col-lg-6');
+               _cards.find('.monafasa-item').removeClass('col-lg-12');
+               _cards.find('.monafasa-item').addClass('col-xl-4');
+               _cards.find('.monafasa-item').removeClass('col-xl-6');
+            } else if (_cards.hasClass('col-md-8')) {
+               _cards.find('.monafasa-item').removeClass('col-md-6');
+               _cards.find('.monafasa-item').addClass('col-md-12');
+               _cards.find('.monafasa-item').removeClass('col-lg-6');
+               _cards.find('.monafasa-item').addClass('col-lg-12');
+               _cards.find('.monafasa-item').removeClass('col-xl-4');
+               _cards.find('.monafasa-item').addClass('col-xl-6');
+            }
+            $('.popover-status').each(function () {
+               var content = $(this).find('.popover-content').html();
+               $(this).attr('data-content', content);
+            });
+            $(function () {
+               $('[data-toggle="popover"]').popover({
+                  trigger: 'hover',
+                  html: true
+               })
+            })
+            $('[data-toggle="tooltip"]').tooltip();
+         }
+      });
+   </script>
+}

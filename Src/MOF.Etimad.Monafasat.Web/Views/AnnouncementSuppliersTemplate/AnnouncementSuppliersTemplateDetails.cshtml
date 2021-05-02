@@ -1,0 +1,169 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.AnnouncementSuppliersTemplateDetailsModel
+
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementTemplateDetails;
+
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item active" aria-current="page"><a asp-controller="AnnouncementSuppliersTemplate" asp-action="AllAgencyAnnouncementSupplierTemplates">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AllAnnouncementTemplate</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementTemplateDetails</li>
+      </ol>
+   </nav>
+}
+
+<ul class="nav nav-pills nav-pills-icons" role="tablist">
+   <li class="nav-item">
+      <a class="nav-link active text-center show" id="basicStepTab" href="#d-1" role="tab" data-toggle="tab" aria-selected="true">
+         <i class="material-icons">dashboard</i>
+         @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation
+      </a>
+   </li>
+   <li class="nav-item">
+      <a class="nav-link text-center" id="announcementTemplateDetails" href="#d-2" role="tab" data-toggle="tab" aria-selected="true">
+         <i class="material-icons">chat</i>
+         تفاصيل القائمة
+      </a>
+   </li>
+
+   <li class="nav-item">
+      <a class="nav-link text-center" id="tenders1" href="#d-3" role="tab" data-toggle="tab" aria-selected="true">
+         <i class="material-icons">question_answer</i>
+         المنافسات المستخدمة للقائمة
+      </a>
+   </li>
+
+   <li class="nav-item">
+      <a class="nav-link text-center" id="requirement" href="#d-4" role="tab" data-toggle="tab" aria-selected="true">
+         <i class="material-icons">question_answer</i>
+         المواصفات والمرفقات المطلوبة للانضمام للقائمة
+      </a>
+   </li>
+   @*<li class="nav-item">
+      <a class="nav-link text-center" id="beneficiaryAgency" href="#d-5" role="tab" data-toggle="tab" aria-selected="true">
+         <i class="material-icons">question_answer</i>
+         @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.BeneficiaryAgecnciesFromAnnouncementTemplate
+      </a>
+   </li>*@
+</ul>
+
+<div class="tab-content  tab-space col-12 " style="padding:0">
+   <div class="tab-pane active animated fadeInLeft delay-1s show" id="d-1">
+      <div>
+         <div id="basicStepDiv">
+            <div class="col-12">
+               <div class="row">
+                  <div class="card">
+                     <div class="card-body">
+                        @await Component.InvokeAsync("AnnouncementBasicDetail", new { idString = @Model.AnnouncementIdString })
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="tab-pane animated fadeInLeft delay-1s" id="d-2">
+      <div class="card">
+         <div class="card-body" id="announcementTemplateDetailsDiv">
+         </div>
+
+         <hr/>
+
+         <div class="">
+            <h4 class="text-primary pull-left" style="margin: 8px 12px;"> @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.BeneficiaryAgecnciesFromAnnouncementTemplate</h4>
+         </div>
+         <div id="beneficiaryAgencyGrid" class="tableDiv">
+
+            @await Html.PartialAsync("~/Views/AnnouncementSuppliersTemplate/Partials/_AnnouncementBeneficiaryAgencyDetailsGrid.cshtml")
+         </div>
+
+      </div>
+   </div>
+
+   <div class="tab-pane animated fadeInLeft delay-1s" id="d-3">
+      <div class="card">
+         <div id="requestsGrid" class="tableDiv">
+            @await Html.PartialAsync("~/Views/AnnouncementSuppliersTemplate/Partials/_AnnouncementTendersDetailsGrid.cshtml")
+         </div>
+      </div>
+   </div>
+   <div class="tab-pane animated fadeInLeft delay-1s" id="d-4">
+      <div class="card">
+         <div class="card-body" id="requirementyDiv">
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row" id="approval">
+   <div class="col-12 ">
+      <a class="btn btn-outline-primary btn-link pull-right" asp-action="AllAgencyAnnouncementSupplierTemplates" asp-controller="AnnouncementSuppliersTemplate">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton</a>
+   </div>
+</div>
+
+@section scripts{
+   <script>
+      $('#requirement').click(function () {
+         $('#loader').show();
+         $.get('/AnnouncementSuppliersTemplate/GetAnnouncementDescriptionViewComponenet?announcementIdStr=' + '@Model.AnnouncementIdString', function (data) {
+            $("#requirementyDiv").html(data);
+            $('#loader').hide();
+         });
+      });
+
+
+      $('#announcementTemplateDetails').click(function () {
+           $('#loader').show();
+         $.get('/AnnouncementSuppliersTemplate/GetAnnouncementTemplateListViewComponenet?announcementIdStr=' + '@Model.AnnouncementIdString', function (data) {
+            $("#announcementTemplateDetailsDiv").html(data);
+            $('#loader').hide();
+         });
+
+   });
+
+   var tenders = new Vue({
+         el: '#requestsGrid',
+         data: {
+            tenders: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/AnnouncementSuppliersTemplate/AnnouncementTendersPagingAsync?announcementIdString=' + '@Model.AnnouncementIdString'
+         },
+         methods: {
+            updateResource: function (data) {
+               this.tenders = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            }
+         }
+   });
+
+
+   var beneficiaryAgency = new Vue({
+         el: '#beneficiaryAgencyGrid',
+         data: {
+            beneficiaryAgency: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/AnnouncementSuppliersTemplate/AnnouncementBeneficiaryAgencyPagingAsync?announcementIdString=' + '@Model.AnnouncementIdString'
+         },
+         methods: {
+            updateResource: function (data) {
+               this.beneficiaryAgency = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            }
+         }
+   });
+   </script>
+}

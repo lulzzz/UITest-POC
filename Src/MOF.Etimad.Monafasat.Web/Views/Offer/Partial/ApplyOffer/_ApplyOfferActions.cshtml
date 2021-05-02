@@ -1,0 +1,10 @@
+@using res = MOF.Etimad.Monafasat.Resources
+<div>
+   <button type="button" class="btn btn-default  prev-tab" @@click="prevTab">@res.SharedResources.DisplayInputs.Previous</button>
+   @if (User.IsInRole(RoleNames.supplier) && Model.OfferStatusId == (int)Enums.OfferStatus.UnderEstablishing || Model.OfferStatusId == (int)Enums.OfferStatus.Established || Model.OfferStatusId == (int)Enums.OfferStatus.Canceled)
+   {
+      @*<button type="button" class="btn btn-primary" data-toggle="modal" id="btnSend" data-target="#checkmodal">@res.OfferResources.Messages.ApproveAndSendOffer</button>*@
+      <a class="btn btn-primary" asp-action="OfferSummary" asp-Route-OfferIdString="@Model.OfferIdString" asp-controller="Offer">@res.OfferResources.Messages.ApproveAndSendOffer</a>
+   }
+
+</div>

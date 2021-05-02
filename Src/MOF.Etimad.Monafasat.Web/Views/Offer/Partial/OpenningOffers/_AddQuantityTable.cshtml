@@ -1,0 +1,40 @@
+@model MOF.Etimad.Monafasat.ViewModel.Offer.OpenOfferStage.QuantityTableforInsertModel
+<form asp-controller="Offer" asp-antiforgery="true" role="form" asp-action="AddQuantity" data-ajax="true" data-ajax-begin="$('#LoadingSite').fadeIn();" data-ajax-complete="$('#LoadingSite').fadeOut();" data-ajax-method="POST" data-ajax-mode="replace" data-ajax-loading="#loadingsite" data-ajax-success="AjaxSuccess()" data-ajax-update="#QuantityTablecontent">
+   <input asp-for="offerIdString" type="hidden" />
+   <input asp-for="tenderIdString" type="hidden" />
+   <div class="modal fade" id="myModal3" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">
+                  @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.QuantityTables
+               </h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i> 
+               </button>
+            </div>
+            <div class="modal-body">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="QuantityName" class="label bmd-label-static">MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.QuantityTableName<span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" asp-for="QuantityName" autocomplete="off">
+                  <span class="text-danger" asp-validation-for="QuantityName"></span>
+               </div>
+               <div class="form-group bmd-form-group">
+                  <label asp-for="Price" class="label bmd-label-static ">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.TotalPrice<span class="text-danger">*</span></label>
+                  <input type="number" class="form-control" asp-for="Price" required autocomplete="off">
+                  <span class="text-danger" asp-validation-for="Price"></span>
+               </div>
+               <div class="form-group bmd-form-group">
+                  <label asp-for="Discount" class="label bmd-label-static">MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.DiscountPercent<span class="text-danger">*</span></label>
+                  <input type="number" class="form-control" asp-for="Discount" autocomplete="off">
+                  <span class="text-danger" asp-validation-for="Discount"></span>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <input class="btn btn-primary btn-sm" type="submit" value="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Save">
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</form>

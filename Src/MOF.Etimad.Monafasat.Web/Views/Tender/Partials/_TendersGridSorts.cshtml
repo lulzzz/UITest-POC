@@ -1,0 +1,19 @@
+<div class="dropdown position-absolute etd-sorting-btn">
+   <span class="d-block" data-toggle="tooltip" data-placement="top" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SortResult" data-container="body" data-original-title=" @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SortResult">
+      <button href="#sort" class="btn btn-primary btn-round btn-sm " data-toggle="dropdown" aria-expanded="false"> <i class="material-icons">sort</i> </button>
+      <div class="dropdown-menu dropdown-menu-left" x-placement="top-end">
+         <h4 class="dropdown-header"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SortResult</h4>
+         <div class="dropdown-divider"></div>
+         <a href="#" class="dropdown-item" @@click="SortBySubmissionDate()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreationDate</a>
+         <a href="#" class="dropdown-item" @@click="SortByOfferOpeningDate()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate</a>
+      </div>
+   </span>
+</div>
+<div class="dropdown position-absolute etd-sorting-btn ltr-align" style="min-height:40px;">
+   <span class="d-block" data-toggle="tooltip" data-placement="top" title="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NumberOfItems" data-container="body">
+      <select id="itemsPerPage" class="btn btn-primary btn-round btn-sm" @@change="getTendersBySelectedPageSize();">
+         @Html.Partial("_pageSizing");
+      </select>
+   </span>
+</div>
+

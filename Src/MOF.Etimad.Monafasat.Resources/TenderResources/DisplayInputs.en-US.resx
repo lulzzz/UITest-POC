@@ -1,0 +1,2601 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AcceptOrRejectTheInvetation" xml:space="preserve">
+    <value>Accept Or Reject The Invetation</value>
+  </data>
+  <data name="ActiveTenders" xml:space="preserve">
+    <value>Active Tenders</value>
+  </data>
+  <data name="Activities" xml:space="preserve">
+    <value>Activities</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="AddEditTender" xml:space="preserve">
+    <value>Add - Edit Tender</value>
+  </data>
+  <data name="AddFile" xml:space="preserve">
+    <value>Add File</value>
+  </data>
+  <data name="AddItem" xml:space="preserve">
+    <value>Add Item</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="AddTable" xml:space="preserve">
+    <value>Add Table</value>
+  </data>
+  <data name="AddTender" xml:space="preserve">
+    <value>Add Tender</value>
+  </data>
+  <data name="AddToFavourite" xml:space="preserve">
+    <value>Add To Favourite</value>
+  </data>
+  <data name="Agencies" xml:space="preserve">
+    <value>Agencies</value>
+  </data>
+  <data name="Agency" xml:space="preserve">
+    <value>Agency</value>
+  </data>
+  <data name="AgencyBranch" xml:space="preserve">
+    <value>Agency Branch</value>
+  </data>
+  <data name="AgencyName" xml:space="preserve">
+    <value>Agency Name</value>
+  </data>
+  <data name="AgreeToApproveTender" xml:space="preserve">
+    <value>Agree To Approve this Tender</value>
+  </data>
+  <data name="AgreeToWithdraw" xml:space="preserve">
+    <value>Agree To Withdraw</value>
+  </data>
+  <data name="AllSuppliers" xml:space="preserve">
+    <value>All Suppliers</value>
+  </data>
+  <data name="AllTenders" xml:space="preserve">
+    <value>All Tenders</value>
+  </data>
+  <data name="AnyTime" xml:space="preserve">
+    <value>AnyTime</value>
+  </data>
+  <data name="AppliedSuppliersReport" xml:space="preserve">
+    <value>Applied Suppliers Report</value>
+  </data>
+  <data name="ApplyAutomatically" xml:space="preserve">
+    <value>Apply Automatically</value>
+  </data>
+  <data name="ApplyOffer" xml:space="preserve">
+    <value>Apply Offer</value>
+  </data>
+  <data name="ApplyWay" xml:space="preserve">
+    <value>Apply Way</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="ApprovedBy" xml:space="preserve">
+    <value>Approved By</value>
+  </data>
+  <data name="Area" xml:space="preserve">
+    <value>Area</value>
+  </data>
+  <data name="Areas" xml:space="preserve">
+    <value>Areas</value>
+  </data>
+  <data name="AreYouSureAccept" xml:space="preserve">
+    <value>Are you sure to accept?</value>
+  </data>
+  <data name="AreYouSureReject" xml:space="preserve">
+    <value>Are you sure you want to decline?</value>
+  </data>
+  <data name="AreYouSureSendTechnicalEvaluation" xml:space="preserve">
+    <value>Are you sure to send the results of the examination and audit for accreditation?</value>
+  </data>
+  <data name="AreYouSureYouWantRemoveTender" xml:space="preserve">
+    <value>Are you sure you want to remove the competition from your favorites list?</value>
+  </data>
+  <data name="AreYouSureYouWantWithdraw" xml:space="preserve">
+    <value>Are you sure you will withdraw from the invitation / competition?</value>
+  </data>
+  <data name="AskSupervisor" xml:space="preserve">
+    <value>Ask Supervisor</value>
+  </data>
+  <data name="Atachementes" xml:space="preserve">
+    <value>Atachementes</value>
+  </data>
+  <data name="AttachementManagement" xml:space="preserve">
+    <value>Attachement Management</value>
+  </data>
+  <data name="Attachment" xml:space="preserve">
+    <value>Attachment</value>
+  </data>
+  <data name="AttachmentsMainConditions" xml:space="preserve">
+    <value>Attachments Main Conditions</value>
+  </data>
+  <data name="AvailableTenderForOffers" xml:space="preserve">
+    <value>Available Tender For Offers</value>
+  </data>
+  <data name="AwardedOffersList" xml:space="preserve">
+    <value>Awarded Offers List</value>
+  </data>
+  <data name="Awarding" xml:space="preserve">
+    <value>Awarding</value>
+  </data>
+  <data name="AwardingDetails" xml:space="preserve">
+    <value>Awarding Details</value>
+  </data>
+  <data name="AwardingRequestWillSent" xml:space="preserve">
+    <value>Awarding Request Will Sent</value>
+  </data>
+  <data name="AwardingType" xml:space="preserve">
+    <value>Awarding Type</value>
+  </data>
+  <data name="AwardingValue" xml:space="preserve">
+    <value>Awarding Value</value>
+  </data>
+  <data name="AwardingWillApproved" xml:space="preserve">
+    <value>Awarding Will Approved</value>
+  </data>
+  <data name="AwardingWillRejected" xml:space="preserve">
+    <value>Awarding Will Rejected</value>
+  </data>
+  <data name="AwardingWillReopen" xml:space="preserve">
+    <value>Awarding Will Reopen</value>
+  </data>
+  <data name="BillNumber" xml:space="preserve">
+    <value>Bill Number</value>
+  </data>
+  <data name="BuyersCount" xml:space="preserve">
+    <value>Buyers/Invited Count</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="CategoryField" xml:space="preserve">
+    <value>Category Field</value>
+  </data>
+  <data name="CheckApproveRequestWillSent" xml:space="preserve">
+    <value>Check Approve Request Will Sent</value>
+  </data>
+  <data name="CheckOffer" xml:space="preserve">
+    <value>Check Offer</value>
+  </data>
+  <data name="CheckOfferConfirm" xml:space="preserve">
+    <value>Check Offer Confirm</value>
+  </data>
+  <data name="CheckOfferConfirmStage" xml:space="preserve">
+    <value>Check Offer Confirm Stage</value>
+  </data>
+  <data name="CheckOfferDetails" xml:space="preserve">
+    <value>Check Offer Details</value>
+  </data>
+  <data name="CheckOffersCommittee" xml:space="preserve">
+    <value>Check Offers Committee</value>
+  </data>
+  <data name="CheckTechnicalEvaluation" xml:space="preserve">
+    <value>Check Technical Evaluation</value>
+  </data>
+  <data name="ChooseArea" xml:space="preserve">
+    <value>--Choose Area--</value>
+  </data>
+  <data name="ChooseFromGovernmentAgencies" xml:space="preserve">
+    <value>Choose From Government Agencies</value>
+  </data>
+  <data name="ChooseOfferCheckCommittee" xml:space="preserve">
+    <value>Choose Offer Check Committee</value>
+  </data>
+  <data name="ChooseOfferOpenCommitte" xml:space="preserve">
+    <value>Choose Offer Open Committe</value>
+  </data>
+  <data name="ChooseOrderBy" xml:space="preserve">
+    <value>Choose OrderBy</value>
+  </data>
+  <data name="ChooseStatus" xml:space="preserve">
+    <value>--Choose Status--</value>
+  </data>
+  <data name="ChooseTechnicalCommittee" xml:space="preserve">
+    <value>Choose Technical Committee</value>
+  </data>
+  <data name="ChooseYear" xml:space="preserve">
+    <value>--Choose Year--</value>
+  </data>
+  <data name="CommercialName" xml:space="preserve">
+    <value>Commercial Name</value>
+  </data>
+  <data name="CommercialNumber" xml:space="preserve">
+    <value>Commercial Number</value>
+  </data>
+  <data name="CompletePurchase" xml:space="preserve">
+    <value>Complete Purchase</value>
+  </data>
+  <data name="ConditionsBooklet" xml:space="preserve">
+    <value>Conditions booklet and attachments</value>
+  </data>
+  <data name="ConditionsBookletAddress" xml:space="preserve">
+    <value>Conditions Booklet Address</value>
+  </data>
+  <data name="ConditionsBookletAndAttachments" xml:space="preserve">
+    <value>Conditions Booklet And Attachments</value>
+  </data>
+  <data name="ConditionsBookletPrice" xml:space="preserve">
+    <value>Conditions Booklet Price</value>
+  </data>
+  <data name="ConditionsBookletValueRiyal" xml:space="preserve">
+    <value>Conditions Booklet Value Riyal</value>
+  </data>
+  <data name="ConditionsReviewed" xml:space="preserve">
+    <value>Conditions Reviewed</value>
+  </data>
+  <data name="ConfirmAcceptInvitation" xml:space="preserve">
+    <value>Confirm Accept Invitation</value>
+  </data>
+  <data name="ConfirmApprove" xml:space="preserve">
+    <value>Confirm Approve</value>
+  </data>
+  <data name="ConfirmAwardingStart" xml:space="preserve">
+    <value>Confirm Awarding Start</value>
+  </data>
+  <data name="ConfirmOpenOfferStage" xml:space="preserve">
+    <value>Confirm Open Offer Stage</value>
+  </data>
+  <data name="ConfirmReject" xml:space="preserve">
+    <value>Confirm Reject</value>
+  </data>
+  <data name="ConfirmSendTechnicalEvaluation" xml:space="preserve">
+    <value>Confirm Send Technical Evaluation</value>
+  </data>
+  <data name="ConfrimCheckResults" xml:space="preserve">
+    <value>Confrim Check Results</value>
+  </data>
+  <data name="ConfrimRejectInvitation" xml:space="preserve">
+    <value>Confrim/Reject Invitation</value>
+  </data>
+  <data name="Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Created By</value>
+  </data>
+  <data name="Dates" xml:space="preserve">
+    <value>Dates</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="DeleteFile" xml:space="preserve">
+    <value>Delete File</value>
+  </data>
+  <data name="DeleteItem" xml:space="preserve">
+    <value>Delete Item</value>
+  </data>
+  <data name="DeleteTable" xml:space="preserve">
+    <value>Delete Table</value>
+  </data>
+  <data name="DetailsStep" xml:space="preserve">
+    <value>Tender Dates and addresses</value>
+  </data>
+  <data name="DirectBuyInginvitation" xml:space="preserve">
+    <value>Invitation</value>
+  </data>
+  <data name="DirectPurchaseTendersCount" xml:space="preserve">
+    <value>Direct Purchase Tenders Count</value>
+  </data>
+  <data name="DirectPurchaseTendersValue" xml:space="preserve">
+    <value>Direct Purchase Tenders Value</value>
+  </data>
+  <data name="DirectPurshase" xml:space="preserve">
+    <value>Direct Purshase</value>
+  </data>
+  <data name="DiscountPercent" xml:space="preserve">
+    <value>Discount Percent</value>
+  </data>
+  <data name="DisplayingJoiningRequests" xml:space="preserve">
+    <value>Displaying Joining Requests</value>
+  </data>
+  <data name="DisplayTendersOption" xml:space="preserve">
+    <value>Display Tenders Option</value>
+  </data>
+  <data name="DownloadExcelTemplate" xml:space="preserve">
+    <value>Download Excel Template</value>
+  </data>
+  <data name="DownloadFile" xml:space="preserve">
+    <value>Download File</value>
+  </data>
+  <data name="EditAreas" xml:space="preserve">
+    <value>Edit Areas</value>
+  </data>
+  <data name="EditCommittee" xml:space="preserve">
+    <value>Edit Committee</value>
+  </data>
+  <data name="EditDelivaryAddress" xml:space="preserve">
+    <value>Edit Delivary Address</value>
+  </data>
+  <data name="EndDateBiggerStart" xml:space="preserve">
+    <value>To Date Have To Be Greater Than From Date</value>
+  </data>
+  <data name="Ended" xml:space="preserve">
+    <value>Ended</value>
+  </data>
+  <data name="EndedTenders" xml:space="preserve">
+    <value>Ended Tenders</value>
+  </data>
+  <data name="EnterAwarding" xml:space="preserve">
+    <value>Enter Awarding</value>
+  </data>
+  <data name="EnterTenderName" xml:space="preserve">
+    <value>Enter Tender Name</value>
+  </data>
+  <data name="EnterTenderNumber" xml:space="preserve">
+    <value>Enter Tender Number</value>
+  </data>
+  <data name="EstablishingActions" xml:space="preserve">
+    <value>Establishing Actions</value>
+  </data>
+  <data name="EvaluationValue" xml:space="preserve">
+    <value>Evaluation Value</value>
+  </data>
+  <data name="EvaluationValueWritten" xml:space="preserve">
+    <value>Evaluation Value (Written)</value>
+  </data>
+  <data name="Execution" xml:space="preserve">
+    <value>Execution</value>
+  </data>
+  <data name="ExecutionPlace" xml:space="preserve">
+    <value>Execution Place</value>
+  </data>
+  <data name="ExportTable" xml:space="preserve">
+    <value>Export Table</value>
+  </data>
+  <data name="ExtendDates" xml:space="preserve">
+    <value>Extend Dates</value>
+  </data>
+  <data name="FavoriteTenders" xml:space="preserve">
+    <value>Favorite Tenders</value>
+  </data>
+  <data name="FavouriteSuppliersList" xml:space="preserve">
+    <value>Favourite Suppliers List</value>
+  </data>
+  <data name="FinancialYear" xml:space="preserve">
+    <value>Financial Year</value>
+  </data>
+  <data name="FirstFile" xml:space="preserve">
+    <value>First File</value>
+  </data>
+  <data name="Free" xml:space="preserve">
+    <value>Free</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="FullAwarding" xml:space="preserve">
+    <value>Full Awarding</value>
+  </data>
+  <data name="GeneralTender" xml:space="preserve">
+    <value>General Tender</value>
+  </data>
+  <data name="Hour" xml:space="preserve">
+    <value>Hour</value>
+  </data>
+  <data name="IndexNumber" xml:space="preserve">
+    <value>Index Number</value>
+  </data>
+  <data name="InsideKSA" xml:space="preserve">
+    <value>Inside KSA</value>
+  </data>
+  <data name="Invalid" xml:space="preserve">
+    <value>Invalid</value>
+  </data>
+  <data name="Invitation" xml:space="preserve">
+    <value>Invitation</value>
+  </data>
+  <data name="InvitationAccepted" xml:space="preserve">
+    <value>Invitation Accepted</value>
+  </data>
+  <data name="InvitationPurchaseDate" xml:space="preserve">
+    <value>Invitation/Purchase Date</value>
+  </data>
+  <data name="InvitationPurchaseStatus" xml:space="preserve">
+    <value>Invitation Purchase Status</value>
+  </data>
+  <data name="InvitationRejected" xml:space="preserve">
+    <value>Invitation Rejected</value>
+  </data>
+  <data name="Invitations" xml:space="preserve">
+    <value>Invitations</value>
+  </data>
+  <data name="InvitationsNumber" xml:space="preserve">
+    <value>Invitations Number</value>
+  </data>
+  <data name="InvitationStatus" xml:space="preserve">
+    <value>Invitation Status</value>
+  </data>
+  <data name="InvitationWaitingForAcceptance" xml:space="preserve">
+    <value>Invitation Waiting For Acceptance</value>
+  </data>
+  <data name="InvitationWithdraw" xml:space="preserve">
+    <value>Invitation Withdraw</value>
+  </data>
+  <data name="ItemName" xml:space="preserve">
+    <value>Item Name</value>
+  </data>
+  <data name="Joining" xml:space="preserve">
+    <value>Joining</value>
+  </data>
+  <data name="JoiningRequests" xml:space="preserve">
+    <value>Joining Requests</value>
+  </data>
+  <data name="JoiningToTender" xml:space="preserve">
+    <value>Joining To Tender</value>
+  </data>
+  <data name="JoinRequestDetails" xml:space="preserve">
+    <value>Join Request Details</value>
+  </data>
+  <data name="LastEnqueriesDate" xml:space="preserve">
+    <value>Last Enqueries Date</value>
+  </data>
+  <data name="LastOfferPresentationDate" xml:space="preserve">
+    <value>Last Offer Presentation Date</value>
+  </data>
+  <data name="LessThanMilion" xml:space="preserve">
+    <value>Less Than Milion</value>
+  </data>
+  <data name="MainActivity" xml:space="preserve">
+    <value>Main Activity</value>
+  </data>
+  <data name="MainInformation" xml:space="preserve">
+    <value>Main Information</value>
+  </data>
+  <data name="MaintenanceOperationActions" xml:space="preserve">
+    <value>Maintenance Operation Actions</value>
+  </data>
+  <data name="Matched" xml:space="preserve">
+    <value>Matched</value>
+  </data>
+  <data name="MonthAgo" xml:space="preserve">
+    <value>Month Ago</value>
+  </data>
+  <data name="MoreThanFiftyMilion" xml:space="preserve">
+    <value>More Than Fifty Milion</value>
+  </data>
+  <data name="MoreThanFiveMilion" xml:space="preserve">
+    <value>More Than Five Milion</value>
+  </data>
+  <data name="MoreThanMilion" xml:space="preserve">
+    <value>More Than Milion</value>
+  </data>
+  <data name="MoreThanTenMilion" xml:space="preserve">
+    <value>More Than Ten Milion</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="NotInvited" xml:space="preserve">
+    <value>Not Invited</value>
+  </data>
+  <data name="NotMatched" xml:space="preserve">
+    <value>Not Matched</value>
+  </data>
+  <data name="NotPaid" xml:space="preserve">
+    <value>Not Paid</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Number</value>
+  </data>
+  <data name="OfferAccepted" xml:space="preserve">
+    <value>Offer Accepted</value>
+  </data>
+  <data name="OfferAwardingConfirmDetails" xml:space="preserve">
+    <value>Offer Awarding Confirm Details</value>
+  </data>
+  <data name="OfferAwardingDetails" xml:space="preserve">
+    <value>Offer Awarding Details</value>
+  </data>
+  <data name="OfferDetails" xml:space="preserve">
+    <value>Offer Details</value>
+  </data>
+  <data name="OfferFiles" xml:space="preserve">
+    <value>Offer Files</value>
+  </data>
+  <data name="OfferNotChecked" xml:space="preserve">
+    <value>Offer Not Checked</value>
+  </data>
+  <data name="OfferNotTechnicallyEvaluated" xml:space="preserve">
+    <value>Offer Not Technically Evaluated</value>
+  </data>
+  <data name="OfferNumber" xml:space="preserve">
+    <value>Offer Number</value>
+  </data>
+  <data name="OfferOpenDateTime" xml:space="preserve">
+    <value>Offer Open Date Time</value>
+  </data>
+  <data name="OfferPresentationAddress" xml:space="preserve">
+    <value>Offer Presentation Address</value>
+  </data>
+  <data name="OfferRejected" xml:space="preserve">
+    <value>Offer Rejected</value>
+  </data>
+  <data name="OffersCount" xml:space="preserve">
+    <value>Offers Count</value>
+  </data>
+  <data name="OffersData" xml:space="preserve">
+    <value>Offers Data</value>
+  </data>
+  <data name="OffersList" xml:space="preserve">
+    <value>Offers List</value>
+  </data>
+  <data name="OffersOpeningDate" xml:space="preserve">
+    <value>Offers Opening Date</value>
+  </data>
+  <data name="DeliveryDate" xml:space="preserve">
+    <value>Delivery Date</value>
+  </data>
+  <data name="OfferStatus" xml:space="preserve">
+    <value>Offer Status</value>
+  </data>
+  <data name="OfferValue" xml:space="preserve">
+    <value>Offer Value</value>
+  </data>
+  <data name="OpenOfferDetails" xml:space="preserve">
+    <value>Open Offer Details</value>
+  </data>
+  <data name="OpenOfferDetailsConfirm" xml:space="preserve">
+    <value>Open Offer Details Confirm</value>
+  </data>
+  <data name="OpenOffers" xml:space="preserve">
+    <value>Open Offers</value>
+  </data>
+  <data name="OpenOffersCommittee" xml:space="preserve">
+    <value>Open Offers Committee</value>
+  </data>
+  <data name="OpenOffersLocation" xml:space="preserve">
+    <value>Open Offers Location</value>
+  </data>
+  <data name="OpenOffersReport" xml:space="preserve">
+    <value>Open Offers Report</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="OutsideKSA" xml:space="preserve">
+    <value>Outside KSA</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Paid</value>
+  </data>
+  <data name="Pamphlet" xml:space="preserve">
+    <value>Pamphlet</value>
+  </data>
+  <data name="PartialAwarding" xml:space="preserve">
+    <value>Partial Awarding</value>
+  </data>
+  <data name="PendingGovernmentAcceptanceOfTheRequest" xml:space="preserve">
+    <value>Pending Government Acceptance Of The Request</value>
+  </data>
+  <data name="Percentage" xml:space="preserve">
+    <value>Percentage</value>
+  </data>
+  <data name="PleaseAddSupplier" xml:space="preserve">
+    <value>Please Add Supplier</value>
+  </data>
+  <data name="PleaseChoose" xml:space="preserve">
+    <value>Please Choose</value>
+  </data>
+  <data name="PleaseEnterConditionDeliverLocation" xml:space="preserve">
+    <value>PleaseEnter Condition Deliver Location</value>
+  </data>
+  <data name="PleaseEnterItemName" xml:space="preserve">
+    <value>Please Enter Item Name</value>
+  </data>
+  <data name="PleaseEnterOpenLocation" xml:space="preserve">
+    <value>Please Enter Open Location</value>
+  </data>
+  <data name="PleaseEnterQuantity" xml:space="preserve">
+    <value>Please Enter Quantity</value>
+  </data>
+  <data name="PleaseEnterRealValue" xml:space="preserve">
+    <value>Please Enter Real Value</value>
+  </data>
+  <data name="PleaseEnterRejectionReason" xml:space="preserve">
+    <value>Please Enter Rejection Reason</value>
+  </data>
+  <data name="PleaseEnterTableName" xml:space="preserve">
+    <value>Please Enter Table Name</value>
+  </data>
+  <data name="PleaseEnterUnit" xml:space="preserve">
+    <value>Please Enter Unit</value>
+  </data>
+  <data name="PleaseEnterVerificationCode" xml:space="preserve">
+    <value>Please Enter Verification Code</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="PriceRange" xml:space="preserve">
+    <value>Price Range</value>
+  </data>
+  <data name="ProgressDoneSuccessfully" xml:space="preserve">
+    <value>Progress Done Successfully</value>
+  </data>
+  <data name="PublicTendersCount" xml:space="preserve">
+    <value>Public Tenders Count</value>
+  </data>
+  <data name="PublicTendersValue" xml:space="preserve">
+    <value>Public Tenders Value</value>
+  </data>
+  <data name="PurchaseConditionsBooklet" xml:space="preserve">
+    <value>Purchase Conditions Booklet</value>
+  </data>
+  <data name="Purchased" xml:space="preserve">
+    <value>Purchased</value>
+  </data>
+  <data name="PurchaseDate" xml:space="preserve">
+    <value>Purchase Date</value>
+  </data>
+  <data name="PurchaseDone" xml:space="preserve">
+    <value>Purchase Done</value>
+  </data>
+  <data name="PurchaseOperationsReport" xml:space="preserve">
+    <value>Purchase Operations Report</value>
+  </data>
+  <data name="PurchaseReport" xml:space="preserve">
+    <value>Purchase Report</value>
+  </data>
+  <data name="Purshase" xml:space="preserve">
+    <value>Purshase</value>
+  </data>
+  <data name="QuantitiesTables" xml:space="preserve">
+    <value>Quantities Tables</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="QuantityTables" xml:space="preserve">
+    <value>Quantity Tables</value>
+  </data>
+  <data name="RejectionConfirm" xml:space="preserve">
+    <value>Rejection Confirm</value>
+  </data>
+  <data name="RejectionReason" xml:space="preserve">
+    <value>Rejection Reason</value>
+  </data>
+  <data name="RelationStep" xml:space="preserve">
+    <value>Calassification field and execution site</value>
+  </data>
+  <data name="RemainingTime" xml:space="preserve">
+    <value>Remaining time</value>
+  </data>
+  <data name="RemoveFromFavorite" xml:space="preserve">
+    <value>Remove From Favorite</value>
+  </data>
+  <data name="RemoveTenderFromFavouriteList" xml:space="preserve">
+    <value>Remove Tender From Favourite List</value>
+  </data>
+  <data name="Reopen" xml:space="preserve">
+    <value>Reopen</value>
+  </data>
+  <data name="ReopenAwarding" xml:space="preserve">
+    <value>Reopen Awarding</value>
+  </data>
+  <data name="ReopenCheck" xml:space="preserve">
+    <value>Reopen Check</value>
+  </data>
+  <data name="ReopenOfferOpening" xml:space="preserve">
+    <value>Reopen Offer </value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="ReportTendersToActivity" xml:space="preserve">
+    <value>Report Tenders To Activity</value>
+  </data>
+  <data name="RequestDate" xml:space="preserve">
+    <value>Request Date</value>
+  </data>
+  <data name="RequestStatus" xml:space="preserve">
+    <value>Request Status</value>
+  </data>
+  <data name="ResendConfirmationCode" xml:space="preserve">
+    <value>Resend Confirmation Code</value>
+  </data>
+  <data name="RestartAwarding" xml:space="preserve">
+    <value>Restart Awarding</value>
+  </data>
+  <data name="RestartCheckOffers" xml:space="preserve">
+    <value>Restart Check Offers</value>
+  </data>
+  <data name="ReviewData" xml:space="preserve">
+    <value>Review Data</value>
+  </data>
+  <data name="Riyal" xml:space="preserve">
+    <value>Riyal</value>
+  </data>
+  <data name="SARiyal" xml:space="preserve">
+    <value>SA Riyal</value>
+  </data>
+  <data name="SaveContinue" xml:space="preserve">
+    <value>Save Continue</value>
+  </data>
+  <data name="SaveSend" xml:space="preserve">
+    <value>Save Send</value>
+  </data>
+  <data name="SaveUpdates" xml:space="preserve">
+    <value>Save Updates</value>
+  </data>
+  <data name="SelectAgency" xml:space="preserve">
+    <value>Select Agency</value>
+  </data>
+  <data name="SelectAgencyBranch" xml:space="preserve">
+    <value>Select Agency Branch</value>
+  </data>
+  <data name="SelectCondtionsBookletPrice" xml:space="preserve">
+    <value>Select Condtions Booklet Price</value>
+  </data>
+  <data name="SendAwardingToApprove" xml:space="preserve">
+    <value>Send Awarding To Approve</value>
+  </data>
+  <data name="SendCheckToApprove" xml:space="preserve">
+    <value>Send Check To Approve</value>
+  </data>
+  <data name="SendingInvitations" xml:space="preserve">
+    <value>Sending Invitations</value>
+  </data>
+  <data name="SendToApprove" xml:space="preserve">
+    <value>Send To Approve</value>
+  </data>
+  <data name="SpecialInvitation" xml:space="preserve">
+    <value>Special Invitation</value>
+  </data>
+  <data name="StartingAwarding" xml:space="preserve">
+    <value>Starting Awarding</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="SubmtionDate" xml:space="preserve">
+    <value>Submtion Date</value>
+  </data>
+  <data name="SupplierDetails" xml:space="preserve">
+    <value>Supplier Details</value>
+  </data>
+  <data name="SuppliersList" xml:space="preserve">
+    <value>Suppliers List</value>
+  </data>
+  <data name="SupplierTenders" xml:space="preserve">
+    <value>Supplier Tenders</value>
+  </data>
+  <data name="TableItemValidation" xml:space="preserve">
+    <value>You must enter at least one item in each quantity table</value>
+  </data>
+  <data name="TableName" xml:space="preserve">
+    <value>Table Name</value>
+  </data>
+  <data name="TablesName" xml:space="preserve">
+    <value>Tables Name</value>
+  </data>
+  <data name="TableValidation" xml:space="preserve">
+    <value>You must enter at least one quantity table</value>
+  </data>
+  <data name="TechnicalEvaluation" xml:space="preserve">
+    <value>Technical Evaluation</value>
+  </data>
+  <data name="TenderActivity" xml:space="preserve">
+    <value>Tender Activity</value>
+  </data>
+  <data name="TenderAddress" xml:space="preserve">
+    <value>Tender Address</value>
+  </data>
+  <data name="TenderApprovedInBudget" xml:space="preserve">
+    <value>Tender Approved In Budget</value>
+  </data>
+  <data name="TenderAttachments" xml:space="preserve">
+    <value>Tender Attachments</value>
+  </data>
+  <data name="TenderCountToTypesReport" xml:space="preserve">
+    <value>Tender Count To Types Report</value>
+  </data>
+  <data name="TenderDate" xml:space="preserve">
+    <value>Tender Date</value>
+  </data>
+  <data name="TenderDetails" xml:space="preserve">
+    <value>Tender Details</value>
+  </data>
+  <data name="TenderFiles" xml:space="preserve">
+    <value>Tender Files</value>
+  </data>
+  <data name="TenderHasBeenBoughtBefore" xml:space="preserve">
+    <value>Tender Has Been Bought Before</value>
+  </data>
+  <data name="TenderName" xml:space="preserve">
+    <value>Tender Name</value>
+  </data>
+  <data name="TenderNumber" xml:space="preserve">
+    <value>Tender Number</value>
+  </data>
+  <data name="TenderOffersDetails" xml:space="preserve">
+    <value>Tender Offers Details</value>
+  </data>
+  <data name="TenderPurpose" xml:space="preserve">
+    <value>Tender Purpose</value>
+  </data>
+  <data name="Tenders" xml:space="preserve">
+    <value>Tenders</value>
+  </data>
+  <data name="TendersCountReport" xml:space="preserve">
+    <value>Tenders Count Report</value>
+  </data>
+  <data name="TendersReport" xml:space="preserve">
+    <value>Tenders Report</value>
+  </data>
+  <data name="TenderStatus" xml:space="preserve">
+    <value>Tender Status</value>
+  </data>
+  <data name="TendersToAwardedSuppliersReport" xml:space="preserve">
+    <value>Tenders To Awarded Suppliers Report</value>
+  </data>
+  <data name="TenderType" xml:space="preserve">
+    <value>Tender Type</value>
+  </data>
+  <data name="TenderValueToTypesReport" xml:space="preserve">
+    <value>Tender Value To Types Report</value>
+  </data>
+  <data name="TenderWillOpenAwarding" xml:space="preserve">
+    <value>Tender Will Open Awarding</value>
+  </data>
+  <data name="TherequestHasbeenAccepted" xml:space="preserve">
+    <value>The Request Has Been Accepted</value>
+  </data>
+  <data name="TherequestHasbeenRejected" xml:space="preserve">
+    <value>The Request Has Been Rejected</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="ToDateHaveToBeGreaterThanFromDate" xml:space="preserve">
+    <value>To Date Have To Be Greater Than From Date</value>
+  </data>
+  <data name="TotalAmount" xml:space="preserve">
+    <value>TotalAmount</value>
+  </data>
+  <data name="TotalAmountWithDiscout" xml:space="preserve">
+    <value>Total Amount With Discout</value>
+  </data>
+  <data name="TotalCount" xml:space="preserve">
+    <value>Total Count</value>
+  </data>
+  <data name="TwoDaysAgo" xml:space="preserve">
+    <value>Two Days Ago</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+  <data name="UnitDiscount" xml:space="preserve">
+    <value>Unit Discount</value>
+  </data>
+  <data name="UnitPrice" xml:space="preserve">
+    <value>Unit Price</value>
+  </data>
+  <data name="Valid" xml:space="preserve">
+    <value>Valid</value>
+  </data>
+  <data name="WaitingForApprove" xml:space="preserve">
+    <value>Waiting For Approve</value>
+  </data>
+  <data name="WeekAgo" xml:space="preserve">
+    <value>Week Ago</value>
+  </data>
+  <data name="WillConfirmOpen" xml:space="preserve">
+    <value>Will Confirm Open</value>
+  </data>
+  <data name="WillReopen" xml:space="preserve">
+    <value>Will Reopen</value>
+  </data>
+  <data name="WillSentToApprove" xml:space="preserve">
+    <value>Will Sent To Approve</value>
+  </data>
+  <data name="Withdraw" xml:space="preserve">
+    <value>Withdraw</value>
+  </data>
+  <data name="WriteCmmercialName" xml:space="preserve">
+    <value>Write Cmmercial Name</value>
+  </data>
+  <data name="WriteCmmercialNumber" xml:space="preserve">
+    <value>Write Cmmercial Number</value>
+  </data>
+  <data name="YouShouldReviewConditions" xml:space="preserve">
+    <value>The information item and the terms of the competition must be approved</value>
+  </data>
+  <data name="MostSupplierHasTendersReport" xml:space="preserve">
+    <value>Most suppliers has tenders report</value>
+  </data>
+  <data name="MostTendersActivitiesReport" xml:space="preserve">
+    <value>Most tender activities report</value>
+  </data>
+  <data name="PublishedTendersReport" xml:space="preserve">
+    <value>Published tenders report</value>
+  </data>
+  <data name="TendersSalesReport" xml:space="preserve">
+    <value>Tenders sales report</value>
+  </data>
+  <data name="AgencySummaryReport" xml:space="preserve">
+    <value>Agency summary report</value>
+  </data>
+  <data name="NotificationStatusReport" xml:space="preserve">
+    <value>Notification status report</value>
+  </data>
+  <data name="MostSuppliersAwardedReport" xml:space="preserve">
+    <value>Most suppliers awarded report</value>
+  </data>
+  <data name="SupplierName" xml:space="preserve">
+    <value>Supplier name</value>
+  </data>
+  <data name="TenderReport" xml:space="preserve">
+    <value>Tenders Report</value>
+  </data>
+  <data name="TendersCount" xml:space="preserve">
+    <value>Tenders Count</value>
+  </data>
+  <data name="TenderPurshasingDate" xml:space="preserve">
+    <value>Tender purshasing date</value>
+  </data>
+  <data name="TenderPurshaseDate" xml:space="preserve">
+    <value>Tender purshase date</value>
+  </data>
+  <data name="InitiatorName" xml:space="preserve">
+    <value>Published By</value>
+  </data>
+  <data name="TechnicalCommittee" xml:space="preserve">
+    <value>Technical Committee Name</value>
+  </data>
+  <data name="InvitationStatusName" xml:space="preserve">
+    <value>Joinging Request Status</value>
+  </data>
+  <data name="OpenOfferLocation" xml:space="preserve">
+    <value>Offers Open Location</value>
+  </data>
+  <data name="BuildingName" xml:space="preserve">
+    <value>Building Name</value>
+  </data>
+  <data name="FloarNumber" xml:space="preserve">
+    <value>Floar Number</value>
+  </data>
+  <data name="DepartmentName" xml:space="preserve">
+    <value>Department Name</value>
+  </data>
+  <data name="SupplierNeedSample" xml:space="preserve">
+    <value>Need to Deliver Samples</value>
+  </data>
+  <data name="AgreementType" xml:space="preserve">
+    <value>Agreement Type</value>
+  </data>
+  <data name="Opened" xml:space="preserve">
+    <value>Opened</value>
+  </data>
+  <data name="Closed" xml:space="preserve">
+    <value>Closed</value>
+  </data>
+  <data name="TenderAgreementAgencies" xml:space="preserve">
+    <value>Beneficiaries</value>
+  </data>
+  <data name="AgreementMonthes" xml:space="preserve">
+    <value> Agreement Period Monthes</value>
+  </data>
+  <data name="AgreementYears" xml:space="preserve">
+    <value>Years</value>
+  </data>
+  <data name="NumberOfWinners" xml:space="preserve">
+    <value>Number Of Winners</value>
+  </data>
+  <data name="BonusValue" xml:space="preserve">
+    <value>Bonus Value</value>
+  </data>
+  <data name="CreateSecondStage" xml:space="preserve">
+    <value>Create Second Stage</value>
+  </data>
+  <data name="EnterAgreementYears" xml:space="preserve">
+    <value>Please, enter agreement years</value>
+  </data>
+  <data name="EnterAgreementMonthes" xml:space="preserve">
+    <value>Please, enter agreement monthes</value>
+  </data>
+  <data name="SamplesDeliveryAddress" xml:space="preserve">
+    <value>Samples Delivery Address</value>
+  </data>
+  <data name="EnterAgreementAgencies" xml:space="preserve">
+    <value>Please, select beneficiaries agencies</value>
+  </data>
+  <data name="LastOfferPresentationTime" xml:space="preserve">
+    <value>Offer Last Presentation Time</value>
+  </data>
+  <data name="OffersOpeningTime" xml:space="preserve">
+    <value>Offers Oppenning Time</value>
+  </data>
+  <data name="DeliveryTime" xml:space="preserve">
+    <value>Delivery Time</value>
+  </data>
+  <data name="ActivityDescription" xml:space="preserve">
+    <value>Activity Description</value>
+  </data>
+  <data name="InvitationType" xml:space="preserve">
+    <value>Invitation Type</value>
+  </data>
+  <data name="AwardStageTenders" xml:space="preserve">
+    <value>Awarding Offers Tenders</value>
+  </data>
+  <data name="CheckStageTenders" xml:space="preserve">
+    <value>Check Offers Tenders</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="MyTenders" xml:space="preserve">
+    <value>My Tenders</value>
+  </data>
+  <data name="OpenStageTenders" xml:space="preserve">
+    <value>Open Offers Tenders</value>
+  </data>
+  <data name="ProfileSettings" xml:space="preserve">
+    <value>Profile Settings</value>
+  </data>
+  <data name="UnderstablishedStageTenders" xml:space="preserve">
+    <value>Understablishing Tenders</value>
+  </data>
+  <data name="ApproveChange" xml:space="preserve">
+    <value>Approve change</value>
+  </data>
+  <data name="ConfirmApprovingChange" xml:space="preserve">
+    <value>Confirm appriving change</value>
+  </data>
+  <data name="ConfirmRejectingChange" xml:space="preserve">
+    <value>Confirm Rejecting change</value>
+  </data>
+  <data name="RejectChange" xml:space="preserve">
+    <value>Reject change</value>
+  </data>
+  <data name="SendChangeForApprovement" xml:space="preserve">
+    <value>Send change for approvement</value>
+  </data>
+  <data name="Inquiry" xml:space="preserve">
+    <value>Inquiries</value>
+  </data>
+  <data name="TotalPrice" xml:space="preserve">
+    <value>Total Price</value>
+  </data>
+  <data name="TotalPriceAfterDiscount" xml:space="preserve">
+    <value>Total Price After Discount</value>
+  </data>
+  <data name="UnderEstablished" xml:space="preserve">
+    <value>Under Established</value>
+  </data>
+  <data name="AwardingComments" xml:space="preserve">
+    <value>Awarding Comments</value>
+  </data>
+  <data name="AgreeToAcceptInvitation" xml:space="preserve">
+    <value>I agree to agree to accept the invitation</value>
+  </data>
+  <data name="PleaseAgreeToAcceptInvitation" xml:space="preserve">
+    <value>You must agree to accept the invitation first</value>
+  </data>
+  <data name="AccessoriesManagement" xml:space="preserve">
+    <value>Accessories Management (Amendment of Bill of Quantities)</value>
+  </data>
+  <data name="ManageAttachments" xml:space="preserve">
+    <value>Manage Attachments (modify files)</value>
+  </data>
+  <data name="SaveEdit" xml:space="preserve">
+    <value>Save the edit</value>
+  </data>
+  <data name="AwardingReport" xml:space="preserve">
+    <value>Awarding Report</value>
+  </data>
+  <data name="TenderAdvReport" xml:space="preserve">
+    <value>Tender Adv Report</value>
+  </data>
+  <data name="ConfirmTheRequestToJoinTheVendorList" xml:space="preserve">
+    <value>Confirm the request to join the vendor list</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="DocumentsAttachments" xml:space="preserve">
+    <value>Documents and Attachments</value>
+  </data>
+  <data name="NoRecordsFound" xml:space="preserve">
+    <value>No Records Found</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="EditeAttachments" xml:space="preserve">
+    <value>Edit in Attachments</value>
+  </data>
+  <data name="EditeQuantityTable" xml:space="preserve">
+    <value>Edit in Quantites Tables</value>
+  </data>
+  <data name="CloseChange" xml:space="preserve">
+    <value>Close change</value>
+  </data>
+  <data name="RequestDateFrom" xml:space="preserve">
+    <value>Request date to</value>
+  </data>
+  <data name="RequestDateTo" xml:space="preserve">
+    <value>Request date to</value>
+  </data>
+  <data name="ResponseDateFrom" xml:space="preserve">
+    <value>Response date from</value>
+  </data>
+  <data name="ResponseDateTo" xml:space="preserve">
+    <value>Response date to</value>
+  </data>
+  <data name="RevisionDate" xml:space="preserve">
+    <value>Deadline extend</value>
+  </data>
+  <data name="RevisionDateList" xml:space="preserve">
+    <value>Deadline extend list</value>
+  </data>
+  <data name="NotPurchased" xml:space="preserve">
+    <value>Not Purchased</value>
+  </data>
+  <data name="Withdrawal" xml:space="preserve">
+    <value>Withdrawal</value>
+  </data>
+  <data name="PleaseAgreeToApproveTender" xml:space="preserve">
+    <value>Please Agree To Approve The Tender</value>
+  </data>
+  <data name="PleaseConfirmThatTenderInBudget" xml:space="preserve">
+    <value>Please Confirm That This Tender Under The Budget</value>
+  </data>
+  <data name="WillOpen" xml:space="preserve">
+    <value>In case that you confirmed, the suppliers will not be able to buy the tender or send a new offer.</value>
+  </data>
+  <data name="AreYouSureToRejectJoiningRequest" xml:space="preserve">
+    <value>Are You Sure To Reject The Joining Request</value>
+  </data>
+  <data name="SupplierWillBeInvitedAreYouSure" xml:space="preserve">
+    <value>Supplier Will Be Invited Immediately, Are You Sure</value>
+  </data>
+  <data name="ConfirmUpdateAdderss" xml:space="preserve">
+    <value>Are you sure you want to edit the address?</value>
+  </data>
+  <data name="AreYouSureYouWantSaveThisModification" xml:space="preserve">
+    <value>Are You Sure You Want Save This Modification?</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="ConfirmModification" xml:space="preserve">
+    <value>Confirm Modification</value>
+  </data>
+  <data name="AwardingReportHeader" xml:space="preserve">
+    <value>On the day {0} corresponding to {1} the offers for this process were studied from the following companies and institutions:</value>
+  </data>
+  <data name="AwardingReportTitle" xml:space="preserve">
+    <value>Studying the offers of a direct purchase</value>
+  </data>
+  <data name="AwardingReasons" xml:space="preserve">
+    <value>Awarding Reasons</value>
+  </data>
+  <data name="AwardingReportBody" xml:space="preserve">
+    <value>In light of the conditions and specifications of the process and the implications of these offers of specifications and prices, we recommend the following:</value>
+  </data>
+  <data name="AwardingReportFooter" xml:space="preserve">
+    <value>This is what happened to the study of previous offers .. and is transmitted with greetings to the Director of the Procurement Department.</value>
+  </data>
+  <data name="Countries" xml:space="preserve">
+    <value>Countries</value>
+  </data>
+  <data name="AddSupplierToFavouriteList" xml:space="preserve">
+    <value>Add Supplier To a Favourite List</value>
+  </data>
+  <data name="ConfirmDeleteFavouriteList" xml:space="preserve">
+    <value>Are you sure you want to delete this favourite list?</value>
+  </data>
+  <data name="NoSamplesRequired" xml:space="preserve">
+    <value>There is no required sample</value>
+  </data>
+  <data name="joined" xml:space="preserve">
+    <value>Joined</value>
+  </data>
+  <data name="MainTenderActivities" xml:space="preserve">
+    <value>Main Tender Activities</value>
+  </data>
+  <data name="AwardingResultDetails" xml:space="preserve">
+    <value>Awarding result details</value>
+  </data>
+  <data name="AverageOffersValue" xml:space="preserve">
+    <value>Average offers value</value>
+  </data>
+  <data name="TendersSalesReportChart" xml:space="preserve">
+    <value>Tenders Sales Report (Chart)</value>
+  </data>
+  <data name="TendersSalesReportList" xml:space="preserve">
+    <value>Tenders Sales Report (List)</value>
+  </data>
+  <data name="RelatedTenders" xml:space="preserve">
+    <value>Related tenders to the sama activity</value>
+  </data>
+  <data name="OfferingApplyingDatePassed" xml:space="preserve">
+    <value>Applying offer date passed</value>
+  </data>
+  <data name="TenderWasCanceled" xml:space="preserve">
+    <value>(Tened was canceled)</value>
+  </data>
+  <data name="AdvancedSearch" xml:space="preserve">
+    <value>Advanced Search</value>
+  </data>
+  <data name="More" xml:space="preserve">
+    <value>More</value>
+  </data>
+  <data name="Subscribtion" xml:space="preserve">
+    <value>الإشتراك</value>
+  </data>
+  <data name="TendersCountReportChart" xml:space="preserve">
+    <value>Tenders Count Report (Chart)</value>
+  </data>
+  <data name="TendersCountReportList" xml:space="preserve">
+    <value>Tenders Count Report (List)</value>
+  </data>
+  <data name="MostSupplierHasTendersReportChart" xml:space="preserve">
+    <value>Most Suppliers have Tenders (Chart)</value>
+  </data>
+  <data name="MostSupplierHasTendersReportList" xml:space="preserve">
+    <value>Most Suppliers have Tenders (List)</value>
+  </data>
+  <data name="CancelRequestAccepted" xml:space="preserve">
+    <value>Cancel Request Accepted</value>
+  </data>
+  <data name="CancelRequestApply" xml:space="preserve">
+    <value>Cancel Request</value>
+  </data>
+  <data name="CancelRequestPending" xml:space="preserve">
+    <value>Cancel Request Pending</value>
+  </data>
+  <data name="CancelRequestRejected" xml:space="preserve">
+    <value>Cancel Request Rejected</value>
+  </data>
+  <data name="PendingAttachmentsUpdate" xml:space="preserve">
+    <value>Pending Attachments Update</value>
+  </data>
+  <data name="PendingExtendDatesUpdate" xml:space="preserve">
+    <value>Pending Extend Dates Update</value>
+  </data>
+  <data name="PendingQuantityTableUpdate" xml:space="preserve">
+    <value>Pending Quantity Table Update</value>
+  </data>
+  <data name="RejectAttachmentUpdate" xml:space="preserve">
+    <value>Reject Attachment Update</value>
+  </data>
+  <data name="RejectExtendDateUpdate" xml:space="preserve">
+    <value>Reject Extend Date Update</value>
+  </data>
+  <data name="RejectQuantityTableUpdate" xml:space="preserve">
+    <value>Reject Quantity Table Update</value>
+  </data>
+  <data name="UnderUpdateForAttachments" xml:space="preserve">
+    <value>Under Update For Attachments</value>
+  </data>
+  <data name="UnderUpdateForExtendDates" xml:space="preserve">
+    <value>Under Update For Extend Dates</value>
+  </data>
+  <data name="UnderUpdateForQuantityTables" xml:space="preserve">
+    <value>Under Update For Quantity Tables</value>
+  </data>
+  <data name="AwardedTenders" xml:space="preserve">
+    <value>Awarded Tenders</value>
+  </data>
+  <data name="RemoveFromFavourite" xml:space="preserve">
+    <value>Remove From Favourite</value>
+  </data>
+  <data name="CreationDate" xml:space="preserve">
+    <value>Creation date</value>
+  </data>
+  <data name="ApprovalList" xml:space="preserve">
+    <value>Approval List</value>
+  </data>
+  <data name="InvoiceNote1" xml:space="preserve">
+    <value>* In the case of non-electronic documents, this invoice must be submitted to the Purchasing Department to receive documents manually.</value>
+  </data>
+  <data name="InvoiceNote2" xml:space="preserve">
+    <value>* Please print this invoice and attach it with the offer to the government.</value>
+  </data>
+  <data name="SortResult" xml:space="preserve">
+    <value>Sort Result</value>
+  </data>
+  <data name="NumberOfItems" xml:space="preserve">
+    <value>Number Of Items</value>
+  </data>
+  <data name="OffersReportHead" xml:space="preserve">
+    <value>A statement of the names of companies and institutions applying for the competition "{0}"</value>
+  </data>
+  <data name="QualificationDocuments" xml:space="preserve">
+    <value>Qualification documents</value>
+  </data>
+  <data name="QualificationEvaluationDate" xml:space="preserve">
+    <value>Qualification documents evaluation date</value>
+  </data>
+  <data name="QualificationEvaluationTime" xml:space="preserve">
+    <value>Qualification documents evaluation time</value>
+  </data>
+  <data name="QualificationName" xml:space="preserve">
+    <value>Qualification invitaion name</value>
+  </data>
+  <data name="QualificationPrice" xml:space="preserve">
+    <value>Qualification documents price</value>
+  </data>
+  <data name="AddEditPreQualification" xml:space="preserve">
+    <value>Add - Edit Prequalification</value>
+  </data>
+  <data name="ConfirmUpdateCommittee" xml:space="preserve">
+    <value>Are you sure to update committee(s)</value>
+  </data>
+  <data name="OffersDetails" xml:space="preserve">
+    <value>Offers Details</value>
+  </data>
+  <data name="EditSamplesAddress" xml:space="preserve">
+    <value>Edit Samples Delivery Address</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="SendDetailesByMessage" xml:space="preserve">
+    <value>We will notify you the notification information shortly, thank you!</value>
+  </data>
+  <data name="YouHaventBuyBookletYet" xml:space="preserve">
+    <value>You Havent Buy the Booklet Yet</value>
+  </data>
+  <data name="WaitingForSaddNumber" xml:space="preserve">
+    <value>Waiting For Sadd Number</value>
+  </data>
+  <data name="WaitingPayament" xml:space="preserve">
+    <value>Waiting Supplier Payment</value>
+  </data>
+  <data name="AwardingDate" xml:space="preserve">
+    <value>Awarding Date</value>
+  </data>
+  <data name="TenderNews" xml:space="preserve">
+    <value>Tender News</value>
+  </data>
+  <data name="PurchasedRejected" xml:space="preserve">
+    <value>Something went wrong, please consult technical support.</value>
+  </data>
+  <data name="OffersCheckingDate" xml:space="preserve">
+    <value>Offeres Checking Date</value>
+  </data>
+  <data name="OffersCheckingTime" xml:space="preserve">
+    <value>Offeres Checking Time</value>
+  </data>
+  <data name="TableNumber" xml:space="preserve">
+    <value>Table Number</value>
+  </data>
+  <data name="PleaseChooseActivity" xml:space="preserve">
+    <value>Please Choose Tender Activity First</value>
+  </data>
+  <data name="SubActivites" xml:space="preserve">
+    <value>Sub Activity</value>
+  </data>
+  <data name="SupplierAwardingRepoer" xml:space="preserve">
+    <value>Awarding Report</value>
+  </data>
+  <data name="TenderPublishDate" xml:space="preserve">
+    <value>Publish Date</value>
+  </data>
+  <data name="AdministrationStaff" xml:space="preserve">
+    <value>Administration Staff</value>
+  </data>
+  <data name="BasicActivityBasedOnCommercialNumber" xml:space="preserve">
+    <value>Basic Activity Based On Commercial Number</value>
+  </data>
+  <data name="CivilRegistry" xml:space="preserve">
+    <value>Civil Registry</value>
+  </data>
+  <data name="CompanyBranches" xml:space="preserve">
+    <value>Company branched</value>
+  </data>
+  <data name="CompanyInfo" xml:space="preserve">
+    <value>Company Info</value>
+  </data>
+  <data name="CompanyType" xml:space="preserve">
+    <value>Company Type</value>
+  </data>
+  <data name="Contracts" xml:space="preserve">
+    <value>Contracts</value>
+  </data>
+  <data name="Files" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="GovernmantalDocuments" xml:space="preserve">
+    <value>Governmantal Documents</value>
+  </data>
+  <data name="InvestmentLicense" xml:space="preserve">
+    <value>Investment License</value>
+  </data>
+  <data name="MainActivityBasedonCommercialNumber" xml:space="preserve">
+    <value>Main Activity Based on Commercial Number</value>
+  </data>
+  <data name="MembershipCity" xml:space="preserve">
+    <value>Membership City</value>
+  </data>
+  <data name="Mobile" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="Nationality" xml:space="preserve">
+    <value>Nationality</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Phone Number</value>
+  </data>
+  <data name="RegistrationInSocialInsurance" xml:space="preserve">
+    <value>Registration In Social Insurance</value>
+  </data>
+  <data name="SupplierInfo" xml:space="preserve">
+    <value>Supplier Information</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="UniqueNumber" xml:space="preserve">
+    <value>Unique Number</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>User Name</value>
+  </data>
+  <data name="ContractAmount" xml:space="preserve">
+    <value>Contract Amount</value>
+  </data>
+  <data name="DocumentName" xml:space="preserve">
+    <value>Document Name</value>
+  </data>
+  <data name="DocumentStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="GoveAgency" xml:space="preserve">
+    <value>Gov. Agency</value>
+  </data>
+  <data name="ProjectName" xml:space="preserve">
+    <value>Project Name</value>
+  </data>
+  <data name="SupplierData" xml:space="preserve">
+    <value>Supplier Information</value>
+  </data>
+  <data name="NumberOfActiveSuppliers" xml:space="preserve">
+    <value>Number Of Active Suppliers</value>
+  </data>
+  <data name="NumberOfActiveSuppliersOnGeneralTender" xml:space="preserve">
+    <value>Number Of Active Suppliers On General Tender</value>
+  </data>
+  <data name="NumberOfActiveSuppliersOnGeneralTender1" xml:space="preserve">
+    <value>Number Of Active Suppliers On Direct Purchase Tenders</value>
+  </data>
+  <data name="NumberOfAwardded" xml:space="preserve">
+    <value>Number Of Awardded</value>
+  </data>
+  <data name="NumberOfOpenedOffers" xml:space="preserve">
+    <value>Number Of Opened Offers</value>
+  </data>
+  <data name="NumberOfSuppliers" xml:space="preserve">
+    <value>Number Of Suppliers</value>
+  </data>
+  <data name="NumberOfSuppliersEnquiries" xml:space="preserve">
+    <value>Number Of Suppliers Enquiries</value>
+  </data>
+  <data name="NumberOfTechnicalChecked" xml:space="preserve">
+    <value>Number Of Technical Checked</value>
+  </data>
+  <data name="SummationOfGeneralTenders" xml:space="preserve">
+    <value>Summation Of General Tenders</value>
+  </data>
+  <data name="SummationOfInvitationsAndDirectPurchaseTenders" xml:space="preserve">
+    <value>Summation Of Invitations And Direct Purchase Tenders</value>
+  </data>
+  <data name="TendersSummryReport" xml:space="preserve">
+    <value>Tenders Summry Report</value>
+  </data>
+  <data name="UploadExcelFile" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="Updated" xml:space="preserve">
+    <value>Updated</value>
+  </data>
+  <data name="ApproveCancelRequest" xml:space="preserve">
+    <value>Approve Cancel Request</value>
+  </data>
+  <data name="ApproveUnitReview" xml:space="preserve">
+    <value>Approve Tender</value>
+  </data>
+  <data name="RejectUnitReview" xml:space="preserve">
+    <value>Reject Tender</value>
+  </data>
+  <data name="RejectCancelRequest" xml:space="preserve">
+    <value>Reject Cancel Request</value>
+  </data>
+  <data name="changeRequestRejectionReason" xml:space="preserve">
+    <value>Change Request Rejection Reason</value>
+  </data>
+  <data name="AgencyCode" xml:space="preserve">
+    <value>Agency Code</value>
+  </data>
+  <data name="MonthlyReceiptPurchaseReport" xml:space="preserve">
+    <value>Monthly Receipt Purchase Report</value>
+  </data>
+  <data name="GoupedByAgency" xml:space="preserve">
+    <value>Gouped By Agency</value>
+  </data>
+  <data name="GoupedByMonth" xml:space="preserve">
+    <value>Gouped By Month</value>
+  </data>
+  <data name="ShowToPublic" xml:space="preserve">
+    <value>Display for Public</value>
+  </data>
+  <data name="CheckAllDocuments" xml:space="preserve">
+    <value>Check all documents</value>
+  </data>
+  <data name="SendAs" xml:space="preserve">
+    <value>Send As SMS Or Email</value>
+  </data>
+  <data name="SendAt" xml:space="preserve">
+    <value>Send at time</value>
+  </data>
+  <data name="SendStatus" xml:space="preserve">
+    <value>Send Status</value>
+  </data>
+  <data name="SendTo" xml:space="preserve">
+    <value>Send to</value>
+  </data>
+  <data name="AppliedsuppliersList" xml:space="preserve">
+    <value>Applied suppliers List</value>
+  </data>
+  <data name="OfferAwardingCount" xml:space="preserve">
+    <value>Offer Awarding Count</value>
+  </data>
+  <data name="OfferCheckingCount" xml:space="preserve">
+    <value>Offer Checking Count</value>
+  </data>
+  <data name="OfferOpeningCount" xml:space="preserve">
+    <value>Offer Opening Count</value>
+  </data>
+  <data name="PurshaseSuppliersCount" xml:space="preserve">
+    <value>Purshase Suppliers Count</value>
+  </data>
+  <data name="SuppliersCount" xml:space="preserve">
+    <value>Suppliers Count</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="SendMovements" xml:space="preserve">
+    <value>Send Movements</value>
+  </data>
+  <data name="IsNotValid" xml:space="preserve">
+    <value>Not Valid</value>
+  </data>
+  <data name="IsValid" xml:space="preserve">
+    <value>Valid</value>
+  </data>
+  <data name="Combined" xml:space="preserve">
+    <value>Combined</value>
+  </data>
+  <data name="Offeror" xml:space="preserve">
+    <value>Offeror</value>
+  </data>
+  <data name="NumberOfPurchases" xml:space="preserve">
+    <value>Number Of Purchases</value>
+  </data>
+  <data name="TheElectronicOffersOnDirectPurchase" xml:space="preserve">
+    <value>The Electronic Offers On Direct Purchase</value>
+  </data>
+  <data name="TheElectronicOffersOnTenders" xml:space="preserve">
+    <value>The Electronic Offers On Tenders</value>
+  </data>
+  <data name="OperationDateTime" xml:space="preserve">
+    <value>Operation date and time</value>
+  </data>
+  <data name="AcceoptOffer" xml:space="preserve">
+    <value>Acceopt Offer</value>
+  </data>
+  <data name="RejectOffer" xml:space="preserve">
+    <value>Reject Offer</value>
+  </data>
+  <data name="AllSuppliersWithElectronicGate" xml:space="preserve">
+    <value>All Suppliers With Electronic Gate</value>
+  </data>
+  <data name="Guarantee" xml:space="preserve">
+    <value>Intial Bankl Gurantee</value>
+  </data>
+  <data name="HasPrequalification" xml:space="preserve">
+    <value>Has prequalification</value>
+  </data>
+  <data name="InitialGuranteePresentationAddress" xml:space="preserve">
+    <value>Initial gurantee presentation address</value>
+  </data>
+  <data name="NeddedInitialGurantee" xml:space="preserve">
+    <value>Initial gurantee nedded</value>
+  </data>
+  <data name="NewRound" xml:space="preserve">
+    <value>Add New Round</value>
+  </data>
+  <data name="TheRound" xml:space="preserve">
+    <value>The Round</value>
+  </data>
+  <data name="NoGuarantee" xml:space="preserve">
+    <value>No Guarantee</value>
+  </data>
+  <data name="OfferPresentationWay" xml:space="preserve">
+    <value>Offer presentation way</value>
+  </data>
+  <data name="OneFile" xml:space="preserve">
+    <value>One file for Technical and finantial offer</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="PreQualification" xml:space="preserve">
+    <value>PreQualification</value>
+  </data>
+  <data name="PrimaryGuarantee" xml:space="preserve">
+    <value>Primary Guarantee</value>
+  </data>
+  <data name="PublishedBy" xml:space="preserve">
+    <value>Published by</value>
+  </data>
+  <data name="ReasonForTenderTypeSelection" xml:space="preserve">
+    <value>Reason for tender type selection</value>
+  </data>
+  <data name="ReferenceTenderNumber" xml:space="preserve">
+    <value>Reference tender number</value>
+  </data>
+  <data name="RequiredInitialGuaranteeAddress" xml:space="preserve">
+    <value>You have to write Initial guarentee address</value>
+  </data>
+  <data name="RequiredOtherReason" xml:space="preserve">
+    <value>you have to write reason</value>
+  </data>
+  <data name="RequiredPrequalification" xml:space="preserve">
+    <value>You have to choose prequalification</value>
+  </data>
+  <data name="RequiredPrequalificationMoreThanThwentyMillion" xml:space="preserve">
+    <value>You have to choose prequalification because estimate value more than 20 million riyals</value>
+  </data>
+  <data name="RequiredTwoFilesMoreThanFiveMillion" xml:space="preserve">
+    <value>You have to choose two files because estimate value more than or equal 5 million riyals</value>
+  </data>
+  <data name="RequiredPurchaseCommittee" xml:space="preserve">
+    <value>You have to choose committee</value>
+  </data>
+  <data name="RequiredTenderTypeSelectionReason" xml:space="preserve">
+    <value>You hane to choose reason</value>
+  </data>
+  <data name="SelectDirectPurchaseCommittee" xml:space="preserve">
+    <value>Select direct purchase committee</value>
+  </data>
+  <data name="SelectOfferPresentationWay" xml:space="preserve">
+    <value>Select offer presentation way</value>
+  </data>
+  <data name="SelectPreQualification" xml:space="preserve">
+    <value>Select prequalification</value>
+  </data>
+  <data name="SelectTenderType" xml:space="preserve">
+    <value>Select tender type</value>
+  </data>
+  <data name="SelectTenderTypeSelectionReason" xml:space="preserve">
+    <value>Select tender type select reason</value>
+  </data>
+  <data name="TenderNumberForAgency" xml:space="preserve">
+    <value>Tender number for agency</value>
+  </data>
+  <data name="TwoSepratedFiles" xml:space="preserve">
+    <value>Two seprated files for technical and finantial offer</value>
+  </data>
+  <data name="FirstStageTender" xml:space="preserve">
+    <value>Two stages tender (first stage)</value>
+  </data>
+  <data name="SecondStageTender" xml:space="preserve">
+    <value>Two stages tender (second stage)</value>
+  </data>
+  <data name="CommunicationRequest" xml:space="preserve">
+    <value>Communication Request</value>
+  </data>
+  <data name="TenderApprovedBySecertary" xml:space="preserve">
+    <value>تم قبول المنافسة من قبل المختص</value>
+  </data>
+  <data name="TenderRejectedByManager" xml:space="preserve">
+    <value>تم رفض المنافسة من قبل المدير</value>
+  </data>
+  <data name="TenderRejectedBySecertary" xml:space="preserve">
+    <value>تم رفض المنافسة من قبل المختص</value>
+  </data>
+  <data name="SendInvitationsForAcceptedSuppliersInTenderFirstStage" xml:space="preserve">
+    <value>Send invitations for first stage accepted suppliers</value>
+  </data>
+  <data name="SendInvitationsForQualifiedSuppliers" xml:space="preserve">
+    <value>Send invitations for qualified suppliers</value>
+  </data>
+  <data name="RejectedByManager" xml:space="preserve">
+    <value>Rejected By Manager</value>
+  </data>
+  <data name="UnderReviewing" xml:space="preserve">
+    <value>Under Secretary Review</value>
+  </data>
+  <data name="WaitingManagerApprove" xml:space="preserve">
+    <value>Waiting Manager Approve</value>
+  </data>
+  <data name="WaitingUnitSecretaryReview" xml:space="preserve">
+    <value>Waiting Unit Secretary Review</value>
+  </data>
+  <data name="EditUnitDesision" xml:space="preserve">
+    <value>Edit Unit Desision</value>
+  </data>
+  <data name="EnterUnitDesision" xml:space="preserve">
+    <value>Enter Unit Desision</value>
+  </data>
+  <data name="SelectUnitLevelTwoUser" xml:space="preserve">
+    <value>Select Unit Level Two User</value>
+  </data>
+  <data name="UnitStageTenders" xml:space="preserve">
+    <value>Unit Stage Tenders</value>
+  </data>
+  <data name="ReturnForEdit" xml:space="preserve">
+    <value>Return For Edit</value>
+  </data>
+  <data name="SelectEditType" xml:space="preserve">
+    <value>Select Edit Type</value>
+  </data>
+  <data name="TransferToAnotherSecretery" xml:space="preserve">
+    <value>Transfer To Another Secretery</value>
+  </data>
+  <data name="PurchaseOffersCommittee" xml:space="preserve">
+    <value>Purchase Committee Name</value>
+  </data>
+  <data name="AgreementPeriod" xml:space="preserve">
+    <value>Agreement Period</value>
+  </data>
+  <data name="BiddingDate" xml:space="preserve">
+    <value>Bidding Date</value>
+  </data>
+  <data name="BiddingDuration" xml:space="preserve">
+    <value>Bidding Duration</value>
+  </data>
+  <data name="BiddingEndTime" xml:space="preserve">
+    <value>Bidding End Time</value>
+  </data>
+  <data name="BiddingStartTime" xml:space="preserve">
+    <value>Bidding Start Time </value>
+  </data>
+  <data name="PleaseEnterNewRoundInformation" xml:space="preserve">
+    <value>Please enter new round information</value>
+  </data>
+  <data name="TechnicalCheckWillBeSentToApprove" xml:space="preserve">
+    <value>Technical check will be sent to approve</value>
+  </data>
+  <data name="CheckFinancialOffers" xml:space="preserve">
+    <value>Check financial offers</value>
+  </data>
+  <data name="BiddingPage" xml:space="preserve">
+    <value>Bidding page</value>
+  </data>
+  <data name="MoveToFinancialCheckStage" xml:space="preserve">
+    <value>Move to financial checking stage</value>
+  </data>
+  <data name="AFinancailConfirmationRequestWillBeSent" xml:space="preserve">
+    <value>Financial checking confirmation request will be sent</value>
+  </data>
+  <data name="OfferFinancialDetails" xml:space="preserve">
+    <value>Offer financial details</value>
+  </data>
+  <data name="TechnicalOfferDetails" xml:space="preserve">
+    <value>technical offer details</value>
+  </data>
+  <data name="OfferFinancialChecked" xml:space="preserve">
+    <value>Check financial offers</value>
+  </data>
+  <data name="ActualActiveParticipate" xml:space="preserve">
+    <value>Actual Active Participate in the round</value>
+  </data>
+  <data name="AddBid" xml:space="preserve">
+    <value>Add Bid</value>
+  </data>
+  <data name="And" xml:space="preserve">
+    <value>And</value>
+  </data>
+  <data name="BiddingDetails" xml:space="preserve">
+    <value>Bidding Details</value>
+  </data>
+  <data name="BiddingValue" xml:space="preserve">
+    <value>Bidding Value</value>
+  </data>
+  <data name="DateFromStatrtTheSession" xml:space="preserve">
+    <value>Date From Statrt The Session</value>
+  </data>
+  <data name="LastBiddingLeastValue" xml:space="preserve">
+    <value>Last Bidding Least Value</value>
+  </data>
+  <data name="Minute" xml:space="preserve">
+    <value>Minute</value>
+  </data>
+  <data name="TimeFromStatrtTheSession" xml:space="preserve">
+    <value>Time From Statrting The Session</value>
+  </data>
+  <data name="SessionEndTime" xml:space="preserve">
+    <value>Session End Time</value>
+  </data>
+  <data name="TimeToEndTheSession" xml:space="preserve">
+    <value>Time To End The Session</value>
+  </data>
+  <data name="CheckApproveFinancialOffersRequestWillSent" xml:space="preserve">
+    <value>Financial check approval request will be sent.</value>
+  </data>
+  <data name="WillReopenFinancialOfferCheck" xml:space="preserve">
+    <value>Financial checking will be reopened.</value>
+  </data>
+  <data name="PostQualification" xml:space="preserve">
+    <value>Post Qualification</value>
+  </data>
+  <data name="AwaredeSuppliersList" xml:space="preserve">
+    <value>Awareded Suppliers</value>
+  </data>
+  <data name="FrameworkAgreement" xml:space="preserve">
+    <value>Framework Agreement Tender</value>
+  </data>
+  <data name="LimitedTender" xml:space="preserve">
+    <value>Limited Tender</value>
+  </data>
+  <data name="ReverseBidding" xml:space="preserve">
+    <value>Reverse Bidding Tender</value>
+  </data>
+  <data name="RecreateFramWorkTender" xml:space="preserve">
+    <value>Recreate FramWork Tender</value>
+  </data>
+  <data name="BiddingOfferPlace" xml:space="preserve">
+    <value>Your offer's place in the bidding</value>
+  </data>
+  <data name="WinnerOrder" xml:space="preserve">
+    <value>Winner Order</value>
+  </data>
+  <data name="Sent" xml:space="preserve">
+    <value>Request Sent</value>
+  </data>
+  <data name="EscalationDate" xml:space="preserve">
+    <value>Escalation date</value>
+  </data>
+  <data name="PlaintRequestApplyDate" xml:space="preserve">
+    <value>Plaint request date</value>
+  </data>
+  <data name="AnnouncementDate" xml:space="preserve">
+    <value>Announcement date</value>
+  </data>
+  <data name="CommitteeDecision" xml:space="preserve">
+    <value>Committee Decision</value>
+  </data>
+  <data name="AlternativeOffer" xml:space="preserve">
+    <value>Alternative Offer Allowed</value>
+  </data>
+  <data name="SpendingCategory" xml:space="preserve">
+    <value>Spending Category</value>
+  </data>
+  <data name="PleaseEnterInspectionDateTime" xml:space="preserve">
+    <value>Please enter the inspection time and date</value>
+  </data>
+  <data name="ChooseCheckingDate" xml:space="preserve">
+    <value>Choose checking date</value>
+  </data>
+  <data name="WithdrawFromInvitation" xml:space="preserve">
+    <value>Withdraw from invitation</value>
+  </data>
+  <data name="HasGuarantee" xml:space="preserve">
+    <value>Guarantee Letter Required</value>
+  </data>
+  <data name="AwardingPercentage" xml:space="preserve">
+    <value>Gaurantee Percentage</value>
+  </data>
+  <data name="MonthsCount" xml:space="preserve">
+    <value>Guarantee Period</value>
+  </data>
+  <data name="CancelationReason" xml:space="preserve">
+    <value>CancelationReason</value>
+  </data>
+  <data name="SupplierViolator" xml:space="preserve">
+    <value>Supplier Violator</value>
+  </data>
+  <data name="AssignUnitTask" xml:space="preserve">
+    <value>Assign Unit Task</value>
+  </data>
+  <data name="SelectUnitLevelOneUser" xml:space="preserve">
+    <value>Please Select Unit Level One User</value>
+  </data>
+  <data name="SelectUnitManagerUser" xml:space="preserve">
+    <value>Please Select Unit Manager User</value>
+  </data>
+  <data name="DirectPurchaseInvitation" xml:space="preserve">
+    <value>Will show to all suppliers</value>
+  </data>
+  <data name="CancelationReasonDescription" xml:space="preserve">
+    <value>Cancelation reason description</value>
+  </data>
+  <data name="ExtensionsRequests" xml:space="preserve">
+    <value>Extensions requests</value>
+  </data>
+  <data name="VROTenders" xml:space="preserve">
+    <value>VRO Tenders</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>One file</value>
+  </data>
+  <data name="TwoFiles" xml:space="preserve">
+    <value>Two seperated files</value>
+  </data>
+  <data name="ModificationDescription" xml:space="preserve">
+    <value>Modification Description</value>
+  </data>
+  <data name="IWouldLikeToAttendTheCommitte" xml:space="preserve">
+    <value>I Would Like To Attend The Committe</value>
+  </data>
+  <data name="EndBidding" xml:space="preserve">
+    <value>End Bidding</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="SystemCertificates" xml:space="preserve">
+    <value>System certificates and licences</value>
+  </data>
+  <data name="AgencyDecalration" xml:space="preserve">
+    <value>Agency Decalration</value>
+  </data>
+  <data name="ApplyTechnicalAndFinancialOffersSectionWay" xml:space="preserve">
+    <value>Apply Technical and financial offers in sepratly</value>
+  </data>
+  <data name="NoAlternativeOffer" xml:space="preserve">
+    <value>Do not allow alternative offer</value>
+  </data>
+  <data name="AlternativeOfferTitle" xml:space="preserve">
+    <value>Alternative Offer</value>
+  </data>
+  <data name="AreAlternativeOfferAccepted" xml:space="preserve">
+    <value>Are Alternative Offer Accepted</value>
+  </data>
+  <data name="DocumentsFontSize" xml:space="preserve">
+    <value>Documents Font Size</value>
+  </data>
+  <data name="DoumentTypes" xml:space="preserve">
+    <value>Doument Types</value>
+  </data>
+  <data name="EvaluateOfferStandards" xml:space="preserve">
+    <value>Evaluate Offer Standards</value>
+  </data>
+  <data name="FinancialOfferDocuments" xml:space="preserve">
+    <value>Financial Offer Documents</value>
+  </data>
+  <data name="InitialGuaranteePercentage" xml:space="preserve">
+    <value>Initial Guarantee Percentage</value>
+  </data>
+  <data name="HideConfirimJoiningTheTenderSection" xml:space="preserve">
+    <value>Hide Confirim Joining The Tender Section</value>
+  </data>
+  <data name="SignAllPages" xml:space="preserve">
+    <value>Sign All Pages</value>
+  </data>
+  <data name="TechnicalOfferDocuments" xml:space="preserve">
+    <value>Technical Offer Documents</value>
+  </data>
+  <data name="SupplierMustPriceAllSections" xml:space="preserve">
+    <value>Supplier Must Price All Sections</value>
+  </data>
+  <data name="BookletFileTypes" xml:space="preserve">
+    <value>File Types</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="EquipmentsSpecifications" xml:space="preserve">
+    <value>Equipments' Specifications</value>
+  </data>
+  <data name="MaterialsSpecifications" xml:space="preserve">
+    <value>Materials' Specifications</value>
+  </data>
+  <data name="ProjectsScope" xml:space="preserve">
+    <value>Project's Scope</value>
+  </data>
+  <data name="QualitySpecifications" xml:space="preserve">
+    <value>Quality's Specifications</value>
+  </data>
+  <data name="Region" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="SafetySpecifications" xml:space="preserve">
+    <value>Safety's Specifications</value>
+  </data>
+  <data name="ServicesAndWorkImplementationsMethod" xml:space="preserve">
+    <value>Services And Work Implementations Method</value>
+  </data>
+  <data name="Suburb" xml:space="preserve">
+    <value>Suburb</value>
+  </data>
+  <data name="TechnicalDeclrations" xml:space="preserve">
+    <value>Technical Declrations</value>
+  </data>
+  <data name="WorkLocationDetails" xml:space="preserve">
+    <value>Work's Location Details</value>
+  </data>
+  <data name="WorksProgram" xml:space="preserve">
+    <value>Work's Program</value>
+  </data>
+  <data name="AlternativeEmailForCommuncation" xml:space="preserve">
+    <value>Alternative Email For Communcation</value>
+  </data>
+  <data name="HideFinancialDocumentSections" xml:space="preserve">
+    <value>Hide Financial Document Sections</value>
+  </data>
+  <data name="HideTechnicalDocumentSections" xml:space="preserve">
+    <value>Hide Technical Document Sections</value>
+  </data>
+  <data name="MaxTimeToAnswerQuestions" xml:space="preserve">
+    <value>Max Time To Answer Questions</value>
+  </data>
+  <data name="MaxTimeToSendQuestions" xml:space="preserve">
+    <value>Max Time To Send Questions</value>
+  </data>
+  <data name="TenderConditionsTemplateOutputs" xml:space="preserve">
+    <value>The Outputs</value>
+  </data>
+  <data name="ContractBasedOnPerformanceDetails" xml:space="preserve">
+    <value>Contract Based On Performance Details</value>
+  </data>
+  <data name="DocumentStyle" xml:space="preserve">
+    <value>Offers document style</value>
+  </data>
+  <data name="JoiningTheTenderSectionTemplateId" xml:space="preserve">
+    <value>Joining The Tender Section Template Id</value>
+  </data>
+  <data name="ApplyOffersTemplateId" xml:space="preserve">
+    <value>Apply Offers Template Id</value>
+  </data>
+  <data name="OpenAndCheckTenders" xml:space="preserve">
+    <value>Opening and checking stage tenders</value>
+  </data>
+  <data name="GuaranteeDuration" xml:space="preserve">
+    <value>Guarantee Duration</value>
+  </data>
+  <data name="TenderShouldHaveActivePreQualifcationOrPostQualification" xml:space="preserve">
+    <value>Tender Should Have Active Pre Or Post Qualifcation Within The Period</value>
+  </data>
+  <data name="VROConfirmOffersChecking" xml:space="preserve">
+    <value>If you confirm, tender status will be (Offers technical checking) and suppliers won't be able to buy the booklets or apply offers anymore.</value>
+  </data>
+  <data name="TenderDescription" xml:space="preserve">
+    <value>Tender Description</value>
+  </data>
+  <data name="ChooseCheckOpenCommittee" xml:space="preserve">
+    <value>Choose CheckOpen Committee</value>
+  </data>
+  <data name="VROFinancialCheckingOpening" xml:space="preserve">
+    <value>VRO Financial Checking Opening</value>
+  </data>
+  <data name="VROOffersChecking" xml:space="preserve">
+    <value>VRO Offers Checking</value>
+  </data>
+  <data name="VROOffersFinancialChecking" xml:space="preserve">
+    <value>VRO Offers Financial Checking</value>
+  </data>
+  <data name="VROOffersFinancialCheckingApproved" xml:space="preserve">
+    <value> VRO Offers Financial Checking Approved</value>
+  </data>
+  <data name="VROOffersFinancialCheckingPending" xml:space="preserve">
+    <value>VRO Offers Financial Checking Pending</value>
+  </data>
+  <data name="VROOffersFinancialCheckingRejected" xml:space="preserve">
+    <value>VRO Offers Financial Checking Rejected</value>
+  </data>
+  <data name="VROOffersTechnicalChecking" xml:space="preserve">
+    <value>VRO Offers Technical Checking</value>
+  </data>
+  <data name="VROOffersTechnicalCheckingApproved" xml:space="preserve">
+    <value>VRO Offers Technical Checking Approved</value>
+  </data>
+  <data name="VROOffersTechnicalCheckingPending" xml:space="preserve">
+    <value>VRO Offers Technical Checking Pending</value>
+  </data>
+  <data name="VROOffersTechnicalCheckingRejected" xml:space="preserve">
+    <value>VRO Offers Technical Checking Rejected</value>
+  </data>
+  <data name="VROOffersCheckingAndTechnicalEval" xml:space="preserve">
+    <value>VRO Offers Checking And Technical Evaluation</value>
+  </data>
+  <data name="NationalTransformationProjects" xml:space="preserve">
+    <value>National Transformation Projects</value>
+  </data>
+  <data name="BookletPrice" xml:space="preserve">
+    <value>Booklet Price</value>
+  </data>
+  <data name="TenderReferenceNumber" xml:space="preserve">
+    <value>Tender reference number</value>
+  </data>
+  <data name="FinalAwardingGuaranteeDeliveryAddress" xml:space="preserve">
+    <value>Final awarding guarantee delivery address</value>
+  </data>
+  <data name="PleaseEnterValueOf" xml:space="preserve">
+    <value>Please enter value</value>
+  </data>
+  <data name="PleaseSelect" xml:space="preserve">
+    <value>Please select </value>
+  </data>
+  <data name="AwardingEndDate" xml:space="preserve">
+    <value>Awarding end date</value>
+  </data>
+  <data name="OffersCheckingEndDate" xml:space="preserve">
+    <value>Offers checking end date</value>
+  </data>
+  <data name="OffersOpeningEndDate" xml:space="preserve">
+    <value>Offers opening end date</value>
+  </data>
+  <data name="AcceptedOffers" xml:space="preserve">
+    <value>Accepted suppliers list</value>
+  </data>
+  <data name="EndOpenFinantialOffersStage" xml:space="preserve">
+    <value>End open finantial offers stage</value>
+  </data>
+  <data name="EnterAgreementDays" xml:space="preserve">
+    <value>Please enter agreement days</value>
+  </data>
+  <data name="AgreementDays" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="Months" xml:space="preserve">
+    <value>Months</value>
+  </data>
+  <data name="EvaluateOffer" xml:space="preserve">
+    <value>Evaluate offer</value>
+  </data>
+  <data name="DateOfRegisteration" xml:space="preserve">
+    <value>Date Of Registeration</value>
+  </data>
+  <data name="RandomSort" xml:space="preserve">
+    <value>Random Sort</value>
+  </data>
+  <data name="OpenFinancialOffers" xml:space="preserve">
+    <value>Open financial offers</value>
+  </data>
+  <data name="PendingUnit" xml:space="preserve">
+    <value>Pending for unit approval</value>
+  </data>
+  <data name="ApproveTender" xml:space="preserve">
+    <value>Approve tender</value>
+  </data>
+  <data name="RejectedBy" xml:space="preserve">
+    <value>Rejected by</value>
+  </data>
+  <data name="ApprovalRejection" xml:space="preserve">
+    <value>Approval rejection</value>
+  </data>
+  <data name="BuyerCount" xml:space="preserve">
+    <value>Buyers count</value>
+  </data>
+  <data name="Excluded" xml:space="preserve">
+    <value>Excluded</value>
+  </data>
+  <data name="NewDirectPurchase" xml:space="preserve">
+    <value>New direct purchase</value>
+  </data>
+  <data name="VROTendersCreatedByGovAgency" xml:space="preserve">
+    <value>VRO tenders created by agency</value>
+  </data>
+  <data name="ResendInvitations" xml:space="preserve">
+    <value> Resend Invitations</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="TenderDefinition" xml:space="preserve">
+    <value>TenderDefinition</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="TenderFragmentation" xml:space="preserve">
+    <value>Tender fragmentation</value>
+  </data>
+  <data name="ConfirimJoiningTheTender" xml:space="preserve">
+    <value>تأكيد المشاركة بالمنافسة</value>
+  </data>
+  <data name="WritePrice" xml:space="preserve">
+    <value>Write Price</value>
+  </data>
+  <data name="ChoosePreQualificationCommittee" xml:space="preserve">
+    <value>Choose qualification committee</value>
+  </data>
+  <data name="PreQualificationCommittee" xml:space="preserve">
+    <value>Qualification committee</value>
+  </data>
+  <data name="AgencyRepresentativeInformation" xml:space="preserve">
+    <value>Agency representative information</value>
+  </data>
+  <data name="DeleteClauseMsg" xml:space="preserve">
+    <value>The entity has the right to delete this item</value>
+  </data>
+  <data name="Employment" xml:space="preserve">
+    <value>Employment</value>
+  </data>
+  <data name="EmploymentPlaceholder" xml:space="preserve">
+    <value>(Government entity adjusts and adds materials according to scope of work)</value>
+  </data>
+  <data name="Equipments" xml:space="preserve">
+    <value>Equipments</value>
+  </data>
+  <data name="FinancialDocumentsList" xml:space="preserve">
+    <value>Financial documents list</value>
+  </data>
+  <data name="GeneralProvisions" xml:space="preserve">
+    <value>General provisions</value>
+  </data>
+  <data name="HideLicenses" xml:space="preserve">
+    <value>اخفاء قسم السجلات والتراخيص النظامية</value>
+  </data>
+  <data name="Introduction" xml:space="preserve">
+    <value>Introduction</value>
+  </data>
+  <data name="JoiningTheTenderPlaceholder" xml:space="preserve">
+    <value>يحق للجهة إلغاء هذه المادة إذا كانت الشروط محققة عند شراء الكراسة</value>
+  </data>
+  <data name="Materials" xml:space="preserve">
+    <value>Materials</value>
+  </data>
+  <data name="NameOfDocument" xml:space="preserve">
+    <value>Document Name</value>
+  </data>
+  <data name="OffersDocuments" xml:space="preserve">
+    <value>Offers documents</value>
+  </data>
+  <data name="QuestionsAndFAQ" xml:space="preserve">
+    <value>Questions and FAQs</value>
+  </data>
+  <data name="TechnicalDocumentsList" xml:space="preserve">
+    <value>Technical documents list</value>
+  </data>
+  <data name="AddedValueDashboard" xml:space="preserve">
+    <value>Added Value Dashboard</value>
+  </data>
+  <data name="BuyingCost" xml:space="preserve">
+    <value>the cost of buying the brochure</value>
+  </data>
+  <data name="InvitationCost" xml:space="preserve">
+    <value>the cost of invitation</value>
+  </data>
+  <data name="SupportingFiles" xml:space="preserve">
+    <value>Supporting files</value>
+  </data>
+  <data name="Attachments" xml:space="preserve">
+    <value>Attachments</value>
+  </data>
+  <data name="SpecialConditions" xml:space="preserve">
+    <value>Special conditions</value>
+  </data>
+  <data name="ShowTenderFragmentation" xml:space="preserve">
+    <value>Show tender fragmentation</value>
+  </data>
+  <data name="RestoreDefaultText" xml:space="preserve">
+    <value>Restore default text</value>
+  </data>
+  <data name="OfferAwardingResultAnnouncement" xml:space="preserve">
+    <value>Announced awarding results</value>
+  </data>
+  <data name="OfferCheckingResultAnnouncement" xml:space="preserve">
+    <value>Announced checking results</value>
+  </data>
+  <data name="OfferValueAfterCalcNPA" xml:space="preserve">
+    <value>Offer value after national product advantage calculation</value>
+  </data>
+  <data name="SortByNPA" xml:space="preserve">
+    <value>Sort by national product advantage value</value>
+  </data>
+  <data name="SortByOfferValue" xml:space="preserve">
+    <value>Sort by offer values</value>
+  </data>
+  <data name="ExcludedFromAwarding" xml:space="preserve">
+    <value>Excluded From Awarding</value>
+  </data>
+  <data name="exclusionReason" xml:space="preserve">
+    <value>excludedReason</value>
+  </data>
+  <data name="PleaseEnterExclusionReason" xml:space="preserve">
+    <value>PleaseEnterExclusionReason</value>
+  </data>
+  <data name="ExclusionWarning" xml:space="preserve">
+    <value>Confirmation of the lack of anchoring causes the supplier to be excluded from the award</value>
+  </data>
+  <data name="ConfirmationExclusionCancelled" xml:space="preserve">
+    <value>Confirm that the supplier are excluded from the awarding</value>
+  </data>
+  <data name="ExclusionCancelled" xml:space="preserve">
+    <value>ExclusionCancelled</value>
+  </data>
+  <data name="IsLinkedToAnnouncement" xml:space="preserve">
+    <value>Is linked to announcement</value>
+  </data>
+  <data name="PreAnnouncement" xml:space="preserve">
+    <value>PreAnnouncement</value>
+  </data>
+  <data name="SelectPreAnnouncement" xml:space="preserve">
+    <value>Select PreAnnouncement</value>
+  </data>
+  <data name="MoreThanTwentyFiveMilion" xml:space="preserve">
+    <value>More Than Twenty Five Milion</value>
+  </data>
+  <data name="FinancailOpeningConfirmation" xml:space="preserve">
+    <value>FInancial offers opening will be approved</value>
+  </data>
+  <data name="ChooseFinancialCheckingDate" xml:space="preserve">
+    <value>Choose financial checking date</value>
+  </data>
+  <data name="FinancialOffersCheckingDate" xml:space="preserve">
+    <value>Financial offers checking date</value>
+  </data>
+  <data name="FinancialOffersCheckingTime" xml:space="preserve">
+    <value>Financial offers checking time</value>
+  </data>
+  <data name="PleaseEnterFinancialInspectionDateTime" xml:space="preserve">
+    <value>Please enter the financial inspection date and time</value>
+  </data>
+  <data name="BackForAwardingFromPlaint" xml:space="preserve">
+    <value>معادة للترسية بسبب قبول طلب التظلم</value>
+  </data>
+  <data name="DirectPurchaseCommitteeMemberId" xml:space="preserve">
+    <value>Select Direct Purchase Committee Member</value>
+  </data>
+  <data name="DirectPurchaseProcedureType" xml:space="preserve">
+    <value>Procedure Type</value>
+  </data>
+  <data name="LowBudgetDirectPurchase" xml:space="preserve">
+    <value>Low Budget Way</value>
+  </data>
+  <data name="LowBudgetWayInfo" xml:space="preserve">
+    <value>The value path is intended to be a comparison and recommendation examination procedure by a member of the direct purchase committee for competitions whose value does not exceed thirty thousand riyals.</value>
+  </data>
+  <data name="NormalDirectPurchase" xml:space="preserve">
+    <value>Normal Way</value>
+  </data>
+  <data name="SelectDirectPurchaseCommitteeMember" xml:space="preserve">
+    <value>Please select purchase committee Member</value>
+  </data>
+  <data name="LowBudgetError" xml:space="preserve">
+    <value>Please Choose Normal procedure way for Tenders with budget greater than 30 Thousand</value>
+  </data>
+  <data name="ConfirmLowBudgetApproveMessage" xml:space="preserve">
+    <value>When Approval Tender Status will be updated to Offer Checking Confirmed Stage</value>
+  </data>
+  <data name="InitiallyApproval" xml:space="preserve">
+    <value>Initially Approval</value>
+  </data>
+  <data name="DirectPurchaseMemberName" xml:space="preserve">
+    <value>Direct Purchase Committee Member</value>
+  </data>
+  <data name="DeleteRequest" xml:space="preserve">
+    <value>Delete request </value>
+  </data>
+  <data name="ExclusionStatus" xml:space="preserve">
+    <value>Exclusion Status</value>
+  </data>
+  <data name="NotExcluded" xml:space="preserve">
+    <value>Not Excluded</value>
+  </data>
+  <data name="AwardingStatus" xml:space="preserve">
+    <value>Awarding status</value>
+  </data>
+  <data name="NonAwardingReason" xml:space="preserve">
+    <value>Non awarding reason</value>
+  </data>
+  <data name="ExclusionFromAwarding" xml:space="preserve">
+    <value>Exclusion from awarding</value>
+  </data>
+  <data name="AwardingExpectedDate" xml:space="preserve">
+    <value>التاريخ المتوقع للترسية</value>
+  </data>
+  <data name="StartingBusinessDate" xml:space="preserve">
+    <value>تاريخ بدء الأعمال</value>
+  </data>
+  <data name="StartingBusinessOrServicesDate" xml:space="preserve">
+    <value>تاريخ بدء الأعمال / الخدمات</value>
+  </data>
+  <data name="StartingSendingEnquiries" xml:space="preserve">
+    <value>بداية إرسال الأسئلة و الاستفسارات</value>
+  </data>
+  <data name="StartingServicesDate" xml:space="preserve">
+    <value>تاريخ بدء الخدمات</value>
+  </data>
+  <data name="FinalGuaranteePercentage" xml:space="preserve">
+    <value>Final guarantee percentage</value>
+  </data>
+  <data name="IsTenderContainsTawreed" xml:space="preserve">
+    <value>Is tender contains tawreed</value>
+  </data>
+  <data name="IsSampleAddresSameOffersAddress" xml:space="preserve">
+    <value>مكان تسليم العروض بنفس عنوان تسليم العينات</value>
+  </data>
+  <data name="OfferDeliveryAddress" xml:space="preserve">
+    <value>Offer Delivery Address</value>
+  </data>
+  <data name="OfferDeliveryDate" xml:space="preserve">
+    <value>Offer Delivery Date</value>
+  </data>
+  <data name="OfferDeliveryLocation" xml:space="preserve">
+    <value>Offer Delivery Location</value>
+  </data>
+  <data name="OfferDeliveryTime" xml:space="preserve">
+    <value>Offer Delivery Time</value>
+  </data>
+  <data name="LocalContentRequirement" xml:space="preserve">
+    <value>LocalContentRequirement</value>
+  </data>
+  <data name="LocalContentConditions" xml:space="preserve">
+    <value>LocalContentConditions</value>
+  </data>
+  <data name="DeterminePreferenceMechanismUsed" xml:space="preserve">
+    <value>DeterminePreferenceMechanismUsed</value>
+  </data>
+  <data name="LocalContentConditionsWeight" xml:space="preserve">
+    <value>اشتراطات آلية وزن المحتوى المحلي / آلية الحد الأدنى المطلوب للمحتوى المحلي</value>
+  </data>
+  <data name="ApplyProvisionsMandatoryList" xml:space="preserve">
+    <value>تطبيق البنود الخاصة بالقائمة الالزامية</value>
+  </data>
+  <data name="StudyMinimumTargetFile" xml:space="preserve">
+    <value>دراسة الحد الأدنى للمحتوى المحلي المستهدف</value>
+  </data>
+  <data name="HowToExcuteBusinessAndServices" xml:space="preserve">
+    <value>How to carry out business and services</value>
+  </data>
+  <data name="OffersChecking" xml:space="preserve">
+    <value>Offers checking</value>
+  </data>
+  <data name="OffersEvaluationCriteria" xml:space="preserve">
+    <value>Offers evaluation criteria</value>
+  </data>
+  <data name="WorkExcutionlocation" xml:space="preserve">
+    <value>Work excution location</value>
+  </data>
+  <data name="ParticipationConfirmationLetterDate" xml:space="preserve">
+    <value>ParticipationConfirmationLetterDate</value>
+  </data>
+  <data name="TermsAndDefinitions" xml:space="preserve">
+    <value>TermsAndDefinitions</value>
+  </data>
+  <data name="CalculatePreference" xml:space="preserve">
+    <value>Show Offes after preference</value>
+  </data>
+  <data name="LocalContentWeight" xml:space="preserve">
+    <value>Local Content Weight</value>
+  </data>
+  <data name="FinancialEvaluation" xml:space="preserve">
+    <value>Financial Evaluation</value>
+  </data>
+  <data name="PriceAfterCalculateSMEA" xml:space="preserve">
+    <value>Price After Calculate Preference</value>
+  </data>
+</root>

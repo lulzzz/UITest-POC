@@ -1,0 +1,268 @@
+@using System
+@inject IJsonHelper Json;
+@model MOF.Etimad.Monafasat.ViewModel.QuantityTableStepDTO
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantityTables</li>
+      </ol>
+   </nav>
+}
+<div class="card">
+   <div class="card-body">
+      <div class="row">
+         @if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding)
+         {
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group">
+                  <label asp-for="HasAlternativeOffer" class="label bmd-label-static"></label>
+                  <div class="form-check">
+                     <label class="form-check-label">
+                        <input asp-for="HasAlternativeOffer" name="HasAlternativeOffer" class="form-check-input" type="radio" id="hasAlternativeOfferYes" value="true" onchange="changeHasAlternativeOffer()">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Yes
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                     <label class="form-check-label">
+                        <input asp-for="HasAlternativeOffer" name="HasAlternativeOffer" class="form-check-input" checked type="radio" id="hasAlternativeOfferNo" value="false" onchange="changeHasAlternativeOffer()">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.No
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                  </div>
+               </div>
+            </div>
+         }
+         <br />
+         <br />
+         <div class="col-12">
+            <div class="card-collapse" style="border: 1px solid #ccc;border-radius: 6px;overflow: hidden;">
+               @Html.Partial("~/Views/Tender/_QuantityTablesChangesCreate.cshtml")
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="row" id="tenderActions">
+   <div class="col-12">
+      <div class="card">
+         <div class="card-body" v-show="hasChangeRequest">
+            <div class="row">
+               <div class="col-12 ">
+                  <div class="form-group bmd-form-group">
+                     <button type="button" class="btn btn-primary pull-left" v-show="hasChangeRequest" name="button" onclick="window.location = '/Tender/TenderQuantityTableChangesApprovement?tenderIdString=@Model.TenderIdString'">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendChangeForApprovement</button>
+                     <button type="button" class="btn btn-danger pull-left" v-show="hasChangeRequest" name="button" onclick="deleteQuantityTableChangeRequest()">تجاهل كل التعديلات</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<script src="~/Etimad-UI/assets/js/xlsx.core.min.js"></script>
+<script src="~/Etimad-UI/assets/js/xls.core.min.js"></script>
+<script src="~/Etimad-UI/assets/js/xlsx.full.min.js"></script>
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script>
+      var TenderActions = new Vue({
+         el: '#tenderActions',
+         data: {
+            canUndoChange: '@((Model.ChangeRequestTypeId == (int)Enums.ChangeRequestType.QuantitiesTables && Model.ChangeRequestStatusId == (int)Enums.ChangeStatusType.New && (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.PurshaseSpecialist))).ToString())' == 'True',
+            hasChangeRequest: '@Model.TemplateFormDTOs.Any(a => a.FormDTOs.Any(f => f.Tables.Any(t => t.IsNewTable || t.IsTableDeleted)) || Model.HasChangedAlternativeOffer)' == 'True'
+         }
+      });
+      $(document).ready(function () {
+         $('.TableNameSection').each(function () {
+            var item = $(this).find('span.tableName');
+            var editItem = $(this).find('input');
+            item.text(editItem.val());
+         });
+         if ('@Model.HasAlternativeOffer' == 'True')
+            $('#hasAlternativeOfferYes').prop('checked', true);
+         else
+            $('#hasAlternativeOfferNo').prop('checked', true);
+      });
+      function editTableName(e, tableName) {
+         var itemName = $(e).parent().parent();
+         var itemNameEdit = $(e).parent().parent().next();
+         itemName.toggleClass('d-block');
+         itemName.toggleClass('d-none');
+         itemNameEdit.toggleClass('d-block');
+         itemNameEdit.toggleClass('d-none');
+         $('#tableName').val(tableName);
+      }
+      function deleteTable(e, tableId, isNewTable) {
+         debugger
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            url: '/Tender/DeleteTableChange?tableId=' + tableId + '&tenderId=@Model.TenderID'+'&isNewTable=' +isNewTable,
+            type: "GET",
+            dataType: "html",
+            success: function () {
+               location.reload();
+               $('#LoadingSite').fadeOut();
+            }
+         });
+      }
+      function changeHasAlternativeOffer() {
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            url: '/Tender/ChangeHasAlternativeOffer?tenderId=@Model.TenderID&hasAlternativeOffer=' + $('#hasAlternativeOfferYes').prop('checked'),
+            type: "GET",
+            dataType: "html",
+            success: function () {
+               location.reload();
+               $('#LoadingSite').fadeOut();
+            }
+         });
+      }
+      function deleteQuantityTableChangeRequest() {
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            url: '/Tender/DeleteQuantityTableChangeRequest?tenderId=@Model.TenderID',
+            type: "GET",
+            dataType: "html",
+            success: function () {
+               location.reload();
+               $('#LoadingSite').fadeOut();
+            }
+         });
+      }
+      function deleteExistingTable(e, tableId) {
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            url: '/Tender/DeleteExistingTableChange?tableId=' + tableId + '&tenderId=@Model.TenderID',
+            type: "GET",
+            dataType: "html",
+            success: function () {
+               location.reload();
+               $('#LoadingSite').fadeOut();
+            }
+         });
+      }
+      var currentElement;
+      var currentTableName;
+      var currentTableId;
+      function saveTableName(e, tableObject, onSuccess) {
+         currentElement = e;
+         var itemNameEdite = $(e).parent().parent().parent().parent();
+         var itemName = $(e).parent().parent().parent().parent().prev();
+         itemName.toggleClass('d-block');
+         itemName.toggleClass('d-none');
+         itemNameEdite.toggleClass('d-block');
+         itemNameEdite.toggleClass('d-none');
+         var itemValue = $(e).parent().find('input').val();
+         currentTableName = itemValue;
+         //itemName.find('span.tableName').text(itemValue);
+         var tableId = $(e).attr("data-table-id");
+         var formId = $(e).attr("data-form-id");
+         currentTableId = tableId;
+         $('#' + tableId).val(itemValue);
+         $('#TableName_' + tableId).val(itemValue);
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $('#LoadingSite').fadeOut();
+         $.post('/Tender/UpdateTableChangesName?tableId=' + tableId + '&tenderId=@Model.TenderID&tableName=' + itemValue, { __RequestVerificationToken: token }).done(function (result) {
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success);
+            $('#tableHeaderContainer_' + formId + ' li a.active').html(currentTableName + ' (جدول جديد)')
+            //$(currentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement).find('[name=TableName]').val(currentTableName);
+            onSuccess(currentTableName, tableObject);
+            $(currentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement).find('[name=TableId]').val(result);
+         }).fail(function () {
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+         });
+      }
+      function addTable(formId, tenderId, templateYears, isNewTable, isTableDeleted) {
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            url: '/Tender/AddNewTableChanges?formid=' + formId + '&tenderId=' + tenderId + '&templateYears=' + templateYears + '&tableName=اسم الجدول',
+            type: "GET",
+            dataType: "html",
+            success: function (data) {
+               var tempParameters = ", '" + isNewTable + "', '" + isTableDeleted + "'";
+               $('#tableHeaderContainer_' + formId).append('<li class="nav-item"><a class="nav-link text-center" data-tableId="' + data + '" href="#tableIndex_' + data + '" onclick="changeTable(' + tenderId + ', ' + data + ', ' + formId + tempParameters + ')" data-toggle="tab">اسم الجدول (جدول جديد)</a></li>');
+               $('#tableHeaderContainer_' + formId + ' li a').removeClass('active');
+               $('#tableHeaderContainer_' + formId + ' li a').removeClass('show');
+               $('#tableHeaderContainer_' + formId + ' li a[data-tableId=' + data + ']').addClass('active');
+               $('#tableHeaderContainer_' + formId + ' li a[data-tableId=' + data + ']').addClass('show');
+               if ($('#collapse_' + formId).attr('aria-expanded') == 'false') {
+                  $('#collapse_' + formId).attr('data-isNewTable', isNewTable);
+                  $('#collapse_' + formId).attr('data-isTableDeleted', isTableDeleted);
+                  $('#collapse_' + formId).attr('data-tableId', data);
+                  $('#collapse_' + formId).click();
+               }
+               else
+                  changeTable(tenderId, data, formId, isNewTable, isTableDeleted);
+               $('#LoadingSite').fadeOut();
+            }
+         });
+      }
+      function AddNewItem() {
+         var index = vueObj.UploaderIndex;
+         var item = {};
+         item.name = $('#txtItemName').val();
+         item.quantity = $('#txtItemQuantity').val();
+         item.unit = $('#txtItemUnit').val();
+         item.details = $('#txtItemDetails').val();
+         // rate not true
+         if (item.name == '' || item.name == undefined) {
+            $('#txtNameValidation').show();
+            return false;
+         }
+         else { $('#txtNameValidation').hide(); }
+         if (item.quantity == '' || isNaN(item.quantity) || item.quantity.length > 8) {
+            $('#txtQuantityNaNValidation').show();
+            return false;
+         }
+         else { $('#txtQuantityNaNValidation').hide(); }
+         if (parseFloat(item.quantity) < 0) {
+            $('#txtQuantityNaNValidation').show();
+            return false;
+         }
+         else {
+            $('#txtQuantityNaNValidation').hide();
+         }
+         var modelValue = $('#attach').val();
+         item.itemAttachmentId = modelValue.split(":")[0];
+         item.itemAttachmentName = modelValue.split(":")[1];
+         if (item.quantity != '' && item.quantity != undefined && item.name != '' && item.name != undefined) {
+            if (vueObj.isItemEdited == 0) {
+               vueObj.QuantitiesTables[index].quantitiesTableItems.push(item);
+            }
+            else if (vueObj.isItemEdited == 1) {
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].name = item.name;
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].unit = item.unit;
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].quantity = item.quantity;
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].details = item.details;
+               var modelValue = $('#attach').val();
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].itemAttachmentId = modelValue.split(":")[0];
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].itemAttachmentName = modelValue.split(":")[1];
+            }
+            clearPopup();
+         }
+         resetFileUpload();
+         vueObj.isItemEdited = 0;
+         $('#myModal2').modal('hide');
+      }
+      function exportToExcel(formId, tableId) {
+         var table = $('#Table_' + tableId + '_' + formId).clone();
+         table.find('tr th').last().remove();
+         table.find('tr').each(function (i, row) {
+            $(row).find('td').last().remove();
+         });
+         var wb = XLSX.utils.table_to_book(table[0], { sheet: "جدول رقم 1" });
+         return XLSX.writeFile(wb, ('QuantitieTables.xlsx'));
+      }
+   </script>
+}

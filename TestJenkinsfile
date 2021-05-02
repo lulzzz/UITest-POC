@@ -1,0 +1,29 @@
+pipeline{
+    agent {label 'build-agent'}
+    stages{
+       stage('Code Analysis ') {
+             
+              steps {
+                    bat "C:/JetBrains/dotCover.exe dotnet --output=D:\\output-2\\sample.html --reportType=HTML -- test ${WORKSPACE}/Tests/MOF.Etimad.Monafasat.UnitTests/MOF.Etimad.Monafasat.UnitTests.csproj"
+
+                    withSonarQubeEnv('sonar-test') {
+                              bat "dotnet-sonarscanner begin /k:Monafasat-01 /d:sonar.host.url=http://10.13.85.50:9000 /d:sonar.login=c0636949a24262d507657b4966992edb8f0ddbd8 /d:sonar.sources=${WORKSPACE}/Src/MOF.Etimad.Monafasat.Web/MOF.Etimad.Monafasat.Web.csproj,${WORKSPACE}/Src/MOF.Etimad.Monafasat.WebApi/MOF.Etimad.Monafasat.WebApi.csproj /d:sonar.cs.dotcover.reportsPaths=D:\\output-2\\sample.html"
+                              bat "dotnet build"
+                              bat "dotnet-sonarscanner end /d:sonar.login=c0636949a24262d507657b4966992edb8f0ddbd8"
+                        }  
+                                    
+                    }
+            }
+        
+
+        stage("Quality Gate") {
+          
+              steps {
+                    timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                  }
+                }
+          }
+
+    }
+}

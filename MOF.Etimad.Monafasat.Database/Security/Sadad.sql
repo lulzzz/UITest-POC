@@ -1,0 +1,3 @@
+﻿CREATE SCHEMA [Sadad]
+    AUTHORIZATION [dbo];
+

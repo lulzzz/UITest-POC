@@ -1,0 +1,193 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailsForCheckingModel
+
+<div class="row">
+   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.BankGuarantee</h5>
+      <div class="card">
+         <div class="col-sm-6 col-xs-12">
+            <div class="form-group bmd-form-group">
+               <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached </label><span class="text-danger">*</span>
+               <div class="form-check">
+                  <label class="form-check-label">
+                     <input name="IsBankGuaranteeAttached" class="form-check-input" checked type="radio" id="IsBankGuaranteeAttached1" value="true">
+                     @res.SharedResources.DisplayInputs.Yes
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+                  <label class="form-check-label">
+                     <input asp-for="IsBankGuaranteeAttached" name="IsBankGuaranteeAttached" class="form-check-input" type="radio" id="IsBankGuaranteeAttached2" value="false">
+                     @res.SharedResources.DisplayInputs.No
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+               </div>
+            </div>
+         </div>
+
+         <table class="table" aria-describedby="Bank Guarantee Info">
+            <thead style="background-color: #e0efe8;">
+               <tr>
+
+                  <th scope="col">@res.OfferResources.DisplayInputs.BankGuaranteeStatus</th>
+                  <th scope="col">@res.OfferResources.DisplayInputs.BankGuaranteeNumber</th>
+                  <th scope="col">@res.OfferResources.DisplayInputs.GuaranteeValue</th>
+                  <th scope="col">@res.OfferResources.DisplayInputs.BankGuaranteeDays</th>
+                  <th scope="col">@res.OfferResources.DisplayInputs.GuaranteeBankName</th>
+                  <th scope="col">@res.OfferResources.DisplayInputs.GuaranteeStartDate</th>
+                  <th scope="col">@res.OfferResources.DisplayInputs.GuaranteeEndDate</th>
+                  @{
+                     if ((User.IsInRole(RoleNames.OffersPurchaseSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed))
+                     {
+                        <th scope="col"></th>
+                     }
+                  }
+               </tr>
+            </thead>
+            <tbody>
+               <tr class="GuaranteesGrid" v-for="(tbl,indexD) in BankGuarantees">
+
+                  <td data-label=" Milestone">
+                     <span> {{tbl.isBankGuaranteeValidString}}</span>
+                     <span style="display:none"> {{tbl.isBankGuaranteeValid}}</span>
+                  </td>
+                  <td data-label=" Quantity">
+                     <span> {{tbl.guaranteeNumber}}</span>
+                  </td>
+                  <td data-label="Unit">
+                     <span> {{tbl.amount}}</span>
+                  </td>
+                  <td data-label="Details">
+                     <span> {{tbl.guaranteeDays}}</span>
+                  </td>
+                  <td data-label="Details">
+                     <span> {{tbl.bankName}}</span>
+                     <span style="display:none"> {{tbl.BankId}}</span>
+                  </td>
+                  <td data-label="Details">
+                     <span format="MM-dd-yyyy"> {{tbl.guaranteeStartDateDisplay}}</span>
+                  </td>
+                  <td data-label="Details">
+                     <span format="MM-dd-yyyy"> {{tbl.guaranteeEndDateDisplay}}</span>
+                  </td>
+                  @{
+                     if ((User.IsInRole(RoleNames.OffersPurchaseSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialChecking)))
+                     {
+                        <td>
+                           <div class="btn-group" role="group">
+
+                              <button type="button" class="btn btn-just-icon btn-danger btn-link btn-sm" data-toggle="tooltip" data-placement="top" @@click="deleteGuarantee(indexD)"><i class="material-icons">delete</i></button>
+                              <button type="button" class="btn btn-just-icon btn-warning btn-link btn-sm" data-toggle="modal" data-placement="top" data-target="#myModal" @@click="editGuarantee(indexD)"><i class="material-icons">edit</i></button>
+                           </div>
+                        </td>
+                     }
+                  }
+               </tr>
+            </tbody>
+            <tfoot>
+               @{
+                     if ((User.IsInRole(RoleNames.OffersPurchaseSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialChecking)))
+                  {
+                     <tr>
+                        <td colspan="9">
+                           <button type="button" class="btn btn-primary btn-sm pull-right" name="button" @@click="AddNewGuarantee" data-toggle="modal" data-target="#myModal">@res.OfferResources.DisplayInputs.AddBankGuarantee</button>
+                        </td>
+                     </tr>
+                  }
+               }
+            </tfoot>
+         </table>
+      </div>
+   </div>
+   @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed || Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialChecking))
+   {
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+         <h5 class="text-dark-green">@*@res.OfferResources.DisplayInputs.FinantialOfferLetter*@ خطاب العرض المالى</h5>
+
+         <div class="card">
+            <div class="card-body">
+               <div class="row">
+                  <div class=" ">
+                     <div class="form-group bmd-form-group">
+                        <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached</label><span class="text-danger">*</span>
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input asp-for="IsFinaintialOfferLetterAttached" name="IsFinaintialOfferLetterAttached" class="form-check-input" checked type="radio" id="isOfferLetterAttached1" value="true">
+                              @res.SharedResources.DisplayInputs.Yes
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <label class="form-check-label">
+                              <input asp-for="IsFinaintialOfferLetterAttached" name="IsFinaintialOfferLetterAttached" class="form-check-input" type="radio" id="isOfferLetterAttached2" value="false">
+                              @res.SharedResources.DisplayInputs.No
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class=" col-md-6 col-sm-12">
+                        <div class="form-group bmd-form-group">
+                           <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.OfferLetterNumber </label>
+                           <input class="form-control" asp-for="FinantialOfferLetterNumber" name="FinantialOfferLetterNumber" id="OfferLetterNumber" />
+                        </div>
+                     </div>
+                     @*<div class="  col-md-6 col-sm-12 ">
+                            <div class="form-group form-check etd-calendar-group">
+                                <label for="datepick" class="label bmd-label-static">@res.OfferResources.DisplayInputs.OfferLetterDate </label>
+                                <input type="text" value="@(Model.OfferLetterDateDisplay)" class="form-control datepicker-mix datepicker-gregorian inputMask" id="OfferLetterDate" name="OfferLetterDate" placeholder="تاريخ" value="">
+                                <input asp-for="OfferLetterDateString" id="hdnOfferLetterDate" name="OfferLetterDateString" type="hidden" />
+                            </div>
+                        </div>*@
+                     <input asp-for="CombinedIdString" id="CombinedIdString" name="CombinedIdString" type="hidden" />
+                     <div class="form-group col-md-5 col-sm-6 col-xs-12">
+                        <div class="formGrop">
+                           <label>تاريخ الاستحقاق *</label>
+                           <input type="text" asp-for="FinantialOfferLetterDate" id="offerLetterDate" name="FinantialOfferLetterDate" class="form-control datepicker-mix datepicker-hijri datepicker-gregorian inputMask" />
+                           @Html.ValidationMessageFor(model => model.OfferLetterDate, "", new { @class = "text-danger" })
+                        </div>
+                     </div>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+         <h5 class="text-dark-green">صورة العرض المالى@*@res.OfferResources.DisplayInputs.FinantialOfferCopy*@</h5>
+         <div class="card">
+            <div class="card-body">
+               <div class="row">
+                  <div class=" ">
+                     <div class="form-group bmd-form-group">
+                        <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached</label><span class="text-danger">*</span>
+                        <div class="form-check">
+                           <label class="form-check-label">
+                              <input asp-for="IsFinantialOfferLetterCopyAttached" name="IsFinantialOfferLetterCopyAttached" class="form-check-input" checked type="radio" id="isOfferCopyAttached1" value="true">
+                              @res.SharedResources.DisplayInputs.Yes
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                           <label class="form-check-label">
+                              <input asp-for="IsFinantialOfferLetterCopyAttached" name="IsFinantialOfferLetterCopyAttached" class="form-check-input" type="radio" id="isOfferCopyAttached2" value="false">
+                              @res.SharedResources.DisplayInputs.No
+                              <span class="circle">
+                                 <span class="check"></span>
+                              </span>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   }
+
+</div>

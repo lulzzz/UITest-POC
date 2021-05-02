@@ -1,0 +1,103 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailsForCheckingModel
+
+<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+   <h5 class="text-dark-green"> @res.OfferResources.DisplayInputs.CommercialRegisterCopy </h5>
+   <div class="card">
+      <div class="card-body">
+         <div class=" ">
+            <div class="form-group bmd-form-group">
+
+               <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached </label><span class="text-danger">*</span>
+               <div class="form-check">
+                  <label class="form-check-label">
+                     <input asp-for="IsCommercialRegisterAttached" name="IsCommercialRegisterAttached" class="form-check-input" checked type="radio" id="isCommercialRegisterAttached1" value="true">
+                     @res.SharedResources.DisplayInputs.Yes
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+                  <label class="form-check-label">
+                     <input asp-for="IsCommercialRegisterAttached" name="IsCommercialRegisterAttached" class="form-check-input" type="radio" id="isCommercialRegisterAttached2" value="false">
+                     @res.SharedResources.DisplayInputs.No
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+               </div>
+            </div>
+         </div>
+         <div class="   ">
+            <div class="form-group bmd-form-group">
+               <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.CommercialRegisterStatus  </label>
+               <div class="form-check">
+                  <label class="form-check-label">
+                     <input asp-for="IsCommercialRegisterValid" name="IsCommercialRegisterValid" class="form-check-input" checked type="radio" id="CommercialRegisterStatus1" value="true">
+                     @res.SharedResources.DisplayInputs.Valid
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+                  <label class="form-check-label">
+                     <input asp-for="IsCommercialRegisterValid" name="IsCommercialRegisterValid" class="form-check-input" type="radio" id="CommercialRegisterStatus2" value="false">
+                     @res.SharedResources.DisplayInputs.Invalid
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+   <h5 class="text-dark-green">@res.OfferResources.DisplayInputs.ChamberJoining  </h5>
+   <div class="card">
+      <div class="card-body">
+         <div class=" ">
+            <div class="form-group bmd-form-group">
+               <label id="" class="label bmd-label-static">@res.OfferResources.DisplayInputs.Attached</label><span class="text-danger">*</span>
+               <div class="form-check">
+                  <label class="form-check-label">
+                     <input asp-for="IsChamberJoiningAttached" name="IsChamberJoiningAttached" class="form-check-input" checked type="radio" id="isChamberJoiningAttached1" value="true">
+                     @res.SharedResources.DisplayInputs.Yes
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+                  <label class="form-check-label">
+                     <input asp-for="IsChamberJoiningAttached" name="IsChamberJoiningAttached" class="form-check-input" type="radio" id="isChamberJoiningAttached2" value="false">
+                     @res.SharedResources.DisplayInputs.No
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+               </div>
+            </div>
+         </div>
+         <div class="   ">
+            <div class="form-group bmd-form-group">
+               <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.ChamberJoiningStatus </label>
+               <div class="form-check">
+                  <label class="form-check-label">
+                     <input asp-for="IsChamberJoiningValid" name="IsChamberJoiningValid" class="form-check-input" checked type="radio" id="ChamberJoiningStatus1" value="true">
+                     @res.SharedResources.DisplayInputs.Valid
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+                  <label class="form-check-label">
+                     <input asp-for="IsChamberJoiningValid" name="IsChamberJoiningValid" class="form-check-input" type="radio" id="ChamberJoiningStatus2" value="false">
+                     @res.SharedResources.DisplayInputs.Invalid
+                     <span class="circle">
+                        <span class="check"></span>
+                     </span>
+                  </label>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,100 @@
+@model MOF.Etimad.Monafasat.ViewModel.CreateNegotiationFirstStageDataModel
+<div class="col-12">
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+
+
+            <div class="row">
+               <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.NegotiationReason
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @Model.NeagotiationReasonText
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 القيمة المستهدفة للعروض
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @Model.DesiredOffersAmount
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.SupplierReplyPeriod
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @(string.Concat(Model.Days, " ", MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.Days, " ", Model.Hours, " ", MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.Hours))
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.ReductionLetterrefId
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <a href="#" onclick="RedirectURL('@Model.negotiationFirstStageViewModel?.attachmentViewModel?.FileNetReferenceId','@Model.negotiationFirstStageViewModel?.attachmentViewModel?.Name'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                                    @Model.negotiationFirstStageViewModel?.attachmentViewModel?.Name
+                                 </a>
+
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Status
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @Model.negotiationFirstStageViewModel?.StatusName
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                        @if (Model.StatusId == (int)Enums.enNegotiationStatus.CheckManagerReject)
+                        {
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-4 etd-item-title">
+                                    @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.RejectedReason
+                                 </div>
+                                 <div class="col-8 etd-item-info">
+                                    <span>
+                                       @Model.negotiationFirstStageViewModel?.RejectionReason
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                        }
+
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            
+         </div>
+      </div>
+   </div>
+
+</div>

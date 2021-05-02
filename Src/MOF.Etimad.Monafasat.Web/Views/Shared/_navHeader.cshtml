@@ -1,0 +1,476 @@
+@*@using System.IO;
+   @using Microsoft.Extensions.Configuration;*@
+@using Microsoft.Extensions.Options;
+@inject IOptionsSnapshot<RootConfiguration> rootConfiguration;
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   string fullname = null;
+   if (!true.Equals(ViewData["signed-out"]))
+   {
+      fullname = Context.User.Claims.FirstOrDefault(f => f.Type == "fullname")?.Value;
+   }
+   //IConfiguration _configuration = _configuration = ConfigurationHelper.GetConfiguration(Directory.GetCurrentDirectory());
+   var _rootConfiguration = rootConfiguration.Value;
+   string reportingURL = _rootConfiguration.ReportingConfiguration.Web; //_configuration.GetSection("Reporting:Web").Value;
+   bool showOldMonafasatLink = _rootConfiguration.OldMonafasatConfiguration.ShowLink; //_configuration.GetSection("OldMonafasat:ShowLink").Value.ToLower() == "true";
+   string supplierOldLinkUrl = _rootConfiguration.OldMonafasatConfiguration.SupplierLinkUrl; //_configuration.GetSection("OldMonafasat:SupplierLinkUrl").Value;
+   string govOldLinkUrl = _rootConfiguration.OldMonafasatConfiguration.GovLinkUrl; //_configuration.GetSection("OldMonafasat:GovLinkUrl").Value;
+}
+@{ var isArabic = !Context.Request.Cookies.ContainsKey("language") || Context.Request.Cookies["language"] == "ar-SA"; }
+<nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg bmd-drawer-f-l bmd-drawer-overlay d-print-none" color-on-scroll="50" id="sectionsNav">
+   <div class="container">
+      <div class="p-0 col-1 navbar-translate">
+         <button class="navbar-toggler pull-left" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"></span>
+         </button>
+         <a class="padd0 navbar-brand pull-left mr-auto" href="@Url.Action("RedirectToEtimad","Account")">
+            <svg style="width: 100px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 150 78">
+               <defs>
+                  <style xmlns="http://www.w3.org/2000/svg">
+                     .b {
+                        fill: #29ad6f;
+                     }
+
+                     .c {
+                        fill: #00665e;
+                     }
+
+                     .navbar-transparent .b {
+                        fill: rgb(255, 255, 255);
+                     }
+                  </style>
+                  <clipPath id="b">
+                     <rect width="150" height="78" />
+                  </clipPath>
+               </defs>
+               @Html.Partial("~/Views/Shared/_Logo.cshtml")
+            </svg>
+         </a>
+      </div>
+      <div class="collapse navbar-collapse">
+         <ul class="navbar-nav ml-auto" id="mainMenu">
+            @if (User.IsInRole(RoleNames.FinancialSupervisor) || User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.MonafasatAdmin) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) ||
+            User.IsInRole(RoleNames.PreQualificationCommitteeSecretary) || User.IsInRole(RoleNames.PreQualificationCommitteeManager) || User.IsInRole(RoleNames.OffersCheckManager) ||
+            User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersOppeningManager)
+            || User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.OffersOppeningSecretary))
+            {
+               if (!(User.UserIsVRO()))
+               {
+                  <li class="dropdown nav-item" id="menuAllQualification">
+                     <a href="/Qualification/Index" class="nav-link">
+                        <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Qualification
+                     </a>
+                  </li>
+               }
+            }
+            @if (User.IsInRole(RoleNames.MonafasatAdmin) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.OffersOppeningSecretary)
+            || User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.OffersCheckSecretary)
+            || User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService)
+            || User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.FinancialSupervisor))
+            {
+               <li class="dropdown nav-item" id="menuAllAgencyAnnouncements">
+                  <a href="/Announcement/AllAgencyAnnouncements" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AllAnnouncement
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.MonafasatAdmin) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.OffersOppeningSecretary)
+            || User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersCheckManager)
+            || User.IsInRole(RoleNames.PreQualificationCommitteeManager) || User.IsInRole(RoleNames.PreQualificationCommitteeSecretary) || User.IsInRole(RoleNames.MonafasatAccountManager)
+            || User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager)
+            || User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2) || User.IsInRole(RoleNames.UnitManagerUser))
+            {
+               <li class="dropdown nav-item" id="menuAllAgencySupplierTemplates">
+                  <a href="/AnnouncementSuppliersTemplate/AllAgencyAnnouncementSupplierTemplates" class="nav-link">
+                     <i class="material-icons">layers</i> إعلانات قوائم الموردين
+                  </a>
+               </li>
+            }
+
+            @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer))
+            {
+               <li class="dropdown nav-item" id="menuUnderOperationAgencyAnnouncements">
+                  <a href="/Announcement/UnderOperationAgencyAnnouncements" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.UnderOperationAnnouncements
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.FinancialSupervisor) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.EtimadOfficer) || User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.MonafasatAdmin) ||
+            User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.OffersOppeningSecretary) ||
+            User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.OffersPurchaseManager) ||
+            User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.ApproveTenderAward) || User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) || User.IsInRole(RoleNames.OffersOpeningAndCheckManager))
+            {
+               <li class="dropdown nav-item" id="menuAllTenders">
+                  <a href="/Tender/Index" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AllTenders
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.EtimadOfficer) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer))
+            {
+               <li class="dropdown nav-item" id="menuTenderIndexUnderOperationsStage">
+                  <a href="/Tender/TenderIndexUnderOperationsStage" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UnderstablishedStageTenders
+                  </a>
+               </li>
+            }
+            @if ((User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.EtimadOfficer) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.MonafasatAdmin)) && User.UserIsRelatedVRO())
+            {
+               <li class="dropdown nav-item" id="menuVROTendersCreatedByGovAgency">
+                  <a href="/Tender/VROTendersCreatedByGovAgency" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.VROTendersCreatedByGovAgency
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.OffersOppeningSecretary))
+            {
+               <li class="dropdown nav-item" id="menuTenderIndexOpeningStage">
+                  <a href="/Tender/TenderIndexOpeningStage" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OpenStageTenders
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersCheckSecretary))
+            {
+               <li class="dropdown nav-item" id="menuTenderIndexCheckingStage">
+                  <a href="/Tender/TenderIndexCheckingStage" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckStageTenders
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.OffersOpeningAndCheckManager) || User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary))
+            {
+               <li class="dropdown nav-item" id="menuVROTendersIndexCheckingAndOpeningStage">
+                  <a href="/Tender/VROTendersIndexCheckingAndOpeningStage" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OpenAndCheckTenders
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.ApproveTenderAward))
+            {
+               <li class="dropdown nav-item" id="menuTenderIndexAwardingStage">
+                  <a href="/Tender/TenderIndexAwardingStage" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardStageTenders
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.OffersPurchaseManager))
+            {
+               <li class="dropdown nav-item" id="menuTenderIndexCheckingDirectPuchaseStage">
+                  <a href="/Tender/TenderIndexCheckingDirectPuchaseStage" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckStageTenders
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary))
+            {
+               <li class="dropdown nav-item" id="menuTenderIndexAwardingStage">
+                  <a href="/Tender/TenderIndexAwardingStage" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardStageTenders
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) || User.IsInRole(RoleNames.OffersOpeningAndCheckManager))
+            {
+               <li class="dropdown nav-item" id="menuTenderIndexAwardingStage">
+                  <a href="/Tender/TenderIndexAwardingStage" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardStageTenders
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.UnitManagerUser) || User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2) || User.IsInRole(RoleNames.UnitBusinessManagement))
+            {
+               <li class="dropdown nav-item" id="menuTenderIndexUnitStage">
+                  <a href="/Tender/TenderIndexUnitStage" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UnitStageTenders
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.UnitManagerUser) || User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2))
+            {
+               <li class="dropdown nav-item" id="menuTenderNegotiation">
+                  <a href="/Tender/TenderNegotiation" class="nav-link">
+                     <i class="material-icons">layers</i>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NegotiationRequests
+                  </a>
+               </li>
+            }
+
+            <li policy="EditAddedValuePolicy" class="dropdown nav-item" id="menuTenderIndexUnderOperationsStage">
+               <a href="/Tender/EditAddedValue" class="nav-link">
+                  <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddedValueDashboard
+               </a>
+            </li>
+
+            <li policy="ViewMandatoryListPolicy" class="dropdown nav-item">
+               <a href="/MandatoryList/Index" class="nav-link">
+                  <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.MandatoryListResources.DisplayInputs.ManageMandatoryList
+               </a>
+            </li>
+
+
+            @if (User.IsInRole(RoleNames.UnitManagerUser) || User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2) || User.IsInRole(RoleNames.UnitBusinessManagement) || User.IsInRole(RoleNames.MonafasatAdmin) || User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService))
+            {
+               <li class="dropdown nav-item" id="menuMangment">
+                  <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-labelledby="multiDropdownMenu">
+                     <i class="fa fa-file-text-o" aria-hidden="true"></i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Control
+                  </a>
+                  <div class="dropdown-menu dropdown-with-icons">
+                     <a asp-controller="ManageUsersAssignation" asp-action="Index" class="dropdown-item">
+                        <i class="material-icons">people</i> @MOF.Etimad.Monafasat.Resources.UsersResources.DisplayInputs.ManageUsersAssignation
+                     </a>
+                     @if (User.IsInRole(RoleNames.MonafasatAdmin))
+                     {
+                        <a asp-controller="Branch" asp-action="Index" class="dropdown-item">
+                           <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Branches
+                        </a>
+                        <a href="/committee/index?committeeTypeId=@(MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt((int)Enums.CommitteeType.TechincalCommittee))" class="dropdown-item">
+                           <i class="material-icons">people</i> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.TechnicalCommittees
+                        </a>
+                        if (User.UserIsVRO())
+                        {
+                           <a href="/committee/index?committeeTypeId=@(MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt((int)Enums.CommitteeType.VROCommittee))" class="dropdown-item">
+                              <i class="material-icons">people</i> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.VROCommittee
+                           </a>
+                        }
+                        else
+                        {
+                           <a href="/committee/index?committeeTypeId=@(MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt((int)Enums.CommitteeType.OpenOfferCommittee))" class="dropdown-item">
+                              <i class="material-icons">people</i> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.OpenOffersCommittees
+                           </a>
+                           <a href="/committee/index?committeeTypeId=@(MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt((int)Enums.CommitteeType.CheckOfferCommittee))" class="dropdown-item">
+                              <i class="material-icons">people</i> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.CheckOffersCommittees
+                           </a>
+                           <a href="/committee/index?committeeTypeId=@(MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt((int)Enums.CommitteeType.PurchaseCommittee))" class="dropdown-item">
+                              <i class="material-icons">people</i> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.PurchaseCommittees
+                           </a>
+                           <a href="/committee/index?committeeTypeId=@(MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt((int)Enums.CommitteeType.PreQualificationCommittee))" class="dropdown-item">
+                              <i class="material-icons">people</i> @MOF.Etimad.Monafasat.Resources.CommitteeResources.DisplayInputs.PreQualificationCommittee
+                           </a>
+                        }
+                     }
+                     @if (User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService))
+                     {
+                        <a href="/Block/GetAgencyExceptedModel" class="dropdown-item">
+                           <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Agency
+                        </a>
+                     }
+                  </div>
+               </li>
+            }
+            <li class="dropdown nav-item" policy="SupplierPolicy" id="menuAllSupplierAnnouncements">
+               <a href="/Announcement/AllSupplierAnnouncements" class="nav-link">
+                  <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AllAnnouncement
+               </a>
+            </li>
+            <li class="dropdown nav-item" policy="SupplierPolicy" id="menuSupplierAnnouncements">
+               <a href="/Announcement/SupplierAnnouncements" class="nav-link">
+                  <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.MyAnnouncements
+               </a>
+            </li>
+            @if (User.IsInRole(RoleNames.supplier))
+            {
+               <li class="dropdown nav-item" id="menuAllSuppliersTenders">
+                  <a href="/Tender/AllSuppliersTenders" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AllTenders
+                  </a>
+               </li>
+               <li class="dropdown nav-item" id="menuSupplierTenders">
+                  <a href="/Tender/SupplierTenders" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MyTenders
+                  </a>
+               </li>
+               <li class="dropdown nav-item" id="menuTenderAwardedIndex">
+                  <a href="/Tender/TenderAwardedIndex" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardedTenders
+                  </a>
+               </li>
+               <li class="dropdown nav-item" id="menuAllSuppliersPreQualifications">
+                  <a href="/Qualification/AllSuppliersPreQualifications" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.Qualification
+                  </a>
+               </li>
+               <li class="dropdown nav-item" id="menuAllSuppliersSupplierTemplates">
+                  <a href="/AnnouncementSuppliersTemplate/AllSupplierAnnouncementSupplierTemplates" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.AnnouncementSupplierTemplateResources.DisplayInputs.AnnouncementSuppliersTemplate
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.ManagerGrievanceCommittee) || User.IsInRole(RoleNames.SecretaryGrievanceCommittee))
+            {
+               <li class="dropdown nav-item" id="menuEscalatedTenders">
+                  <a href="/CommunicationRequest/EscalatedTenders" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.EscalationsRequests
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.PrePlanningCreator) || User.IsInRole(RoleNames.PrePlanningAuditor) || User.IsInRole(RoleNames.supplier))
+            {
+               <li class="dropdown nav-item" id="menuPreplanning">
+                  <a href="/Preplanning/index" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.PrePlanning
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.EtimadOfficer) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) || User.IsInRole(RoleNames.OffersOpeningAndCheckManager) || User.IsInRole(RoleNames.MonafasatBlackListCommittee) || User.IsInRole(RoleNames.MonafasatBlockListSecritary) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.MonafasatAdmin) || User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2) || User.IsInRole(RoleNames.UnitManagerUser) || User.IsInRole(RoleNames.UnitBusinessManagement) || User.IsInRole(RoleNames.AccountsManagementSpecialist) || User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.TechnicalCommitteeUser) || User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary))
+            {
+               <li class="dropdown nav-item" id="menuLists">
+                  <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-labelledby="multiDropdownMenu">
+                     <i class="fa fa-file-text-o" aria-hidden="true"></i>  @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Menus
+                  </a>
+                  <div class="dropdown-menu dropdown-with-icons">
+                     @if (User.IsInRole(RoleNames.MonafasatBlackListCommittee) || User.IsInRole(RoleNames.MonafasatBlockListSecritary))
+                     {
+                        <a href="/Block/ReviewBlockingList" id="menuReviewBlockingList" class="dropdown-item">
+                           <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.ReviewBlockingList
+                        </a>
+                     }
+                     @if (User.IsInRole(RoleNames.MonafasatAdmin) || User.IsInRole(RoleNames.AccountsManagementSpecialist))
+                     {
+                        <a href="/Block/AdminReviewBlockingList" id="menuAdminReviewBlockingList" class="dropdown-item">
+                           <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.ReviewBlockingList
+                        </a>
+                     }
+                     @if (User.IsInRole(RoleNames.MonafasatAdmin))
+                     {
+                        <a href="/Block/index" id="menuBlook" class="dropdown-item">
+                           <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockList
+                        </a>
+                     }
+                     @if (User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService))
+                     {
+                        <a href="/Block/GetBlockListUsers" id="menuGetBlockListUsers" class="dropdown-item">
+                           <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockedListUsers
+                        </a>
+                     }
+                     @if (User.IsInRole(RoleNames.MonafasatBlackListCommittee))
+                     {
+                        <a href="/Block/GetManagerBlockList" id="menuGetManagerBlockList" class="dropdown-item">
+                           <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockList
+                        </a>
+                     }
+                     @if (User.IsInRole(RoleNames.MonafasatBlockListSecritary))
+                     {
+                        <a href="/Block/GetSecretaryBlockList" id="menuGetSecretaryBlockList" class="dropdown-item">
+                           <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockList
+                        </a>
+                     }
+                     @if (User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.EtimadOfficer) || User.IsInRole(RoleNames.PurshaseSpecialist))
+                     {
+                        <a href="/Tender/FavouriteSuppliersListAsync" id="menuFavouriteSuppliersListAsync" class="dropdown-item">
+                           <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FavouriteSuppliersList
+                        </a>
+                     }
+                     @if (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.MonafasatAdmin) || User.IsInRole(RoleNames.EtimadOfficer) || User.IsInRole(RoleNames.PurshaseSpecialist))
+                     {
+                        <a asp-controller="Tender" asp-action="Revisions" id="menuRevisions" class="dropdown-item">
+                           <i class="material-icons">verified_user</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExtensionsRequests
+                        </a>
+                     }
+                     @if (User.IsInRole(RoleNames.MonafasatAdmin) || User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2) || User.IsInRole(RoleNames.UnitManagerUser) || User.IsInRole(RoleNames.UnitBusinessManagement) || User.IsInRole(RoleNames.EtimadOfficer) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.TechnicalCommitteeUser) || User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary))
+                     {
+                        <a asp-controller="ManageVendors" asp-action="Index" id="menuManageVendors" class="dropdown-item">
+                           <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.VendrosList
+                        </a>
+                     }
+                     @if (User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.MonafasatAdmin) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) || User.IsInRole(RoleNames.OffersOpeningAndCheckManager) || User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.EtimadOfficer) || User.IsInRole(RoleNames.PurshaseSpecialist)
+|| User.IsInRole(RoleNames.UnitSpecialistLevel1) || User.IsInRole(RoleNames.UnitSpecialistLevel2) || User.IsInRole(RoleNames.UnitManagerUser) || User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.TechnicalCommitteeUser) || User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary))
+                     {
+                        <a href="/Tender/AppliedSuppliersList" id="menuAppliedSuppliersList" class="dropdown-item">
+                           <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AppliedsuppliersList
+                        </a>
+                     }
+                  </div>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.EtimadOfficer) || User.IsInRole(RoleNames.TechnicalCommitteeUser))
+            {
+               <li class="dropdown nav-item" id="menuSupplierEnquiryList">
+                  <a href="/Enquiry/SupplierEnquiryList" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Enquiries
+                  </a>
+               </li>
+            }
+            @if (User.IsInRole(RoleNames.supplier))
+            {
+               <li class="dropdown nav-item" id="menuCombinedInvitationsForSupplier">
+                  <a href="/Offer/CombinedInvitationsForSupplier" class="nav-link">
+                     <i class="material-icons">layers</i> @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CombinedInvitations
+                  </a>
+               </li>
+            }
+            @if (showOldMonafasatLink)
+            {
+               <li class="dropdown nav-item d-xl-none d-lg-none d-md-none d-sm-none">
+
+                  <a href="@(User.IsInRole(RoleNames.supplier) ? supplierOldLinkUrl : govOldLinkUrl)" class="nav-link" style="border-color:#fff; border-radius:4px;">
+                     <i class="material-icons">link</i>
+
+                     الانتقال إلى نظام المنافسات القديم
+                  </a>
+
+               </li>
+
+            }
+         </ul>
+
+      </div>
+      <div class="left-controls pull-right">
+         <div class="btn-group">
+            @if (showOldMonafasatLink)
+            {
+               <a href="@(User.IsInRole(RoleNames.supplier) ? supplierOldLinkUrl : govOldLinkUrl)" class="btn btn-outline-primary btn-link btn-sm d-none d-sm-block " style="border-color:#fff; border-radius:4px;">
+                  <i class="material-icons">link</i>
+
+                  الانتقال إلى نظام المنافسات القديم
+               </a>
+            }
+            @if (!User.Identity.IsAuthenticated)
+            {
+               <a class="btn btn-primary btn-link btn-sm" href="/Account/UpdateIDMClaims">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Login</a>
+            }
+            else
+            {
+               @if (@User.IsInRole(RoleNames.supplier))
+               {
+                  <span class="SubTitle" title="@User.SupplierNumber() - @User.SupplierName()" data-toggle="tooltip" data-placement="bottom" data-original-title="@User.SupplierName()">
+                     <button data-toggle="drawer" type="button" data-target="#dw-s3" rel="tooltip" class="btn btn-primary btn-link  btn-sm   d-sm-block" data-original-title="" title="">
+                        <i class="material-icons">person</i> @User.FullName()
+                        <span class="caret"></span>
+                     </button>
+                  </span>
+               }
+               else
+               {
+                  <span class="SubTitle" title="@User.UserAgencyName()" data-original-title="@User.UserAgency()" data-toggle="tooltip" data-placement="bottom">
+                     <button data-toggle="drawer" type="button" data-target="#dw-s3" rel="tooltip" class="btn btn-primary btn-link  btn-sm   d-sm-block" data-original-title="" title="">
+                        <i class="material-icons">person</i> @User.FullName()
+                        <span class="caret"></span>
+                     </button>
+                  </span>
+               }
+               @if (User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) || User.IsInRole(RoleNames.OffersOpeningAndCheckManager)
+         || !(User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.supplier) || User.IsInRole(RoleNames.MonafasatAdmin) || User.IsInRole(RoleNames.MonafasatAccountManager)
+         || User.IsInRole(RoleNames.OffersOppeningSecretary) || User.IsInRole(RoleNames.OffersOppeningManager) || User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersCheckManager)
+         || User.IsInRole(RoleNames.CustomerService) || User.IsInRole(RoleNames.TechnicalCommitteeUser) || User.IsInRole(RoleNames.MonafasatBlackListCommittee) ||
+         User.IsInRole(RoleNames.OffersPurchaseSecretary) || User.IsInRole(RoleNames.MonafasatBlockListSecritary)
+         || User.IsInRole(RoleNames.PrePlanningAuditor) || User.IsInRole(RoleNames.PrePlanningCreator) || User.IsInRole(RoleNames.SecretaryGrievanceCommittee) || User.IsInRole(RoleNames.ManagerGrievanceCommittee) || User.IsInRole(RoleNames.OffersPurchaseManager)))
+               {
+                  @*<a class="btn btn-primary btn-link btn-sm d-none d-sm-block" href="/dashboard/index" title="@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.Dashboard" data-toggle="tooltip" data-original-title="@MOF.Etimad.Monafasat.Resources.Dashboard.DisplayInputs.Dashboard" data-placement="bottom"><i class="material-icons">dashboard</i></a>*@
+               }
+               @if (!(User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService)))
+               {
+                  <button data-toggle="drawer" type="button" data-target="#dw-s2" rel="tooltip" class="btn btn-primary btn-link btn-just-icon btn-sm etd-notification-btn animated d-none d-sm-block" data-original-title="" title="" onclick="loadNotifications()">
+                     <i class="material-icons">notifications</i><span class="notificationNumberPanel badge badge-danger d-none" id="notificationNumber">0</span>
+                  </button>
+               }
+            }
+            <button data-toggle="drawer" type="button" data-target="#dw-s4" rel="tooltip" class="btn btn-primary btn-link btn-just-icon btn-sm etd-notification-btn animated d-none d-sm-block" data-original-title="التطبيقات" title="التطبيقات">
+               <i class="material-icons">apps</i>
+            </button>
+         </div>
+      </div>
+   </div>
+</nav>

@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DaysCount" xml:space="preserve">
+    <value> عدد الايام لابد ان يكون رقم صحيح من 0 الى 99999999999</value>
+  </data>
+  <data name="DaysCountFormat" xml:space="preserve">
+    <value>عدد الايام لابد ان يكون رقم صحيح</value>
+  </data>
+  <data name="ExtendOfferValidtiyRequiredReplyRecieveDate" xml:space="preserve">
+    <value>حقل "مدة استقبال الرد" إجبارى</value>
+  </data>
+  <data name="HoursCount" xml:space="preserve">
+    <value>من0 ال 23</value>
+  </data>
+  <data name="HoursCountFormat" xml:space="preserve">
+    <value>عدد الساعات لابد ان يكون رقم صحيح من 0 الى 99999999999   </value>
+  </data>
+  <data name="MustNotExceed90Days" xml:space="preserve">
+    <value>يجب أن لا تتجاوز الأيام 90 يوم</value>
+  </data>
+  <data name="ReplyReceivingDurationDaysMustBeGreaterThanTen" xml:space="preserve">
+    <value>حقل "مدة استقبال الرد (ايام)" يجب أن يكون 10 أيام او اكبر</value>
+  </data>
+  <data name="NegotiationRequestUnderProcessing" xml:space="preserve">
+    <value>يوجد طلب تفاض حاليا تحت الاجراء</value>
+  </data>
+  <data name="NotAllowedSupplierNegotiation" xml:space="preserve">
+    <value>غير مسموح بالتفاوض فى الوقت الحالى</value>
+  </data>
+  <data name="RequiredDiscountAmount" xml:space="preserve">
+    <value>حقل " نسبة الخصم" إجبارى</value>
+  </data>
+  <data name="RequiredExtendOffersReason" xml:space="preserve">
+    <value>حقل "سبب طلب تمديد سريان العروض" إجبارى</value>
+  </data>
+  <data name="RequiredNegotiationReason" xml:space="preserve">
+    <value>حقل " سبب  التفاوض " إجبارى</value>
+  </data>
+  <data name="RequiredReductionLetterrefId" xml:space="preserve">
+    <value>حقل "خطاب التخفيض" إجبارى</value>
+  </data>
+  <data name="TenderNotinOfferAwarding" xml:space="preserve">
+    <value>المنافسة ليست فى مرحلة الترسية</value>
+  </data>
+  <data name="TenderMusthasNotAgreedNegotaition" xml:space="preserve">
+    <value>لابد من وجود تفاوض مرحلة اولى تم الرد علية ب غير موافق من جميع الموردين</value>
+  </data>
+  <data name="SecondStageNegotiationAlreadyExist" xml:space="preserve">
+    <value>يوجد تفاوض مرحلة ثانية تحت الاجراء</value>
+  </data>
+  <data name="SupplierOrederMustbeTheSameBeforeandAfterEdit" xml:space="preserve">
+    <value>لابد الا يتغير ترتيب العروض قبل وبعد تعديل الكميات</value>
+  </data>
+  <data name="CanNotProceedStatusIs" xml:space="preserve">
+    <value>لا يمكن اتمام العملية لان حالة الطلب </value>
+  </data>
+  <data name="RequestNotFound" xml:space="preserve">
+    <value>الطلب غير موجود</value>
+  </data>
+  <data name="RequiredOffersDuration" xml:space="preserve">
+    <value>حقل "مدة سريان العروض" إجبارى</value>
+  </data>
+  <data name="FirstStageNegotiationAlreadyExist" xml:space="preserve">
+    <value>يوجد تفاوض بالفعل</value>
+  </data>
+  <data name="RequiredInitialGuarantee" xml:space="preserve">
+    <value>الرجاء ارفاق نسخة الضمان الابتدائي</value>
+  </data>
+  <data name="QuantityTableItemMustbeMoreThanone" xml:space="preserve">
+    <value>لابد من وجود على الاقل صنف واحد فى كل جدول كميات </value>
+  </data>
+  <data name="QuantityTableMustbeMoreThanone" xml:space="preserve">
+    <value>لابد من وجود على الاقل جدول كميات واحد</value>
+  </data>
+  <data name="EditChangedTheOrder" xml:space="preserve">
+    <value>لايمكن القيام بالتعديل المطلوب بسبب تأثيرة على ترتيب عروض الموردين</value>
+  </data>
+  <data name="WrongTenderStatus" xml:space="preserve">
+    <value>غير متاح فى هذه المرحلة للمنافسة</value>
+  </data>
+  <data name="FifteenDaysPresentationDatePeriod" xml:space="preserve">
+    <value>يجب ألا تقل المدة بين أخر موعد لتقديم العروض و تاريخ اليوم عن خمسة عشر يوما</value>
+  </data>
+  <data name="YouHaveAnotherPlaint" xml:space="preserve">
+    <value>لديك طلب تظلم علي هذه المنافسة </value>
+  </data>
+  <data name="NoOffers" xml:space="preserve">
+    <value>لايوجد عروض</value>
+  </data>
+  <data name="ProjectNumberRequired" xml:space="preserve">
+    <value>رقم المشروع /البرنامج / البند  إجبارى</value>
+  </data>
+  <data name="CurrentOfferNotLowestOne" xml:space="preserve">
+    <value>العرض الحالى ليس اقل العروض قيمة بعد التعديل </value>
+  </data>
+  <data name="FirstStageNegotiationReasonNotBudget" xml:space="preserve">
+    <value>لابد ان يكون سبب التفاوض ارتفاع اسعار العروض عن اسعار القيمة التقديرية للمشروع</value>
+  </data>
+  <data name="RecivingReplayDaysMustBeLessthanOffersDuration" xml:space="preserve">
+    <value>يجب ان تكون مدة استقبال الرد (ايام) أقل من مدة سريان العروض</value>
+  </data>
+  <data name="RejectionReasonMustbeLessThan1000Caracter" xml:space="preserve">
+    <value>سبب الرفض يجب أن يكون أقل من 1000 حرف</value>
+  </data>
+  <data name="CommunicationRequestRequired" xml:space="preserve">
+    <value>إختر نوع الطلب</value>
+  </data>
+  <data name="EnterNotes" xml:space="preserve">
+    <value>يجب ادخال الملاحظات</value>
+  </data>
+  <data name="EnterReplyReceivingDuration" xml:space="preserve">
+    <value>حقل "مدة استقبال الرد" إجبارى</value>
+  </data>
+  <data name="TimeOutOfWorkingHours" xml:space="preserve">
+    <value>مدة استقبال الرد بالساعات خارج أوقات الدام</value>
+  </data>
+  <data name="CantRemoveLastTable" xml:space="preserve">
+    <value>لا يمكن مسح اخر جدول</value>
+  </data>
+  <data name="RequiredDesiredOffersAmount" xml:space="preserve">
+    <value>برجائ إدخال القيمة المستهدفة للعروض</value>
+  </data>
+  <data name="NegotiationFirstStageExtraDiscountValueValidation" xml:space="preserve">
+    <value>يجب ان تكون قيمة التخفيض الإضافي اكبر من 1 واقل من قيمة التخفيض المستهدفه</value>
+  </data>
+  <data name="ExtendOffersDateRequestLenthValidation" xml:space="preserve">
+    <value>يجب ادخال سبب تقديم العروض بشكل صحيح</value>
+  </data>
+</root>

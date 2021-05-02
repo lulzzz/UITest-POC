@@ -1,0 +1,320 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+@using System
+@model MOF.Etimad.Monafasat.ViewModel.OfferDetailsForCheckingModel
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+   ViewData["Title"] = @res.OfferResources.DisplayInputs.OfferDataDetails;
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+</style>
+
+
+@using res = MOF.Etimad.Monafasat.Resources
+
+<div id="app">
+   @Html.AntiForgeryToken()
+   <input type="hidden" id="hdnisNewBank" value="1" />
+   <input type="hidden" id="hdnisNewClassification" value="1" />
+   <input type="hidden" asp-for="OfferIdString" id="hdOfferId" />
+   @Html.Partial("~/Views/Offer/CheckOffer/Partials/_OfferTechnicalDetails.cshtml")
+   @if (Model.IsSupplierCombinedLeader == true && Model.TenderStatusId != (int)Enums.TenderStatus.Approved)
+   {
+      @Html.Partial("~/Views/Offer/CheckOffer/Partials/_OffersTechnicalChecking.cshtml")
+   }
+   <div class="row">
+      <div class="col">
+         @{
+            if (User.IsInRole(RoleNames.OffersPurchaseSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.DirectPurchaseOffersChecking) && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles)
+            {
+               <button type="button" id="btnSubmit" class="btn btn-primary">
+                  @res.SharedResources.DisplayInputs.Save
+               </button>
+            }
+         }
+      </div>
+      <div class="clearfix"></div>
+   </div>
+</div>
+
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script>
+      var isClassEdit = 0;
+      var classEditIndex ;
+      var isGuaranteeEdit = 0;
+      var GuaranteeEditIndex ;
+      var guaranteesList = [];
+      var classificationsList = [];
+@if (Model != null && Model.BankGuaranteeFiles != null)
+{
+   @:guaranteesList = @Html.Raw(Json.Serialize(Model.BankGuaranteeFiles));
+   @:classificationsList = @Html.Raw(Json.Serialize(Model.SpecificationsFiles));
+}
+      var vueObj = new Vue({
+         el: "#app",
+         data: {
+            BankGuarantees: guaranteesList,
+            Specifications: classificationsList,
+         },
+         methods: {
+            deleteGuarantee: function ( im) {
+               this.BankGuarantees.splice(im, 1);
+            },
+            deleteSpecification: function (im) {
+
+               this.Specifications.splice(im, 1);
+            },
+            AddNewSpecification: function () {
+               isClassEdit = 0;
+            },
+            AddNewGuarantee: function () {
+               isGuaranteeEdit = 0;
+            },
+            editSpecification: function (im) {
+               var ClassObj = this.Specifications[im];
+               isClassEdit = 1;
+               classEditIndex = im;
+               if (ClassObj.isForApplier == true)
+                  $("#isForApplier1").prop("checked", true);
+               else
+                  $("#isForApplier2").prop("checked", true);
+               $('#specificationDegree').val(ClassObj.degree);
+               $('#ConstructionWorklst').val(ClassObj.constructionWorkId);
+               $('#MaintenanceWorklst').val(ClassObj.maintenanceRunningWorkId);
+               $("#specificationDegree, #MaintenanceWorklst, #ConstructionWorklst").selectpicker("refresh");
+            },
+            editGuarantee: function (im) {
+               var bankObj = this.BankGuarantees[im];
+               isGuaranteeEdit = 1;
+               GuaranteeEditIndex = im;
+               if (bankObj.isBankGuaranteeValid == true)
+                  $("#guaranteeStatus1").prop("checked", true);
+               else
+                  $("#guaranteeStatus2").prop("checked", true);
+               $('#tb_GuaranteeNUmber').val(bankObj.guaranteeNumber);
+               $('#tb_GuaranteeValue').val(bankObj.amount);
+               $('#tb_GuaranteeDays').val(bankObj.guaranteeDays);
+               $('#bankName').val(bankObj.bankId);
+               $('#tb_GuaranteeStartDate').val(bankObj.guaranteeStartDateDisplay);
+               $('#tb_GuaranteeEndDate').val(bankObj.guaranteeEndDateDisplay);
+               $("#bankName").selectpicker("refresh");
+            }
+         }
+      });
+      $(document).ready(function () {
+         if ('@Model.TechnicalOfferStatusId' == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer)  || $('#technicalOfferStatusId option:selected').val() == "") {
+            $('#divRejectionReason').attr('hidden', true);
+         }
+         $('.selectpicker').selectpicker('refresh');
+         if (@User.IsInRole(RoleNames.OffersPurchaseManager).ToString().ToLower() == true || @((User.IsInRole(RoleNames.OffersPurchaseSecretary) && Model.TenderStatusId == (int)Enums.TenderStatus.DirectPurchaseOffersChecking).ToString().ToLower()) == false) {
+            $("input").attr('disabled', true);
+            $('.check').attr("disabled", true);
+         }
+         $("#btnSubmit").click(function () {
+            if ($('#technicalOfferStatusId').val() == "") {
+               $("#spanTechnicalResult").show()
+               return false;
+            }
+            if ($('#technicalOfferStatusId').val() == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer) && $('#txtRejectionReason').val() == "") {
+               $("#RejectionReasonSpan").show()
+               return false;
+            }
+            if ($('#technicalOfferStatusId').val() == "" && $('#txtRejectionReason').val() == "") {
+               $("#RejectionReasonSpan").show()
+               $("#spanTechnicalResult").show()
+               return false;
+            }
+            var obj = {};
+            obj.OfferLetterNumber = $("#OfferLetterNumber").val();
+            obj.offerLetterDate = $("#offerLetterDate").val();
+            obj.CombinedIdString = $("#CombinedIdString").val();
+            obj.SpecificationsFiles = vueObj.Specifications;
+            obj.BankGuaranteeFiles = vueObj.BankGuarantees;
+            obj.OfferLetterNumber = $("#OfferLetterNumber").val();
+            obj.IsOfferLetterAttached = $("input[name='IsOfferLetterAttached']:checked").val();
+            obj.IsChamberJoiningAttached = $("input[name='IsChamberJoiningAttached']:checked").val();
+            obj.IsChamberJoiningValid = $("input[name='IsChamberJoiningValid']:checked").val();
+            obj.IsCommercialRegisterAttached = $("input[name='IsCommercialRegisterAttached']:checked").val();
+            obj.IsCommercialRegisterValid = $("input[name='IsCommercialRegisterValid']:checked").val();
+            obj.IsOfferCopyAttached = $("input[name='IsOfferCopyAttached']:checked").val();
+            obj.IsPurchaseBillAttached = $("input[name='IsPurchaseBillAttached']:checked").val();
+            obj.IsSaudizationAttached = $("input[name='IsSaudizationAttached']:checked").val();
+            obj.IsSaudizationValidDate = $("input[name='IsSaudizationValidDate']:checked").val();
+            obj.IsSocialInsuranceAttached = $("input[name='IsSocialInsuranceAttached']:checked").val();
+            obj.IsSocialInsuranceValidDate = $("input[name='IsSocialInsuranceValidDate']:checked").val();
+            obj.IsVisitationAttached = $("input[name='IsVisitationAttached']:checked").val();
+            obj.IsZakatAttached = $("input[name='IsZakatAttached']:checked").val();
+            obj.IsZakatValidDate = $("input[name='IsZakatValidDate']:checked").val();
+            obj.IsBankGuaranteeAttached = $("input[name='IsBankGuaranteeAttached']:checked").val();
+            obj.IsSpecificationAttached = $("input[name='IsSpecificationAttached']:checked").val();
+            obj.IsSpecificationValidDate = $("input[name='IsSpecificationValidDate']:checked").val();
+            obj.TechnicalOfferStatusId = $("#technicalOfferStatusId").val();
+            obj.RejectionReason = $("#txtRejectionReason").val();
+            obj.Notes = $("#txtNotes").val();
+            obj.OfferIdString = $('#hdOfferId').val();
+            var token = $('input[name=__RequestVerificationToken]').val();
+            $('#LoadingSite').fadeIn();
+            $.post("/Offer/DirectPurchaseTechnicalChecking", {
+               model: obj, __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', 'success')
+               setTimeout(function () {
+                  window.location = "/Offer/CombinedSuppliersCheckingStage/@Model.OfferIdString/@Model.TenderIdString";
+               }, 2000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+         });
+         $("#technicalOfferStatusId").change(function () {
+            var selectedValue = $('#technicalOfferStatusId option:selected').val();
+            if (selectedValue == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.NotIdenticalOffer)) {
+               $('#divRejectionReason').attr('hidden', false);
+               $("#spanTechnicalResult").hide()
+            }
+            if (selectedValue == @Convert.ToInt16(MOF.Etimad.Monafasat.SharedKernel.Enums.OfferTechnicalEvaluationStatusId.IdenticalOffer) || selectedValue == "") {
+               $('#divRejectionReason').attr('hidden', true);
+               $('#txtRejectionReason').val(null);
+               $("#spanTechnicalResult").hide()
+            }
+         });
+         function isValidForm() {
+            var flag = 1;
+            if (vueObj.BankGuarantees.length == 0) {
+               $('#txtGuaranteesValidation').show();
+               flag = flag * 0;
+            }
+            if (vueObj.Specifications.length == 0) {
+               $('#txtSpecificationsValidation').show();
+               flag = flag * 0;
+            }
+            if (flag == 0)
+               return false;
+            return true;
+         }
+      });
+      function AddBankGuarantee() {
+         if ($('#tb_GuaranteeNUmber').val().trim() == "") {
+            $('#vdGuaranteeNUmber').show();
+            return false;
+         }
+         if ($('#bankName').val() == "") {
+            $('#vdbankName').show();
+            return false;
+         }
+         if ($('#tb_GuaranteeValue').val().trim() == "") {
+            $('#vdGuaranteeValue').show();
+            return false;
+         }
+         var bankObj = {};
+         bankObj.isBankGuaranteeValid = $("input[name='guaranteeStatus']:checked").val();
+         bankObj.isBankGuaranteeValidString = $("input[name='guaranteeStatus']:checked").parent('label').text();
+         bankObj.guaranteeNumber = $('#tb_GuaranteeNUmber').val();
+         bankObj.amount = $('#tb_GuaranteeValue').val();
+         bankObj.guaranteeDays = $('#tb_GuaranteeDays').val();
+         bankObj.bankId = $('#bankName option:selected').val();
+         bankObj.bankName = $('#bankName option:selected').text();
+         bankObj.guaranteeEndDate = $('#tb_GuaranteeEndDate').val();
+         var startDate = "";
+         var endDate = "";
+         bankObj.guaranteeStartDate = $('#tb_GuaranteeStartDate').val();
+         bankObj.guaranteeStartDateDisplay = $('#tb_GuaranteeStartDate').val();
+         if ($("#tb_GuaranteeEndDate").val() != "") {
+            if ($('#cb_tb_GuaranteeEndDate').is(':checked')) {
+               var x = $("#tb_GuaranteeEndDate").val().split('/');
+               endDate = x[1] + '/' + x[0] + '/'+x[2];
+            }
+            else {
+               endDate = convertUmmalquraToGregorian($("#tb_GuaranteeEndDate").val());
+            }
+         }
+         if ($("#tb_GuaranteeStartDate").val() != "") {
+            if ($('#cb_tb_GuaranteeStartDate').is(':checked')) {
+               var x = $("#tb_GuaranteeStartDate").val().split('/');
+               startDate = x[1] + '/' + x[0] + '/' + x[2];
+            }
+            else {
+               startDate = convertUmmalquraToGregorian($("#tb_GuaranteeStartDate").val());
+            }
+         }
+         if (new Date(startDate) > new Date(endDate)) {
+            $('#vdDates').show();
+            return false;
+         }
+         bankObj.guaranteeEndDate = $('#tb_GuaranteeEndDate').val();
+         bankObj.guaranteeEndDateDisplay = $('#tb_GuaranteeEndDate').val();
+         vueObj.BankGuarantees.push(bankObj);
+         if (isGuaranteeEdit == 1) {
+            vueObj.BankGuarantees.splice(GuaranteeEditIndex, 1);
+         }
+         $('#vdDates').hide();
+         $('#myModal').modal('hide');
+         cleanBankModal();
+      }
+      function cleanBankModal() {
+         $('.datepicker-gregorian').val('')
+         $('#vdGuaranteeNUmber').hide( );
+         $('#vdbankName').hide();
+         $('#vdGuaranteeValue').hide();
+         $("input[name='guaranteeStatus'][value=" + true + "]").prop('checked', true);
+         $('#tb_GuaranteeNUmber').val("");
+         $('#tb_GuaranteeValue').val("");
+         $('#tb_GuaranteeDays').val("");
+         $("#tb_GuaranteeStartDate").val('');
+         $("#hdntb_GuaranteeStartDate").val('')
+         $('#tb_GuaranteeEndDate').val('');
+         $("#bankName").val("");
+         $("#bankName").selectpicker("refresh");
+         $('#txtGuaranteesValidation').hide();
+      }
+      function cleanSpecificationModal() {
+         $('#vdGuaranteeNUmber').hide();
+         $('#vdbankName').hide();
+         $('#vdGuaranteeValue').hide();
+         $("input[name='isForApplier'][value=" + true + "]").prop('checked', true);
+         $('#specificationDegree').val("");
+         $('#ConstructionWorklst').val("");
+         $('#MaintenanceWorklst').val("");
+         $('#txtSpecificationsValidation').hide();
+         $("#specificationDegree, #MaintenanceWorklst, #ConstructionWorklst").selectpicker("refresh");
+      }
+      function AddSpecification() {
+         var ClassObj = {};
+         ClassObj.isSpecificationValidDate = $("input[name='specificationStatus']:checked").val();
+         ClassObj.isSpecificationValidDateString = $("input[name='specificationStatus']:checked").parent('label').text();
+         ClassObj.isForApplier = $("input[name='isForApplier']:checked").val();
+         ClassObj.isForApplierString = $("input[name='isForApplier']:checked").parent('label').text();
+         ClassObj.degree = $('#specificationDegree  option:selected').val();
+         ClassObj.attachmentId = 0;
+         ClassObj.constructionWorkId = $('#ConstructionWorklst  option:selected').val();
+         if ($('#ConstructionWorklst  option:selected').val() == "")
+            ClassObj.constructionWorkString = "";
+         else
+            ClassObj.constructionWorkString = $('#ConstructionWorklst  option:selected').text();
+         ClassObj.maintenanceRunningWorkId = $('#MaintenanceWorklst  option:selected').val();
+         if ($('#MaintenanceWorklst  option:selected').val()=="")
+            ClassObj.maintenanceRunningWorkString = "";
+         else
+            ClassObj.maintenanceRunningWorkString = $('#MaintenanceWorklst  option:selected').text();
+         vueObj.Specifications.push(ClassObj);
+         if (isClassEdit == 1) {
+            vueObj.Specifications.splice(classEditIndex, 1);
+         }
+         $('#myModal2').modal('hide');
+         cleanSpecificationModal();
+      }
+      $('.modal > div').addClass('modal-lg');
+   </script>
+}

@@ -1,0 +1,136 @@
+@model MOF.Etimad.Monafasat.ViewModel.ExtendOffersValiditySavingModel
+@using res = MOF.Etimad.Monafasat.Resources
+<div class="row">
+   <div class="col-12">
+      <h4 class="text-primary">@res.CommunicationRequest.DisplayInputs.ExtendOffersValidity</h4>
+   </div>
+   @if ((User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseSecretary)) &&
+(Model.AgencyRequestStatusId == (int)Enums.AgencyCommunicationRequestStatus.UnderUpdate && Model.TenderRequestsCount == 0)
+|| (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersPurchaseSecretary) || (User.IsInRole(RoleNames.OffersPurchaseManager) && Model.IsLowBudgetDirectPurchase.HasValue && Model.IsLowBudgetDirectPurchase.Value)) && (Model.AgencyRequestStatusId == (int)Enums.AgencyCommunicationRequestStatus.Rejected || Model.AgencyRequestStatusId == (int)Enums.AgencyCommunicationRequestStatus.UnderUpdate))
+   {
+      <form class="col-12" id="ExtendOffersValidityForm" method="POST" asp-controller="CommunicationRequest" asp-antiforgery="true" asp-action="AddExtendOffersValidity" data-ajax="true" data-ajax-begin="$('#LoadingSite').fadeIn();" data-ajax-complete="$('#LoadingSite').fadeOut();" data-ajax-method="POST" data-ajax-mode="replace" data-ajax-loading="#loadingsite" data-ajax-success="AjaxSuccess()" data-ajax-update="#ExtendOffersValidityForm" autocomplete="off" v-cloak>
+         <input type="hidden" asp-for="TenderIdString" />
+         <input type="hidden" asp-for="AgencyRequestId" />
+         <input type="hidden" asp-for="ExtendOffersValidityId" />
+
+         <div class="col col-12">
+            <div class="row">
+               <div class="col-lg-3 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="OffersDuration" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                     <input asp-for="OffersDuration" class="form-control" onchange="getdate(this)" name="OffersDuration" id="txtOffersDuration" />
+                     <span asp-validation-for="OffersDuration" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-3 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group form-check etd-calendar-group">
+                     <label asp-for="NewOffersExpiryDate" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                     <input disabled="disabled" type="text" asp-for="NewOffersExpiryDate" id="txtNewOffersExpiryDate" name="NewOffersExpiryDate" class="form-control datepicker-mix datepicker-gregorian inputMask" />
+                  </div>
+               </div>
+
+               <div class="col-lg-3 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="ReplyReceivingDurationDays" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                     <input asp-for="ReplyReceivingDurationDays" class="form-control" onkeypress="allowNumeric(event)" id="ReplyReceivingDurationDays" />
+                     <span asp-validation-for="ReplyReceivingDurationDays" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-3 col-sm-6 col-xs-12">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label asp-for="ReplyReceivingDurationTime" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <input asp-for="ReplyReceivingDurationTime" type="text" class="form-control" id="replyReceivingDurationTime" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time" readonly />
+                  </div>
+               </div>
+               <div class="col-lg-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group ">
+                     <label asp-for="ExtendOffersReason" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                     <textarea maxlength="250" asp-for="ExtendOffersReason" class="form-control" id="defintionText"></textarea>
+                     <span asp-validation-for="ExtendOffersReason" class="text-danger"></span>
+                  </div>
+               </div>
+            </div>
+            <input class="btn btn-primary btn-sm" id="submitButton" type="submit" value="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Save">
+            @*<input class="btn btn-danger btn-sm" id="cancelButton" type="button" onclick="window.location = '/Tender/Index'" value="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Cancel">*@
+            <a class="btn btn-outline-primary btn-link btn-sm pull-right" asp-action="DetailsForAll" asp-controller="Tender" asp-route-STenderId="@Model.TenderIdString">
+               @res.OfferResources.DisplayInputs.Cancel
+            </a>
+            @if (Model.AgencyRequestId != 0 && Model.AgencyRequestStatusId == (int)Enums.AgencyCommunicationRequestStatus.UnderUpdate)
+            {
+               <button type="button" class="btn btn-danger btn-sm" name="button" id="btnDeleteRequest" onclick="DeleteRequest()" data-toggle="modal" data-target="#myModal">@res.SharedResources.DisplayInputs.Delete</button>
+
+            }
+         </div>
+      </form>
+   }
+   else
+   {
+      <div class="col-md-6 col-sm-12 col-xs-12">
+         <ul class="list-group form-details-list">
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     <label asp-for="OffersDuration" class="label bmd-label-static noSpecial"></label><span class="text-danger"></span>
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>@(Model.OffersDuration)</span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     <label asp-for="ExtendOffersReason" class="label bmd-label-static noSpecial"></label><span class="text-danger"></span>
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.ExtendOffersReason)
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     <label asp-for="NewOffersExpiryDate" class="label bmd-label-static noSpecial"></label><span class="text-danger"></span>
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.NewOffersExpiryDateString)
+                     </span>
+                     <span>
+                        @(Model.NewOffersExpiryDateHijriString)
+                     </span>
+                  </div>
+               </div>
+            </li>
+         </ul>
+      </div>
+      <div class="col-md-6 col-sm-12 col-xs-12">
+         <ul class="list-group form-details-list">
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     <label asp-for="ReplyReceivingDurationDays" class="label bmd-label-static noSpecial"></label><span class="text-danger"></span>
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        @(Model.ReplyReceivingDurationDays)
+                     </span>
+                  </div>
+               </div>
+            </li>
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     <label asp-for="ReplyReceivingDurationTime" class="label bmd-label-static"></label><span class="text-danger"></span>
+                   </div>
+                  <div class="col-8 etd-item-info">
+                     <span>@(Model.ReplyReceivingDurationTime)</span>
+                  </div>
+               </div>
+            </li>
+         </ul>
+      </div>
+   }
+</div>

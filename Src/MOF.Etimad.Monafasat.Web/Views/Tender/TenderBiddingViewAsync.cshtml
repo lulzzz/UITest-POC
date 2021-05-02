@@ -1,0 +1,383 @@
+@model MOF.Etimad.Monafasat.ViewModel.BiddingTenderDetailsModel
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingDetails;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item" aria-current="page"><a href="#">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"].ToString()</li>
+      </ol>
+   </nav>
+}
+<div class="modal fade" id="ApproveModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+            </h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <form action="EndTenderPedding" method="post">
+            @Html.AntiForgeryToken()
+            <div class="modal-body">
+               <input id="biddingVlaue" name="tenderIdString" type="hidden" class="form-control col-6 tenderIdString" v-bind:value="Tender.tenderIdString" />
+               <input id="biddingVlaue" name="biddingRoundIdString" type="hidden" class="form-control col-6 biddingRoundIdString" v-bind:value="Tender.biddingRoundIdString" />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.AreYouSure
+               <div class="form-group bmd-form-group" id="divVerficationCode">
+                  <input type="number" class="form-control col-md-12" id="txtActivationNo" value="" name="verificationCode" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+                  <span class="bmd-help text-danger position-relative" id="txtActivationNoValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+                  <br />
+                  <br />
+                  <p class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainigTimeToApprove<span class=" text-danger" id="timer1"></span></p>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="submit" value="" id="btnConfirmApprove">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm
+               </button>
+               <button type="button" class="btn btn-primary btn-sm m-1" id="btnResendVerificationCode1"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="ConfirmNewRoundModal" tabindex="-1" role="dialog" v-if="Tender.canStartNewRound">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <form action="StartNewRound" method="post">
+            @Html.AntiForgeryToken()
+            <div class="modal-body">
+               <input name="TenderIdString" type="hidden" class="form-control col-6 tenderIdString" />
+               <label>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterNewRoundInformation</label>
+               <div class="col-xs-12">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingDate</label>
+                     <input type="text" class="form-control datepicker-mix datepicker-gregorian inputMask" id="biddingDate" name="BiddingDate" placeholder="" value="">
+                  </div>
+               </div>
+               <div class="col-xs-12">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingStartTime</label>
+                     <input type="text" id="biddingStartTime" name="StartTime" class="form-control timepicker" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+                  </div>
+               </div>
+               <div class="col-xs-12">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label for="datepick" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingEndTime</label>
+                     <input type="text" id="biddingEndTime" name="EndTime" class="form-control timepicker" placeholder="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Time">
+                  </div>
+               </div>
+               <br />
+               <div class="col-12">
+                  <div class="form-group form-check etd-calendar-group">
+                     <label class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BiddingDuration: </label>
+                     <label id="biddingDuration" class="label bmd-label-static"></label>
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn-sm" type="submit" onclick="return ValidateNewRoundData();" id="btnConfirmApprove" v-if="Tender.canStartNewRound">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm
+               </button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+<div class="col-12" id="TenderBidding">
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+            <div class="row" v-if="!Tender.latestRound">
+               <div class="col-12 center-block text-center">
+                  <span v-if="Tender.tenderStatusId == '@((int)Enums.TenderStatus.BiddingApproved)'" class="center-block text-center">
+                     تم انتهاء المزايدة، أقل قيمة مزايدة:
+                  </span>
+                  <span v-else class="center-block text-center">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastBiddingLeastValue :
+                  </span>
+                  <span class="center-block text-center">
+                     {{Tender.lastLeastBiddingValue > 0 ? Tender.lastLeastBiddingValue : "لم يتم ادخالى قيمة فى اخر جولة"}}
+                  </span>
+               </div>
+            </div>
+            <div class="row">
+               @await Html.PartialAsync("~/Views/Tender/Partials/_BiddingTenderDetails.cshtml")
+            </div>
+            <br />
+            <div class="row">
+               <div class="col-12">
+                  <div class="form-group">
+                     @if (User.IsInRole(RoleNames.supplier))
+                     {
+                        <form action="AddOfferBid" method="post">
+                           @Html.AntiForgeryToken()
+                           <div class="col-xs-12 col-md-12 col-lg-6 form">
+                              <div class="form-group bmd-form-group p-0">
+                                 <label class="label bmd-label-static text-dark-green">رقم المزايدة</label>
+                                 <input name="tenderIdString" type="hidden" class="form-control col-6" v-bind:value="Tender.tenderIdString" />
+                                 <input name="biddingRoundIdString" type="hidden" class="form-control col-6" v-bind:value="Tender.biddingRoundIdString" />
+                                 <div class="input-group-append">
+                                    <input id="supplierBiddingVlaue" name="biddingValue" type="number" step="0.01" min="0" class="form-control col-6" />
+                                    @if (DateTime.Now >= Model.StartDate && DateTime.Now <= Model.EndDate)
+                                    {
+                                       <button type="submit" onclick="return checkValue();" class="btn btn-sm btn-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddBid </button>
+                                    }
+                                    <button type="button" onclick="location.reload();" class="btn btn-sm btn-primary">تحديث بيانات المزايدة </button>
+                                 </div>
+                              </div>
+                           </div>
+                        </form>
+                     }
+                     @if (User.IsInRole(RoleNames.OffersCheckSecretary))
+                     {
+                        <input id="biddingVlaue" name="tenderIdString" type="hidden" class="form-control col-6" v-bind:value="Tender.tenderIdString" />
+                        <input id="biddingVlaue" name="biddingRoundIdString" type="hidden" class="form-control col-6" v-bind:value="Tender.biddingRoundIdString" />
+                        <button v-if="Tender.canEndBidding" id="btnApprove" onclick="btnApproveClick();" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#ApproveModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndBidding </button>
+                        <button v-if="Tender.canStartNewRound" type="button" onclick="btnNewRoundClick();" class="btn btn-sm btn-primary" id="btnNewRound" data-toggle="modal" data-target="#ConfirmNewRoundModal">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NewRound </button>
+                        <button type="button" onclick="location.reload();" class="btn btn-sm btn-primary">تحديث بيانات المزايدة </button>
+                     }
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-12">
+                  <h4 class="text-primary">
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersList
+                  </h4>
+                  <div class="table-responsive">
+                     @await Html.PartialAsync("~/Views/Tender/Partials/_TenderBidding.cshtml")
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="">
+   @if (User.IsInRole(RoleNames.supplier))
+   {
+      <button class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("SupplierTenders", "Tender")'">
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+         <div class="ripple-container"></div>
+      </button>
+   }
+   else if (User.IsInRole(RoleNames.OffersCheckSecretary) || User.IsInRole(RoleNames.OffersCheckManager))
+   {
+      <button class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("TenderIndexCheckingStage", "Tender")'">
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+         <div class="ripple-container"></div>
+      </button>
+   }
+   <div class="clearfix"></div>
+</div>
+<script>
+   function checkValue() {
+      if (!parseFloat($("#supplierBiddingVlaue").val())) {
+         AlertFun('قيمة المزاية لابد ان تكون رقم', alertMessageType.Danger);
+         return false;
+      }
+      if (!$("#supplierBiddingVlaue").val() > 0) {
+         AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.BiddingValueMustBeGreaterThanZero)', alertMessageType.Danger);
+         return false;
+      }
+   }
+</script>
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   <script src="~/Etimad-UI/assets/lib/signalr/dist/browser/signalr.js"></script>
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+   <script>
+      var tenderBidding;
+      var connection = new signalR.HubConnectionBuilder().withUrl("/BiddingRoundHub").build();
+      connection.on('@($"Notify_BiddingRound_{Model.TenderIdString}_{Model.BiddingRoundIdString}")', function (message) {
+         loadOffers();
+      });
+      connection.start().then(function () {
+         console.log("Connected");
+      }).catch(function (err) {
+         return console.error(err.toString());
+      });
+      var token = $('input[name=__RequestVerificationToken]').val();
+      var tenderBidding;
+      function validateOpeningDateVacation(alertMessage = true) {
+         $("#biddingDuration").text('0 ' + '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Hour)');
+         var biddingDate = $("#biddingDate").val();
+         var biddingStartTime = $("#biddingStartTime").val();
+         var biddingEndTime = $("#biddingEndTime").val();
+         if (!biddingDate || !biddingEndTime || !biddingStartTime) {
+            if (alertMessage) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterBiddingDateTimeInfo)', alertMessageType.Danger);
+            }
+            return;
+         }
+         var offersOpeningDateGregorian;
+         if ($('#cb_biddingDate').is(':checked')) {
+            var i = biddingDate.split('/');
+            offersOpeningDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+         }
+         else {
+            offersOpeningDateGregorian = convertUmmalquraToGregorian(biddingDate);
+         }
+         if (biddingDate != "") {
+            Gregorian = new Date(offersOpeningDateGregorian);
+            var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+            var day = Gregorian.getUTCDate() + 1;
+            var year = Gregorian.getUTCFullYear();
+            var serverDate = day + "/" + month + "/" + year;
+            var lcalDate = month + "-" + day + "-" + year;
+            var startDateTime = new Date(lcalDate + " " + $("#biddingStartTime").val().split(' ')[0] + " " + $("#biddingStartTime").val().split(' ')[1]);
+            var endDateTime = new Date(lcalDate + " " + $("#biddingEndTime").val().split(' ')[0] + " " + $("#biddingEndTime").val().split(' ')[1]);
+            if (isNaN(startDateTime) || isNaN(endDateTime)) {
+               if (alertMessage) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.PleaseEnterValidDateTime)', alertMessageType.Danger);
+               }
+               return;
+            }
+            if (startDateTime >= endDateTime) {
+               if (alertMessage) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.BiddingEndTimeMustBeGreaterBiddingStartTime)', alertMessageType.Danger);
+               }
+               return;
+            }
+            $("#biddingDuration").text(parseInt((Math.abs(endDateTime - startDateTime) / (1000 * 60 * 60)) % 24) +
+               '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Hour)' + " " +
+               '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.And)' + " " +
+               parseInt((Math.abs(endDateTime - startDateTime) / (1000 * 60)) % 60) +
+               '@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Minute)');
+         }
+      }
+      function btnApproveClick() {
+         document.getElementById('timer1').innerHTML = 05 + ":" + 00;
+         startTimer(1);
+         $("#btnResendVerificationCode1").prop("disabled", true);
+         createVerificationCode();
+      }
+      function btnNewRoundClick() {
+      }
+      function createVerificationCode() {
+         $.post('/Tender/CreateVerificationCode', { tenderIdString: '@Html.Raw(Html.Encode(ViewBag.tenderIdString))', __RequestVerificationToken: token }).fail(function (error) {
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         });
+      }
+      function checkSecond(sec, timer) {
+         if (sec < 10 && sec >= 0) { sec = "0" + sec };
+         if (sec < 0) { sec = "59" };
+         return sec;
+      }
+      function checkTime(min, sec, myVar, timer) {
+         if (min <= 0 && sec <= 0) {
+            $("#btnResendVerificationCode" + timer).prop("disabled", false);
+            clearTimeout(myVar)
+         };
+         return sec;
+      }
+      var myVar;
+      function startTimer(timer) {
+         var elemnt = 'timer' + timer;
+         clearTimeout(myVar);
+         var presentTime = document.getElementById(elemnt).innerHTML;
+         var timeArray = presentTime.split(/[:]+/);
+         var m = timeArray[0];
+         var s = checkSecond((timeArray[1] - 1), timer);
+         if (s == 59) { m = m - 1 }
+         document.getElementById('timer'+ timer).innerHTML = m + ":" + s;
+         myVar = setTimeout(startTimer.bind(null,timer), 1000);
+         checkTime(m, s, myVar, timer);
+         if (m < 0 && s > 0) {
+            document.getElementById('timerChangeRequest').innerHTML = "0:00";
+            return false;
+         }
+      }
+      $(document).ready(function () {
+         $("#biddingDate").focusout(function () {
+            validateOpeningDateVacation(false);
+         });
+         $("#biddingStartTime").focusout(function () {
+            validateOpeningDateVacation(false);
+         });
+         $("#biddingEndTime").focusout(function () {
+            validateOpeningDateVacation(false);
+         });
+         tenderBidding = new Vue({
+            el: '#TenderBidding',
+            data: {
+               Tender: {}
+            },
+            methods: {
+               RedirectURL: function (fileNetReferenceId, fileName) {
+                  window.open("/Upload/getfile/" + fileNetReferenceId + ":" + fileName, '_blank');
+               },
+            },
+            created: function created() {
+               loadOffers();
+            },
+         error: function (error) {
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         }
+         });
+      });
+      function ValidateNewRoundData() {
+         if (!$("#biddingDate").val()) {
+            AlertFun('يرجى التأكد من تاريخ المزايدة', alertMessageType.Danger);
+            return false;
+         }
+         if (!$("#biddingStartTime").val()) {
+            AlertFun('يرجى التأكد من وقت بداية المزايدة', alertMessageType.Danger);
+            return false;
+         }
+         if (!$("#biddingEndTime").val()) {
+            AlertFun('يرجى التأكد من وقت نهاية المزايدة', alertMessageType.Danger);
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+         return true;
+      }
+      function loadOffers() {
+            $('#LoadingSite').fadeIn();
+         $.ajax({
+            url: '/Tender/RoundBiddingPagingAsync?tenderIdString=' + '@Html.Raw(Html.Encode(ViewBag.tenderIdString))',
+            type: 'get',
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+               $('#LoadingSite').fadeOut();
+               if (XMLHttpRequest.responseText == "Logout") { window.location = '/Authorization/AccessDenied'; return; }
+            },
+            success: function (response) {
+               $('#LoadingSite').fadeOut();
+               tenderBidding.Tender = response;
+               $(".tenderIdString").val(tenderBidding.Tender.tenderIdString);
+               $(".biddingRoundIdString").val(tenderBidding.Tender.biddingRoundIdString);
+            }
+         });
+      }
+   </script>
+}

@@ -1,0 +1,76 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+@using res = MOF.Etimad.Monafasat.Resources
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.UploadFile</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+             <form id="formSaveFiles">
+               @Html.AntiForgeryToken()
+               <div id="attachementUploader">
+                  @if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.OneFile || Model.OfferPresentationWayId == null)
+                  {
+                     <div class="" id="bankUploader">
+                        @Html.FileUploader("model", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 40, multiple: true, allowedExtensions: new List<string> { "pdf", "zip", "xlsx" })
+                        <span id="vdBankGuaranteeReference" class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.EnterFile</span>
+                     </div>
+                  }
+                  else if (Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles)
+                  {
+                     <div class="" id="financiaUploader">
+                        <label for="financialFile">@res.OfferResources.DisplayInputs.FinancialOffer</label>
+                        @Html.FileUploader("financialFile", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                        <span id="financialFileeReference" class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.EnterFile</span>
+                     </div>
+                     <div class="" id="technicalUploader">
+                        <label for="technicalFile">@res.OfferResources.DisplayInputs.TechnicalOffer</label>
+                        @Html.FileUploader("technicalFile", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 50, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                        <span id="technicalFileReference" class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.EnterFile</span>
+                     </div>
+                  }
+               </div>
+               <div class="" id="combinedUploader">
+                  @Html.FileUploader("combinedFile", fileMaxSize: 1024 * 350, numberOfFilesToUpload: 40, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                  <span id="combinedFilealert" class="text-danger">@MOF.Etimad.Monafasat.Resources.OfferResources.ErrorMessages.EnterFile</span>
+               </div>
+            </form>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button"
+                    onclick="saveFiles('@ViewBag.tenderIdEncrypt');"
+                    value="">
+               @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Save
+            </button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TechnicalFinancialFiles</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button"
+                    onclick="saveFiles('@ViewBag.tenderIdEncrypt');"
+                    value="">
+               @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Save
+            </button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+

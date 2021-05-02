@@ -1,0 +1,72 @@
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+   <div id="accordion">
+      <div class="card" v-for="(item, $index) in QuantityTables.negotiationQuantityTableModels">
+         <a class="btn btn-primary btn-link" data-toggle="collapse" v-bind:data-target="'#collapse'+$index" aria-expanded="true" aria-controls="collapseOne">
+            {{$index + 1 }} -   <strong>({{item.name}}) </strong><span class="badge badge-primary m-1">{{item.status}}</span> <strong>{{item.name}} - <i>{{item.intializeDateString}}</i> </strong>
+         </a>
+
+         <div v-bind:id="'collapse'+$index" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+
+            <table class="table table-striped">
+               <caption>الاصناف</caption>
+               <thead>
+                  <tr>
+                     <th scope="col" >
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ItemName
+
+                     </th>
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Quantity
+                     </th>
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Unit
+                     </th>
+                     <th scope="col">
+                        التفاصيل
+                     </th>
+                     <th scope="col">
+                        كراسة الشروط والمواصفات
+                        الخاصة بالصنف
+                     </th>
+                     <th scope="col">
+                        <button class="btn btn-round btn-sm btn-danger" v-if="isEditAllowed == 1" @@click="ReflectDeleteTable(item.id)">
+                           <i class="material-icons">clear</i>     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete
+                        </button>
+                     </th>
+
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr v-for="(itemm, $index) in item.negotiationQuantityTableItems">
+                     <td>{{itemm.name}}</td>
+                     <td>{{itemm.quantity}}</td>
+                     <td>{{itemm.unit}}</td>
+                     <td>{{itemm.details}}</td>
+                     <td>
+
+                        <a v-if="itemm.attachmentRefId !=null" :href="`/Upload/getfile/${itemm.attachmentRefId}/${itemm.attachmentName};`" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                           {{itemm.attachmentName}}
+                        </a>
+                     </td>
+                     <td>
+                        <button class="btn btn-sm btn-danger" v-if="isEditAllowed == 1" @@click="ReflectDeleteItem(item.id,itemm.id)">
+                           <i class="material-icons">clear</i>      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete
+                        </button>
+                        |
+                        <button class="btn btn-warning btn-sm etd-edit-btn" v-if="isEditAllowed == 1" @@click="fillEditModal(itemm,item.id)" data-toggle="modal" data-target="#editModal">
+                           <i class="material-icons">edit</i>   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Edit
+                        </button>
+
+
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+
+         </div>
+      </div>
+
+   </div>
+</div>
+

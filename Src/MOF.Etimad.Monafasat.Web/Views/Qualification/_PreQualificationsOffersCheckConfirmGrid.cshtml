@@ -1,0 +1,45 @@
+<h4 class="text-primary">الموردين المتقدمين</h4>
+<div class="table-responsive">
+   <table id="OffersCheckTable" class="table  table-striped text-center"    summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow">
+      <thead class="text-center">
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CommercialName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CommercialNumber</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.NumberOfPointsAndNumberOfTenderPoints</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualificationResult</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+         </tr>
+      </thead>
+      <tbody class="text-center" v-if="PreQualificationDetails && PreQualificationDetails.length > 0">
+         <tr v-for="(preQualification, $index) in PreQualificationDetails">
+            <td class="text-center" data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CommercialName"><span @@click="getSupplierInfo(preQualification.comercialNumber)">{{preQualification.comercialName}}</span></td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CommercialNumber"> {{preQualification.comercialNumber}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.NumberOfPointsAndNumberOfTenderPoints">
+               {{preQualification.finalResultPoints}} \  {{preQualification.tenderPoints}}
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualificationResult">
+               {{preQualification.finalResultStatus}}
+            </td>
+
+            <td data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               <div class="dropdown">
+                  <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i> <div class="ripple-container"></div></button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                     <a :href="viewCheckQalification(preQualification.preQualificationIdString, preQualification.supplierId)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.PreQualificationDetails</a>
+                  </div>
+               </div>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="9" class="text-center">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>

@@ -1,0 +1,62 @@
+@model MOF.Etimad.Monafasat.ViewModel.StartNegotiationModel
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NegotiationRequest</li>
+      </ol>
+   </nav>
+}
+@{
+   ViewBag.Title = MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Negotiation;
+
+}
+<div class="col-12" id="applyOffer" v-cloak>
+
+</div>
+@section scripts
+   {
+
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+
+}
+<form action="/CommunicationRequest/CreateNegotiationRequestd" method="post">
+   @Html.AntiForgeryToken()
+   <div class="col-12">
+      <div class="row">
+         <div class="card">
+            <div class="card-body">
+               <div id="divPreview" class="col-md-6 col-lg-6">
+                  <div class="form-group bmd-form-group">
+                     <input type="hidden" value="@Model.TenderIdString" name="TenderIdString" />
+                     <label class="label bmd-label-static noSpecial">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.RequestType</label>
+                     <select asp-items="@Model.NegotaitionTypes" asp-for="enNegotiationTypeId" class="form-control" data-style="select-with-transition" data-size="7">
+                        <option value="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Select </option>
+
+                     </select>
+                     <span asp-validation-for="enNegotiationTypeId" class="text-danger"></span>
+                  </div>
+                  <div class="form-group bmd-form-group">
+                     <button type="submit" class="btn btn-primary">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.StartNegotiation</button>
+                    <a asp-action="DetailsForAll" class="btn btn-outline-primary" asp-controller="Tender" asp-route-STenderId="@Model.TenderIdString">@(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton)</a>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</form>
+<script>
+
+   $('form').submit(function () {
+      $('#loader').show();
+   })
+
+
+</script>

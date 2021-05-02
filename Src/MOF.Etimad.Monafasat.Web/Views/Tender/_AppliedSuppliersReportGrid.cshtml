@@ -1,0 +1,84 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+<div class="table-responsive tenderGridHight">
+   <table class="table table-striped" id="TenderTable">
+      <caption></caption>
+      <thead>
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType</th>
+            @if (User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService))
+            {
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName</th>
+            }
+            @if (User.IsInRole(RoleNames.MonafasatAdmin))
+            {
+               <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyBranch</th>
+            }
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletPrice</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OffersNumber</th>
+            <th scope="col" style="width:130px" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Actions</th>
+         </tr>
+      </thead>
+      <tbody v-if="Tenders && Tenders.length > 0">
+         <tr v-for="(tender, $index) in Tenders">
+            <td data-label="#" class="text-center">{{ (currentPage -1) * (pageSize) +  $index + 1}}</td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName"> <a :href="detailsUrl(tender.tenderIdString)">{{tender.tenderName}}</a></td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType">{{tender.tenderTypeName}}</td>
+            @if (User.IsInRole(RoleNames.MonafasatAccountManager) || User.IsInRole(RoleNames.CustomerService))
+            {
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName">{{tender.agencyName}} - {{tender.branchName}}</td>
+            }
+            @if (User.IsInRole(RoleNames.MonafasatAdmin))
+            {
+               <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName">{{tender.branchName}}</td>
+            }
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus">
+               @await Html.PartialAsync("_TenderStatuses.cshtml")
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber">{{tender.tenderNumber}}</td>
+            <td class="text-center text-primary h5" v-if="tender.conditionsBookletPrice > 0">{{tender.conditionsBookletPrice}} @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Riyal</td>
+            <td class="text-center text-primary h5" v-else>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Free</td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate">
+               <span v-if="tender.lastEnqueriesDate"> {{tender.lastEnqueriesDate.split('T')[0]}} <br /></span>
+               <span v-if="tender.lastEnqueriesDateHijri && tender.lastEnqueriesDate"> {{tender.lastEnqueriesDateHijri}}</span>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate">
+               <span v-if="tender.lastOfferPresentationDate"> {{tender.lastOfferPresentationDate.split('T')[0]}}<br /></span>
+               <span v-if="tender.lastOfferPresentationDateHijri && tender.lastOfferPresentationDate"> {{tender.lastOfferPresentationDateHijri}} <br /> {{tender.lastOfferPresentationDate.split('T')[1].substring(0,5)}} </span>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate">
+               <span v-if="tender.offersOpeningDate"> {{tender.offersOpeningDate.split('T')[0]}} <br /></span>
+               <span v-if="tender.offersOpeningDateHijri && tender.offersOpeningDate"> {{tender.offersOpeningDateHijri}} <br /> {{tender.offersOpeningDate.split('T')[1].substring(0,5)}}  </span>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OffersNumber">
+               <span v-if="tender.offersCount > 0">
+                  {{tender.offersCount}}
+               </span>
+               <span v-else> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist </span>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Actions">
+               <div class="col-md-12 text-right">
+                  <a :href="detailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details</a>
+                  <a :href="OffersReport(tender.tenderIdString)" target="_blank" :id="tender.tenderId" class="btn btn-sm btn-primary"> @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.OffersReport</a>
+               </div>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="13" class="text-center">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+               <br />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>

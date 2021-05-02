@@ -1,0 +1,63 @@
+@using MOF.Etimad.Monafasat.SharedKernel
+<div class="table-responsive" style="min-height:100px">
+ 
+   <table id="SuppliersTable" class="table table-bordered  table-striped text-center"    summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow" >
+      <thead class="text-center">
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)</th>
+            <th scope="col" class="text-center">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)</th>
+            @*<th scope="col" class="text-center">@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.InvitationStatus)</th>*@
+            <th scope="col" class="text-center">@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Operations)</th>
+         </tr>
+      </thead>
+      <tbody class="text-center" v-if="Suppliers && Suppliers.length > 0">
+         <tr v-for="(Supplier, $index) in Suppliers">
+            <td class="text-center" data-label="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)"> {{$index +1}} </td>
+            <td class="text-center" data-label="@Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.ComericalRegisterName)"> {{Supplier.commericalRegisterName}} </td>
+            <td class="text-center" data-label=" @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ComericalRegisterNo)"> {{Supplier.commericalRegisterNo}} </td>
+            @*<td class="text-center" data-label=" @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.InvitationStatus)">
+                  <span v-if="Supplier.statusId == '0'">
+                     <span class="badge badge-default"> @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.NotInvited)</span>
+                  </span>
+                  <span v-else-if="Supplier.statusId == '@((int)Enums.InvitationStatus.New)'">
+                     <span class="badge badge-warning">
+                        @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.WaitingForAcceptingInvitation)
+                     </span>
+                  </span>
+                  <span v-else-if="Supplier.statusId == '@((int)Enums.InvitationStatus.Approved)'">
+                     <span class="badge badge-success">
+                        @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.InvitationAccepted)
+                     </span>
+                  </span>
+                  <span v-else-if="Supplier.statusId == '@((int)Enums.InvitationStatus.Rejected)'">
+                     <span class="badge badge-danger">
+                        @Html.Raw(MOF.Etimad.Monafasat.Resources.InvitationResources.DisplayInputs.InvitationRejected)
+                     </span>
+                  </span>
+                  <span v-else-if="Supplier.statusId == '@((int)Enums.InvitationStatus.ToBeSent)'">
+                     <span class="badge badge-danger">
+                        بإنتظار الاعتماد
+                     </span>
+                  </span>
+               </td>*@
+            <td class="text-center" data-label=" @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Operations)">
+               <template v-if="Supplier.statusId == '4'">
+                  <button type="button" class="btn btn-primary btn-just-icon btn-round btn-sm" id="btnAddToInvitationGrid" disabled="disabled" @@click="AddToInvitationGrid(Supplier)"><i class="material-icons">add</i> </button>
+               </template>
+               <template v-else>
+                  <button type="button" class="btn btn-primary btn-just-icon btn-round btn-sm" id="btnAddToInvitationGrid" @@click="AddToInvitationGrid(Supplier)"><i class="material-icons">add</i> </button>
+               </template>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="9" class="text-center">
+               @Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData)
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>

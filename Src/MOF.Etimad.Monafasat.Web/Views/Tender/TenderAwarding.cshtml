@@ -1,0 +1,1585 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderOffersModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+    Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+    string tenderIdString = Model.TenderIdString;
+    int tenderStatusId = Model.TenderStatusId;
+    var isReverseBidding = Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding ? true : false;
+    var awardingManagerUser = User.IsInRole(RoleNames.OffersCheckManager) || User.IsInRole(RoleNames.OffersPurchaseManager);
+    ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingDetails;
+    var stagingUrl = Url.Action("TenderIndexAwardingStage", "Tender");
+    bool canFilterOnNPA = (Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects && Model.ContainSupply == true);
+    var SortCriteria = canFilterOnNPA == true && Model.NPCalcHaveBeenDone == true ? "OfferWeightAfterCalcNPA" : "FinalPriceAfterDiscount";
+    var isOptionalReasonForDirectpurchase = (Model.DirectPurchaseReasonId == (int)Enums.ReasonForPurchaseTenderType.BusinessesAndPurchasesLessThanOneHundredThousand || Model.DirectPurchaseReasonId == (int)Enums.ReasonForPurchaseTenderType.Emergency) ? "true" : "false";
+    var isShowAwardingDiscount = Model.VersionId < (int)Enums.ActivityVersions.Sprint7Activities;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item" aria-current="page"><a href="@Url.Action("TenderIndexAwardingStage", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardStageTenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"].ToString()</li>
+      </ol>
+   </nav>
+}
+@Html.AntiForgeryToken()
+<div id="offersAwardingGrid">
+   <div class="modal fade" id="initialModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Confirm</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <template v-if="showMsgWithoutPostQualification">
+               <div class="modal-body" id="withoutPostQualificationMsg">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.AwardingWithoutPostQualification
+               </div>
+            </template>
+            <template v-if="showMsgWithPendingPostQualification">
+               <div class="modal-body">
+                  @(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.PendingPostQualification + ' ' + MOF.Etimad.Monafasat.Resources.TenderResources.Messages.AwardingWithoutPostQualification)
+               </div>
+            </template>
+            <template v-if="showMsgSendToApprove">
+               <div class="modal-body" id="sendToInitialMsg">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingRequestWillSent
+               </div>
+            </template>
+            <template v-if="showMsgCreatePostQualification">
+               <div class="modal-body">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.PostQualificationAwarding
+               </div>
+            </template>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary btn-sm" name="button" v-if="!showMsgCreatePostQualification" @@click="btnSendInitialAwardConfirmation()" id="btnSendInitialAwardConfirmation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+               <button type="button" class="btn btn-primary btn-sm" name="button" v-if="showMsgCreatePostQualification" @@click="createPostQualificationSingleOffer()" id="createPostQualificationSingleOffer">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="modal fade" id="excludedReasonModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Confirm</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <template>
+               <div class="modal-body">
+                  <div class="form-group bmd-form-group" style="padding-top:0">
+                     <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExclusionReason</label>
+                     <textarea class="form-control" rows="5" id="txtExclusionReason" name="ExclusionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterExclusionReason"></textarea>
+                     <div class="pull-left">
+                        <p>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ExclusionWarning</p>
+                        <p class="bmd-help text-danger" id="txtExclusionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterExclusionReason</p>
+                     </div>
+                  </div>
+               </div>
+            </template>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary btn-sm" name="button" @@click="AddExclusionReason()" id="btnSaveExclusionReason">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="modal fade" id="removeExcludedReasonModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Confirm</h5>
+               <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                  <i class="material-icons">clear</i>
+               </button>
+            </div>
+            <template>
+               <div class="modal-body">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConfirmationExclusionCancelled
+               </div>
+            </template>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary btn-sm" name="button" @@click="removeExclusionReason()" id="btnRemoveExclusionReason">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm</button>
+               <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Cancel</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="col-12">
+      <div class="row">
+         <div class="card">
+            @if (Model.CancelRequestId != null && Model.CancelRequestId != 0 && Model.TenderHasPendingStatusAwardingStage)
+            {
+               <div class="alert alert-warning" style="z-index:0">
+                  <div class="container" style="text-align:center; font-size:16px">
+                     <a asp-action="CancelTender" asp-controller="Tender" asp-route-STenderId="@Model.TenderIdString"> @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.CancelRequestExist  @Model.TenderRefrenceNumber</a>
+                  </div>
+               </div>
+            }
+            <div class="card-body">
+               <div class="row" id="basicDetials">
+                  <div class="col-12">
+                     <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails</h4>
+                  </div>
+                  <div class="col-md-6 col-sm-12 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model.TenderName)</span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderRefrenceNumber
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>@(Model.TenderRefrenceNumber)</span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @(Model.TenderNumber)
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                        @if (Model.TenderTypeId != (int)Enums.TenderType.Competition)
+                        {
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-4 etd-item-title">
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EvaluationValue
+                                 </div>
+                                 <div class="col-8 etd-item-info">
+                                    <span>
+                                       @(Model.EstimatedValue)
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-4 etd-item-title">
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EvaluationValueWritten
+                                 </div>
+                                 <div class="col-8 etd-item-info">
+                                    <span>
+                                       @(Model.EstimatedValueText)
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                        }
+                        else
+                        {
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-4 etd-item-title">
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NumberOfWinners
+                                 </div>
+                                 <div class="col-8 etd-item-info">
+                                    <span>
+                                       @(Model.NumberOfWinners)
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                           <li class="list-group-item">
+                              <div class="row">
+                                 <div class="col-4 etd-item-title">
+                                    @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BonusValue
+                                 </div>
+                                 <div class="col-8 etd-item-info">
+                                    <span>
+                                       @(Model.BonusValue)
+                                    </span>
+                                 </div>
+                              </div>
+                           </li>
+                        }
+                     </ul>
+                  </div>
+                  <div class="col-md-6 col-sm-12 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.BuyersCount
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @(Model.BuyersCount)
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersCount
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @(Model.OffersCount)
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+                  <div class="col-12">
+                     <div class="row">
+                        <div class="col-lg-4 col-sm-6 col-xs-12">
+                           <div class="form-group bmd-form-group">
+                              <label for="name" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingType</label>
+                              @if (Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding)
+                              {
+                                 <div class="form-check">
+                                    <span class="form-control col-6">  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FullAwarding</span>
+                                 </div>
+                              }
+                              else
+                              {
+                                 <div class="form-check">
+                                    <label class="form-check-label">
+                                       <input name="TenderAwardingType" id="totalAwarding" requierd="true" type="radio" class="form-check-input" value="true" v-model="awardingType" :disabled="isTotalAwarding" />
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FullAwarding
+                                       <span class="circle"><span class="check"></span></span>
+                                    </label>
+                                    <label class="form-check-label">
+                                       <input name="TenderAwardingType" id="partialAwarding" requierd="true" type="radio" class="form-check-input" value="false" v-model="awardingType" :disabled="isTotalAwarding" />
+                                       @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PartialAwarding
+                                       <span class="circle"><span class="check"></span></span>
+                                    </label>
+                                 </div>
+                                 <span id="spanAwardingType" style="color:#ff0000"></span>
+                              }
+                           </div>
+                        </div>
+                         @if (Model.IsTenderHasStopPeriod)
+                         {
+                           <div class="col-lg-4 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label for="name" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.StoppingPeriod</label>
+                                 <div class="form-check">
+                                    @if (Model.VersionId >= (int)Enums.ActivityVersions.Sprint7Activities)
+                                    {
+                                       <input readonly  id="StoppingPeriod" type="number" class="form-control col-6" value="@Model.AwardingStoppingPeriod" />
+                                    }
+                                    else
+                                    {
+                                       <input  id="StoppingPeriod" type="number" class="form-control col-6" value="@Model.AwardingStoppingPeriod" />
+                                    }
+                                 </div>
+                              </div>
+                           </div>
+                         }
+                     </div>
+                     @if (!Model.IsOldTender)
+                     {
+                        <div class="row">
+                           <div class="col-lg-4 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label for="name" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.HasGuarantee</label>
+                                 <div class="form-check">
+                                    <label class="form-check-label">
+                                       <input name="HasGuarantee" id="requiredGuarantee" requierd="true" type="radio" class="form-check-input" value="true" />
+                                       @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Yes
+                                       <span class="circle"><span class="check"></span></span>
+                                    </label>
+                                    <label class="form-check-label">
+                                       <input name="HasGuarantee" id="notRequiredGuarantee" requierd="true" type="radio" class="form-check-input" value="false" />
+                                       @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.No
+                                       <span class="circle"><span class="check"></span></span>
+                                    </label>
+                                 </div>
+                                 <span id="spanHasGuarantee" style="color:#ff0000"></span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row" v-show="hasGuarantee">
+                           @if (Model.VersionId < (int)Enums.ActivityVersions.Sprint7Activities)
+                           {
+                              <div class="col-lg-4 col-sm-6 col-xs-12">
+                                 <div class="form-group bmd-form-group">
+                                    <label for="name" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingPercentage</label><span class="text-danger">*</span>
+                                    <div class="form-check">
+                                       <input id="awardingDiscountPercentage" type="number" class="form-control col-6" min="0" max="100" placeholder="أرقام بالنسبة المئوية" value="@Model.AwardingDiscountPercentage" />
+                                    </div>
+                                 </div>
+                              </div>
+                           }
+                           @if (Model.VersionId >= (int)Enums.ActivityVersions.Sprint7Activities)
+                           {
+                              if (!(Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.Competition))
+                              {
+                                 <div class="col-lg-4 col-sm-6 col-xs-12">
+                                    <div class="form-group bmd-form-group">
+                                       <label for="name" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingPercentage</label><span class="text-danger">*</span>
+                                       <div class="form-check">
+                                          <input readonly id="awardingDiscountPercentage" type="number" class="form-control col-6" min="0" max="100" placeholder="أرقام بالنسبة المئوية" value="@Model.AwardingDiscountPercentage" />
+                                       </div>
+                                    </div>
+                                 </div>
+                              }
+                           }
+
+                           <div class="col-lg-4 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label for="name" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.GuaranteeDuration</label><span class="text-danger">*</span>
+                                 <div class="form-check">
+                                    <input id="awardingMonths" type="number" class="form-control col-6" min="1" max="12" placeholder="شهور" value="@Model.AwardingMonths" />
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-lg-4 col-sm-6 col-xs-12">
+                              <div class="form-group bmd-form-group">
+                                 <label for="name" class="label bmd-label-static"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.FinalAwardingGuaranteeDeliveryAddress</label><span class="text-danger">*</span>
+                                 <div class="form-check">
+                                    <input id="finalGuaranteeDeliveryAddress" type="text" class="form-control col-6" value="@Model.FinalGuaranteeDeliveryAddress" />
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     }
+                     <div class="row">
+                        @if (!Model.IsOldTender)
+                        {
+                           <div class="col-12">
+                              <div class="form-group bmd-form-group">
+                                 <h4 class="text-primary"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingReport</h4>
+                                 <h4 class="text-warning">يتم رفع النسخه الموقعه من أعضاء اللجنة</h4>
+
+                                 <div class="form-check">
+                                    <div id="attachmentDelete">
+                                       <table class="table table-striped" aria-describedby="attachements">
+                                          <thead style="background-color: #e0efe8;">
+                                             <tr>
+                                                <th scope="col">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.FileName </th>
+                                                <th scope="col" v-if="activeAdd" style="width: 100px;">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+                                             </tr>
+                                          </thead>
+                                          <tbody>
+                                             <tr v-for="(fl, $index) in file">
+                                                <td data-label=" Milestone">
+                                                   <a href="#" id="AwardingFileName" @@click="RedirectURL();return false;" target="_blank"> {{fl.awardingReportFileName}}@*@Model.AwardingReportFileName*@ </a>
+                                                </td>
+                                                <td data-label="Details">
+                                                   @if (Model.CanInsertAwardingData && Model.TenderStatusId == (int)Enums.TenderStatus.OffersAwarding)
+                                                   {
+                                                      <div class="dropdown pull-left">
+                                                         <button @@click="DeleteAttach" id="btnRemoveFile" class="btn btn-round btn-sm btn-danger"><i class="material-icons">delete</i> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Delete</button>
+                                                      </div>
+                                                   }
+                                                </td>
+                                             </tr>
+                                          </tbody>
+                                          <tfoot>
+                                             <tr>
+                                                @if (Model.CanInsertAwardingData && Model.TenderStatusId == (int)Enums.TenderStatus.OffersAwarding)
+                                                {
+                                                   <td colspan="3"> <button id="btnUpload" type="button" onclick="resetFileUpload()" v-if="activeAdd" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#UploadFile">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.UploadFile </button></td>
+                                                }
+                                             </tr>
+                                          </tfoot>
+                                       </table>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        }
+                        <br />
+                        <br />
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                           <br />
+                           <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersList</h4>
+                           @Html.Partial("_TotalOffersAwardingGrid", Model)
+
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                           <br />
+                           <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardedOffersList</h4>
+
+                           @Html.Partial("_ActualOffersAwardingGrid")
+                        </div>
+                        <div class="row">
+                        </div>
+                        @if (Model.CanInsertAwardingData && (Model.TenderStatusId == (int)Enums.TenderStatus.OffersAwardedRejected || Model.TenderStatusId == (int)Enums.TenderStatus.OffersInitialAwardedRejected || Model.TenderStatusId == (int)Enums.TenderStatus.BackForAwardingFromPlaint))
+                        {
+                           <div class="col-md-12 col-sm-12 col-xs-12">
+                              <ul class="list-group form-details-list">
+                                 <li class="list-group-item">
+                                    <div class="row">
+                                       <div class="col-2 etd-item-title">
+                                          <i class="material-icons text-danger pull-left">not_interested</i>
+                                          <span class="p-1">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</span>
+                                       </div>
+                                       <div class="col-10 etd-item-info">
+                                          @(Model.RejectionReason)
+                                       </div>
+                                    </div>
+                                 </li>
+                              </ul>
+                           </div>
+                        }
+
+                        @Html.Partial("~/Views/Tender/Partials/_TenderAwardingActions.cshtml", Model)
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col">
+               <button type="button" class="btn btn-outline-primary btn-link pull-right" onclick="window.location = '@Url.Action("TenderIndexAwardingStage", "Tender")'">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+                  <div class="ripple-container"></div>
+               </button>
+            </div>
+         </div>
+         @Html.Partial("~/Views/Tender/Partials/_TenderAwardingUploadFilePopup.cshtml")
+         @section modalTitle
+         {
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+         }
+         @section modalContent
+         {
+            <div class="col-lg-12 col-sm-12 col-xs-12 model-actions" id="divSendToApproveMessage">
+               <div class="form-group bmd-form-group">
+                  <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingRequestWillSent</lable>
+               </div>
+            </div>
+            <div class="col-lg-12 col-sm-12 col-xs-12 model-actions" id="divApproveMessage">
+               <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingWillApproved</lable>
+               <input type="text" class="form-control" id="txtverificationCode" name="verificationCode" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode" />
+               <div class="pull-left">
+                  <span class="bmd-help text-danger position-relative" id="txtverificationCodeValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterVerificationCode</span>
+               </div>
+               <br />
+               <p class="text-dark-green">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RemainingTime<span class=" text-danger" id="timer"></span></p>
+            </div>
+            <div class="col-lg-12 col-sm-12 col-xs-12 model-actions" id="divReopenMessage">
+               <div class="form-group bmd-form-group">
+                  <lable>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingWillReopen</lable>
+               </div>
+            </div>
+            <div class="col-12 model-actions" id="divRejectReason">
+               <div class="form-group bmd-form-group" style="padding-top:0">
+                  <label for="RejectionReason" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason</label>
+                  <textarea rows="5" class="form-control" id="txtRejectionReason" name="RejectionReason" placeholder="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason"></textarea>
+                  <div class="pull-left">
+                     <span style="display:none" class="bmd-help text-danger" id="txtRejectionReasonValidation">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseEnterRejectionReason</span>
+                  </div>
+               </div>
+            </div>
+
+         }
+      </div>
+   </div>
+</div>
+@section modalButtons
+   {
+
+   <button type="button" class="btn btn-primary btn-sm m-1 model-actions" name="button" id="btnApproveInitialConfirmation" onclick="approveInitial('@Url.Action("ApproveTenderInitialAwarding", "Tender")','')">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+   </button>
+   <button type="button" class="btn btn-primary btn-sm m-1 model-actions" name="button" id="btnRejectInitialConfirmation" onclick="rejectAction('@Url.Action("RejectInitialAwardTenderOffer", "Tender")')">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm
+   </button>
+   <button type="button" class="btn btn-primary btn-sm m-1 model-actions" name="button" id="btnReopenInitialConfirmation" onclick="makeAjaxRequest('@Url.Action("ReopenTenderAwardingAsync", "Tender")','')">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+   </button>
+   <button type="button" class="btn btn-primary btn-sm m-1 model-actions" name="button" id="btnSendConfirmation" onclick="makeAjaxRequest('@Url.Action("SendAwardTenderToApproveAsync", "Tender")','')">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+   </button>
+   <button type="button" class="btn btn-primary btn-sm m-1 model-actions" name="button" id="btnApproveConfirmation">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+   </button>
+   <button type="button" class="btn btn-primary btn-sm m-1 model-actions" name="button" id="btnRejectConfirmation">
+      @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Confirm
+   </button>
+   <button type="button" class="btn btn-primary btn-sm m-1 model-actions" name="button" id="btnReopenConfirmation">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+   </button>
+   <button type="button" class="btn btn-primary btn-sm m-1 model-actions" name="button" id="btnSaveConfirmation" @@click="saveOfferAwardingValues">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+   </button>
+   <button type="button" class="btn  btn-primary btn-sm m-1 model-actions" name="button" id="btnResendVerificationCode"> @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ResendConfirmationCode</button>
+   <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Cancel
+   </button>
+}
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script>
+
+      function rejectAction(url) {
+         var rejectionReason = $("#txtRejectionReason").val();
+         $("#txtRejectionReasonValidation").hide();
+         if (rejectionReason.trim() == '') {
+            $("#txtRejectionReasonValidation").show();
+            return false;
+         }
+         makeAjaxRequest(url, rejectionReason);
+      }
+      function approveInitial(url) {
+         var verificationCodeValue = $("#txtverificationCode").val();
+         if (verificationCodeValue == '') {
+            $("#txtverificationCodeValidation").show();
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+         $.post(url,
+            {
+               tenderIdString: '@tenderIdString',
+               verificationCode: $("#txtverificationCode").val(),
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $('#myModal').modal('hide');
+               if ('@Model.IsOldTender' == 'True') {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ApproveAwarding)', alertMessageType.Success);
+               } else {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ApproveInitialAwarding)', alertMessageType.Success);
+
+               }
+               setTimeout(function () {
+                  window.location = '@stagingUrl';
+               }, 3000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               $('#myModal').modal('hide');
+               if (error.responseText != "Logout" && error.responseJSON) {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      }
+
+
+      function makeAjaxRequest(url, rejectionReason) {
+         $('#LoadingSite').fadeIn();
+         $.post(url,
+            {
+               tenderIdString: '@tenderIdString',
+               rejectionReason: rejectionReason,
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $('#myModal').modal('hide');
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@stagingUrl';
+               }, 3000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               $('#myModal').modal('hide');
+               if (error.responseText != "Logout" && error.responseJSON) {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      }
+      var _offerAwardingList = [];
+      var token = $('input[name=__RequestVerificationToken]').val();
+
+      var myVar;
+      function startTimer() {
+         clearTimeout(myVar);
+         var presentTime = document.getElementById('timer').innerHTML;
+         var timeArray = presentTime.split(/[:]+/);
+         var m = timeArray[0];
+         var s = checkSecond((timeArray[1] - 1));
+         if (s == 59) { m = m - 1 }
+         document.getElementById('timer').innerHTML = m + ":" + s;
+         myVar = setTimeout(startTimer, 1000);
+         checkTime(m, s, myVar);
+         if (m < 0 && s > 0) {
+            document.getElementById('timer').innerHTML = "0:00";
+            return false;
+         }
+      }
+      function checkSecond(sec) {
+         if (sec < 10 && sec >= 0) { sec = "0" + sec }; // add zero in front of numbers < 10
+         if (sec < 0) { sec = "59" };
+         return sec;
+      }
+      function checkTime(min, sec, myVar) {
+         if (min <= 0 && sec <= 0) {
+            $("#btnResendVerificationCode").prop("disabled", false);
+            clearTimeout(myVar)
+         };
+         return sec;
+      }
+      function sendToApprove() {
+         if (OffersCheck.ActualOffersAwarding.length == 0) {
+            AlertFun('@Html.Raw(@MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.EnterAwardingData)', alertMessageType.Danger);
+            return false;
+         }
+         //Todo:
+
+         $("#btnResendVerificationCode").hide();
+         $("#divApproveMessage").hide();
+         $("#divSendToApproveMessage").show();
+         $("#divRejectReason").hide();
+         $("#divReopenMessage").hide();
+         $("#btnApproveConfirmation").hide();
+         $("#btnSendConfirmation").hide();
+         $("#btnRejectConfirmation").hide();
+         $("#btnReopenConfirmation").hide();
+         $("#divReopenMessage").hide();
+      }
+      $("#btnResendVerificationCode").on("click", function () {
+         $("#btnResendVerificationCode").prop("disabled", true);
+         document.getElementById('timer').innerHTML = 05 + ":" + 00;
+         $.post('/Tender/CreateVerificationCode',
+            {
+               tenderIdString: "@tenderIdString", __RequestVerificationToken: token
+            }).fail(function (error) {
+               if (error.responseText != "Logout" && error.responseJSON) {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+         startTimer();
+      });
+      function resetFileUpload(type) {
+         $('.file_uploader_message').html('');
+         $('.qq-upload-list').html('');
+         $('.file_uploader').css('display', 'block');
+         $('#AwardingReportUploader').val('');
+      }
+      function saveFiles(tenderId) {
+
+         var AwardingReportUploader = $('#AwardingReportUploader').val();
+          if (OffersCheck.file.length > 0) {
+            OffersCheck.file.splice(0,1);
+         }
+
+         OffersCheck.file.push( { awardingReportFileNameId: AwardingReportUploader.split(':')[0], awardingReportFileName: AwardingReportUploader.split(':')[1] });
+
+         if (AwardingReportUploader) {
+            OffersCheck.fullFileNewFileId = AwardingReportUploader;
+            $("#AwardingFileName").text(AwardingReportUploader.split(':')[1]);
+            $("#UploadFile").modal('toggle');
+         }
+         else {
+            //error upload file
+            alert("Error");
+         }
+         $('#AwardingReportUploader').val('');
+      }
+      var _offerAwardingList = [];
+      var token = $('input[name=__RequestVerificationToken]').val();
+      var fullFileNewFileId = @Html.Raw(Json.Serialize(Model.AwardingReportFileNameId + ":" + Model.AwardingReportFileName));
+      $(document).ready(function () {
+         if ('@Model.CanInsertAwardingData' != 'True' || @Model.TenderStatusId != @((int)Enums.TenderStatus.OffersAwarding)) {
+            $(".check-secretery-actions").css('display', 'none');
+            $("#StoppingPeriod").prop('disabled', true);
+            $("#partialAwarding").prop('disabled', true);
+            $("#totalAwarding").prop('disabled', true);
+            $("#awardingDiscountPercentage").prop('disabled', true);
+            $("#awardingMonths").prop('disabled', true);
+            $("#finalGuaranteeDeliveryAddress").prop('disabled', true);
+            $("#requiredGuarantee").prop('disabled', true);
+            $("#notRequiredGuarantee").prop('disabled', true);
+            OffersCheck.activeAdd = false;
+         }
+
+         $("#totalAwarding").click(function () {
+            if ($(this).is(':checked')) {
+               OffersCheck.awardingType = true;
+            }
+         })
+         if ("@Model.HasGuarantee" == "True") {
+            OffersCheck.hasGuarantee = true;
+            $("#hasGuarantee").prop('checked', true);
+         }
+         else {
+            OffersCheck.hasGuarantee = false;
+            $("#hasGuarantee").prop('checked', false);
+         }
+          if (@Model.OffersCount <= 1) {
+            $("#totalAwarding").prop('checked', true);
+            $("#partialAwarding").prop('disabled', true);
+            $("#TenderAwardingType").val(true);
+         }
+         if ('@Model.HasGuarantee' == 'True') {
+            $("#requiredGuarantee").prop('checked', true);
+            $("#notRequiredGuarantee").prop('checked', false);
+         }
+         else {
+            $("#requiredGuarantee").prop('checked', false);
+            $("#notRequiredGuarantee").prop('checked', true);
+         }
+         $("#requiredGuarantee").click(function () {
+            if ($("#requiredGuarantee").is(':checked')) {
+               OffersCheck.hasGuarantee = true;
+            }
+         });
+         $("#notRequiredGuarantee").click(function () {
+            if ($("#notRequiredGuarantee").is(':checked')) {
+               OffersCheck.hasGuarantee = false;
+            }
+         });
+         $("#partialAwarding").click(function () {
+            if ($(this).is(':checked')) {
+               OffersCheck.awardingType = false;
+               $('#spanAwardingType').text('');
+            }
+         })
+      });
+      //Final Awarding approve
+      $("#btnApproveConfirmation").on("click", function () {
+         $("#divApproveMessage").show();
+         $("#txtverificationCodeValidation").hide()
+         var verificationCodeValue = $("#txtverificationCode").val();
+         if (verificationCodeValue == '') {
+            $("#txtverificationCodeValidation").show();
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ApproveTenderAwardingWithVerificationAsync", "Tender")',
+            {
+               tenderIdString: '@tenderIdString',
+               verificationCode: verificationCodeValue,
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $("#myModal").modal('hide');
+               $("#btnApprove").attr("disabled", true);
+               $("#btnReject").attr("disabled", true);
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ApproveAwarding)', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@Url.Action("TenderIndexAwardingStage", "Tender")';
+               }, 3000);
+
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               $("#myModal").modal('hide');
+               if (error.responseText != "Logout" && error.responseJSON) {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      $("#btnReopenConfirmation").on("click", function () {
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ReopenTenderAwardingAsync", "Tender")',
+            {
+               tenderIdString: '@tenderIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $('#btnReopen').attr('disabled', 'true');
+
+               $("#myModal").modal('hide');
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@Url.Action("TenderIndexAwardingStage", "Tender")';
+               }, 3000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               $('#myModal').modal('hide');
+               if (error.responseText != "Logout" && error.responseJSON) {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      $("#btnRejectConfirmation").on("click", function () {
+         var rejectionReason = $("#txtRejectionReason").val();
+         $("#txtRejectionReasonValidation").hide();
+         if (rejectionReason.trim() == "") {
+            $("#txtRejectionReasonValidation").show();
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("RejectAwardTenderOffersReportAsync", "Tender")',
+            {
+               tenderIdString: '@tenderIdString',
+               rejectionReason: rejectionReason,
+               __RequestVerificationToken: token
+            }).done(function () {
+               $("#approvalSection").addClass("d-none");
+               $('#LoadingSite').fadeOut();
+               $("#myModal").modal('hide');
+               $("#btnApprove").attr("disabled", true);
+               $("#btnReject").attr("disabled", true);
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.RejectAwarding)', alertMessageType.Success);
+               setTimeout(function () {
+                  window.location = '@Url.Action("TenderIndexAwardingStage", "Tender")';
+               }, 3000);
+            }).fail(function (error) {
+               $("#myModal").modal('hide');
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout" && error.responseJSON) {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      var crsuppliers = '';
+      var OffersCheck = new Vue({
+         el: '#offersAwardingGrid',
+         data: {
+            Offers: [],
+            PostQualificationOffer: [],
+            ActualOffersAwarding: [],
+            offerValues: [],
+            file: [],
+            totalCount: 0,
+            oldurl :'/Offer/TenderAwardingPagingAsync?tenderIdString=' + '@tenderIdString' + '&Sort= @SortCriteria',
+            currentPage: 1,
+            fullFileNewFileId: fullFileNewFileId,
+            pageSize: 10,
+            awardingValue: 0,
+            postQualificationTenderIdString: '@Html.Raw(Model.postQualificationTenderIdString)',
+            sort: '@canFilterOnNPA' == 'True' ? 'OfferWeightAfterCalcNPA': 'FinalPriceAfterDiscount',
+            resource_url: '/Offer/TenderAwardingPagingAsync?tenderIdString=' + '@tenderIdString' + '&Sort= @SortCriteria',
+            actualAwardingResource_url: '/Offer/ActualTenderAwardingPagingAsync?tenderIdString=' + '@tenderIdString',
+            activeAdd: true,
+            disableAdd: false,
+            awardingType: ('@Model.TenderAwardingType' == 'True' || '@isReverseBidding' == 'True') ? true : false,
+            hasGuarantee: '@Model.HasGuarantee' == 'True' ? true : false,
+            tenderStatus: @Model.TenderStatusId != @((int)Enums.TenderStatus.OffersAwarding) ? true : false,
+            queryString: '',
+            isPassed: false,
+            isReverseTender: '@isReverseBidding' == 'True' ? true : false,
+            isLowestOffer: false,
+            showCheckBox: '@Model.TenderAwardingType' == 'False' ? true : false,
+            showPostQualification: false,
+            isAllowedToEditAwardingValue: false,
+            hasPassPostQualification: false,
+            hasPendingPostQualification: false,
+            encryptedTenderId: '@Model.TenderIdString',
+            showMsgWithoutPostQualification: false,
+            showMsgWithPendingPostQualification: false,
+            showMsgSendToApprove: false,
+            showMsgCreatePostQualification: false,
+            token: $('input[name=__RequestVerificationToken]').val(),
+            selectedSupplier: '',
+            selectedOfferId: '',
+            isTenderHasAwardingValue: '@Model.IsTenderHasAwardingValue' == 'True' ? true : false,
+            SuppliersToBeAwarded: [],
+            isSupplierHasExcludedReason: false
+         },
+         created: function () {
+            if (this.awardingType == false || this.awardingType == "false") {
+               this.showCheckBox = true;
+            } else if (this.awardingType == true || this.awardingType == "true") {
+               this.showCheckBox = false;
+            }
+         },
+         watch: {
+            awardingType: function () {
+               if (this.awardingType == false || this.awardingType == "false") {
+                  this.showCheckBox = true;
+                  if (OffersCheck.ActualOffersAwarding.length > 0)
+                     OffersCheck.ActualOffersAwarding[0].awardingValue = '';
+
+               } else if (this.awardingType == true || this.awardingType == "true") {
+                  this.showCheckBox = false;
+                  this.PostQualificationOffer.length = 0;
+                  this.showPostQualification = false;
+                  if (OffersCheck.ActualOffersAwarding.length > 0)
+                     OffersCheck.ActualOffersAwarding[0].awardingValue = OffersCheck.ActualOffersAwarding[0].finalPrice;
+               }
+               return this.showCheckBox;
+            },
+            PostQualificationOffer: function () {
+               if (this.PostQualificationOffer.length > 0) {
+                  this.showPostQualification = true;
+               }
+               else {
+                  this.showPostQualification = false;
+               }
+            },
+            Offers: function () {
+               if ('@isReverseBidding' == 'True') {
+                  this.awardingType = true;
+               }
+            }
+         },
+         methods: {
+            checkIfLowestPrice: function (offerParam) {
+               var fillteredOffers = this.Offers.filter(function (item) {
+                  return item.isPasssPostQaulification != false && item.finalPrice !=0;
+               });
+               if (fillteredOffers != null && fillteredOffers.length > 0) {
+                  var offer = fillteredOffers.reduce(function (prev, current) {
+                     return (prev.finalPrice < current.finalPrice) ? prev : current
+                  })
+                  return offer.offerId == offerParam.offerId;
+               }
+               return false;
+            },
+            getSupplierInfo: function (CR) {
+               getSupplierInfo(CR);
+            },
+            updateResource: function (data) {
+               this.Offers = data;
+
+               if (this.Offers.length == 1 && this.ActualOffersAwarding.length <= 1)
+                  this.awardingType = true;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            btnSendToInitialApprove: function () {
+               debugger;
+               if ('@Model.IsOldTender' == 'True')
+               {
+                  OffersCheck.showMsgWithoutPostQualification = false;
+                  OffersCheck.showMsgWithPendingPostQualification = false;
+                  OffersCheck.showMsgCreatePostQualification = false;
+                  OffersCheck.showMsgSendToApprove = true;
+                  $("#initialModal").modal('show');
+                  return;
+                }
+               var sendObj = {
+                  EncryptedTenderId: OffersCheck.encryptedTenderId,
+                  CRs: OffersCheck.SuppliersToBeAwarded,
+                  __RequestVerificationToken: OffersCheck.token
+               }
+               postRequest('/Tender/CheckSendTenderToApproveAwarding', sendObj, true)
+                  .then(function (response) {
+                  if (response == @((int)Enums.AwardingReturnType.SupplierFailedInPostQualification)) {
+                     AlertFun('لايمكن الإرسال لأنه يوجد مورد لم يجتز التأهيل اللاحق', alertMessageType.Danger);
+                     return;
+                  }
+                  if (response == @((int)Enums.AwardingReturnType.HasExpiredPreQualification)) {
+                     AlertFun('لا يمكن الارسال للاعتماد لأن المنافسة مربوطه بتأهيل مسبق غير سارى', alertMessageType.Danger);
+                     return;
+                  }
+                  if (response == @((int)Enums.AwardingReturnType.HasApprovedPostQualification)) {
+                     AlertFun('لايمكن الإرسال لأنه يوجد تأهيل لاحق معتمد', alertMessageType.Danger);
+                     return;
+                  }
+                  $("#initialModal").modal('show');
+                  if ( response == @((int)Enums.AwardingReturnType.SupplierHasNoPostQualification) ) {
+                     OffersCheck.showMsgWithoutPostQualification = true;
+                     OffersCheck.showMsgWithPendingPostQualification = false;
+                     OffersCheck.showMsgSendToApprove = false;
+                     OffersCheck.showMsgCreatePostQualification = false;
+                  } else if (response == @((int)Enums.AwardingReturnType.HasPendingPostQualification) ) {
+                     OffersCheck.showMsgWithPendingPostQualification = true;
+                     OffersCheck.showMsgWithoutPostQualification = false;
+                     OffersCheck.showMsgSendToApprove = false;
+                     OffersCheck.showMsgCreatePostQualification = false;
+                  } else {
+                      OffersCheck.showMsgWithoutPostQualification = false;
+                      OffersCheck.showMsgWithPendingPostQualification = false;
+                      OffersCheck.showMsgCreatePostQualification = false;
+                      OffersCheck.showMsgSendToApprove = true;
+                  }
+               })
+                  .catch(function (error) {
+                  $('#LoadingSite').fadeOut();
+               });
+            },
+            btnSendInitialAwardConfirmation: function () {
+               $('#LoadingSite').fadeIn();
+               postRequest('@Url.Action("SendAwardTenderToInitialApprove", "Tender")',
+                  {
+                     tenderIdString: OffersCheck.encryptedTenderId,
+                      __RequestVerificationToken: OffersCheck.token
+                  }, true).then(function () {
+                     $('#initialModal').modal('hide');
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SendInitialAwardingToApprove)', alertMessageType.Success);
+
+                     setTimeout(function () {
+                        window.location = '@Url.Action("TenderIndexAwardingStage", "Tender")';
+                     }, 3000);
+                  }).catch(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     $('#initialModal').modal('hide');
+                     if (error.responseText != "Logout") {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                  });
+            },
+            initialApprove: function () {
+               if ('@Model.IsPreqaulificationExpired' == 'True') {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.CannotApproveInitial)', alertMessageType.Danger);
+               }
+               else {
+                  $('#myModal').modal('show');
+                  $(".model-actions").hide();
+                  document.getElementById('timer').innerHTML = 05 + ":" + 00;
+                  startTimer();
+                  $("#btnResendVerificationCode").prop("disabled", true);
+                  $.post('/Tender/CreateVerificationCode', { tenderIdString: "@tenderIdString", __RequestVerificationToken: token });
+                  $("#btnResendVerificationCode").show();
+                  $("#divApproveMessage").show();
+                  $("#btnApproveInitialConfirmation").show();
+               }
+            },
+             initialApproveLowBudget: function () {
+               if ('@Model.IsPreqaulificationExpired' == 'True') {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.CannotApproveInitial)', alertMessageType.Danger);
+               }
+               else {
+                  $('#LoadingSite').fadeIn();
+                  $.post('/Tender/IsTenderHasPendingRequestsOrNoExeclusionReasons?tenderIdString=' + '@tenderIdString')
+                     .done(function () {
+                        $('#myModal').modal('show');
+                        $(".model-actions").hide();
+                        document.getElementById('timer').innerHTML = 05 + ":" + 00;
+                        startTimer();
+                        $("#btnResendVerificationCode").prop("disabled", true);
+                        $.post('/Tender/CreateVerificationCode', { tenderIdString: "@tenderIdString", __RequestVerificationToken: token });
+                        $("#btnResendVerificationCode").show();
+                        $("#divApproveMessage").show();
+                        $("#btnApproveInitialConfirmation").show();
+
+                        $('#LoadingSite').fadeOut();
+                     })
+                     .fail(function (error) {
+                        if (error.responseText != "Logout" && error.responseJSON) {
+                           AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                        }
+                        else if (error.responseText == "Logout") {
+                           window.location = '/account/logout'; return;
+                        }
+                         $('#LoadingSite').fadeOut();
+                     });
+               }
+            },
+            //reject tender Awarding in case of old types and vro and reject initial awarding in case of new types
+            btnInitialReject: function () {
+               $(".model-actions").hide();
+               $("#divRejectReason").show();
+               $("#btnRejectInitialConfirmation").show();
+            },
+            btnInitialReopen: function () {
+               $(".model-actions").hide();
+               $("#divReopenMessage").show();
+               $("#btnReopenInitialConfirmation").show();
+            },
+            btnSendToApprove: function () {
+               $(".model-actions").hide();
+               $("#divSendToApproveMessage").show();
+               $("#btnSendConfirmation").show();
+            },
+            btnApprove: function () {
+               $(".model-actions").hide();
+               document.getElementById('timer').innerHTML = 05 + ":" + 00;
+               startTimer();
+               $("#btnResendVerificationCode").prop("disabled", true);
+               $.post('/Tender/CreateVerificationCode', { tenderIdString: "@tenderIdString", __RequestVerificationToken: token });
+               $("#btnResendVerificationCode").show();
+               $("#divApproveMessage").show();
+               $("#btnApproveConfirmation").show();
+            },
+
+            //Reject tender from صاحب الصلاحيه in case of new types
+            btnReject: function () {
+               $(".model-actions").hide();
+               $("#divRejectReason").show();
+               $("#btnRejectConfirmation").show();
+            },
+            btnReopen: function () {
+               $(".model-actions").hide();
+               $("#divReopenMessage").show();
+               $("#btnReopenConfirmation").show();
+            },
+            DeleteAttach: function () {
+               this.fullFileNewFileId = '';
+               this.file.splice(0, 1);
+               $("#AwardingFileName").text('');
+            },
+            RedirectURL: function () {
+
+               window.open("/Upload/getfile/" + this.file[0].awardingReportFileNameId + ":" + this.file[0].awardingReportFileName, '_blank');
+            },
+            updateActualAwardingResource: function (result) {
+               this.ActualOffersAwarding = result;
+               _offerAwardingList = result;
+               result.forEach(function (item) {
+                  this.awardingValue = item.awardingValue;
+                  OffersCheck.SuppliersToBeAwarded.push(item.commericalRegisterNo);
+               });
+
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            SendToApprove: function () {
+               $("#btnResendVerificationCode").hide();
+               $("#divApproveMessage").hide();
+               $("#divSendToApproveMessage").show();
+               $("#divRejectReason").hide();
+               $("#divReopenMessage").hide();
+               $("#btnApproveConfirmation").hide();
+               $("#btnSendConfirmation").show();
+               $("#btnRejectConfirmation").hide();
+               $("#btnReopenConfirmation").hide();
+               $("#divReopenMessage").hide();
+            },
+            CheckOneFileOffer: function (id) {
+               return '/Offer/OfferChecking/' + '@tenderIdString' + '/' + id;
+            },
+            CheckFinancialOffer: function (id) {
+               return '/Offer/OfferChecking/' + '@tenderIdString' + '/' + id;
+            },
+            addToActualAwardedGrid: function (event, offer) {
+               if (OffersCheck.ActualOffersAwarding.length > 0 && (OffersCheck.awardingType == true || OffersCheck.awardingType == "true")) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.MustSelectMoreThanOneOfferInPartialAwarding)', alertMessageType.Danger);
+                  return;
+               }
+               //عدم وجود تاهيل مسبق او وجود تاهيل مسبق لكنه غير سارى وعدم وجود تاهيل لاحق
+               if (('@Model.IsPasssPreqaulification' != 'True' || '@Model.IsPreqaulificationExpired' == 'True') && offer.isPasssPostQaulification != true &&  @Model.TenderTypeId == @((int)Enums.TenderType.ReverseBidding)) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderShouldHaveActivePreQualifcationOrPostQualification)', alertMessageType.Danger);
+                  return;
+               }
+               if ( @Model.TenderTypeId == @((int)Enums.TenderType.ReverseBidding) && (OffersCheck.awardingType == false || OffersCheck.awardingType == "false")) {
+                  AlertFun('يجب أن تكون الترسيه كاملة فى حالة المزايدة العكسية', alertMessageType.Danger);
+                  return;
+               }
+
+               $('#LoadingSite').fadeIn();
+               $.get('/Tender/IsSupplierPassedForTenderAwarding?tenderIdString=' + '@tenderIdString' + '&&cr=' + offer.commericalRegisterNo)
+                  .done(function (data) {
+                     debugger;
+                     if ((((@Model.TenderTypeId == @((int)Enums.TenderType.NewDirectPurchase) && '@isOptionalReasonForDirectpurchase' == 'true')|| @Model.TenderTypeId == @((int)Enums.TenderType.Competition))
+                           && (data == @((int)Enums.AwardingReturnType.HasExpiredPreQualification) || data == @((int)Enums.AwardingReturnType.NoPreQualificationNoPostQualificatoin)))
+                        || data == @((int)Enums.AwardingReturnType.HasPendingPostQualification) || data == @((int)Enums.AwardingReturnType.SupplierPassedInPostQualification) || data == @((int)Enums.AwardingReturnType.HasValidPreQualification))
+                     {
+                        OffersCheck.isPassed = true;
+                        OffersCheck.awardingType = $('input[type=radio][name=TenderAwardingType]').prop('checked');
+                        if (OffersCheck.awardingType == true || OffersCheck.isReverseTender) {
+                           if (OffersCheck.ActualOffersAwarding.length > 0) {
+                              $('#spanAwardingType').text('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.PartialAwardingMessage)');
+                           }
+                           else {
+                              $('#spanAwardingType').text('');
+                              offer.isChecked = true;
+                              OffersCheck.ActualOffersAwarding.push(offer);
+                              OffersCheck.SuppliersToBeAwarded.push(offer.commericalRegisterNo);//
+                              OffersCheck.ActualOffersAwarding[0].awardingValue = offer.finalPrice;
+                              var i = OffersCheck.Offers.indexOf(offer);
+                              OffersCheck.Offers.splice(i, 1);
+
+                             crsuppliers = crsuppliers + offer.commericalRegisterNo + ",";
+
+                           }
+                        }
+                        else {
+                           for (var i = 0; i < OffersCheck.ActualOffersAwarding.length; i++) {
+                              OffersCheck.ActualOffersAwarding[i].awardingValue = "";
+                           }
+                           offer.isChecked = true;
+                           OffersCheck.ActualOffersAwarding.push(offer);
+                           OffersCheck.SuppliersToBeAwarded.push(offer.commericalRegisterNo);//
+
+                           var i = OffersCheck.Offers.indexOf(offer);
+                           OffersCheck.Offers.splice(i, 1);
+                             crsuppliers = crsuppliers + offer.commericalRegisterNo + ",";
+                        }
+                        if (OffersCheck.ActualOffersAwarding.length > 1 && OffersCheck.awardingType == false) {
+                           $("#TotalAwarding").prop('disabled', true);
+                        }
+                        else {
+                           $("#TotalAwarding").prop('disabled', false);
+                        }
+                        $("#btnSendToInitialApprove").addClass("d-none");
+                        $("#btnInitialApproveLowValue").addClass("d-none");
+
+                     }
+                     else if (data == @((int)Enums.AwardingReturnType.NoPreQualificationNoPostQualificatoin)) {
+                        OffersCheck.isPassed = false;
+                        AlertFun('المنافسة ليس لها تأهيل سابق ولا تأهيل لاحق', alertMessageType.Danger);
+                     }
+                     else if (data == @((int)Enums.AwardingReturnType.HasApprovedPostQualification)) {
+                        OffersCheck.isPassed = false;
+                        AlertFun('يوجد تأهيل لاحق معتمد ويجب تأهيل المورد المراد الترسية عليه', alertMessageType.Danger);
+                     }
+                     else if (data == @((int)Enums.AwardingReturnType.HasExpiredPreQualification)) {
+                        OffersCheck.isPassed = false;
+                        AlertFun('المنافسة مربوطه بتأهيل مسبق غير سارى', alertMessageType.Danger);
+                     }
+                     else if (data == @((int)Enums.AwardingReturnType.SupplierFailedInPostQualification)) {
+                        OffersCheck.isPassed = false;
+                        AlertFun('هذا المورد لم ينجح فى التأهيل اللاحق ولا يمكن الترسية عليه', alertMessageType.Danger); // review with ismail
+                     }
+                     $('#LoadingSite').fadeOut();
+
+                  })
+                  .fail(function (error) {
+                     if (error.responseText != "Logout" && error.responseJSON) {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                     // event.target.parentElement.removeAttribute("disabled");
+                     $('#LoadingSite').fadeOut();
+
+                  });
+            },
+            ApplyOffer: function (id) {
+               return '/Offer/OpenOffers/' + id + '/' + @((int)Enums.TenderStatus.OffersAwarding);
+            },
+            removeActualAwardedOffer: function (awardedOffer) {
+               debugger;
+               if (OffersCheck.isTenderHasAwardingValue) {
+                  $.get('/Tender/RemoveOfferAwardingValue?offerId=' + awardedOffer.offerId)
+                     .done(function (data) {
+                        if (data == true) {
+                           OffersCheck.awardingType = $('input[type=radio][name=TenderAwardingType]').prop('checked');
+                           $('#spanAwardingType').text('');
+                           OffersCheck.Offers.push(awardedOffer);
+                           awardedOffer.isChecked = false;
+                           var crIndex = OffersCheck.SuppliersToBeAwarded.indexOf(awardedOffer.commericalRegisterNo);
+                           OffersCheck.SuppliersToBeAwarded.splice(crIndex, 1);//
+                           var i = OffersCheck.ActualOffersAwarding.indexOf(awardedOffer);
+
+                           OffersCheck.ActualOffersAwarding.splice(i, 1);
+                           crsuppliers = crsuppliers.replace(awardedOffer.commericalRegisterNo,"");
+                           $('#spanAwardingType').text('');
+                           if (OffersCheck.ActualOffersAwarding.length > 1) {
+                              $("#TotalAwarding").prop('disabled', true);
+                           }
+                           else {
+                              $("#TotalAwarding").prop('disabled', false);
+                           }
+                           $("#btnSendToInitialApprove").addClass("d-none");
+                           $("#btnInitialApproveLowValue").addClass("d-none");
+
+                            OffersCheck.resource_url = OffersCheck.oldurl +'&crsuppliers='+crsuppliers +"&d=" + new Date();
+                         }
+
+                     }).fail(function (error) {
+                        if (error.responseText != "Logout" && error.responseJSON) {
+                           AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                        }
+                        else if (error.responseText == "Logout") {
+                           window.location = '/account/logout'; return;
+                        }
+                        $('#LoadingSite').fadeOut();
+                     });
+               } else {
+
+                  OffersCheck.awardingType = $('input[type=radio][name=TenderAwardingType]').prop('checked');
+                  $('#spanAwardingType').text('');
+                  OffersCheck.Offers.push(awardedOffer);
+                  awardedOffer.isChecked = false;
+                  var crIndex = OffersCheck.SuppliersToBeAwarded.indexOf(awardedOffer.commericalRegisterNo);
+                  OffersCheck.SuppliersToBeAwarded.splice(crIndex, 1);//
+                  var i = OffersCheck.ActualOffersAwarding.indexOf(awardedOffer);
+                  OffersCheck.ActualOffersAwarding.splice(i, 1);
+                  $('#spanAwardingType').text('');
+                  crsuppliers = crsuppliers.replace(awardedOffer.commericalRegisterNo,"");
+                  if (OffersCheck.ActualOffersAwarding.length > 1) {
+                     $("#TotalAwarding").prop('disabled', true);
+                  }
+                  else {
+                     $("#TotalAwarding").prop('disabled', false);
+                  }
+                  $("#btnSendToInitialApprove").addClass("d-none");
+                  $("#btnInitialApproveLowValue").addClass("d-none");
+               }
+            },
+            saveOfferAwardingValues: function () {
+               debugger;
+               var tenderType = '@Html.Raw(Model.TenderTypeId)';
+
+               if ('@Model.IsTenderHasStopPeriod' == 'True') {
+                  if (!($("#StoppingPeriod").val() >= 5 && $("#StoppingPeriod").val() <= 10)) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AwardingStoppingMustBeEqualOrGreaterThen5)', alertMessageType.Danger);
+                     return;
+                  }
+               }
+
+                  debugger;
+                  if ($('input[type=radio][name=HasGuarantee]:checked').val() == 'true') {
+
+                           if ('@isShowAwardingDiscount'=='True')
+                              {
+                                    if ($("#awardingDiscountPercentage").val() == '') {
+                                       AlertFun('الرجاء إدخال قيمة الضمان النهائي', alertMessageType.Danger);
+                                       return;
+                                    }
+                                 }
+
+                     if ($("#awardingMonths").val() == '') {
+                        AlertFun('الرجاء إدخال مدة سريان الضمان النهائي', alertMessageType.Danger);
+                        return;
+                     }
+                     if ($("#finalGuaranteeDeliveryAddress").val().trim() == '') {
+                        AlertFun('الرجاء إدخال عنوان تسليم الضمان النهائي', alertMessageType.Danger);
+                        return;
+                     }
+                  }
+               
+               if ('@Model.IsOldTender' != 'True') {
+                  debugger;
+                  var isShowAlertMessage = false;
+                  OffersCheck.Offers.forEach(function (item) {
+                     OffersCheck.isSupplierHasExcludedReason = item.isExclusionReasonEmpty ? false : true;
+                     if (item.isPasssPostQaulification != false && !item.hasActivePostQaulification) {
+                        if (item.isExclusionReasonEmpty && !item.canAddExclustionReasonIfExtendOfferValidityExist) {
+                           isShowAlertMessage = true;
+                        }
+                     }
+                  });
+                  if (isShowAlertMessage) {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ExcludedMessageNotInserted)', alertMessageType.Danger);
+                     return;
+                  }
+               }
+
+               if (this.fullFileNewFileId.length <= 1 && !(tenderType == '@((int)Enums.TenderType.CurrentTender)' || tenderType == '@((int)Enums.TenderType.CurrentDirectPurchase)' || tenderType == '@((int)Enums.TenderType.NationalTransformationProjects)')) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.MustIncludeAwardingReport)', alertMessageType.Danger);
+                  return;
+               }
+
+               if (OffersCheck.ActualOffersAwarding.length == 1 && (OffersCheck.awardingType == false || OffersCheck.awardingType == "false")) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.MustSelectMoreThanOneOfferInPartialAwarding)', alertMessageType.Danger);
+                  return;
+               }
+               var tenderId = '@Model.TenderId';
+               _offerAwardingList = this.ActualOffersAwarding;
+               for (var i = 0; i < _offerAwardingList.length; i++) {
+                  _offerAwardingList[i].awardingValue = $('input[id=' + _offerAwardingList[i].offerId + ']').val();
+                  _offerAwardingList[i].justificationOfRecommendation = $('#Recom_' + _offerAwardingList[i].offerId).val();
+                  _offerAwardingList[i].awardingValue = (_offerAwardingList[i].awardingValue < 0 || _offerAwardingList[i].awardingValue == "") ? "0" : _offerAwardingList[i].awardingValue;
+                  if ((_offerAwardingList[i].awardingValue > _offerAwardingList[i].finalPrice) && '@(Model.TenderTypeId != (int)Enums.TenderType.Competition)' == 'True') {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ApprovedPriceMoreThanOffer)', alertMessageType.Danger);
+                     return;
+                  }
+                  this.offerValues.push(_offerAwardingList[i].awardingValue);
+               }
+               if (this.offerValues.indexOf("0") == -1) {
+                  var TenderAwardingType = tenderType == '@((int)Enums.TenderType.ReverseBidding)' ? true : $('input[type=radio][name=TenderAwardingType]:checked').val();
+                  var offerAwardingObj = {};
+                  if ('@Model.IsOldTender' == 'True') {
+                     offerAwardingObj = {
+                        tenderId: tenderId,
+                        tenderAwardingType: TenderAwardingType,
+                        offerAwardingList: _offerAwardingList,
+                        awardingReportFileNameId: this.fullFileNewFileId.split(':')[0],
+                        awardingReportFileName: this.fullFileNewFileId.split(':')[1],
+                        awardingStoppingPeriod: $("#StoppingPeriod").val(),
+                        HasGuarantee: false,
+                        AwardingDiscountPercentage: null,
+                        FinalGuaranteeDeliveryAddress: null,
+                        AwardingMonths: null,
+                     };
+                  }
+                  else {
+                     offerAwardingObj = {
+                        tenderId: tenderId,
+                        tenderAwardingType: TenderAwardingType,
+                        offerAwardingList: _offerAwardingList,
+                        awardingReportFileNameId: this.fullFileNewFileId.split(':')[0],
+                        awardingReportFileName: this.fullFileNewFileId.split(':')[1],
+                        awardingStoppingPeriod: $("#StoppingPeriod").val(),
+                        HasGuarantee: $('input[type=radio][name=HasGuarantee]:checked').val(),
+                        AwardingDiscountPercentage: $('input[type=radio][name=HasGuarantee]:checked').val() == 'true' ? $("#awardingDiscountPercentage").val() : null,
+                        FinalGuaranteeDeliveryAddress: $('input[type=radio][name=HasGuarantee]:checked').val() == 'true' ? $("#finalGuaranteeDeliveryAddress").val() : null,
+                        AwardingMonths: $('input[type=radio][name=HasGuarantee]:checked').val() == 'true' ? $("#awardingMonths").val() : null
+                     };
+                  }
+
+                  $('#LoadingSite').fadeIn();
+                  $.post('/Offer/SaveOfferAwardingValuesAsync', { offerAwardingObj: offerAwardingObj, __RequestVerificationToken: token }).done(function () {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SaveAwarding)', alertMessageType.Success);
+                     OffersCheck.isTenderHasAwardingValue = true;
+                     if ('@Model.CanApproveInitially' === 'True') {
+                        $("#btnInitialApproveLowValue").removeClass("d-none");
+                     }
+                     else {
+                        $("#btnSendToInitialApprove").removeClass("d-none");
+                     }
+                     $('#LoadingSite').fadeOut();
+                  }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     if (error.responseText != "Logout" && error.responseJSON) {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                  });
+               }
+               else {
+                  this.offerValues = [];
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.InvalidOfferValue)', alertMessageType.Danger);
+               }
+            },
+            toggleOfferInOffersArray: function (cr) {
+
+               if (this.PostQualificationOffer.indexOf(cr) > -1) {
+                  this.PostQualificationOffer.splice(this.PostQualificationOffer.indexOf(cr), 1);
+               }
+               else {
+                  this.PostQualificationOffer.push(cr);
+               }
+            },
+            viewFinancialOffer: function (id) {
+               return '/Offer/OfferAwarding?offerId=' + id;
+            },
+            showPostQualificationModal: function (commericalRegisterNo) {
+               this.selectedSupplier = commericalRegisterNo;
+               this.showMsgWithoutPostQualification = false;
+               this.showMsgWithPendingPostQualification = false;
+               this.showMsgSendToApprove = false;
+               this.showMsgCreatePostQualification = true;
+            },
+            createPostQualificationSingleOffer: function () {
+               debugger;
+               var queryString = "";
+               if (OffersCheck.awardingType == true || OffersCheck.awardingType == "true") {
+                  queryString += "CommercialNumbers=" + this.selectedSupplier + "&&";
+                  window.location = '/qualification/CreatePostQualification?' + queryString + '&PostQualificationTenderIdString=' + '@tenderIdString';
+
+               } else if (!this.PostQualificationOffer || !this.PostQualificationOffer.length || this.PostQualificationOffer.length == 0) {
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PleaseSelectOffers)', alertMessageType.Danger);
+                  return;
+               }
+               for (var i = 0; i < this.PostQualificationOffer.length; i++) {
+                  queryString += "CommercialNumbers=" + this.PostQualificationOffer[i] + "&&";
+               }
+               window.location = '/qualification/CreatePostQualification?' + queryString +  '&PostQualificationTenderIdString=' + '@tenderIdString';
+            },
+            showExcludedReasonModal: function (commericalRegisterNo, selectedOfferId) {
+               this.selectedSupplier = commericalRegisterNo;
+               OffersCheck.selectedOfferId = selectedOfferId;
+            },
+            AddExclusionReason: function () {
+               var exclusionReasonObj = {};
+                   var exclusionReason = $.trim($('#txtExclusionReason').val());
+                  $("#txtExclusionReasonValidation").hide();
+               if (exclusionReason == '') {
+                  $("#txtExclusionReasonValidation").show();
+                  return false;
+               }
+                  exclusionReasonObj = { offerIdString:OffersCheck.selectedOfferId,commericalRegisterNo: this.selectedSupplier,exclusionReason: exclusionReason};
+                  $('#LoadingSite').fadeIn();
+               $.post('/Offer/AddExclusionReasonAsync', { exclusionReasonAwardingObj: exclusionReasonObj, __RequestVerificationToken: token }).done(function (data) {
+
+                  debugger;
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.SaveExclusionAwardingReason)', alertMessageType.Success);
+                     $("#excludedReasonModal").modal('hide');
+                     $('#LoadingSite').fadeOut();
+                     OffersCheck.resource_url = OffersCheck.oldurl +'&crsuppliers='+crsuppliers +"&d=" + new Date();
+
+                  }).fail(function (error) {
+                     $("#excludedReasonModal").modal('hide');
+                     $('#LoadingSite').fadeOut();
+                     if (error.responseText != "Logout" && error.responseJSON) {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                  });
+            },
+              showRemoveExcludedReasonModal: function (commericalRegisterNo, selectedOfferId) {
+               this.selectedSupplier = commericalRegisterNo;
+               OffersCheck.selectedOfferId = selectedOfferId;
+            },
+           removeExclusionReason: function () {
+               var exclusionReasonObj = {};
+                  exclusionReasonObj = { offerIdString:OffersCheck.selectedOfferId,commericalRegisterNo: this.selectedSupplier};
+                  $('#LoadingSite').fadeIn();
+                  $.post('/Offer/RemoveExclusionReasonAsync', { exclusionReasonAwardingObj: exclusionReasonObj, __RequestVerificationToken: token }).done(function () {
+                     AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.RemoveExclusionAwardingReason)', alertMessageType.Success);
+                     $("#removeExcludedReasonModal").modal('hide');
+                     $('#LoadingSite').fadeOut();
+
+                     OffersCheck.resource_url = OffersCheck.oldurl +'&crsuppliers='+crsuppliers +"&d=" + new Date();
+                  }).fail(function (error) {
+                     $('#LoadingSite').fadeOut();
+                     if (error.responseText != "Logout" && error.responseJSON) {
+                        AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                     }
+                     else if (error.responseText == "Logout") {
+                        window.location = '/account/logout'; return;
+                     }
+                  });
+            },
+            OfferDetails: function (id) {
+               return '/Offer/OpenOffersDetailsForAwarding/' + id +'/'+ @((int)Enums.TenderStatus.OffersAwarding);
+            },
+            OfferChecking: function (id) {
+               return '/Offer/OfferCheckingDetailsForAwarding/' + '@tenderIdString' + '/' + id;
+            }
+         },
+         computed: {
+            isTotalAwarding: function () {
+               if (this.ActualOffersAwarding.length > 1 || this.isReverseTender)
+                  return true;
+               return false;
+            }
+         },
+         error: function (error) {
+            $('#LoadingSite').fadeOut();
+            if (error.responseText != "Logout" && error.responseJSON) {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+         }
+      });
+      function UpdateAwarding(e) {
+
+         indx = $(e).parent().parent().index()
+         OffersCheck.ActualOffersAwarding[indx].awardingValue = $(e).val();
+         if ((OffersCheck.ActualOffersAwarding[indx].awardingValue > OffersCheck.ActualOffersAwarding[indx].finalPrice) && '@(Model.TenderTypeId != (int)Enums.TenderType.Competition)' == 'True') {
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ApprovedPriceMoreThanOffer)', alertMessageType.Danger);
+            return false;
+         }
+      }
+      function UpdateRecommendation(e) {
+         indx = $(e).parent().parent().index()
+         OffersCheck.ActualOffersAwarding[indx].justificationOfRecommendation = $(e).val();
+      }
+
+      if ('@Model.AwardingReportFileNameId' != "")
+         OffersCheck.file.push({ awardingReportFileNameId: '@Model.AwardingReportFileNameId', awardingReportFileName:@Html.Raw(Json.Serialize(@Model.AwardingReportFileName))});
+
+   </script>
+}

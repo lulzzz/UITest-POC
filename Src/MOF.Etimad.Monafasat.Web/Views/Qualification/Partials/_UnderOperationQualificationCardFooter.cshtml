@@ -1,0 +1,170 @@
+<div class="col-md-12 text-right">
+   <button type="button" @@click="detailsUrl(tender.tenderIdString, tender.tenderStatusIdString)" class="btn btn-sm btn-primary">
+      @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details
+   </button>
+   @if (User.IsInRole(RoleNames.DataEntry))
+   {
+      <template v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PreQualification))">
+         <button type="button" @@click="ApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Established) && tender.tenderTypeId == @((int)Enums.TenderType.PreQualification)">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+         </button>
+         <button type="button" @@click="ApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Rejected) && tender.tenderTypeId == @((int)Enums.TenderType.PreQualification)">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+         </button>
+      </template>
+   }
+   @if (User.IsInRole(RoleNames.Auditer))
+   {
+      <template v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PreQualification))">
+         <button type="button" @@click="ApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Pending) && tender.tenderTypeId == @((int)Enums.TenderType.PreQualification)      ">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve</button>
+      </template>
+   }
+
+   @if (User.IsInRole(RoleNames.PreQualificationCommitteeSecretary))
+   {
+      @*<button type="button" @@click="checkTenderOffers(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentChecking)) &&tender.tenderTypeId == @((int)Enums.TenderType.PreQualification)&& tender.offersCheckingDate <= tender.currentDate && tender.userCommitteeType == @((int)Enums.UserRole.NewMonafasat_OffersCheckSecretary) )" class="btn btn-sm btn-primary">
+             @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CheckTechnicalEvaluation
+         </button>
+          <button type="button" @@click="checkTenderOffers(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckRejected)&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_PreQualificationCommitteeSecretary)) &&tender.tenderTypeId == @((int)Enums.TenderType.PreQualification)" class="btn btn-sm btn-primary">
+             @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ReopenCheck
+         </button>*@
+      <button type="button" @@click="detailsUrl(tender.tenderIdString, tender.tenderStatusIdString)"v-if="(tender.tenderStatusId ==  @((int)Enums.TenderStatus.QualificationCommitteeApproval)&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_PreQualificationCommitteeSecretary))" class="btn btn-sm btn-primary">
+         قبول او رفض التأهيل
+      </button>
+      <template v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PreQualification))">
+         <button type="button" @@click="editUrl(tender.tenderIdString)" v-if="(tender.tenderStatusId ==  @((int)Enums.TenderStatus.QualificationUnderEstablishingFromCommittee)&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_PreQualificationCommitteeSecretary))" class="btn btn-sm btn-primary">
+            إنشاء التأهيل
+         </button>
+         @*<button type="button" @@click="ApprovementAction(tender.tenderIdString)" v-if="(tender.tenderStatusId ==  @((int)Enums.TenderStatus.RejectedQualificationApprovalByCommitteeManager))" class="btn btn-sm btn-primary">
+               إعادة الفتح
+            </button>*@
+      </template>
+      <template v-if="(tender.hasPendingCancelRequest && tender.tenderStatusId == @((int)Enums.TenderStatus.Approved))">
+         <button type="button" @@click="checkOffersPopup(tender.tenderIdString)" data-toggle="modal" data-target="#cancelModal" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentChecking)) && tender.offersCheckingDate <= tender.currentDate && tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_PreQualificationCommitteeSecretary))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CheckTechnicalEvaluation
+         </button>
+      </template>
+      <template v-else>
+         <button type="button" @@click="checkTenderOffers(tender.tenderIdString)" v-if="((tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentChecking)) && tender.offersCheckingDate <= tender.currentDate && tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_PreQualificationCommitteeSecretary))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CheckTechnicalEvaluation
+         </button>
+      </template>
+
+      <button type="button" @@click="reopenCheckTenderOffers(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckRejected)&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_PreQualificationCommitteeSecretary))" class="btn btn-sm btn-primary">
+         @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ReopenCheck
+      </button>
+      <template v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification))">
+         <button type="button" @@click="EditPostQualification(tender.tenderIdString)" v-if="(tender.tenderStatusId ==  @((int)Enums.TenderStatus.QualificationUnderEstablishingFromCommittee)&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_PreQualificationCommitteeSecretary))" class="btn btn-sm btn-primary">
+            إنشاء التأهيل
+         </button>
+      </template>
+      <button type="button" @@click="ApprovementAction(tender.tenderIdString)" v-if="(tender.tenderStatusId ==  @((int)Enums.TenderStatus.RejectedQualificationApprovalByCommitteeManager)&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_PreQualificationCommitteeSecretary))" class="btn btn-sm btn-primary">
+         إعادة الفتح
+      </button>
+   }
+
+   @if (User.IsInRole(RoleNames.PreQualificationCommitteeManager))
+   {
+      <template v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PreQualification))">
+         @*<button type="button" @@click="ApprovementAction(tender.tenderIdString)" v-if="(tender.tenderStatusId ==  @((int)Enums.TenderStatus.PendingQualificationCommitteeManagerApproval))" class="btn btn-sm btn-primary">
+               إعتماد التأهيل
+            </button>*@
+         @*<button type="button" @@click="confirmCheckOffersCheck(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckPending) && tender.tenderTypeId == @((int)Enums.TenderType.PreQualification) && tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_PreQualificationCommitteeManager))" class="btn btn-sm btn-primary">
+                @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ApproveSendQualificationDocumentForManager
+            </button>*@
+         @*<button type="button" @@click="PostQualificationApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Pending)  )">
+                @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve
+            </button>*@
+      </template>
+
+      <template v-if="tender.hasp">
+      </template>
+
+      <template v-if="(tender.hasPendingCancelRequest && tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckPending))">
+         <button type="button" @@click="checkOffersPopup(tender.tenderIdString)" data-toggle="modal" data-target="#cancelModal" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckPending) && tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_PreQualificationCommitteeManager))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CheckTechnicalEvaluation
+         </button>
+      </template>
+      <template v-else>
+         <button type="button" @@click="confirmCheckOffersCheck(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckPending) && tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_PreQualificationCommitteeManager))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ApproveSendQualificationDocumentForManager
+         </button>
+      </template>
+
+      <button type="button" @@click="ApprovementAction(tender.tenderIdString)" v-if="(tender.tenderStatusId ==  @((int)Enums.TenderStatus.PendingQualificationCommitteeManagerApproval)&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_PreQualificationCommitteeManager))" class="btn btn-sm btn-primary">
+         إعتماد التأهيل
+      </button>
+
+
+      @*<template v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification))">
+            <button type="button" @@click="ApprovementAction(tender.tenderIdString)" v-if="(tender.tenderStatusId ==  @((int)Enums.TenderStatus.PendingQualificationCommitteeManagerApproval))" class="btn btn-sm btn-primary">
+               إعتماد التأهيل
+            </button>
+         </template>*@
+   }
+
+
+   @if (User.IsInRole(RoleNames.OffersCheckSecretary))
+   {
+      <span v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification) && tender.userCheckCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_OffersCheckSecretary))">
+
+         <button type="button" @@click="ApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Established)">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+         </button>
+         <button type="button" @@click="ApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Rejected)">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+         </button>
+      </span>
+   }
+
+
+   @if (User.IsInRole(RoleNames.OffersPurchaseSecretary))
+   {
+      <span v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification) &&  tender.userDirectPurchaseCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_SecretaryDirtectPurshasingCommittee) )">
+
+         @*<button type="button" @@click="checkPostQualificationOffers(tender.tenderIdString)" v-if="( ( tender.tenderStatusId == @((int)Enums.TenderStatus.Approved) || tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentChecking) ) && tender.offersCheckingDate <= tender.currentDate )" class="btn btn-sm btn-primary">
+               @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.CheckTechnicalEvaluation
+            </button>*@
+
+
+         @*<button type="button" @@click="checkPostQualificationOffers(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckRejected) && tender.tenderTypeId == @((int)Enums.TenderType.PostQualification))" class="btn btn-sm btn-primary">
+               @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ReopenCheck
+            </button>*@
+
+         <button type="button" @@click="ApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Established)">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SendToApprove
+         </button>
+         <button type="button" @@click="ApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="tender.tenderStatusId == @((int)Enums.TenderStatus.Rejected)">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Reopen
+         </button>
+      </span>
+   }
+
+
+   @if (User.IsInRole(RoleNames.OffersCheckManager))
+   {
+      <span v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification) && (tender.postQualificationTenderTypeId != @((int)Enums.TenderType.CurrentDirectPurchase) && tender.postQualificationTenderTypeId != @((int)Enums.TenderType.NewDirectPurchase)))">
+
+         @*<button type="button" @@click="ConfirmCheckPostQualificationOffers(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckPending)   )" class="btn btn-sm btn-primary">
+               @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ApproveSendQualificationDocumentForManager
+            </button>*@
+         <button type="button" @@click="ApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Pending)  )">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve
+         </button>
+      </span>
+   }
+
+   @if (User.IsInRole(RoleNames.OffersPurchaseManager))
+   {
+      <span v-if="(tender.tenderTypeId == @((int)Enums.TenderType.PostQualification) && (tender.postQualificationTenderTypeId == @((int)Enums.TenderType.CurrentDirectPurchase) || tender.postQualificationTenderTypeId == @((int)Enums.TenderType.NewDirectPurchase)))">
+
+         @*<button type="button" @@click="ConfirmCheckPostQualificationOffers(tender.tenderIdString)" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.DocumentCheckPending)   )" class="btn btn-sm btn-primary">
+               @MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.ApproveSendQualificationDocumentForManager
+            </button>*@
+         <button type="button" @@click="ApprovementAction(tender.tenderIdString)" class="btn btn-sm btn-primary" v-if="(tender.tenderStatusId == @((int)Enums.TenderStatus.Pending) || (tender.isUserHasAccessToLowBudgetTender && tender.tenderStatusId == @((int)Enums.TenderStatus.Established)) )  ">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Approve
+         </button>
+      </span>
+   }
+
+</div>

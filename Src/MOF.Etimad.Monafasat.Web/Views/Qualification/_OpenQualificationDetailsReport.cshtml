@@ -1,0 +1,112 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderDetialsReportModel
+
+<link rel="icon" href="~/Etimad-UI/assets/imgs/favicon.ico">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+<script src="~/Etimad-UI/assets/js/vue-app/vue@2.5.2.js"></script>
+<script>
+   document.title = "Report";
+   (function () {
+      var link = document.createElement('link'),
+         oldLink = document.getElementById('dynamic-favicon');
+      link.id = 'dynamic-favicon';
+      link.rel = 'shortcut icon';
+
+      link.href = '~/Etimad-UI/assets/imgs/favicon.ico';
+      document.getElementsByTagName('head')[0].appendChild(link);
+   })();
+   function printData() {
+      window.print();
+      window.close();
+   }
+</script>
+
+<style type="text/css">
+   .table tr td {
+      width: 50% !important;
+   }
+</style>
+
+<button id="printButton" onclick="printData();" class="btn btn-success d-print-none" style="margin:20px;">طباعة</button>
+
+<div id="printDiv" class="row" dir="rtl" style="margin:20px;">
+   <div class="col-sm-12 text-center">
+      <img class="rounded mx-auto" src="~/Etimad-UI/assets/imgs/favicon.ico" alt="صورة" />
+      <hr />
+   </div>
+   <h2 class="col-sm-12 text-center">تفاصيل دعوة التأهيل</h2>
+
+   <table class="table table-bordered col-sm-12" summary="البيانات">
+      <tr>
+         <th scope="row">الجهة الحكومية</th>
+         <td class="text-center">@Model?.AgnecyName</td>
+      </tr>
+      <tr>
+         <th scope="row">المعلومات الأساسية</th>
+         <td class="text-center">
+            إسم دعوة التأهيل: @Model?.TenderName
+            <br />
+            رقم دعوة التأهيل: @Model?.ReferenceNumber
+         </td>
+      </tr>
+
+      @*<tr>
+         <td>قيمة المنافسة</td>
+         <td class="text-center">@Model?.ConditionsBookletPrice</td>
+      </tr>*@
+
+      <tr>
+         <th scope="row">الغاية من دعوة التأهيل</th>
+         <td class="text-center">@Model?.TenderPurpose</td>
+      </tr>
+
+      <tr>
+         <th scope="row">   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate</th>
+         <td class="text-center">
+            التاريخ: @Model?.LastEnqueriesDateHijriString
+            <br />
+            الموافق: @Model?.LastEnqueriesDateString
+         </td>
+      </tr>
+
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.LastApplyDocumentTime </th>
+         <td class="text-center">
+            التاريخ: @Model?.LastOfferPresentationDateHijriString
+            <br />
+            الموافق: @Model?.LastOfferPresentationDateString
+         </td>
+      </tr>
+
+      <tr>
+         <th scope="row">@MOF.Etimad.Monafasat.Resources.QualificationResources.DisplayInputs.OffersCheckingDate</th>
+         <td class="text-center">
+            التاريخ: @Model?.OffersCheckingDateHijriString
+            <br />
+            الموافق: @Model?.OffersCheckingDateString
+         </td>
+      </tr>
+
+     
+
+      <tr>
+         <th scope="row">مكان التنفيذ</th>
+         <td class="text-center">@Model?.ExcuationLocation</td>
+      </tr>
+
+      <tr>
+         <th scope="row">مجال التصنيف</th>
+         <td class="text-center">
+            <ul>
+               @for (int i = 0; i < Model?.TenderMaintenanceRunnigWorks.Count; i++)
+               {
+                  <li> @Model?.TenderMaintenanceRunnigWorks[i]</li>
+               }
+               @for (int i = 0; i < Model?.TenderConstructionWorks.Count; i++)
+               {
+                  <li> @Model?.TenderConstructionWorks[i]</li>
+               }
+            </ul>
+         </td>
+      </tr>
+   </table>
+</div>

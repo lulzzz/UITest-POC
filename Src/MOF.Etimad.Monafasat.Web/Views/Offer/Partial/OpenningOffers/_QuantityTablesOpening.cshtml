@@ -1,0 +1,207 @@
+@model MOF.Etimad.Monafasat.ViewModel.QuantityTableStepDTO
+@{
+   var count = 0;
+}
+@foreach (var template in Model.TemplateFormDTOs)
+{
+   @foreach (var form in template.FormDTOs)
+   {
+      count++;
+      <div class="card-header" role="tab" id='headingOne@(count)'>
+         <h4 class="m-0 p-2">
+            <a data-toggle="collapse" name="collapseHeader" href="#collapse@(count)" aria-expanded="false" aria-controls="collapse@(count)" data-tableId="@(form.Tables.Count > 0 ? form.Tables[0].TableId : 0)" id="collapse_@form.FormId" onclick="loadTables(this, @Model.TenderID, @form.FormId)">
+               @(form.FormName + " - " + template.TemplateName)
+               <i class="material-icons pull-left">keyboard_arrow_down</i> 
+            </a>
+         </h4>
+      </div>
+      <div id="collapse@(count)" class="collapse" role="tabpanel" aria-labelledby='collapse@(count)' data-parent="#accordion">
+         <div class="row">
+            <div class="col-12">
+               <ul id="tableHeaderContainer_@form.FormId" class="nav nav-pills">
+                  @foreach (var table in form.Tables)
+                  {
+                     <li class="nav-item"><a class="nav-link text-center" id="tableIndex_@table.TableId" href="#tableIndex_@table.TableId" data-tableId="@table.TableId" onclick="submitForm(@form.FormId); changeTable(@Model.TenderID, @table.TableId, @form.FormId)" data-toggle="tab">@table.TableName</a></li>
+                  }
+               </ul>
+            </div>
+         </div>
+         <div id="tableContainDiv_@(form.FormId)"></div>
+      </div>
+   }
+}
+@{ count++; }
+@if (Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase)
+{
+   <div class="card-header" role="tab" id='headingOne@(count)'>
+      <h4 class="m-0 p-2">
+         <a data-toggle="collapse" name="collapseHeader" href="#collapseBayan" aria-expanded="false" aria-controls="collapseBayan" onclick="LoadBayanTable(this, @Model.TenderID)">
+            جداول البيانات
+            <i class="material-icons pull-left">keyboard_arrow_down</i> 
+         </a>
+      </h4>
+   </div>
+   <div id="collapseBayan" class="collapse" role="tabpanel" aria-labelledby='collapse@(count)' data-parent="#accordion">
+      <div class="row">
+         <div class="col-12">
+            <div id="BayanDiv">
+               <div v-if="QuantityTableItems && QuantityTableItems.length > 0" v-for="(table, $index) in QuantityTableItems">
+                  <div id="byanTableContent" v-html="table.tableHtml">
+                  </div>
+               </div>
+               <div v-else>
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.Messages.NoBayanTables
+               </div>
+               <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+            </div>
+            <form asp-controller="Offer" asp-action="SaveBayanQuantityItem"
+                  data-ajax-failure="OnQtableFailure" data-ajax-success="AddEditRow" data-ajax-loading="#LoadingSite" data-ajax-begin=""
+                  data-ajax="true" data-ajax-method="POST">
+               <input type="hidden" name="OfferId" value="@Model.OfferId" />
+               <div id="addModel"></div>
+            </form>
+            <form asp-controller="Offer" asp-action="DeleteBayanQuantityItem"
+                  data-ajax-failure="OnQtableFailure" data-ajax-success="DeleteExistinghtmlRow" data-ajax-loading="#LoadingSite"
+                  data-ajax="true" data-ajax-method="POST">
+               <input type="hidden" name="OfferId" value="@Model.OfferId" />
+               <div id="deleteModel"></div>
+            </form>
+            <div id="javaScript"></div>
+         </div>
+      </div>
+   </div>
+}
+@{ count++; }
+<div class="card-header" role="tab" id='headingOne@(count)'>
+   <h4 class="m-0 p-2">
+      <a data-toggle="collapse" name="collapseHeader" href="#collapseCostTable" aria-expanded="false" aria-controls="collapseCostTable" onclick="LoadCoastsTable(this, @Model.TenderID, 0, 0)">
+         جدول التكاليف
+         <i class="material-icons pull-left">keyboard_arrow_down</i> 
+      </a>
+   </h4>
+</div>
+<div id="collapseCostTable" class="collapse table-responsive" role="tabpanel" aria-labelledby='collapse@(count)' data-parent="#accordion">
+   <div class="row">
+      <div class="col-12">
+         <div class="table-responsive" id="collapseCostTable"></div>
+      </div>
+   </div>
+</div>
+<script>
+   var byanTender;
+   if (@Model.TenderTypeId == @((int)Enums.TenderType.CurrentTender) || @Model.TenderTypeId == @((int)Enums.TenderType.CurrentDirectPurchase)) {
+      $(document).ready(function () {
+         byanTender = new Vue({
+            el: '#BayanDiv',
+            data: {
+               totalCount: 0,
+               currentPage: 1,
+               QuantityTableItems: [],
+               pageSize: @((int)Enums.PageSize.Fifty),
+               resource_url: ''
+            },
+            methods: {
+               updateResource: function (response) {
+                  this.QuantityTableItems = response;
+                  this.totalCount = this.$refs.vpaginator.totalCount;
+                  this.currentPage = this.$refs.vpaginator.currentPage;
+                  this.pageSize = this.$refs.vpaginator.pageSize;
+                  $('#addModel').html(response[0].editFormHtml);
+                  $('#byanTableContent').html(response[0].tableHtml);
+                  $('#deleteModel').html(response[0].deleteFormHtml);
+                  if (response[0].javascript != null)
+                     $('#javaScript').html(response[0].javascript);
+               }
+            }
+         })
+      })
+   }
+   function changeTable(tenderId, tableId, formId) {
+      $('#collapse_' + formId).attr('data-tableId', tableId);
+      Tender.resource_url = '/Offer/GetOfferTableQuantityItemsForVROAsync?tenderId=' + tenderId + '&OfferId= @Model.OfferId' +'&quantityTableId=' + tableId + '&formId=' + formId + '&isReadOnly=@Model.IsReadOnly';
+   }
+   function LoadCoastsTable(e, tenderId, tableId, formId) {
+      if ($(e).attr('aria-expanded') == 'true') {
+         $("#tableContainDiv_" + formId).html('');
+         return;
+      }
+      else
+         $('a[name=collapseHeader][aria-expanded=true]').click();
+      $('#loader').show();
+      var token = $('input[name=__RequestVerificationToken]').val();
+
+      $.get('/Offer/GetCoastsTablForDirectPurchaseAsync?TenderId=' + tenderId + '&OfferId=@Model.OfferId' + '&QuantityTableId=' + tableId + '&FormId=' + formId + '&isReadOnly=true', {
+         __RequestVerificationToken: token,
+      }).done(function (data) {
+         $("#collapseCostTable").html(data);
+         $('#loader').hide();
+      }).fail(function () {
+         $('#loader').hide();
+         $('#LoadingSite').fadeOut();
+      });
+   }
+   var BayanQuantityTableItems;
+   function LoadBayanTable(e, tenderId) {
+      if ($(e).attr('aria-expanded') != 'true')
+         $('a[name=collapseHeader][aria-expanded=true]').click();
+      else
+         return;
+      if (byanTender.resource_url == '')
+         byanTender.resource_url = '/Offer/GetBayanTableAsync?tenderId=' + tenderId + '&offerId=@Model.OfferId';
+      else
+         byanTender.$refs.vpaginator.fetchData('/Offer/GetBayanTableAsync?tenderId=' + tenderId + '&offerId=@Model.OfferId');
+   }
+   function loadTables(e, tenderId, formId) {
+      var tableId = $(e).attr('data-tableId');
+      if ($(e).attr('aria-expanded') == 'true') {
+         $("#tableContainDiv_" + formId).html('');
+         return;
+      }
+      else
+         $('a[name=collapseHeader][aria-expanded=true]').click();
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $.post('/Offer/GetVROOfferQuantityTableViewComponent?tenderId=' + tenderId + '&offerId=@Model.OfferId' + '&tableId=' + tableId + '&formId=' + formId + '&isReadOnly=@Model.IsReadOnly', {
+         __RequestVerificationToken: token,
+      }).done(function (data) {
+         $("#tableContainDiv_" + formId).html(data);
+         $('#tableHeaderContainer_' + formId + ' li a').removeClass('active');
+         $('#tableHeaderContainer_' + formId + ' li a').removeClass('show');
+         $('#tableHeaderContainer_' + formId + ' li a[data-tableId=' + tableId + ']').addClass('active');
+         $('#tableHeaderContainer_' + formId + ' li a[data-tableId=' + tableId + ']').addClass('show');
+      }).fail(function () {
+      });
+   }
+   function DeleteExistinghtmlRow(e) {
+      DeletehtmlRow(e);
+      byanTender.$refs.vpaginator.fetchData(byanTender.resource_url);
+   }
+   //Append New Row to Table Or replace Existing One
+   function AddEditRow(Data) {
+      var tableselector = "table[name = " + Data.tableId + "] tbody";
+      var EffectedRow = $(tableselector + " .EffectedRow_" + Data.tableId);
+      var MEffectedRow = $(tableselector + " .MEffectedRow_" + Data.tableId);
+      //replace Existing One  (Edit Row Or Altenaitv item)
+      if (EffectedRow.length > 0) {
+         $(EffectedRow).replaceWith(Data.formHtml);
+         $(MEffectedRow).find('#btnAlternative').hide();
+         $(MEffectedRow).removeClass(MEffectedRow);
+         $("table[name = " + Data.tableId + "]  .offerType_td").show();
+         $('.modal').modal('hide');
+      }
+      //Append New Row (new Item)
+      else {
+         var tableselector = "table[name = " + Data.tableId + "] tbody";
+         Data.formHtml = Data.formHtml.replace("tr_0", "tr_" + Data.itemNumber)
+         var cellsCount = $(tableselector + ' tr').first().find('td').length - 1;
+         byanTender.totalCount += cellsCount;
+         if (byanTender.totalCount > byanTender.pageSize) {
+            var currentPage = Math.round((byanTender.totalCount / byanTender.pageSize)) + 1;
+            byanTender.$refs.vpaginator.fetchData(byanTender.resource_url);
+         }
+         else
+            $(tableselector).append(Data.formHtml);
+         $('.modal').modal('hide');
+      }
+      byanTender.$refs.vpaginator.fetchData(byanTender.resource_url);
+   }
+</script>

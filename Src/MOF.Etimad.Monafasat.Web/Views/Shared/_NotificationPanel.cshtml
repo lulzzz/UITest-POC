@@ -1,0 +1,9 @@
+<a :href="item.link" :data-read="item.notifacationStatusId" v-bind:class="{ new: item.notifacationStatusId != @((int)Enums.NotifacationStatus.Read) }" class="notfication-item btn btn-link btn-block btn-sm">
+   <span class="not-title"> {{ item.title }}</span>
+   <span>
+      <i class="material-icons">schedule</i>
+      <span class="dateMomentFormat">
+         {{ item.displayDate }}
+      </span>
+   </span>
+</a>

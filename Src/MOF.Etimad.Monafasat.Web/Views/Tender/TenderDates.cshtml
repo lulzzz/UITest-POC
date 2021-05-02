@@ -1,0 +1,560 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderDatesModel
+@using MOF.Etimad.Monafasat.SharedKernel;
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddEditTender;
+   var showInvitationTab = (((Model.PreQualificationId != null || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender || Model.TenderTypeId == (int)Enums.TenderType.SecondStageTender || Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding ||
+              Model.TenderTypeId == (int)Enums.TenderType.LimitedTender || Model.TenderTypeId == (int)Enums.TenderType.FrameworkAgreement || Model.TenderTypeId == (int)Enums.TenderType.Competition ||
+              Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects) && Model.InvitationTypeId == (int)Enums.InvitationType.Specific) || (Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase && Model.OfferPresentationWayId == (int)Enums.OfferPresentationWayId.TwoSepratedFiles));
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("TenderIndexUnderOperationsStage", "Tender")">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UnderstablishedStageTenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AddEditTender</li>
+      </ol>
+   </nav>
+}
+<style>
+   .main {
+      background: #f3f3f3;
+   }
+</style>
+<form method="POST" id="detailsStepForm" asp-controller="Tender" asp-action="TenderDates" autocomplete="off">
+   @Html.AntiForgeryToken()
+   <div id="app" v-cloak>
+      @*<input asp-for="OffersOpeningAddressId" type="hidden" />*@
+      <input asp-for="TenderTypeId" type="hidden" />
+      <input asp-for="VersionId" type="hidden" />
+      <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+      <ul class="wizSteps">
+         <li>
+            <div>
+               @if (Model.TenderTypeId == (int)Enums.TenderType.SecondStageTender)
+               {
+                  <h4><a id="hBasicStep" href="@Url.Action("BasicSecondStageData", "Tender", new { id = Model.TenderIdString })"><span class="step-num">1</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</a></h4>
+               }
+               else
+               {
+                  <h4><a id="hBasicStep" href="@Url.Action("BasicTenderData", "Tender", new { id = Model.TenderIdString })"><span class="step-num">1</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</a></h4>
+               }
+            </div>
+            <input asp-for="TenderName" id="hdnTenderName" type="hidden" />
+            <input asp-for="TenderNumber" id="hdnTenderNumber" type="hidden" />
+
+            <input asp-for="TenderIdString" value="@Model.TenderIdString" id="hdnTenderIdString" type="hidden" />
+            <input asp-for="ReferenceNumber" value="@Model.ReferenceNumber" id="hdnTenderReferenceNumber" type="hidden" />
+            <div class="clearfix"></div>
+         </li>
+         <li class="active">
+            <div>
+               <h4 id="hDetailsStep">
+                  <a href="#">
+                     <span class="step-num">2</span>
+                     <label style="color:#009688;font-weight: bold;">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DetailsStep<p class="step-count">(2 - 5)</p></label>
+
+                  </a>
+               </h4>
+            </div>
+            <div class="col col-11 pull-right">
+               <div class="row" id="relationFieldsDiv">
+                  @Html.Partial("_TenderDates.cshtml", Model)
+               </div>
+               <div class="row">
+                  <div class="col">
+                     @if (Model.TenderTypeId == (int)Enums.TenderType.SecondStageTender)
+                     {
+                        <button class="btn btn-default etd-search-btn" id="btnPriviousSecondStage">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+                     }
+                     else
+                     {
+                        <button class="btn btn-default etd-search-btn" id="btnPrivious">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+                     }
+                     <button class="btn btn-primary etd-search-btn pull-right" id="btnSave">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveContinue
+                     </button>
+                  </div>
+               </div>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+         @if (Model.TenderStatusId == (int)Enums.TenderStatus.Established)
+         {
+            <li class="">
+               <div>
+                  <h4><a id="hRealtionStep" href="@Url.Action("RelationsStep", "Tender", new { tenderId = Model.TenderIdString })"><span class="step-num">3</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep</a></h4>
+               </div>
+               <div class="clearfix"></div>
+            </li>
+            <li class="">
+               <div>
+                  <h4 id="hQuantatysStep"><a href="@Url.Action("QuantitiesTableStep", "Tender", new { id = Model.TenderIdString })"><span class="step-num">4</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables</a></h4>
+               </div>
+               <div class="clearfix"></div>
+            </li>
+            @if (Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects || Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase)
+            {
+               <li class="">
+                  <div>
+                     <h4><a id="hAttachmentStep" href="@Url.Action("AttachmentsStep", "Tender", new { id = Model.TenderIdString })"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles</a></h4>
+                  </div>
+                  <div class="clearfix"></div>
+               </li>
+            }
+            else
+            {
+               <li class="">
+                  <div>
+                     <h4><a id="hdnTemplatesStep" href="@Url.Action("UpdateConditionsTemplate", "Tender", new { tenderIdString = Model.TenderIdString })"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles</a></h4>
+                  </div>
+                  <div class="clearfix"></div>
+               </li>
+            }
+            @if (showInvitationTab == true)
+            {
+               <li class="">
+                  <div>
+                     <h4><a id="hInvitationsStep" href="@Url.Action("SendInvitationsStep", "Tender", new { tenderIdString = Model.TenderIdString })"><span class="step-num">6</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Invitations</a></h4>
+                  </div>
+                  <div class="clearfix"></div>
+               </li>
+            }
+         }
+         else
+         {
+            <li class="">
+               <div>
+                  <h4><a id="hRelationStep" href="#"><span class="step-num">3</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep</a></h4>
+               </div>
+               <div class="clearfix"></div>
+            </li>
+            @if (Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding)
+            {
+               <li class="">
+                  <div>
+                     <h4><a id="hQuantatysStep" href="#"><span class="step-num">4</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables</a></h4>
+                  </div>
+                  <div class="clearfix"></div>
+               </li>
+            }
+            <li class="">
+               <div>
+                  <h4><a id="hAttachmentStep" href="#"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles</a></h4>
+               </div>
+               <div class="clearfix"></div>
+            </li>
+            @if (showInvitationTab == true)
+            {
+               <li class="">
+                  <div>
+                     <h4><a id="hInvitationsStep" href="#"><span class="step-num">6</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Invitations</a></h4>
+                  </div>
+                  <div class="clearfix"></div>
+               </li>
+            }
+         }
+      </ul>
+      <div class="row">
+
+         <div class="col">
+            <a asp-controller="Tender" asp-action="Index" class="btn h6 pull-right btn-outline-primary" id="btnBack" style="font-size:0.8em">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButtonToMain
+            </a>
+         </div>
+      </div>
+   </div>
+</form>
+@section scripts{
+   <script type="text/javascript">
+   var app = new Vue({
+      el: '#app',
+      data: {
+         isOldTender: '@Model.IsOldTender' == 'True' ? true : false,
+         showIsSameAddressCheckBox: '@Model.SupplierNeedSample' == 'True' ? true : false,
+         isSampleAddresSameOffersAddress: '@Model.IsSampleAddresSameOffersAddress' == 'True' ? true : false,
+         isNeedInitialGuarantee: '@Model.NeedInitialGuarantee' == 'True' ? "true" : "false",
+         isSupplierNeedSample: '@Model.SupplierNeedSample' == 'True' ? "true" : "false",
+         tenderType: '@Model.TenderTypeId'
+      },
+      //created: function () {
+      //   if (this.isSupplierNeedSample == "false") {
+      //      this.showIsSameAddressCheckBox = false;
+      //   } else {
+      //      this.showIsSameAddressCheckBox = true;
+      //   }
+      //},
+      watch: {
+         isSupplierNeedSample: function () {
+            debugger;
+            if (this.isSupplierNeedSample == "false") {
+               $('#tb_SamplesDeliveryAddress').val("");
+               $('#tb_BuildingName').val("");
+               $('#tb_FloarNumber').val("");
+               $('#tb_DepartmentName').val("");
+               this.showIsSameAddressCheckBox = false;
+               this.isSampleAddresSameOffersAddress = false;
+
+            } else {
+               this.showIsSameAddressCheckBox = true;
+            }
+         },
+         isSampleAddresSameOffersAddress: function () {
+            if (this.isSampleAddresSameOffersAddress) {
+               $("#txtOfferDeliveryAddress").val($('#tb_SamplesDeliveryAddress').val());
+               $("#txtOfferBuildingName").val($('#tb_BuildingName').val());
+               $("#txtOfferFloarNumber").val($('#tb_FloarNumber').val());
+               $("#txtOfferDepartmentName").val($('#tb_DepartmentName').val());
+ 
+               $("#offersDeliveryDate").val($('#deliveryDate').val());
+               $("#offersDeliveryTime").val($('#deliveryTime').val());
+
+            } 
+         },
+         isNeedInitialGuarantee: function () {
+            if (this.isNeedInitialGuarantee == "false") {
+               $('#initialGuaranteePercentage').val(null);
+               $('#tb_InitialGuaranteeAddress').val("");
+            }
+         }
+      },
+      methods: {
+         showAddress: function () {
+            $("#offersOpeningAddressId").parent().hide();
+            $("#offersOpeningAddress").show();
+            $("#OffersOpeningAddressDiv").show();
+            $("#OffersOpeningAddressSlc").hide();
+            $("#btnOffersOpening").attr("hidden", true)
+            $("#btnOffersOpeningHide").attr("hidden", false)
+         },
+         hideAddress: function () {
+            $("#offersOpeningAddressId").parent().show();
+            $("#offersOpeningAddress").hide();
+            $("#OffersOpeningAddressDiv").hide();
+            $("#OffersOpeningAddressSlc").show();
+            $("#btnOffersOpening").attr("hidden", false);
+            $("#btnOffersOpeningHide").attr("hidden", true);
+         }
+      }
+   });
+   var validator;
+   var vacations = [];
+      $(document).ready(function () {
+       $('#LoadingSite').fadeOut();
+         setTimeout(function () {
+            $("#lastOfferPresentationTime").on("dp.hide", function (e) {
+               if (app.tenderType != @((int)Enums.TenderType.CurrentDirectPurchase) && app.tenderType != @((int)Enums.TenderType.CurrentTender) && app.tenderType != @((int)Enums.TenderType.NationalTransformationProjects)
+                  && app.tenderType != @((int)Enums.TenderType.NewDirectPurchase) && app.tenderType != @((int)Enums.TenderType.FirstStageTender) && app.tenderType != @((int)Enums.TenderType.Competition))
+               {
+                  debugger;
+                  var lastOfferPresentationTime = e.date._d.setHours(e.date._d.getHours());
+                  var newOffersOpeningTime = e.date._d.setHours(e.date._d.getHours() + 1);
+                  newOffersOpeningTime = new Date(newOffersOpeningTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                  $("#offersOpeningTime").val(newOffersOpeningTime);
+                 //if lastOfferPresentationTime >= 11:00 PM And < 12:00 AM then we add one day to offers open Data
+                  if (lastOfferPresentationTime >= 1588881600000 && lastOfferPresentationTime < 1588885200000)
+                  {
+                     changeOfferOpeningDate();
+                  }
+            }
+            });
+         $("#lastEnquiesDate").calendarsPicker('option', 'onClose', function () {
+            validateEnquiriesDateVacation();
+         });
+         $("#lastOfferPressentationDate").calendarsPicker('option', 'onClose', function () {
+            validateOfferPressentationDateVacation();
+            changeDatesValues();
+         });
+
+         $("#offersOpeningDate").calendarsPicker('option', 'onClose', function () {
+            validateOpeningDateVacation();
+         });
+         $("#offersCheckingDate").calendarsPicker('option', 'onClose', function () {
+            validateCheckingDateVacation();
+         });
+         validateEnquiriesDateVacation();
+         validateOfferPressentationDateVacation();
+         validateOpeningDateVacation();
+         validateCheckingDateVacation();
+      }, 1000);
+         @if (Model != null && Model.Vacations != null)
+         {
+            @:vacations = @Html.Raw(Json.Serialize(Model.Vacations))
+         }
+         $('#btnPriviousSecondStage').click(function () {
+            $('#LoadingSite').fadeOut();
+            window.location = "@Url.Action("BasicSecondStageData", "Tender", new { id =  Model.TenderIdString })";
+            return false;
+         });
+      $('#btnPrivious').click(function () {
+         $('#LoadingSite').fadeOut();
+         window.location = "@Url.Action("BasicTenderData", "Tender", new { id =  Model.TenderIdString })";
+         return false;
+      });
+
+   });
+
+      //$("#lastOfferPresentationTime").on('changeTime', function () {
+      //   var lastOfferPresentationTime = $("#lastOfferPresentationTime").val();
+      //   $("#offersOpeningTime").val(lastOfferPresentationTime);
+      //});
+   function validateEnquiriesDateVacation() {
+      var lastEnqueriesDate = $("#lastEnquiesDate").val();
+      var lastEnqueriesDateGregorian
+      if ($('#cb_lastEnquiesDate').is(':checked')) {
+         var i = lastEnqueriesDate.split('/');
+         lastEnqueriesDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         lastEnqueriesDateGregorian = convertUmmalquraToGregorian(lastEnqueriesDate);
+      }
+      if (lastEnqueriesDate != "") {
+         var Gregorian = lastEnqueriesDateGregorian;
+         Gregorian = new Date(Gregorian);
+         var currentDate = new Date();
+         var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+         var day = Gregorian.getUTCDate() + 1;
+         var year = Gregorian.getUTCFullYear();
+         var newdate = day + "/" + month + "/" + year;
+         var flag = 1;
+         for (var i = 0; i < vacations.length; i++) {
+            if (newdate == vacations[i].vacationDateString) {
+               flag = flag * 0;
+            }
+         }
+         if (flag == 1) {
+            $('#lastEnquiesDateVac').hide();
+         }
+         else {
+            $('#lastEnquiesDateVac').show();
+         }
+         if (Gregorian.getDay() == 5 || Gregorian.getDay() == 6) {
+            $('#lastEnquiesDateVac').show();
+         }
+         else {
+            $('#lastEnquiesDateVac').hide();
+         }
+      }
+   }
+   function validateOfferPressentationDateVacation() {
+      var offerPressentationDate = $("#lastOfferPressentationDate").val();
+      var offerPressentationDateGregorian;
+      if ($('#cb_lastOfferPressentationDate').is(':checked')) {
+         var i = offerPressentationDate.split('/');
+         offerPressentationDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         offerPressentationDateGregorian = convertUmmalquraToGregorian(offerPressentationDate);
+      }
+      offerPressentationDateGregorian = new Date(offerPressentationDateGregorian);
+      if (offerPressentationDateGregorian != "") {
+         Gregorian = new Date(offerPressentationDateGregorian);
+         var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+         var day = Gregorian.getUTCDate() + 1;
+         var year = Gregorian.getUTCFullYear();
+         var newdate = day + "/" + month + "/" + year;
+         var flag = 1;
+         for (var i = 0; i < vacations.length; i++) {
+            if (newdate == vacations[i].vacationDateString) {
+               flag = flag * 0;
+            }
+         }
+         if (flag == 1) {
+            $('#lastOfferPressentationDateVac').hide();
+         }
+         else {
+            $('#lastOfferPressentationDateVac').show();
+         }
+         if (Gregorian.getDay() == 5 || Gregorian.getDay() == 6) {
+            $('#lastOfferPressentationDateVac').show();
+         }
+         else {
+            $('#lastOfferPressentationDateVac').hide();
+         }
+      }
+   }
+
+      function changeOfferOpeningDate() {
+         debugger;
+      var offerPressentationDate = $("#lastOfferPressentationDate").val();
+      var offerPressentationDateGregorian;
+      if ($('#cb_lastOfferPressentationDate').is(':checked')) {
+         var i = offerPressentationDate.split('/');
+         offerPressentationDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         offerPressentationDateGregorian = convertUmmalquraToGregorian(offerPressentationDate);
+      }
+      offerPressentationDateGregorian = new Date(offerPressentationDateGregorian);
+      //change values
+               offerPressentationDateGregorian = addDays(offerPressentationDateGregorian, 1);
+
+            var offersOpeningDate;
+            if ($('#cb_offersOpeningDate').is(':checked')) {
+                 offersOpeningDate = offerPressentationDateGregorian;
+                 var copiedDate = new Date(Number(offersOpeningDate));
+
+                 if ($('#cb_offersOpeningDate').is(':checked')) {
+                    newdate = dateToString(copiedDate);
+                 }
+         else {
+                    newdate = convertGregorianToUmmalqura(dateToString(copiedDate));
+                 }
+              } else {
+                 offersOpeningDate = convertGregorianToUmmalqura(dateToString(offerPressentationDateGregorian));
+                 copy = new Date(Number(offerPressentationDateGregorian))
+                 copy.setDate(offerPressentationDateGregorian.getDate());
+                 if ($('#cb_offersOpeningDate').is(':checked')) {
+                    newdate = dateToString(copy);
+                 }
+         else {
+                    newdate = convertGregorianToUmmalqura(dateToString(copy));
+                 }
+              }
+      $("#offersOpeningDate").val(newdate);
+      $("#lastOfferPressentationDate").blur();
+           }
+      function changeDatesValues() {
+         debugger;
+      var offerPressentationDate = $("#lastOfferPressentationDate").val();
+      var offerPressentationDateGregorian;
+      if ($('#cb_lastOfferPressentationDate').is(':checked')) {
+         var i = offerPressentationDate.split('/');
+         offerPressentationDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         offerPressentationDateGregorian = convertUmmalquraToGregorian(offerPressentationDate);
+      }
+      offerPressentationDateGregorian = new Date(offerPressentationDateGregorian);
+      //change values
+         if (app.tenderType == @((int)Enums.TenderType.CurrentDirectPurchase) || app.tenderType == @((int)Enums.TenderType.CurrentTender) || app.tenderType == @((int)Enums.TenderType.NationalTransformationProjects))
+            {
+               offerPressentationDateGregorian = addDays(offerPressentationDateGregorian, 1);
+            }
+            var offersOpeningDate;
+            if ($('#cb_offersOpeningDate').is(':checked')) {
+                 offersOpeningDate = offerPressentationDateGregorian;
+                 var copiedDate = new Date(Number(offersOpeningDate));
+
+                 if ($('#cb_offersOpeningDate').is(':checked')) {
+                    newdate = dateToString(copiedDate);
+                 }
+         else {
+                    newdate = convertGregorianToUmmalqura(dateToString(copiedDate));
+                 }
+              } else {
+                 offersOpeningDate = convertGregorianToUmmalqura(dateToString(offerPressentationDateGregorian));
+                 copy = new Date(Number(offerPressentationDateGregorian))
+                 copy.setDate(offerPressentationDateGregorian.getDate());
+                 if ($('#cb_offersOpeningDate').is(':checked')) {
+                    newdate = dateToString(copy);
+                 }
+         else {
+                    newdate = convertGregorianToUmmalqura(dateToString(copy));
+                 }
+              }
+      $("#offersOpeningDate").val(newdate);
+      $("#lastOfferPressentationDate").blur();
+           }
+   function validateCheckingDateVacation() {
+      var offersCheckingDate = $("#offersCheckingDate").val();
+      var offersCheckingDateGregorian;
+      if ($('#cb_offersCheckingDate').is(':checked')) {
+         var i = offersCheckingDate.split('/');
+         offersCheckingDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+      }
+      else {
+         offersCheckingDateGregorian = convertUmmalquraToGregorian(offersCheckingDate);
+      }
+      if (offersCheckingDate != "") {
+         Gregorian = new Date(offersCheckingDateGregorian);
+         var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+         var day = Gregorian.getUTCDate() + 1;
+         var year = Gregorian.getUTCFullYear();
+         var newdate = day + "/" + month + "/" + year;
+         var currentDate = new Date();
+         var flag = 1;
+         for (var i = 0; i < vacations.length; i++) {
+            if (newdate == vacations[i].vacationDateString) {
+               flag = flag * 0;
+            }
+         }
+         if (flag == 1) {
+            $('#offersCheckingDateVac').hide();
+         }
+         else {
+            $('#offersCheckingDateVac').show();
+         }
+         if (Gregorian.getDay() == 5 || Gregorian.getDay() == 6) {
+            $('#offersCheckingDateVac').show();
+         }
+         else {
+            $('#offersCheckingDateVac').hide();
+         }
+      }
+   }
+      function validateOpeningDateVacation() {
+         var offersOpeningDate = $("#offersOpeningDate").val();
+         var offersOpeningDateGregorian;
+         if ($('#cb_offersOpeningDate').is(':checked')) {
+            var i = offersOpeningDate.split('/');
+            offersOpeningDateGregorian = i[1] + '/' + i[0] + '/' + i[2];
+         }
+         else {
+            offersOpeningDateGregorian = convertUmmalquraToGregorian(offersOpeningDate);
+         }
+         if (offersOpeningDate != "") {
+            Gregorian = new Date(offersOpeningDateGregorian);
+            var month = Gregorian.getUTCMonth() + 1; //months from 1-12
+            var day = Gregorian.getUTCDate() + 1;
+            var year = Gregorian.getUTCFullYear();
+            var newdate = day + "/" + month + "/" + year;
+            var currentDate = new Date();
+            var flag = 1;
+            for (var i = 0; i < vacations.length; i++) {
+               if (newdate == vacations[i].vacationDateString) {
+                  flag = flag * 0;
+               }
+            }
+            if (flag == 1) {
+               $('#offersOpeningDateVac').hide();
+            }
+            else {
+               $('#offersOpeningDateVac').show();
+            }
+            if (Gregorian.getDay() == 5 || Gregorian.getDay() == 6) {
+               $('#offersOpeningDateVac').show();
+            }
+            else {
+               $('#offersOpeningDateVac').hide();
+            }
+         }
+      }
+      var fixing = false;
+      function blockSpecialChar(e) {
+         if (fixing)
+            return;
+         fixing = true;
+         var newString = "";
+         var stringValue = $(e.currentTarget).val();
+         for (var i = 0; i < stringValue.length; i++) {
+            var k = stringValue[i];
+            var iChars = "!@@#$%^&*()+=-[]\\\';,./{}|\":<>?_×÷،ٍِِِِِ’َ؟?‘ًَُ~ٍِـ`";
+            if (iChars.indexOf(k) == -1)
+               newString = newString + k;
+         }
+         $(e.currentTarget).val(newString);
+         fixing = false;
+      }
+      $('input[type=radio][name=NeedInitialGuarantee]').change(function () {
+         if ($(this).val() == true) {
+            $('#InitialGuaranteePercentage').show();
+         }
+         else
+            $('#InitialGuaranteePercentage').hide();
+      })
+
+   </script>
+   @*<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>*@
+
+}

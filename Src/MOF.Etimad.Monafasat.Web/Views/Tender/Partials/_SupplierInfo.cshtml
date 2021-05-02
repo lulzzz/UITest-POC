@@ -1,0 +1,904 @@
+@model MOF.Etimad.Monafasat.ViewModel.SupplierFullDataViewModel
+
+
+<div id="accordion" role="tablist">
+   <div class=" card-collapse">
+      <div class="card-header" role="tab" id="headingOne">
+         <h5 class="mb-0">
+            <a data-toggle="collapse" href="#SupplierInfo" aria-expanded="true" aria-controls="collapseOne">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierInfo
+               <i class="material-icons">keyboard_arrow_down</i> 
+            </a>
+         </h5>
+      </div>
+      <div id="SupplierInfo" class="collapse  show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+         <div class="card-body">
+            @{
+
+               foreach (var info in Model.contactOfficers)
+               {
+
+
+                  <ul class="list-group form-details-list h6">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Email
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>@info.Email</span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UserName
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @info.Name
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Nationality
+
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @info.Nationality
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CiviRegistery
+                           </div>
+                           <div class="col-8 etd-item-info">
+
+                              <span>
+                                 @info.NationalID
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Title
+                           </div>
+                           <div class="col-8 etd-item-info">
+
+                              <span>
+                                 @info.JobTitle
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Mobile
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @info.Mobile
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PhoneNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 @info.PhoneNumber
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+
+               }
+
+            }
+         </div>
+      </div>
+   </div>
+   <div class=" card-collapse">
+      <div class="card-header" role="tab" id="headingTwo">
+         <h5 class="mb-0">
+            <a class="collapsed" data-toggle="collapse" href="#CompanyInfo" aria-expanded="false" aria-controls="collapseTwo">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CompanyInfo
+               <i class="material-icons">keyboard_arrow_down</i> 
+            </a>
+         </h5>
+      </div>
+      <div id="CompanyInfo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+         <div class="card-body">
+            <ul class="list-group form-details-list h6">
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CompanyType
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.CompanyType</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AdministrationStaff
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.BoardOfDirectories</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.supplierNumber</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.supplierName</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainActivityBasedonCommercialNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.MainActivity</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MembershipCity
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.YasserInfo.MembershipCityName</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.UniqueNumber
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.YasserInfo.OfficeFacilityNumberInMinistryOfLabor</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RegistrationInSocialInsurance
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.YasserInfo.SocialSecuritySubscriptionNumber</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InvestmentLicense
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span>@Model.YasserInfo.InvestmentLicenseNumber</span>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Activities
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <ul>
+                           @{
+                              foreach (var activity in Model.Activities)
+                              {
+                                 <li>@activity</li>
+                              }
+
+
+                           }
+                        </ul>
+                     </div>
+                  </div>
+               </li>
+               <li class="list-group-item">
+                  <div class="row">
+                     <div class="col-4 etd-item-title">
+
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ActivityDescription
+                     </div>
+                     <div class="col-8 etd-item-info">
+                        <span> @Model.MainActivityDescription</span>
+                     </div>
+                  </div>
+               </li>
+            </ul>
+         </div>
+      </div>
+   </div>
+   <div class=" card-collapse">
+      <div class="card-header" role="tab" id="headingThree">
+         <h5 class="mb-0">
+            <a class="collapsed" data-toggle="collapse" href="#CompanyBranches" aria-expanded="false" aria-controls="collapseThree">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CompanyBranches
+               <i class="material-icons">keyboard_arrow_down</i> 
+            </a>
+         </h5>
+      </div>
+      <div id="CompanyBranches" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+         <div class="card-body">
+            <table class="table table-condensed table-striped"   summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow" >
+               <thead>
+                  <tr>
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.City
+                     </th>
+
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PhoneNumber
+
+                     </th>
+
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Fax
+
+                     </th>
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Address
+
+                     </th>
+                  </tr>
+               </thead>
+               <tbody>
+                  @foreach (var BR in Model.Addresses)
+                  {
+                     <tr>
+                        <td>@BR.City</td>
+                        <td>@BR.PhoneNumber</td>
+                        <td>@BR.FaxNumber</td>
+                        <td>
+                           @MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.PostalAddress : @BR.Location
+                           <br />
+                           @MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.PObox : @BR.PostOffice
+                           <br />
+                           @MOF.Etimad.Monafasat.Resources.VendorsResources.DisplayInputs.PostalCode : @BR.PostalCode
+                           <br />
+                        </td>
+                     </tr>
+                  }
+
+
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+   <div class=" card-collapse">
+      <div class="card-header" role="tab" id="headingThree">
+         <h5 class="mb-0">
+            <a class="collapsed" data-toggle="collapse" href="#contracts" aria-expanded="false" aria-controls="collapseThree">
+               @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Contracts
+               <i class="material-icons">keyboard_arrow_down</i> 
+            </a>
+         </h5>
+      </div>
+      <div id="contracts" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+         <div class="card-body">
+            <table class="table table-condensed table-striped"   summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow">
+               <thead>
+                  <tr>
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProjectName
+                     </th>
+
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ContractAmount
+
+                     </th>
+
+                     <th scope="col">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.GoveAgency
+
+
+                     </th>
+                  </tr>
+               </thead>
+               <tbody>
+                  @foreach (var pro in Model.Projects)
+                  {
+                     <tr>
+                        <td>@pro.ProjectName</td>
+
+                        <td>@pro.ContractAmount</td>
+
+                        <td>@pro.Agency</td>
+                     </tr>
+                  }
+
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+   @if (Model.SupplierType == (int)Enums.SupplierType.SemiGovAgency || Model.SupplierType == (int)Enums.SupplierType.PrivateSector)
+   {
+      <div class=" card-collapse">
+         <div class="card-header" role="tab" id="headingThree">
+            <h5 class="mb-0">
+               <a class="collapsed" data-toggle="collapse" href="#GovernmantalDocuments" aria-expanded="false" aria-controls="collapseThree">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.GovernmantalDocuments
+                  <i class="material-icons">keyboard_arrow_down</i> 
+               </a>
+            </h5>
+         </div>
+         <div id="GovernmantalDocuments" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+            <div class="card-body">
+               <table class="table table-condensed table-striped"   summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow">
+                  <thead>
+                     <tr>
+                        <th scope="col">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentName
+                        </th>
+                        <th scope="col">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentStatus
+                        </th>
+                        <th scope="col">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Actions
+                        </th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.CR</td>
+                        <td>
+                           <span class="badge h6" id="CR"></span>
+                           <span id="CRdate"></span>
+                        </td>
+                        <td>
+                           <button type="button" class="btn  btn-sm btn-primary" @(string.IsNullOrEmpty(Model.supplierName) ? "disabled" : "") onclick="ValidateMCICRAndGetInfo('@Model.supplierNumber', event)">   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check</button>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ZakatLecience</td>
+
+                        <td>
+                           <span class="badge h6" id="ZakatLecience"></span>
+                           <span id="ZakatLeciencedate"></span>
+                        </td>
+                        <td>
+                           <button type="button" class="btn btn-sm btn-primary" @(string.IsNullOrEmpty(Model.supplierNumber) ? "disabled" : "") onclick="ZakatCertificateInquiryByCR('@Model.supplierNumber', event)">   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check</button>
+
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.ContractorsCategorization</td>
+
+                        <td>
+                           <span class="badge h6" id="ContractorsCategorization"></span>
+                           <span id="ContractorsCategorizationdate"></span>
+                        </td>
+                        <td>
+                           <button type="button" class="btn btn-sm btn-primary" @(string.IsNullOrEmpty(Model.supplierNumber) ? "disabled" : "") onclick="ContractorDetailsInquiry( '@Model.supplierNumber',event)">   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check</button>
+
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.WorkLaborFiled</td>
+
+                        <td>
+                           <span class="badge h6" id="WorkLaborFiledStatus"></span>
+                           <span class="font-weight-bold" id="WorkLaborFiled" hidden>
+                              <br />
+                              <span id="WorkLaborFiledColorName"></span>
+                              <span>(نسبة السعودة:</span>
+                              <span id="WorkLaborFiledPercentage"></span>
+                              <span>%)</span>
+                              <br />
+                              <span class="text-danger">@MOF.Etimad.Monafasat.Resources.VendorsResources.Messages.PleaseVerifyCompanyName</span>
+                              <br />
+                              <span id="WorkLaborFiledName"></span>
+                              <span id="WorkLaborFileddate"></span>
+                           </span>
+                        </td>
+                        <td>
+                           <button type="button" class="btn btn-sm btn-primary" onclick="NitaqatInformationInquiry('@Model.YasserInfo.OfficeFacilityNumberInMinistryOfLabor' ,'@Model.YasserInfo.SequenceFacilityNumberInMinistryOfLabor', event)">   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check</button>
+
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.CommericialWorkshopSubsciption</td>
+
+                        <td>
+                           <span class="badge h6" id="CommericialWorkshopSubsciption"></span>
+                           <span id="CommericialWorkshopSubsciptiondate"></span>
+                        </td>
+                        <td>
+                           <button type="button" class="btn  btn-sm  btn-primary" onclick="GetCOCSubscriptionBySijilNumber('@Model.supplierNumber','@Model.YasserInfo.MembershipCityCode', event)">   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check</button>
+
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SocialInsuranceLicience</td>
+                        <td>
+                           <span class="badge h6" id="SocialInsuranceLicience"></span>
+                           <br />
+                           <span id="verifyCompanyNameMessage" class="text-danger" hidden>@MOF.Etimad.Monafasat.Resources.VendorsResources.Messages.PleaseVerifyCompanyName</span>
+                           <br />
+                           <span id="SocialInsuranceCompanyName"></span>
+                           <span id="SocialInsuranceLiciencedate"></span>
+                        </td>
+                        <td>
+                           <button type="button" class="btn btn-sm btn-primary" onclick="GOSICertificateInquiry('@Model.YasserInfo.SocialSecuritySubscriptionNumber', event)">   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check</button>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.InvestmentLicience</td>
+                        <td>
+                           <span class="badge h6" id="InvestmentLicience"></span>
+                           <span id="InvestmentLiciencedate"></span>
+                        </td>
+                        <td>
+                           <button type="button" class="btn btn-sm  btn-primary" onclick="LicenseStatusInquiry( '@Model.YasserInfo.InvestmentLicenseNumber', event)">   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check</button>
+                        </td>
+                     </tr>
+
+                     <tr>
+                        <td>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.LocalContent</td>
+                        <td>
+                           <span class="badge h6" id="LocalContent"></span>
+                           <span id="EstablishmentType"></span>
+                        </td>
+                        <td>
+                           <button type="button" class="btn btn-sm btn-primary" onclick="LocalContentGetEstablishmentTypeByCR('@Model.supplierNumber', event)">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check</button>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+            <div style="text-align:center">
+               <button type="button" class="btn btn-sm  btn-primary pull-center" style="text-align:center" onclick="CheckAll( )">   @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckAllDocuments</button>
+            </div>
+         </div>
+      </div>
+   }
+
+   @*<div class=" card-collapse">
+         <div class="card-header" role="tab" id="headingThree">
+            <h5 class="mb-0">
+               <a class="collapsed" data-toggle="collapse" href="#Files" aria-expanded="false" aria-controls="collapseThree">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Files
+                  <i class="material-icons">keyboard_arrow_down</i> 
+               </a>
+            </h5>
+         </div>
+         <div id="Files" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+            <div class="card-body row">
+               <div class="col-md-6 col-sm-12 col-xs-12">
+
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              كراسة الشروط والمواصفات وملاحق المنافسة
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <a href="#" onclick="RedirectURL('idd_2CE19608-84B1-C336-8521-6875EB300000','THIQAH Day Agenda.pdf'); return false;" target="_blank" class="btn btn-outline-primary btn-sm col-12" style="white-space: normal;">
+                                 THIQAH Day Agenda.pdf
+                              </a>
+                           </div>
+                        </div>
+                     </li>
+
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>*@
+</div>
+
+<script>
+   function AjaxStartSpinner(event) {
+      event.target.innerHTML = '<i class="fa fa-refresh fa-spin" style="font-size:24px"></i> ';
+      event.target.classList.add('btn-warning');
+      event.target.disabled = true;
+   }
+   function AjaxStopSpinner(event) {
+
+      if (event.checkAll)
+         event.target.innerHTML = '@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckAllDocuments';
+      else
+         event.target.innerHTML = '@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check';
+
+      event.target.disabled = false;
+      event.target.classList.remove('btn-warning');
+
+
+   }
+
+   function CheckAll() {
+      event.checkAll = true;
+      ValidateMCICRAndGetInfo('@Model.supplierNumber', event);
+      GetCOCSubscriptionBySijilNumber('@Model.YasserInfo.InvestmentLicenseNumber', '@Model.YasserInfo.MembershipCityCode', event);
+      ZakatCertificateInquiryByCR('@Model.supplierNumber', event);
+      LocalContentGetEstablishmentTypeByCR('@Model.supplierNumber', event);
+      ContractorDetailsInquiry('@Model.supplierNumber', event);
+      LicenseStatusInquiry('@Model.YasserInfo.InvestmentLicenseNumber', event);
+      GOSICertificateInquiry('@Model.YasserInfo.SocialSecuritySubscriptionNumber', event);
+      NitaqatInformationInquiry('@Model.YasserInfo.OfficeFacilityNumberInMinistryOfLabor' ,'@Model.YasserInfo.SequenceFacilityNumberInMinistryOfLabor', event)
+   }
+
+   function ValidateMCICRAndGetInfo(CR,event) {
+      AjaxStartSpinner(event);
+
+      $.get('/Tender/ValidateMCICRAndGetInfo/' + CR).done(function (result) {
+          AjaxStopSpinner(event);
+
+         $('#CR').html(result.result.statusName);
+         if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Success)) {
+
+            $('#CR').addClass("badge-primary");
+            $('#CRdate').html('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDate'+ ':'+result.result.date);
+         }
+          else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Warnning)) {
+            $('#CR').addClass("badge-warning");
+         }
+           else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Wrong)) {
+            $('#CR').addClass("badge-danger");
+            $('#CRdate').html('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDate'+ ':'+result.result.date);
+         }
+
+
+      }).fail(function (error) {
+         AjaxStopSpinner(event)
+          if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });;
+   }
+
+   function GetCOCSubscriptionBySijilNumber(LicenseNumber, CityCode,event) {
+      AjaxStartSpinner(event);
+      if (!LicenseNumber || !CityCode) {
+          $('#CommericialWorkshopSubsciption').css('color', 'red');
+         $('#CommericialWorkshopSubsciption').html('@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.IncompleteData');
+         AjaxStopSpinner(event)
+ return true;
+      }
+      $.get('/Tender/GetCOCSubscriptionBySijilNumber/' + LicenseNumber + '/' + CityCode).done(function (result) {
+         AjaxStopSpinner(event)
+         $('#CommericialWorkshopSubsciption').html(result.result.statusName);
+         $('#CommericialWorkshopSubsciptiondate').html(result.result.date);
+         if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Success)) {
+            $('#CommericialWorkshopSubsciption').addClass("badge-primary");
+         }
+          else if (result.result.enSupplierInfoType ==@((int)Enums.SupplierInfoType.Warnning) ){
+            $('#CommericialWorkshopSubsciption').addClass("badge-warning");
+         }
+         else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Wrong)) {
+            $('#CommericialWorkshopSubsciption').addClass("badge-danger");
+         }
+      }).fail(function (error) {
+         AjaxStopSpinner(event)
+
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });;
+   }
+
+   function ZakatCertificateInquiryByCR(CR, event) {
+
+      AjaxStartSpinner(event);
+      $.get('/Tender/ZakatCertificateInquiryByCR/' + CR).done(function (result) {
+         AjaxStopSpinner(event);
+
+         $('#ZakatLecience').html(result.result.statusName);
+         if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Success))  {
+            $('#ZakatLecience').addClass("badge-primary");
+            $('#ZakatLeciencedate').html('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDate'+ ':'+result.result.date);
+         }
+          else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Warnning)) {
+            $('#ZakatLecience').addClass("badge-warning");
+         }
+           else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Wrong)) {
+            $('#ZakatLecience').addClass("badge-danger");
+            $('#ZakatLeciencedate').html('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDate'+ ':'+result.result.date);
+         }
+         event.target.innerHTML = ' @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check';
+         event.target.disabled = false;
+         event.target.classList.remove('btn-warning');
+
+
+      }).fail(function (error) {
+         event.target.innerHTML =' @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check';
+         event.target.disabled = false;
+         event.target.classList.remove('btn-warning');
+
+
+         AjaxStopSpinner(event)
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });;
+   }
+
+   @*function LocalContentGetEstablishmentTypeByCR(CR, event) {
+      AjaxStartSpinner(event);
+      $.get('/Tender/LocalContentGetEtasblishmentTypeByCR/' + CR).done(function (result) {
+         AjaxStopSpinner(event);
+
+         debugger;
+
+         $('#LocalContent').html(result.result.statusName);
+         if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Success))  {
+            $('#LocalContent').addClass("badge-primary");
+            $('#EstablishmentType').html('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDate'+ ':'+result.result.date);
+         }
+          else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Warnning)) {
+            $('#LocalContent').addClass("badge-warning");
+         }
+           else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Wrong)) {
+            $('#LocalContent').addClass("badge-danger");
+            $('#EstablishmentType').html('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDate'+ ':'+result.result.date);
+         }
+         event.target.innerHTML = ' @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check';
+         event.target.disabled = false;
+         event.target.classList.remove('btn-warning');
+
+
+      }).fail(function (error) {
+         event.target.innerHTML =' @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check';
+         event.target.disabled = false;
+         event.target.classList.remove('btn-warning');
+         AjaxStopSpinner(event)
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });;
+   }*@
+
+      function LocalContentGetEstablishmentTypeByCR(CR, event) {
+      AjaxStartSpinner(event);
+      $.get('/Tender/LocalContentGetEtasblishmentTypeByCR/' + CR).done(function (result) {
+         AjaxStopSpinner(event);
+         debugger;
+         $('#LocalContent').html(result.result.size);
+         if (result.result.status.trim().toLowerCase() == "success") {
+            $('#LocalContent').addClass("badge-primary");
+         }
+         else {
+            $('#LocalContent').addClass("badge-danger");
+         }
+         $('#LocalContent').html(result.result.size);
+         @*if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Success))  {
+            $('#LocalContent').addClass("badge-primary");
+            $('#EstablishmentType').html('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDate'+ ':'+result.result.date);
+         }
+          else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Warnning)) {
+            $('#LocalContent').addClass("badge-warning");
+         }
+           else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Wrong)) {
+            $('#LocalContent').addClass("badge-danger");
+            $('#EstablishmentType').html('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDate'+ ':'+result.result.date);
+         }*@
+         event.target.innerHTML = '@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check';
+         event.target.disabled = false;
+         event.target.classList.remove('btn-warning');
+
+
+      }).fail(function (error) {
+         event.target.innerHTML =' @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Check';
+         event.target.disabled = false;
+         event.target.classList.remove('btn-warning');
+         AjaxStopSpinner(event)
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });;
+   }
+
+
+
+   function ContractorDetailsInquiry(partyNumberId, event) {
+
+      AjaxStartSpinner(event);
+      if (!partyNumberId) {
+          $('#ContractorsCategorization').css('color', 'red');
+          $('#ContractorsCategorization').html('@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.IncompleteData');
+         AjaxStopSpinner(event)
+ return true;
+      }
+      $.get('/Tender/ContractorDetailsInquiry/' + partyNumberId).done(function (result) {
+         AjaxStopSpinner(event)
+         $('#ContractorsCategorization').html(result.result.statusName);
+         $('#ContractorsCategorizationdate').html(result.result.date);
+         if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Success)) {
+            $('#ContractorsCategorization').addClass("badge-primary");
+         }
+          else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Warnning)) {
+            $('#ContractorsCategorization').addClass("badge-warning");
+         }
+           else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Wrong)) {
+            $('#ContractorsCategorization').addClass("badge-danger");
+         }
+
+      }).fail(function (error) {
+         AjaxStopSpinner(event)
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });;
+   }
+   function LicenseStatusInquiry(LicenseNumber,event) {
+      AjaxStartSpinner(event);
+      if (!LicenseNumber) {
+         $('#InvestmentLicience').css('color', 'red');
+         $('#InvestmentLicience').html('@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.IncompleteData');
+         AjaxStopSpinner(event)
+ return true;
+      }
+      $.get('/Tender/LicenseStatusInquiry/' + LicenseNumber).done(function (result) {
+
+         AjaxStopSpinner(event)
+         $('#InvestmentLicience').html(result.result.statusName);
+         $('#InvestmentLiciencedate').html('@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EndDate'+ ':' + result.result.date);
+         if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Success))  {
+            $('#InvestmentLicience').addClass("badge-primary");
+         }
+          else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Warnning)) {
+            $('#InvestmentLicience').addClass("badge-warning");
+         }
+           else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Wrong)) {
+            $('#InvestmentLicience').addClass("badge-danger");
+         }
+
+      }).fail(function (error) {
+
+
+         AjaxStopSpinner(event)
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });;
+   }
+   function GOSICertificateInquiry(GOSIId,event) {
+      AjaxStartSpinner(event);
+      if (!GOSIId) {
+         $('#SocialInsuranceLicience').css('color', 'red');
+         $('#SocialInsuranceLicience').html('@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.IncompleteData');
+         AjaxStopSpinner(event)
+ return true;
+      }
+
+
+      $.get('/Tender/GOSICertificateInquiry/' + GOSIId).done(function (result) {
+         AjaxStopSpinner(event)
+         $('#SocialInsuranceLicience').html(result.result.statusName);
+         if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Success))  {
+            $('#SocialInsuranceLicience').addClass("badge-primary");
+            $('#verifyCompanyNameMessage').attr("hidden", false);
+            $('#SocialInsuranceLiciencedate').html(result.result.date);
+            $('#SocialInsuranceCompanyName').html(result.result.companyName);
+         }
+          else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Warnning)) {
+            $('#SocialInsuranceLicience').addClass("badge-warning");
+         }
+           else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Wrong)) {
+            $('#SocialInsuranceLicience').addClass("badge-danger");
+         }
+      }).fail(function (error) {
+         AjaxStopSpinner(event)
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });;
+   }
+   function NitaqatInformationInquiry(EstablishmentLaborOfficeId, EstablishmentSequenceNumber, event) {
+      AjaxStartSpinner(event);
+      if (!EstablishmentLaborOfficeId || !EstablishmentSequenceNumber ) {
+         $('#WorkLaborFiled').css('color', 'red');
+         $('#WorkLaborFiled').html('@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.IncompleteData');
+         AjaxStopSpinner(event)
+ return true;
+      }
+      $.get('/Tender/NitaqatInformationInquiry/' + EstablishmentLaborOfficeId + '/' + EstablishmentSequenceNumber).done(function (result) {
+         AjaxStopSpinner(event)
+         $('#WorkLaborFiledStatus').html(result.result.statusName);
+         if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Success)) {
+            $('#WorkLaborFiled').attr("hidden", false);
+            $('#WorkLaborFiledStatus').addClass("badge-primary");
+            $('#WorkLaborFiledColorName').html(result.result.notes);
+            $('#WorkLaborFiledPercentage').html(result.result.saudiPercentage);
+            $('#WorkLaborFiledName').html(result.result.companyName);
+            $('#WorkLaborFileddate').html(result.result.date);
+            $('#WorkLaborFiledStatus').html(result.result.statusName);
+         }
+          else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Warnning)) {
+            $('#WorkLaborFiledStatus').addClass("badge-warning");
+         }
+           else if (result.result.enSupplierInfoType == @((int)Enums.SupplierInfoType.Wrong)) {
+            $('#WorkLaborFiledStatus').addClass("badge-danger");
+         }
+      }).fail(function (error) {
+         AjaxStopSpinner(event)
+         if (error.responseText != "Logout") {
+            AlertFun(error.responseJSON.message, alertMessageType.Danger);
+         }
+         else if (error.responseText == "Logout") {
+            window.location = '/account/logout'; return;
+         }
+      });;
+   }
+
+</script>

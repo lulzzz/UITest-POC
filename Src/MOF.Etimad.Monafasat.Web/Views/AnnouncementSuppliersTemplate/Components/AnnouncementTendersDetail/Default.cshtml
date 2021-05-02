@@ -1,0 +1,36 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderAnnouncementSuppliersTemplateDetails
+@using MOF.Etimad.Monafasat.SharedKernal;
+@{
+   ViewData["Title"] = "المنافسات المستخدمة للقائمة";/*MOF.Etimad.Monafasat.Resources.AnnouncementResources.DisplayInputs.AnnouncementTemplateDetails;*/
+}
+
+@{
+   int announcementId = Util.Decrypt(Model.AnnouncementIdString);
+}
+
+   <div class="row">
+      @await Html.PartialAsync("~/Views/Tender/DetailsPartials/_DetailsSuppliersRequestsGrid.cshtml")
+   </div>
+
+
+<script>
+     var agencyRequestsApp = new Vue({
+         el: '#agencyRequestsGrid',
+         data: {
+            AgencyRequests: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/CommunicationRequest/GetAgencyCommunicationRequestsGridAsync?TenderId=' + @announcementId,
+            queryString: '',
+            showTable: false
+            },
+            methods: {
+            updateResource: function (data) {
+            this.AgencyRequests = data;
+            this.totalCount = this.$refs.vpaginator.totalCount;
+            this.currentPage = this.$refs.vpaginator.currentPage;
+            this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+     });
+</script>

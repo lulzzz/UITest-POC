@@ -1,0 +1,87 @@
+<div class="animated  delay-2s col-md-12 col-sm-12 col-xs-12" id="CommitteeTable">
+   <div class="row" v-if="Branches && Branches.length > 0">
+      <div class=" monafasa-item col-xl-4 col-lg-4 col-md-6  col-sm-12 col-xs-12" v-for="(br, $index) in Branches">
+         <div class="card">
+            <div class="card-body">
+               @Html.Partial("_BranchListActions.cshtml")
+               <h5 class="card-category card-category-social text-primary">
+                  <i class="material-icons  text-dark-green" style="border: 1px solid #ccc;display: inline;border-radius: 100%;padding: 5px;">people</i><span class="d-inline-block" style="padding: 0 5px;"> {{br.branchName}} </span></h5>
+               <span class="h6 badge badge-warning" v-if="br.techcommitteeIds.length==0 || br.checkcommitteeIds.length==0 || br.opencommitteeIds.length==0 ">
+                  @MOF.Etimad.Monafasat.Resources.BranchResources.ErrorMessages.CommitteesNotSet
+               </span>
+               <div class="clearfix"></div>
+               <div class="row">
+                  <ul class="list-group form-details-list">
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.TheSequenceNumber
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>{{(currentPage -1) * (pageSize) +  $index + 1}}</span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item" v-if="br.agencyName !=null">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.agencyName}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item" v-if="br.branchName !=null">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyBranch
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 {{br.branchName}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Position
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span v-if="br.mainBranchAddress !=null">
+                                 {{br.mainBranchAddress.position}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col etd-item-title">
+                              @MOF.Etimad.Monafasat.Resources.BranchResources.DisplayInputs.Phone1
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span v-if="br.mainBranchAddress !=null">
+                                 {{br.mainBranchAddress.phone}}
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row " v-else>
+      <div class="col-12 text-center">
+         @Html.Partial("~/Views/Shared/_NoData.cshtml")
+      </div>
+   </div>
+   <div class="col-12 m-5 m-auto">
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+   </div>
+</div>

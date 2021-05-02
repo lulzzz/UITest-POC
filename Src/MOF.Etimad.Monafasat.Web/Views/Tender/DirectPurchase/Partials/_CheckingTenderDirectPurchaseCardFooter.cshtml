@@ -1,0 +1,35 @@
+<div class="card-footer row">
+   <div class="col-md-12 text-right">
+      @if (User.IsInRole(RoleNames.OffersPurchaseSecretary))
+      {
+         <a :href="checkDirectPurchaseTenderOffers(tender.tenderIdString)" v-if="(tender.isLowBudgetDirectPurchase == false &&  (( tender.tenderStatusId == @((int)Enums.TenderStatus.OffersChecking) ||  tender.tenderStatusId == @((int)Enums.TenderStatus.DirectPurchaseOffersChecking))&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_SecretaryDirtectPurshasingCommittee)))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckTechnicalEvaluation
+         </a>
+         <a :href="checkDirectPurchaseTenderOffers(tender.tenderIdString)" v-if="(tender.isLowBudgetDirectPurchase == false &&((tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingConfirmed) ||  tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialChecking)) && tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_SecretaryDirtectPurshasingCommittee) && tender.offerPresentationWayId == @((int)Enums.OfferPresentationWayId.TwoSepratedFiles)))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckFinancialOffers
+         </a>
+         <a :href="checkDirectPurchaseTenderOffers(tender.tenderIdString)" v-if="(tender.isLowBudgetDirectPurchase == false &&((tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingRejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.DirectPurchaseOffersCheckingRejected) || tender.tenderStatusId == @((int)Enums.TenderStatus.BackForCheckingFromPlaint))&& tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_SecretaryDirtectPurshasingCommittee)))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReopenCheck
+         </a>
+      }
+
+      @if (User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary))
+      {
+
+         <a :href="checkDirectPurchaseTenderOffers(tender.tenderIdString)" v-if="((tender.isLowBudgetDirectPurchase==false &&  (tender.tenderStatusId == @((int)Enums.TenderStatus.OffersTechnicalCheckingPending) || tender.tenderStatusId == @((int)Enums.TenderStatus.DirectPurchaseOffersCheckingApprovePending) || tender.tenderStatusId == @((int)Enums.TenderStatus.OffersFinancialOfferCheckingPending)) && tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_ManagerDirtectPurshasingCommittee)))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReviewData
+         </a>
+         <a :href="checkDirectPurchaseTenderOffers(tender.tenderIdString)" v-if="(((tender.tenderStatusId == @((int)Enums.TenderStatus.Approved)) && tender.canStartOfferCheckingDate &&  (tender.isLowBudgetDirectPurchase==false || tender.isLowBudgetDirectPurchase==null ? tender.userCommitteeType == @((int)Enums.UserCommitteeType.NewMonafasat_ManagerDirtectPurshasingCommittee) : true)))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOfferConfirmStage
+         </a>
+
+      }
+      @if (User.IsInRole(RoleNames.OffersPurchaseManager) || User.IsInRole(RoleNames.OffersPurchaseSecretary))
+      {
+         <a :href="checkDirectPurchaseTenderOffers(tender.tenderIdString)" v-if="(tender.isLowBudgetDirectPurchase == true &&(( tender.tenderStatusId == @((int)Enums.TenderStatus.OffersChecking) )))" class="btn btn-sm btn-primary">
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckTechnicalEvaluation
+         </a>
+         }
+
+   </div>
+</div>

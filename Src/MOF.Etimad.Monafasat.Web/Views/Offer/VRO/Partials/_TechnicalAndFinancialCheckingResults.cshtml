@@ -1,0 +1,56 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@model MOF.Etimad.Monafasat.ViewModel.VROFinantialCheckingModel
+
+<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+   <div class="form-group has-success bmd-form-group">
+      <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.OfferStatus </label><span class="text-danger">*</span>
+      <label class="label bmd-label-static"> : @Model.FinantialOfferStatusString</label>
+   </div>
+</div>
+<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+   <div class="form-group has-success bmd-form-group">
+      <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.TechnicalEvaluation </label><span class="text-danger">*</span>
+      <label class="label bmd-label-static"> : @Model.TechnicalOfferStatusString</label>
+   </div>
+</div>
+<div id="divTechnicalRejectionReason">
+   <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <label for="TechnicalRejectionReason" class="label bmd-label-static">@res.SharedResources.DisplayInputs.RejectedReason</label>
+         <label> : @Model.TechnicalRejectionReason</label>
+      </div>
+   </div>
+</div>
+<div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+   <div class="form-group bmd-form-group">
+      <label for="Notes" class="label bmd-label-static">@res.SharedResources.DisplayInputs.Notes</label>
+      <label> : @Model.Notes</label>
+   </div>
+</div>
+<div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+   <div class="form-group bmd-form-group">
+      <label for="TechnicalRejectionReason" class="label bmd-label-static">@res.OfferResources.DisplayInputs.TechnicalWeight</label>
+      <label> : @Model.TechnicalWeigth</label>
+   </div>
+</div>
+
+@if (User.IsInRole(RoleNames.OffersOpeningAndCheckSecretary) && (Model.TenderStatusId == (int)Enums.TenderStatus.VROOffersFinancialChecking || Model.TenderStatusId == (int)Enums.TenderStatus.VROFinancialCheckingOpening))
+{
+   <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+      <div class="form-group has-success bmd-form-group">
+         <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.FinancialWeight  </label><span class="text-danger">*</span>
+         <input name="FinancialWeigth" asp-for="FinancialWeigth " type="number" class="form-control" />
+      </div>
+      <span class="bmd-help text-danger" id="spanOfferFinancialWeight">@res.OfferResources.ErrorMessages.EnterFinancialWeight </span>
+      <br />
+   </div>
+}
+else
+{
+   <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
+      <div class="form-group bmd-form-group">
+         <label for="FinancialWeigth" class="label bmd-label-static">@res.OfferResources.DisplayInputs.FinancialWeight</label>
+         <label> : @Model.FinancialWeigth</label>
+      </div>
+   </div>
+}

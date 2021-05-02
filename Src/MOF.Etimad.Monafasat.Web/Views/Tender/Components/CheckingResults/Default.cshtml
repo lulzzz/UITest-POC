@@ -1,0 +1,34 @@
+@model MOF.Etimad.Monafasat.ViewModel.CheckingResultsModel
+<br />
+<div class="row">
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <h4>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AcceptedOffers</h4>
+      <table class="table  table-striped text-center table-bordered">
+         <caption></caption>
+         <thead>
+            <tr>
+               <th scope="col">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierName</th>
+            </tr>
+         </thead>
+         <tbody class="text-center">
+            @if (Model.SupplierNames != null && Model.SupplierNames.Count > 0)
+            {
+               @foreach (var item in Model.SupplierNames)
+               {
+                  <tr>
+                     <td>@item</td>
+                  </tr>
+               }
+            }
+            else
+            {
+               <tr>
+                  <td>
+                     @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoOfferAccepted
+                  </td>
+               </tr>
+            }
+         </tbody>
+      </table>
+   </div>
+</div>

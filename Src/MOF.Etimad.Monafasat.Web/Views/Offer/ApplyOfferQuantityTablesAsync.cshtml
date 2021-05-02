@@ -1,0 +1,185 @@
+@model MOF.Etimad.Monafasat.ViewModel.Offer.OfferQuantityTableModel
+@{
+
+   ViewData["Title"] = "جداول الكميات";
+}
+<style>
+   .modal {
+      z-index: 9999999;
+   }
+</style>
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">جداول الكميات</li>
+      </ol>
+   </nav>
+}
+
+
+<div class="card">
+   <div class="alert alert-warning p-1">
+      <i class="material-icons pull-left p-2">
+         warning
+      </i>
+      <span class="d-inline-block p-2">
+         فى حالة عدم تعبئة قيم الجداول تعتبر القيمة صفر
+      </span>
+
+   </div>
+   <div class="card-body">
+    
+         <div  id="divQuantityTable" class="card-collapse" style="border:1px solid #ccc;border-radius:6px;overflow:hidden;">
+
+            @Html.Partial("~/Views/Offer/Partial/_ApplyOfferQuantityTables.cshtml", Model.QuantitiesTemplateModel)
+
+            @*<h1>@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Loading</h1>*@
+         </div>
+
+      </div>
+
+</div>
+<div class="row">
+   <div class="col-12">
+      @{
+         <a asp-action="OfferFilesAsync" class="btn btn-default pull-left" asp-controller="Offer" asp-route-OfferIdString="@Model.OfferIdString"> السابق</a>
+
+         if (Model.IsSolidarity)
+         {
+            <a asp-action="OfferSolidarityAsync" class="btn btn-primary pull-left" asp-controller="Offer" asp-route-OfferIdString="@Model.OfferIdString"> التالى</a>
+
+         }
+         else
+         {
+            <a asp-action="OfferSummary" class="btn btn-primary pull-left" asp-controller="Offer" asp-route-OfferIdString="@Model.OfferIdString"> التالى</a>
+         }
+         <a asp-action="OfferFilesAsync" class="btn btn-outline-primary pull-right" asp-controller="Offer" asp-route-OfferIdString="@Model.OfferIdString"> @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackToMyTenders</a>
+      }
+   </div>
+</div>
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script>
+
+      function submitForm(formId) {
+         
+         $("#tableContainDiv_" + formId).find("#form0").submit();
+      }
+
+//      window.addEventListener("beforeunload", function (e) {
+//    var confirmationMessage = 'It looks like you have been editing something. '
+//                            + 'If you leave before saving, your changes will be lost.';
+
+//    (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+//    return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+//});
+
+
+
+      //$(document).ajaxError(function (xhr, status, error) {
+      //   
+      //   console.log(status)
+      // //  AlertFun(error.responseText, alertMessageType.Danger);
+      //   $('#LoadingSite').fadeOut();
+
+      //});
+      //var loader = false;
+
+      //$('#divQuantityTable form').submit(function () {
+      //   loader = true;
+
+      //});
+  //    $(document).ajaxComplete(function () {
+  //      // alert();
+  //       //  $('#LoadingSite').fadeOut();
+  //       $('.qtableselectpicker').selectpicker('refresh')
+  //   //    $('.selectpicker').selectpicker('refresh');
+        
+  //    });
+
+  //    $(document).ajaxStart(function (e) {
+  //   //   $('#LoadingSite').fadeIn();
+  //       $('.qtableselectpicker').selectpicker('refresh')
+  ////    $('.selectpicker').selectpicker('refresh');
+  //    });
+
+  //    $(document).ajaxSuccess(function (e) {
+  //    //     $('#loader').hide();
+  //       $('.qtableselectpicker').selectpicker('refresh')
+  // //      $('.selectpicker').selectpicker('refresh');
+
+
+  //    });
+      $(document).ready(function () {
+         //$('#LoadingSite').fadeIn();
+         @*$.ajax({
+            url: "/Offer/GetApplyOfferQuantityTablesComponent?OfferIdString=@Model.OfferIdString",
+            cache: false,
+            global: false,
+            success: function (html) {
+               
+               $('#divQuantityTable').html(html);
+            }
+            , complete: function () {
+               $('.qtableselectpicker').selectpicker('refresh')
+               loader = false
+                  ;
+               $('#LoadingSite').fadeOut();
+
+            }
+         })*@
+        @*$('#divQuantityTable').load("/Offer/GetQuantityTablesComponent?OfferIdString=@Model.OfferIdString").ajaxStart(function () {
+            loader = false;
+         }).ajaxComplete(function () {
+            
+            $('#LoadingSite').fadeOut();
+            loader = true;
+            }).ajaxError(function () {
+               
+               AlertFun("حدث خطا غير متوقع ", alertMessageType.Danger);
+               $('#LoadingSite').fadeIn();
+            });*@
+      });
+
+
+      @*var Negotiation = new Vue({
+         el: '#app',
+         data: {
+            QuantityTables: [],
+             totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/offer/GetApplyOfferQuantityTable?tenderIdString=' + '@Model.OfferIdString',
+            queryString: ''
+         },
+         methods: {
+              updateResource: function (data) {
+               
+               console.log("Data  :" +  data);
+               this.Offers = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            formatPrice(value) {
+               let val = (value / 1).toFixed(2).replace('.', ',')
+               return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+            }, RedirectURL: function (ids, names) {
+               
+               window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+            }
+         }
+      });*@
+
+     
+
+      //$('#divSubmit').click(function () {
+      //   $("#form0").submit();
+      //})
+   </script>}

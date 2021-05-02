@@ -1,0 +1,476 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.SharedKernal;
+@model MOF.Etimad.Monafasat.ViewModel.EnquiryModel
+@{
+   ViewData["Title"] = @res.EnquiryResources.DisplayInputs.EnquiryReview;
+   
+   int enquiryId = Model.EnquiryId; 
+   string tenderdString = Util.Encrypt(Model.TenderId);
+   string enquiryIdString = Util.Encrypt(Model.EnquiryId);
+   string enquiryReplyIdString = ""; 
+   int technicalCommitteeId = Model.TechnicalCommitteeId;
+   string technicalCommitteeName = Model.TechnicalCommitteeName;
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="@Url.Action("SupplierEnquiryList", "Enquiry")">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Enquiries</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.EnquiryReview</li>
+      </ol>
+   </nav>
+}
+
+@section modalTitle{
+   <h4 id="editReplyTitle" style="display:none;"> @res.EnquiryResources.DisplayInputs.Edit</h4>
+   <h4 id="addReplyTitle">@res.EnquiryResources.DisplayInputs.AddReply</h4>
+}
+@section modalContent{
+   <div class="col-lg-12 col-sm-12 col-xs-12" id="divSendMessage">
+      <div class="form-group">
+         <label for="EnquiryReplyMessage" class="label bmd-label-static">@res.EnquiryResources.DisplayInputs.EnquiryReply</label>
+         <textarea id="EnquiryReplyMessage" name="EnquiryReplyMessage" rows="3" autocomplete="off" class="form-control" title="@res.EnquiryResources.DisplayInputs.EnterReply"></textarea>
+         <div class="pull-left">
+            <span class="bmd-help text-danger" id="txtReplyValidation" style="display:none;">@res.EnquiryResources.DisplayInputs.EnterReply</span>
+            <br />
+         </div>
+      </div>
+   </div>
+}
+@section modalButtons{
+   <button type="button" class="btn btn-primary btn-sm" name="button" id="btnReplyConfirmation"> @res.EnquiryResources.DisplayInputs.Add </button>
+   <button type="button" class="btn btn-primary btn-sm" style="display:none" name="button" id="btnEditReplyConfirmation"> @res.EnquiryResources.DisplayInputs.Edit</button>
+   <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.EnquiryResources.DisplayInputs.Cancel</button>
+}
+<div class="modal fade" id="approveModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@res.EnquiryResources.DisplayInputs.ApproveReply</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="row" id="divApprove"> 
+                  <div class="form-group">
+                     <label id="" class="label bmd-label-static"> @res.EnquiryResources.Messages.ApproveReplyMsg</label>
+                  </div>
+               
+               <div class="clearfix"></div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button" id="btnApprove">@res.EnquiryResources.DisplayInputs.Confirm</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">@res.EnquiryResources.DisplayInputs.DeleteReply</h5>
+            <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+               <i class="material-icons">clear</i> 
+            </button>
+         </div>
+         <div class="modal-body">
+            <div class="row" id="divDelete">
+               <div class="col-sm-6 col-xs-12">
+                  <div class="form-group">
+                     <label id="" class="label bmd-label-static"> @res.EnquiryResources.Messages.DeleteReplyMsg</label>
+                  </div>
+               </div>
+               <div class="clearfix"></div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button" id="btnDeleteConfirmation">@res.EnquiryResources.DisplayInputs.Delete</button>
+            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">@res.EnquiryResources.DisplayInputs.Cancel</button>
+         </div>
+      </div>
+   </div>
+</div>
+ 
+@Html.AntiForgeryToken()
+<div class="" id="basicDetials">
+   <div class="card">
+      <div class="card-body">
+         <div class="row">
+            <div class="col-12">
+               <h4 class="text-primary"> @res.EnquiryResources.DisplayInputs.EnquiryReview</h4>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @res.EnquiryResources.DisplayInputs.SendingDate
+                        </div>
+                        <div class="col-9 etd-item-info">
+                           <span>
+                              @(Model.EnquirySendingDate.HasValue ? @Model.EnquirySendingDate.Value.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("en-US")) : "")
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @res.EnquiryResources.DisplayInputs.TechnicalCommitteeType
+                        </div>
+                        <div class="col-9 etd-item-info">
+                           <span>
+                              @(Model.IsJoinedCommittee == true ? @res.EnquiryResources.DisplayInputs.JoinedCommittee : @res.EnquiryResources.DisplayInputs.OriginalCommittee)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+
+               </ul>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col etd-item-title">
+                           @res.CommitteeResources.DisplayInputs.TechnicalCommitteeName
+                        </div>
+                        <div class="col-9 etd-item-info">
+                           <span>
+                              @(Model.TechnicalCommitteeName)
+                           </span>
+                        </div>
+                     </div>
+                  </li>
+
+               </ul>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-12 etd-item-title">
+                           @res.EnquiryResources.DisplayInputs.EnquiryText
+                        </div>
+                        <div class="col-12 etd-item-info">
+                           <span id="subPurposSapn" style="display:block"> 
+                              @Html.Raw(Model.EnquiryName.Length > 150 ? Model.EnquiryName.Substring(0, 150) : Model.EnquiryName)
+                             @if (Model.EnquiryName.Length > 150) {
+                                <button type="button" class="readMore btn btn-link btn-sm btn-primary p-1" style="font-weight:700" onclick="readMore(event)">عرض المزيد<i class="fa fa-ellipsis-h p-1"></i> </button>
+                             }
+                           </span>
+                           <span id="purposeSpan" hidden="hidden" style="display:block">
+                              @Html.Raw(Model.EnquiryName)
+                              <button type="button" class="readLess btn btn-link btn-sm p-1 btn-warning " style="font-weight:700" onclick="readLess(event)">إخفاء المزيد<i class="fa fa-ellipsis-h p-1"></i> </button>
+                           </span>
+
+                        </div>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+            <div class="col-12">
+               <button class="btn btn-primary" id="btnSend" data-toggle="modal"> @res.EnquiryResources.DisplayInputs.AddReply</button> 
+               @if (Model.IsJoinedCommittee != true)
+               {
+                  <button class="btn " onclick="window.location = '@Url.Action("JoinTechnicalCommittee", "Enquiry" , new { enquiryIdString= @enquiryIdString })'">
+                     @res.EnquiryResources.DisplayInputs.JoinCommittee
+                  </button>
+               }
+               <button class="btn btn-outline-primary pull-right" onclick="window.location = '@Url.Action("SupplierEnquiriesOnTender", "Enquiry" , new { id=@tenderdString})'">
+                  @MOF.Etimad.Monafasat.Resources.EnquiryResources.DisplayInputs.Back
+               </button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div id="enquiriesGrid" class="card">
+
+   <div class="card-body">
+      <div class="col-12">
+         <h4 class="text-primary">الردود ({{ enquiryReplies.length }})</h4>
+      </div>
+      <div class="card-collapse" v-if="enquiryReplies && enquiryReplies.length > 0">
+         <template v-for="(reply, $index) in enquiryReplies">
+            <div>
+               <blockquote class="blockquote h5">
+                  <div class="text-left pull-right" v-if="reply.enquiryReplyStatusId == @((int)Enums.EnquiryReplyStatus.Pending) && reply.committeeId == @technicalCommitteeId">
+                     <a href="#" @@click="approveReply(reply.enquiryReplyIdString)" v-if="reply.enquiryReplyStatusId == @((int)Enums.EnquiryReplyStatus.Pending) && reply.isComment == false" class="btn btn-sm btn-primary"> <i class="material-icons">send</i>  @res.EnquiryResources.DisplayInputs.Approve</a>
+                     <a href="#" @@click="editReply(reply.enquiryReplyIdString, reply.isComment)" v-if="reply.enquiryReplyStatusId == @((int)Enums.EnquiryReplyStatus.Pending) && reply.isComment == false" class="btn btn-sm btn-primary"> <i class="material-icons">edit</i>  @res.EnquiryResources.DisplayInputs.Edit</a>
+                     <a href="#" @@click="deleteReply(reply.enquiryReplyIdString)" v-if="reply.enquiryReplyStatusId == @((int)Enums.EnquiryReplyStatus.Pending) && reply.isComment == false" class="btn btn-sm btn-primary"> <i class="material-icons">clear</i>  @res.EnquiryResources.DisplayInputs.Delete</a>
+                  </div>
+                  <span v-if="reply.enquiryReplyMessage">
+                     {{reply.enquiryReplyMessage.substr(0, 150)}}
+                     <button class="readMore btn btn-link btn-sm btn-primary p-1" v-if="reply.enquiryReplyMessage.length > 150" onclick="readMore(event)" style="font-weight:700">عرض المزيد<i class="fa fa-ellipsis-h p-1"></i> </button>
+                  </span>
+                  <span hidden="hidden">
+                     {{reply.enquiryReplyMessage}}
+                     <button class="readLess btn btn-link btn-sm btn-warning p-1 font-weight-bold" onclick="readLess(event)" style="font-weight:700">إخفاء المزيد<i class="fa fa-ellipsis-h p-1"></i> </button>
+                  </span>
+                  <small class="text-dark-green">
+                     {{reply.committeeName}}
+                     <template v-if="reply.isComment">
+                        <span class="badge badge-info m-3">@res.EnquiryResources.DisplayInputs.InternalComment </span>
+
+                        <span class="text-warning  m-3">@res.EnquiryResources.DisplayInputs.CreationDate : {{reply.creationDate.split('T')[0]}}</span>
+                     </template>
+                     <template v-else>
+                        <template v-if="reply.enquiryReplyStatusId != @((int)Enums.EnquiryReplyStatus.Approved)">
+                           <span class="badge badge-warning m-3">@res.EnquiryResources.DisplayInputs.PendingToApprove </span>
+                        </template>
+
+                        <template v-else>
+                           <span class="badge badge-primary m-3">@res.SharedResources.DisplayInputs.Approved </span>
+                           <span v-if="reply.enquiryReplyDate" class="badge badge-info m-3">@res.EnquiryResources.DisplayInputs.ReplyDate : {{reply.enquiryReplyDate.split('T')[0]}}</span>
+                        </template>
+                     </template>
+                  </small>
+               </blockquote>
+            </div>
+         </template>
+      </div>
+       
+      <div v-else>
+         <div class="row text-center">
+            <div class="card">
+               <div class="card-body text-center">
+                  <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+                  <br />
+                  @res.EnquiryResources.DisplayInputs.NoData
+               </div>
+            </div>
+         </div>
+      </div>
+      <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+      <input type="hidden" id="enquiryReplyIdStringHidden" value="@enquiryReplyIdString" />
+      <input type="hidden" id="enquiryReplyIdHidden" />
+      <input type="hidden" id="committeeIdHidden" />
+      <input type="hidden" id="enquiryReplyStatusIdHidden" value="@enquiryReplyIdString" />
+   </div>
+</div>
+@section scripts{
+   <script>
+      function readMore(e) {
+         var _target = e.target;
+         if (e.target.localName == 'i')
+            _target = e.target.parentNode;
+         $(_target).parent().prop("hidden", true);
+         $(_target).parent().next().prop("hidden", false);
+      }
+      function readLess(e) {
+         var _target = e.target;
+         if (e.target.localName == 'i')
+            _target = e.target.parentNode;
+         $(_target).parent().prev().prop("hidden", false);
+         $(_target).parent().prop("hidden", true);
+      }
+      $("#btnApprove").on("click", function (e) {
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            type: "GET",
+            url: '@Url.Action("ApproveEnquiryReply", "Enquiry")',
+            data: { enquiryReplyIdString: $("#enquiryReplyIdStringHidden").val() },
+            success: function (data) {
+               $('#LoadingSite').fadeOut();
+               $('#approveModal').modal('hide');
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               Reply.$refs.vpaginator.fetchData(Reply.resource_url);
+            },
+            error: function (error) {
+               $('#LoadingSite').fadeOut();
+               $('#approveModal').modal('hide');
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+
+            }
+         });
+      });
+      $("#btnReplyConfirmation").on("click", function () {
+         var enquiryValidation = $("#EnquiryReplyMessage").val();
+         if (enquiryValidation.trim() == '') {
+            $("#txtReplyValidation").show();
+            return false;
+         }
+         var enquiryReplyObj = {
+            EnquiryId: @Model.EnquiryId,
+            CommitteeId: @technicalCommitteeId,
+            //EnquiryReplyStatusId: @((int)Enums.EnquiryReplyStatus.Pending),
+            EnquiryReplyMessage: $("#EnquiryReplyMessage").val(),
+         }
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $('#LoadingSite').fadeIn();
+         $.post("/Enquiry/AddEnquiryReply",
+            {
+               enquiryReplyObj: enquiryReplyObj,
+               __RequestVerificationToken: token
+            }).done(function () {
+               $("#EnquiryReplyMessage").val('');
+               $('#LoadingSite').fadeOut();
+               $('#myModal').modal('hide');
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               Reply.$refs.vpaginator.fetchData(Reply.resource_url);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               $('#myModal').modal('hide');
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            });
+      });
+       
+    
+      $("#btnSend").on("click", function () {
+         document.getElementById("editReplyTitle").style.display = "none";
+         document.getElementById("addReplyTitle").style.display = "block";
+         document.getElementById("btnEditReplyConfirmation").style.display = "none";
+         document.getElementById("btnReplyConfirmation").style.display = "block";
+         $('#EnquiryReplyMessage').val('');
+         $('#myModal').modal('show');
+      });
+      $("#btnEditReplyConfirmation").on("click", function () {
+         var enquiryReplyObj = {
+            EnquiryId: @enquiryId,
+            EnquiryReplyId: $("#enquiryReplyIdHidden").val(),
+            EnquiryReplyStatusId: $("#enquiryReplyStatusIdHidden").val(),
+            EnquiryReplyMessage: $("#EnquiryReplyMessage").val(),
+            CommitteeId: $("#committeeIdHidden").val()
+         }
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $('#LoadingSite').fadeIn();
+         $.post("/Enquiry/EditEnquiryReply",
+            {
+               enquiryReplyObj: enquiryReplyObj,
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#myModal').modal('hide');
+               $("#EnquiryReplyMessage").val()
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               setTimeout(function () {
+                  Reply.$refs.vpaginator.fetchData(Reply.resource_url);
+               }, 2000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               $('#myModal').modal('hide');
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            });
+      });
+      $("#btnEditCommentConfirmation").on("click", function () {
+         var enquiryReplyObj = {
+            EnquiryId: @enquiryId,
+            EnquiryReplyId: $("#enquiryReplyIdHidden").val(),
+            EnquiryReplyStatusId: $("#enquiryReplyStatusIdHidden").val(),
+            EnquiryReplyMessage: $("#EnquiryComment").val(),
+            CommitteeId: $("#committeeIdHidden").val()
+         }
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $('#LoadingSite').fadeIn();
+         $.post("/Enquiry/EditEnquiryReply",
+            {
+               enquiryReplyObj: enquiryReplyObj,
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#commentModal').modal('hide');
+               $("#EnquiryComment").val()
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               setTimeout(function () {
+                  Reply.$refs.vpaginator.fetchData(Reply.resource_url);
+               }, 2000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               $('#commentModal').modal('hide');
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            });
+      });
+      $("#btnDeleteConfirmation").on("click", function () {
+         var enquiryReplyIdString = $("#enquiryReplyIdStringHidden").val();
+         $('#LoadingSite').fadeIn();
+         $.get('/Enquiry/Delete?enquiryReplyIdString=' + enquiryReplyIdString).done(function () {
+            $('#deleteModal').modal('hide');
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+            setTimeout(function () {
+               Reply.$refs.vpaginator.fetchData(Reply.resource_url);
+            }, 2000);
+         }).fail(function (e) {
+            $('#LoadingSite').fadeOut();
+            $('#deleteModal').modal('hide');
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', alertMessageType.Danger);
+         });
+      });
+      var Reply = new Vue({
+         el: '#enquiriesGrid',
+         data: {
+            enquiryReplies: [],
+            currentDate: new Date(),
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/Enquiry/GetAllEnquiryRepliesByEnquiryId?EnquiryIdString=' + '@enquiryIdString',
+            queryString: ''
+         },
+         methods: {
+            updateResource: function (data) {
+               debugger
+               this.enquiryReplies = data;
+               this.totalCount = this.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            approveReply: function (enquiryReplyIdString) {
+               $("#enquiryReplyIdStringHidden").val(enquiryReplyIdString);
+               $('#approveModal').modal('show');
+            },
+            editReply: function (enquiryReplyIdString, ) {
+               $.get('/Enquiry/GetEnquiryReplyByReplyId?enquiryReplyIdString=' + enquiryReplyIdString).done(function (data) {
+                  debugger;
+                  if (data.isComment == true) { 
+                     $('#commentModal').modal('show');
+                     $("#EnquiryComment").val(data.enquiryReplyMessage);
+                     $("#enquiryReplyIdHidden").val(data.enquiryReplyId);
+                     $("#enquiryReplyStatusIdHidden").val(data.enquiryReplyStatusId);
+                     $("#committeeIdHidden").val(data.committeeId);
+                  } else {
+                     document.getElementById("editReplyTitle").style.display = "block";
+                     document.getElementById("addReplyTitle").style.display = "none";
+                     document.getElementById("btnEditReplyConfirmation").style.display = "block";
+                     document.getElementById("btnReplyConfirmation").style.display = "none";
+                     document.getElementById("EnquiryReplyMessage").value = data.enquiryReplyMessage;
+                     $("#EnquiryReplyMessage").val(data.enquiryReplyMessage);
+                     $("#enquiryReplyIdHidden").val(data.enquiryReplyId);
+                     $("#enquiryReplyStatusIdHidden").val(data.enquiryReplyStatusId);
+                     $("#committeeIdHidden").val(data.committeeId);
+                     $('#myModal').modal('show');
+                  }
+               }).fail(function (error) {
+                  $('#LoadingSite').fadeOut();
+                  if (error.responseText != "Logout") {
+                     AlertFun(error.responseJSON.message, alertMessageType.Danger);
+                  }
+                  else if (error.responseText == "Logout") {
+                     window.location = '/account/logout'; return;
+                  }
+               });
+            },
+            deleteReply: function (enquiryReplyIdString) {
+               $("#enquiryReplyIdStringHidden").val(enquiryReplyIdString);
+               $('#deleteModal').modal('show');
+            },
+            error: function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            }
+         }
+      });
+   </script>
+}

@@ -1,0 +1,492 @@
+@inject IJsonHelper Json;
+@using MOF.Etimad.Monafasat.SharedKernel;
+@using Microsoft.Extensions.Options;
+@inject IOptionsSnapshot<RootConfiguration> rootConfiguration;
+@model MOF.Etimad.Monafasat.ViewModel.QuantityTableStepDTO
+@{
+    var _rootConfiguration = rootConfiguration.Value;
+    var localContentManualForGov = _rootConfiguration.LocalContentFilesConfiguration.LocalContentManualForGov;
+    ViewBag.Title = MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantitiesTables;
+    var showInvitationTab = ((Model.PreQualificationId != 0) || Model.TenderTypeId == (int)Enums.TenderType.SecondStageTender || Model.TenderTypeId == (int)Enums.TenderType.NewDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding ||
+              Model.TenderTypeId == (int)Enums.TenderType.LimitedTender || Model.TenderTypeId == (int)Enums.TenderType.FrameworkAgreement || Model.TenderTypeId == (int)Enums.TenderType.Competition ||
+              Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects) && Model.InvitationTypeId == (int)Enums.InvitationType.Specific;
+    var showDatesTab = Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects && Model.TenderCreatedByTypeId != (int)Enums.TenderCreatedByType.AgenciesRelatedByVRO;
+    var templateIds = Model.TemplateFormDTOs.Select(x => x.TemplateId).ToList();
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Dashboard")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantityTables</li>
+      </ol>
+   </nav>
+}
+<ul class="wizSteps">
+   <li>
+      <div>
+         @if (Model.TenderTypeId == (int)Enums.TenderType.SecondStageTender)
+         {
+            <h4><a id="hBasicStep" href="@Url.Action("BasicSecondStageData", "Tender", new { id = Model.TenderIdString })"><span class="step-num">1</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</a></h4>
+         }
+         else
+         {
+            <h4><a id="hBasicStep" href="@Url.Action("BasicTenderData", "Tender", new { id = Model.TenderIdString })"><span class="step-num">1</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.MainInformation</a></h4>
+         }
+      </div>
+      <input asp-for="TenderIdString" value="@Model.TenderIdString" id="hdnTenderIdString" type="hidden" />
+      <input value="@templateIds" id="templateIds" type="hidden" />
+      <div class="clearfix"></div>
+   </li>
+   @if (showDatesTab == true || User.UserIsVRO())
+   {
+      <li class="">
+         <div>
+            <h4><a id="hDetailsStep" href="@Url.Action("TenderDates", "Tender", new { tenderId = Model.TenderIdString })"><span class="step-num">2</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DetailsStep</a></h4>
+         </div>
+         <div class="clearfix"></div>
+      </li>
+   }
+   <li class="">
+      <div>
+         <h4><a id="hRealtionStep" href="@Url.Action("RelationsStep", "Tender",new {tenderId =Model.TenderIdString})"><span class="step-num">3</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RelationStep</a></h4>
+      </div>
+      <div class="clearfix"></div>
+   </li>
+   <li class="active">
+      <div>
+         <h4 id="hQuantatysStep"><span class="step-num">4</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.QuantityTables<strong class="step-count">(4 - 5)</strong> </h4>
+      </div>
+      <div class="col col-11 pull-right">
+         <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left:10px;">
+               <ul class="list-group form-details-list">
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>@(Model.TenderName)</span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ReferenceTenderNumber
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>@(string.IsNullOrEmpty(Model.ReferenceNumber) ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotFound : Model.ReferenceNumber)</span>
+                        </div>
+                     </div>
+                  </li>
+                  <li class="list-group-item">
+                     <div class="row">
+                        <div class="col-4 etd-item-title">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber
+                        </div>
+                        <div class="col-8 etd-item-info">
+                           <span>@(string.IsNullOrEmpty(Model.TenderNumber) ? MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotFound : Model.TenderNumber)</span>
+                        </div>
+                     </div>
+                  </li>
+                  @if (Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender)
+                  {
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              الدليل الإرشادي للجهات الحكومية لتضمين متطلبات المحتوى المحلي
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 <a target="_blank" href="@localContentManualForGov" rel="lightbox" alt="عرض الملف" title="عرض الملف">تحميل الملف</a><br />
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  }
+                  @if (Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects)
+                  {
+                     <li class="list-group-item">
+                        <div class="row">
+                           <div class="col-4 etd-item-title">
+                              القائمة الإلزاميه
+                           </div>
+                           <div class="col-8 etd-item-info">
+                              <span>
+                                 <a target="_blank" href="/Tender/GetAllMandatoryListProductsForExport" rel="lightbox" alt="عرض الملف" title="عرض الملف">تحميل الملف</a><br />
+                              </span>
+                           </div>
+                        </div>
+                     </li>
+                  }
+               </ul>
+               <div class="alert alert-warning" role="alert" style="background-color: #ffffff;color: #f18a21;border: 1px solid; border-radius: 4px;padding: 11px; z-index:1;">
+                  <strong style="font-size:16px;font-weight:700">تنبيه هام</strong>: يرجى الانتباه بأن لائحة تفضيل المحتوى المحلي والمنشآت الصغيرة والمتوسطة والشركات المدرجة في السوق المالية في الأعمال والمشتريات قد دخلت حيز النفاذ اعتباراً من تاريخ 1 ديسمبر 2019 م ونهيب جميع الجهات الحكومية عند إعدادها وتنفيذها لأعمالها ومشترياتها الالتزام بأحكام اللائحة وعدم الإخلال بأي منها.
+               </div>
+               @if(Model.TemplateFormDTOs.Where(x => x.TemplateId == (int)Enums.ActivityTemplate.E3asha).Any())
+               {
+                  <div class="alert alert-warning" role="alert" style="background-color: #ffffff;color: #f18a21;border: 1px solid; border-radius: 4px;padding: 11px; z-index:1;">
+                     <strong style="font-size:16px;font-weight:700">ملاحظة مهمة : </strong>
+                     @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.LifeQuantityTableAlert
+                  </div>
+               }
+            </div>
+            @if (Model.TenderTypeId != (int)Enums.TenderType.FirstStageTender && Model.TenderTypeId != (int)Enums.TenderType.Competition && Model.TenderTypeId != (int)Enums.TenderType.ReverseBidding)
+            {
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="HasAlternativeOffer" class="label bmd-label-static"></label>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="HasAlternativeOffer" name="HasAlternativeOffer" class="form-check-input" type="radio" id="hasAlternativeOfferYes" value="true">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Yes
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input asp-for="HasAlternativeOffer" name="HasAlternativeOffer" class="form-check-input" checked type="radio" id="hasAlternativeOfferNo" value="false">
+                           @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.No
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+            }
+            <br />
+            <br />
+            <div class="col-12">
+               <div class="card-collapse" style="border: 1px solid #ccc;border-radius: 6px;overflow: hidden;">
+                  @await Html.PartialAsync("~/Views/Tender/_QuantityTablesCreate.cshtml")
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col">
+               <button class="btn btn-default etd-search-btn" id="btnPrivious">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+               <button class="btn btn-primary etd-search-btn pull-right" onclick="redirectNext(@Model.TenderTypeId==@((int)Enums.TenderType.CurrentDirectPurchase) || @Model.TenderTypeId==@((int)Enums.TenderType.CurrentTender) || @Model.TenderTypeId==@((int)Enums.TenderType.NationalTransformationProjects) )" id="btnNext">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SaveContinue</button>
+               <button type="button" id="btnCancel" class="btn btn-danger" hidden="hidden">
+                  إلغاء
+               </button>
+            </div>
+         </div>
+      </div>
+      <div class="clearfix"></div>
+   </li>
+   @if (Model.TenderStatusId == (int)Enums.TenderStatus.Established)
+   {
+      @if (Model.TenderTypeId == (int)Enums.TenderType.NationalTransformationProjects || Model.TenderTypeId == (int)Enums.TenderType.CurrentTender || Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase)
+      {
+         <li class="">
+            <div>
+               <h4><a id="hAttachmentStep" href="@Url.Action("AttachmentsStep", "Tender", new { id = Model.TenderIdString })"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+      }
+      else
+      {
+         <li class="">
+            <div>
+               <h4><a id="hdnTemplatesStep" href="@Url.Action("UpdateConditionsTemplate", "Tender", new { tenderIdString = Model.TenderIdString })"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+      }
+      @if (showInvitationTab == true)
+      {
+         <li class="">
+            <div>
+               <h4><a id="hInvitationsStep" href="@Url.Action("SendInvitationsStep", "Tender", new { tenderIdString = Model.TenderIdString })"><span class="step-num">6</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Invitations</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+      }
+   }
+   else
+   {
+      <li class="">
+         <div>
+            <h4><a id="hAttachmentStep" href="#"><span class="step-num">5</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderFiles</a></h4>
+         </div>
+         <div class="clearfix"></div>
+      </li>
+      @if (showInvitationTab == true)
+      {
+         <li class="">
+            <div>
+               <h4><a id="hInvitationsStep" href="#"><span class="step-num">6</span>@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Invitations</a></h4>
+            </div>
+            <div class="clearfix"></div>
+         </li>
+      }
+   }
+</ul>
+<div class="row">
+   <div class="col">
+      <a asp-controller="Tender" asp-action="Index" class="btn h6 pull-right btn-outline-primary" id="btnBack" style="font-size:0.8em">
+         @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButtonToMain
+      </a>
+   </div>
+</div>
+@section scripts
+   {
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+   <script>
+      $(document).ready(function () {
+         $('.TableNameSection').each(function () {
+            var item = $(this).find('span.tableName');
+            var editItem = $(this).find('input');
+            item.text(editItem.val());
+         });
+      });
+      function editTableName(e, tableName) {
+         var itemName = $(e).parent();
+         var itemNameEdit = $(e).parent().next();
+         itemName.toggleClass('d-block');
+         itemName.toggleClass('d-none');
+         itemNameEdit.toggleClass('d-block');
+         itemNameEdit.toggleClass('d-none');
+         $('#tableName').val(tableName);
+      }
+      function deleteTable(e, tableId) {
+         debugger
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            url: '/Tender/DeleteTable?tableId=' + tableId + '&tenderId=@Model.TenderID',
+            type: "GET",
+            dataType: "html",
+            success: function () {
+               location.reload();
+               $('#LoadingSite').fadeOut();
+            }
+         });
+      }
+      var currentElement;
+      var currentTableName;
+      var currentTableId;
+      function saveTableName(e, tableObject, onSuccess) {
+         currentElement = e;
+         var itemNameEdite = $(e).parent().parent().parent().parent();
+         var itemName = $(e).parent().parent().parent().parent().prev();
+         itemName.toggleClass('d-block');
+         itemName.toggleClass('d-none');
+         itemNameEdite.toggleClass('d-block');
+         itemNameEdite.toggleClass('d-none');
+         var itemValue = $(e).parent().find('input').val();
+         currentTableName = itemValue;
+         var tableId = $(e).attr("data-table-id");
+         var formId = $(e).attr("data-form-id");
+         currentTableId = tableId;
+         $('#' + tableId).val(itemValue);
+         $('#TableName_' + tableId).val(itemValue);
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $('#LoadingSite').fadeOut();
+         $.post('/Tender/UpdateTableName?tableId=' + tableId + '&tenderId=@Model.TenderID&tableName=' + itemValue, { __RequestVerificationToken: token }).done(function (result) {
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success);
+            $('#tableHeaderContainer_' + formId + ' li a.active').html(currentTableName)
+            onSuccess(currentTableName, tableObject);
+            $(currentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement).find('[name=TableId]').val(result);
+         }).fail(function () {
+            $('#LoadingSite').fadeOut();
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.ErrorMessage)', 'danger');
+         });
+      }
+      function addTable(formId, tenderId, templateYears) {
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            url: '/Tender/AddNewTable?formid=' + formId + '&tenderId=' + tenderId + '&templateYears=' + templateYears + '&tableName=اسم الجدول',
+            type: "GET",
+            dataType: "html",
+            success: function (data) {
+               $('#tableHeaderContainer_' + formId).append('<li class="nav-item"><a class="nav-link text-center" data-tableid="' + data + '" href="#tableIndex_' + data + '" onclick="changeTable(' + tenderId + ', ' + data + ', ' + formId + ')" data-toggle="tab">اسم الجدول</a></li>');
+               $('#tableHeaderContainer_' + formId + ' li a').removeClass('active');
+               $('#tableHeaderContainer_' + formId + ' li a').removeClass('show');
+               $('#tableHeaderContainer_' + formId + ' li a[data-tableId=' + data + ']').addClass('active');
+               $('#tableHeaderContainer_' + formId + ' li a[data-tableId=' + data + ']').addClass('show');
+               if ($('#collapse_' + formId).attr('aria-expanded') == 'false') {
+                  $('#collapse_' + formId).attr('data-tableId', data);
+                  $('#collapse_' + formId).click();
+               }
+               else
+                  changeTable(tenderId, data, formId);
+               $('#LoadingSite').fadeOut();
+            }
+         });
+      }
+      $(document).ready(function () {
+         $('#btnPrivious').click(function () {
+            $('#LoadingSite').fadeIn();
+            window.location = "@Url.Action("RelationsStep", "Tender", new { tenderId = Model.TenderIdString })";
+            return false;
+         });
+         if ('@Model.HasAlternativeOffer' == 'True')
+            $('#hasAlternativeOfferYes').prop('checked', true);
+         else
+            $('#hasAlternativeOfferNo').prop('checked', true);
+      });
+      function redirectNext(oldTypes) {
+         var token = $('input[name=__RequestVerificationToken]').val();
+         $('#LoadingSite').fadeIn();
+         $.post('/Tender/UpdateHasAlternative?tenderId=@Model.TenderID&hasAlternative=' + $('#hasAlternativeOfferYes').prop('checked'), { __RequestVerificationToken: token }).done(function (result) {
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.Messages.DataSaved)', alertMessageType.Success);
+            if (oldTypes == true)
+               window.location.href = "/Tender/AttachmentsStep/" + "@Model.TenderIdString";
+            else
+               window.location = "@Url.Action("UpdateConditionsTemplate", "Tender", new { tenderIdString = Model.TenderIdString })";
+         }).fail(function (errorMessage) {
+            $('#LoadingSite').fadeOut();
+            AlertFun(errorMessage.responseJSON.message, 'danger');
+         });
+         return false;
+      }
+      function getQuantityTablesObject() {
+         var obj = {};
+         obj.QuantitiesTables = vueObj.QuantitiesTables;
+         return obj;
+      }
+      function RedirectURLEditMode () {
+         var item = vueObj.QuantitiesTables[vueObj.UploaderIndex].quantitiesTableItems[vueObj.editedItemIndex];
+         window.open("/Upload/getfile/" + item.itemAttachmentId + ":" + item.itemAttachmentName, '_blank');
+      }
+      function saveFiles() {
+         var modelValue = $('#model').val();
+         if (modelValue == "") {
+            return false;
+         }
+         else {
+            $('#uploadLable' + UploaderIndex).html(modelValue.split(":")[1]);
+            $('#hdnUploadLable' + UploaderIndex).val(modelValue.split(":")[0]);
+            $('#model').val('');
+            $('.file_uploader_message').remove();
+            $('#myModal2').hide();
+         }
+      }
+      function resetFileUpload() {
+         // this sould be implmentd on file uploader
+         $('.file_uploader_message').html('');
+         $('.qq-upload-list').html('');
+         $('.file_uploader').css('display', 'block');
+      }
+      function AddNewItem() {
+         var index = vueObj.UploaderIndex;
+         var item = {};
+         item.name = $('#txtItemName').val();
+         item.quantity = $('#txtItemQuantity').val();
+         item.unit = $('#txtItemUnit').val();
+         item.details = $('#txtItemDetails').val();
+         if (item.name == '' || item.name == undefined) {
+            $('#txtNameValidation').show();
+            return false;
+         }
+         else { $('#txtNameValidation').hide(); }
+         if (item.quantity == '' || isNaN(item.quantity) || item.quantity.length>8) {
+            $('#txtQuantityNaNValidation').show();
+            return false;
+         }
+         else { $('#txtQuantityNaNValidation').hide(); }
+         if (parseFloat(item.quantity) < 0) {
+            $('#txtQuantityNaNValidation').show();
+            return false;
+         }
+         else {
+            $('#txtQuantityNaNValidation').hide();
+         }
+         var modelValue = $('#attach').val();
+         item.itemAttachmentId = modelValue.split(":")[0];
+         item.itemAttachmentName = modelValue.split(":")[1];
+         if (item.quantity != '' && item.quantity != undefined && item.name != '' && item.name != undefined) {
+            if (vueObj.isItemEdited == 0) {
+               vueObj.QuantitiesTables[index].quantitiesTableItems.push(item);
+            }
+            else if (vueObj.isItemEdited == 1) {
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].name = item.name;
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].unit = item.unit;
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].quantity = item.quantity;
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].details = item.details;
+               var modelValue = $('#attach').val();
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].itemAttachmentId = modelValue.split(":")[0];
+               vueObj.QuantitiesTables[index].quantitiesTableItems[vueObj.editedItemIndex].itemAttachmentName = modelValue.split(":")[1];
+            }
+            clearPopup();
+         }
+         resetFileUpload();
+         vueObj.isItemEdited = 0;
+         $('#myModal2').modal('hide');
+      }
+      function clearPopup() {
+         $('#attach').val('');
+         $('#txtQuantityValidation').hide();
+         $('#txtNameValidation').hide();
+         $('#txtQuantityNaNValidation').hide();
+         $('#txtItemUnit').val('');
+         $('#txtItemName').val('');
+         $('#txtItemQuantity').val('');
+         $('#txtItemDetails').val('');
+         $('#ItemFile').val('');
+         $('#hdnUploadLable').val('');
+         $('#uploadLable').html('');
+         $('#attach').val('');
+      }
+      function changeFile() {
+         resetFileUpload();
+         $('#attach').val('');
+         $('#uploaderDiv').show();
+         $('#editFileDiv').hide();
+         return false;
+      }
+      function exportToTable(indexD) {
+         var regex = /^([a-zA-Z0-9\s_\\.\-:()])+(.xlsx|.xls)$/;
+         /*Checks whether the file is a valid excel file*/
+         if (regex.test($("#excelfile_" + indexD).val().toLowerCase())) {
+            var xlsxflag = false;
+            /*Checks whether the browser supports HTML5*/
+            if (typeof (FileReader) != "undefined") {
+               var reader = new FileReader();
+               reader.onload = function (e) {
+                  var data = e.target.result;
+                  /*Converts the excel data in to object*/
+                  var workbook = XLS.read(data, { type: 'binary' });
+                  /*Gets all the sheetnames of excel in to a variable*/
+                  var sheet_name_list = workbook.SheetNames;
+                  var cnt = 0; /*This is used for restricting the script to consider only first sheet of excel*/
+                  sheet_name_list.forEach(function (y) { /*Iterate through all sheets*/
+                     /*Convert the cell value to Json*/
+                     if (xlsxflag) {
+                        var exceljson = XLSX.utils.sheet_to_json(workbook.Sheets[y]);
+                     }
+                     else {
+                        var exceljson = XLS.utils.sheet_to_row_object_array(workbook.Sheets[y]);
+                     }
+                     if (exceljson.length > 0 && cnt == 0) {
+                        BindTable(exceljson, indexD);
+                        cnt++;
+                     }
+                  });
+                  $('#quantityTb_' + indexD).show();
+               }
+               if (xlsxflag) {/*If excel file is .xlsx extension than creates a Array Buffer from excel*/
+                  reader.readAsArrayBuffer($("#excelfile_" + indexD)[0].files[0]);
+               }
+               else {
+                  reader.readAsBinaryString($("#excelfile_" + indexD)[0].files[0]);
+               }
+            }
+            else {
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.HTML5Error)', alertMessageType.Success);
+            }
+         }
+         else {
+            AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.ErrorMessages.ValidExcell)', alertMessageType.Danger);
+         }
+      }
+   </script>
+}
+<script src="~/Etimad-UI/assets/js/xlsx.full.min.js"></script>

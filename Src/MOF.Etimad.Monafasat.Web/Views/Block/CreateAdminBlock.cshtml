@@ -1,0 +1,174 @@
+@model MOF.Etimad.Monafasat.ViewModel.AdminSupplierBlockModel
+
+
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.AddToBlockList;
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="#">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockedListRequest</li>
+      </ol>
+   </nav>
+}
+
+@Html.AntiForgeryToken()
+   <form method="Post" action="" class="my-form">
+      <input type="hidden" id="ModuleType" value="4" />
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-lg-4 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="SupplierTypeId" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.SupplierType<span class="text-danger">*</span></label>
+                     <select data-live-search="false" name="SupplierTypeId" id="SupplierType" onchange="changeBlockType()" class="selectpicker" data-style="select-with-transition" title=@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Choose data-size="7" asp-for="SupplierTypeId">
+                        <option value="1">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.HaveCommertialRegistration</option>
+                        <option value="2">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.DontHaveCommertialRegistration</option>
+                     </select>
+                     <span asp-validation-for="SupplierTypeId" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-6 col-xs-12" id="OrganizationTypeDiv">
+                  <div class="form-group bmd-form-group">
+                     <label for="OrganizationType" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.OrganizationType<span class="text-danger">*</span></label>
+                     <select data-live-search="false" name="OrganizationTypeId" id="OrganizationTypeId" onchange="changeBlockType()" class="selectpicker" data-style="select-with-transition" title=@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Choose data-size="7" asp-for="OrganizationTypeId">
+                        <option value="1">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.ForeignCustomer</option>
+                        <option value="2">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Practicing</option>
+                     </select>
+                     <span asp-validation-for="OrganizationTypeId" class="text-danger"></span>
+                  </div>
+               </div>
+
+               <div class="col-lg-4 col-sm-6 col-xs-12" id="CRNOriginDiv">
+                  <div class="form-group bmd-form-group">
+                     <label for="CRNOrigin" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CRNOrigin<span class="text-danger">*</span></label>
+                     <input type="text" class="form-control" id="CRNOrigin" asp-for="CommercialRegistrationNoOrigin" value="@(Model.CommercialRegistrationNoOrigin)">
+
+                     <span asp-validation-for="CommercialRegistrationNoOrigin" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-4 col-xs-12" id="CommercialRegistrationNoDiv">
+                  <div class="form-group bmd-form-group">
+                     <label for="CommercialRegistrationNo" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialRegistrationNo<span class="text-danger">*</span></label>
+                     <div class=" input-group">
+                        <input type="text" class="form-control" id="CommercialRegistrationNo" asp-for="CommercialRegistrationNo" value="@(Model.CommercialRegistrationNo)">
+                        <div class="input-group-append">
+                           <button type="button" class="btn btn-primary btn-sm" id="fetchCrName">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Search</button>
+                        </div>
+                     </div>
+                     <span asp-validation-for="CommercialRegistrationNo" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-4 col-xs-12" id="LicenseNumber">
+                  <div class="form-group bmd-form-group">
+                     <label for="LicenseNumber" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.LicenseNumber<span class="text-danger">*</span></label>
+                     <input type="text" class="form-control" id="LicenseNumber" asp-for="LicenseNumber" value="@(Model.LicenseNumber)">
+                     <span asp-validation-for="LicenseNumber" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-4 col-sm-4 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="CommercialSupplierName" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.CommercialSupplierName<span class="text-danger">*</span></label>
+                     <input type="text" class="form-control" id="CommercialSupplierName" asp-for="CommercialSupplierName" value="@(Model.CommercialSupplierName)">
+                     <span asp-validation-for="CommercialSupplierName" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-8 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="ResolutionNumber" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.BlockReasonAdmin<span class="text-danger">*</span></label>
+                     <input class="form-control" id="BlockReason" asp-for="BlockDetails" value="@(Model.BlockDetails)">
+                     <span asp-validation-for="BlockDetails" class="text-danger"></span>
+                  </div>
+               </div>
+               <div class="col-lg-5 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label for="AttachmentId" class="label bmd-label-static">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.AttachmentRefAdmin <span class="text-danger">*</span></label>
+                     <div class="row">
+                        @Html.FileUploaderFor(m => m.AdminFileNetReferenceId, fileMaxSize: 1024 * 350, numberOfFilesToUpload: 4, multiple: false, allowedExtensions: new List<string> { "pdf", "zip" })
+                     </div>
+                     <span asp-validation-for="AdminFileNetReferenceId" class="text-danger"></span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-12 ">
+         <button class="btn btn-primary" type="submit" id="CreateAdminBlockAsync">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Send</button>
+         <button class="btn btn-danger" type="reset" onclick="window.location = '/Block/GetAdminBlockList'">@MOF.Etimad.Monafasat.Resources.BlockResources.DisplayInputs.Cancel</button>
+      </div>
+   </form>
+
+@section scripts {
+   <script src="~/Etimad-UI/assets/js/fineUploderbundle.min.js"></script>
+   <link href="~/Etimad-UI/assets/js/fin-uploader/fin-uploader.css" rel="stylesheet" />
+
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+      $(document).ready(function () {
+         $('#CommercialRegistrationNoDiv').css('display', 'none');
+         $('#CRNOriginDiv').css('display', 'none');
+         $('#LicenseNumber').css('display', 'none');
+         $('#OrganizationTypeDiv').css('display', 'none');
+
+         $("#fetchCrName").on("click", function () {
+            if ($("#CommercialRegistrationNo").val().trim()=="") {
+               AlertFun('من فضلك ادخل السجل التجاري', alertMessageType.Danger);
+               return false;
+            }
+            $('#LoadingSite').fadeIn();
+            $.ajax({
+               type: "GET",
+               url: "GetCrNameAsync",
+               data: {
+                  Cr: $("#CommercialRegistrationNo").val().trim()
+               },
+               success: function (data) {
+                  $("#CommercialSupplierName").val(data);
+                  $('#LoadingSite').fadeOut();
+               },
+               error: function (error) {
+                  $('#LoadingSite').fadeOut();
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+            });
+         });
+         $("#DirectBlock").on("click", function () {
+            window.location = "/Block/CreateAsync";
+         });
+      });
+
+
+
+      function changeBlockType() {
+         $("#CommercialRegistrationNo").val('');
+         $("#CommercialSupplierName").val('');
+
+         var HasCRNValue = $("#SupplierType").val();
+         var ForignCustomer = $("#OrganizationTypeId").val();
+         if (HasCRNValue == 2 && ForignCustomer == 2) {
+            $('#CommercialRegistrationNoDiv').css('display', 'none');
+            $('#CRNOriginDiv').css('display', 'none');
+            $('#LicenseNumber').css('display', 'block');
+         } else if (HasCRNValue == 1) {
+            $('#CommercialRegistrationNoDiv').css('display', 'block');
+            $('#CRNOriginDiv').css('display', 'none');
+            $('#LicenseNumber').css('display', 'none');
+            $('#OrganizationTypeDiv').css('display', 'none');
+         } else if (HasCRNValue == 2 && ForignCustomer == 1) {
+            $('#CommercialRegistrationNoDiv').css('display', 'none');
+            $('#CRNOriginDiv').css('display', 'block');
+            $('#LicenseNumber').css('display', 'none');
+         }
+         else if (HasCRNValue == 2) {
+            $('#CommercialRegistrationNoDiv').css('display', 'none');
+            $('#OrganizationTypeDiv').css('display', 'block');
+         } else {
+            $('#CommercialRegistrationNoDiv').css('display', 'block');
+            $('#CRNOriginDiv').css('display', 'none');
+            $('#LicenseNumber').css('display', 'none');
+         }
+      }
+   </script>
+}

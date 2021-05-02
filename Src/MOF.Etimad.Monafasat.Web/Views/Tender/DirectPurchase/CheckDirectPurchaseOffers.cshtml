@@ -1,0 +1,718 @@
+@model MOF.Etimad.Monafasat.ViewModel.TenderOffersModel
+@{
+   Layout = "~/Views/Shared/_Layout-ETD.cshtml";
+   string tenderIdString = Model.TenderIdString;
+   int tenderStatusId = Model.TenderStatusId;
+   int waitngForCheckReportConfirmationStatus = (int)Enums.TenderStatus.OffersCheckedPending;
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOfferDetails;
+   bool canFilterOnNPA = (Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.IsTenderTechnicalChecked == true && Model.IsTenderFinancialChecked == true);
+   if (tenderStatusId == waitngForCheckReportConfirmationStatus)
+   {
+      ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CheckOfferConfirm;
+   }
+   var SortCriteria = canFilterOnNPA == true && Model.NPCalcHaveBeenDone == true ? "OfferWeightAfterCalcNPA" : "FinalPriceAfterDiscount";
+}
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BreadCrumb_Home</a></li>
+         <li class="breadcrumb-item" aria-current="page"><a href="#">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Tenders</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"].ToString()</li>
+      </ol>
+   </nav>
+}
+@section modalTitle{
+   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Confirm
+}
+@section modalContent{
+   @Html.Partial("~/Views/Tender/DirectPurchase/Partials/_ModalContent.cshtml")
+}
+@section modalButtons{
+   @Html.Partial("~/Views/Tender/DirectPurchase/Partials/_ModalActions.cshtml")
+}
+@Html.AntiForgeryToken()
+<div class="col-12">
+   <div class="row">
+      <div class="card">
+         @if (Model.CancelRequestId != null && Model.CancelRequestId != 0 && Model.TenderHasPendingStatus)
+         {
+            <div class="alert alert-warning" style="z-index:0">
+               <div class="container" style="text-align:center; font-size:16px">
+                  <a asp-action="CancelTender" asp-controller="Tender" asp-route-STenderId="@Model.TenderIdString"> @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.CancelRequestExist  @Model.TenderRefrenceNumber</a>
+               </div>
+            </div>
+         }
+         @if (Model.showUnacceptedFinanciallyMessage)
+         {
+            <div class="alert alert-warning" style="z-index:0">
+               <div class="container" style="text-align:center; font-size:16px">
+                  <i class="material-icons">warning</i>
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.Messages.UnacceptedFinanciallyMessage
+               </div>
+            </div>
+         }
+         <div class="card-body">
+            <div class="row" id="basicDetials">
+               @Html.Partial("~/Views/Tender/DirectPurchase/Partials/_TenderDetailsForCheckDirectPurchaseTenderOffers.cshtml", Model)
+               <div class="clearfix"></div>
+               @if (Model.TenderStatusId != (int)Enums.TenderStatus.Approved)
+               {
+                  @Html.Partial("~/Views/Tender/DirectPurchase/Partials/_OfferDetailsForCheckDirectPurchaseTenderOffers.cshtml", Model)
+                  <div class="clearfix"></div>
+               }
+               @if (Model.TenderStatusId == (int)Enums.TenderStatus.DirectPurchaseOffersCheckingRejected || Model.TenderStatusId == (int)Enums.TenderStatus.OffersTechnicalCheckingRejected || Model.TenderStatusId == (int)Enums.TenderStatus.OffersCheckedRejected || Model.TenderStatusId == (int)Enums.TenderStatus.OffersFinancialOfferCheckingRejected)
+               {
+                  <div class="col-md-6 col-sm-12 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    @(Model.RejectionReason)
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               }
+               else if (Model.TenderStatusId == (int)Enums.TenderStatus.BackForCheckingFromPlaint)
+               {
+                  <div class="col-md-6 col-sm-12 col-xs-12">
+                     <ul class="list-group form-details-list">
+                        <li class="list-group-item">
+                           <div class="row">
+                              <div class="col-4 etd-item-title">
+                                 @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.RejectionReason
+                              </div>
+                              <div class="col-8 etd-item-info">
+                                 <span>
+                                    معاد من اللجنة بسبب قبول التظلم
+                                 </span>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               }
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="">
+   @Html.Partial("~/Views/Tender/DirectPurchase/Partials/_CheckDirectPurchaseOffersApprovalActions.cshtml", Model)
+   <div class="clearfix"></div>
+</div>
+@section scripts{
+   <script>
+      var token = $('input[name=__RequestVerificationToken]').val();
+      $("#btnSendToApprove").on("click", function () {
+         $(".modal-content-body").hide();
+         $("#divSendToApproveMessage").show();
+         $("#btnSendConfirmation").show();
+      });
+      $("#btnSendToApproveTechTwoFiles").on("click", function () {
+         $(".modal-content-body").hide();
+         $("#btnSendTechTwoFilesConfirmation").show();
+         $("#divSendToApproveMessage").show();
+      });
+      $("#btnSendToApproveFinancialTwoFiles").on("click", function () {
+         $(".modal-content-body").hide();
+         $("#btnSendFinancialTwoFilesConfirmation").show();
+         $("#divSendToApproveFinancialMessage").show();
+      });
+      $("#btnResendVerificationCode").on("click", function () {
+         createVerificationCode();
+      });
+       $("#btnCalculatePreference").on("click", function () {
+         $('#LoadingSite').fadeIn();
+         $.get("/Offer/CalculateOffersPreferences/" + '@Model.TenderIdString').done(function () {
+               debugger
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               window.location.reload();
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      $("#btnApprove").on("click", function () {
+         createVerificationCode();
+         $(".modal-content-body").hide();
+         $("#btnResendVerificationCode").prop("disabled", true);
+         if (@Model.TenderTypeId != @((int)Enums.TenderType.CurrentDirectPurchase)) {
+            $("#divLC").show();
+         }
+         $("#btnResendVerificationCode").show();
+         $("#btnApproveConfirmation").show();
+         $("#divApproveMessage").show();
+      });
+      $("#btnlowbudgetApprove").on("click", function () {
+         createVerificationCode();
+         $(".modal-content-body").hide();
+         $("#btnResendVerificationCode").prop("disabled", true);
+         if (@Model.TenderTypeId != @((int)Enums.TenderType.CurrentDirectPurchase)) {
+            $("#divLC").show();
+         }
+         $("#btnResendVerificationCode").show();
+         $("#btnApproveConfirmation").show();
+         $("#divlowbudgetMessage").show();
+         $("#divApproveMessage").show();
+      });
+      $("#btnApproveTechTwoFiles").on("click", function () {
+         document.getElementById('timer').innerHTML = 05 + ":" + 00;
+         startTimer();
+         createVerificationCode();
+         $(".modal-content-body").hide();
+         $("#btnResendVerificationCode").prop("disabled", true);
+         $("#btnResendVerificationCode").show();
+         $("#btnApproveTechTwoFilesConfirmation").show();
+         $("#divApproveMessage").show();
+      });
+      $("#btnApproveFinancialTwoFiles").on("click", function () {
+         document.getElementById('timer').innerHTML = 05 + ":" + 00;
+         startTimer();
+         createVerificationCode();
+         $(".modal-content-body").hide();
+         $("#btnResendVerificationCode").prop("disabled", true);
+         $("#btnResendVerificationCode").show();
+         if (@Model.TenderTypeId != @((int)Enums.TenderType.CurrentDirectPurchase)) {
+            $("#divLC").show();
+         }
+         $("#btnApproveFinancialTwoFilesConfirmation").show();
+         $("#divApproveMessage").show();
+      });
+
+      $("#btnReject").on("click", function () {
+         $(".modal-content-body").hide();
+         $("#divRejectReason").show();
+         $("#btnRejectConfirmation").show();
+      });
+      $("#btnRejectTechTwoFiles").on("click", function () {
+         $(".modal-content-body").hide();
+         $("#divRejectReason").show();
+         $("#btnRejectTechTwoFilesConfirmation").show();
+      });
+      $("#btnRejectFinancialTwoFiles").on("click", function () {
+         $(".modal-content-body").hide();
+         $("#divRejectReason").show();
+         $("#btnRejectFinancialTwoFilesConfirmation").show();
+      });
+
+      $("#btnReopenCheckOffers").on("click", function () {
+         $(".modal-content-body").hide();
+         $("#divReopenMessage").show();
+         $("#btnReopenConfirmation").show();
+      });
+      $("#btnReopenCheckOffersTechTwoFiles").on("click", function () {
+         $(".modal-content-body").hide();
+         $("#divReopenMessage").show();
+         $("#btnReopenTechTwoFilesConfirmation").show();
+      });
+      $("#btnReopenCheckOffersFinancialTwoFiles").on("click", function () {
+         $(".modal-content-body").hide();
+         $("#divReopenFinancialMessage").show();
+         $("#btnReopenFinancialTwoFilesConfirmation").show();
+      });
+
+      $("#btnCheckOffers").on("click", function () {
+         $(".modal-content-body").hide();
+         $("#divOpenCheckMessage").show();
+         $("#btnOpenCheckConfirmation").show();
+      });
+
+      $(document).ready(function () {
+         @*if ('@Model.TenderStatusId' == '@((int)(Enums.TenderStatus.Approved))') {
+            $("#defaultBack").prop("hidden",true);
+            $("#backToCheck").prop("hidden",false);
+         }*@
+         $("#btnOpenCheckConfirmation").on("click", function () {
+            $('#LoadingSite').fadeIn();
+            $.post('@Url.Action("StartTenderDirectPurchaseOffersCheckingAsync", "Tender")',
+               {
+                  tenderIdString: '@tenderIdString',
+                  __RequestVerificationToken: token
+               }).done(function () {
+                  $("#myModal").modal("hide");
+                  $('#LoadingSite').fadeOut();
+                  AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                  setTimeout(function () {
+                   location.reload();
+                     }, 3000);
+              }).fail(function (error) {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+         });
+      });
+
+      $("#btnReopenConfirmation").on("click", function () {
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ReopenDirectPurchaseTenderOffersCheckingAsync", "Tender")',
+            {
+               tenderIdString: '@tenderIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               setTimeout(function () {
+                  location.reload();
+                     }, 3000);
+            }).fail(function (error) {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location ='@Url.Action("Logout", "Account")'; return;
+               }
+            });
+      });
+      $("#btnReopenTechTwoFilesConfirmation").on("click", function () {
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ReopenDirectPurchaseTenderOffersTechnicalCheckingAsync", "Tender")',
+            {
+               tenderIdString: '@tenderIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               setTimeout(function () {
+                  location.reload();
+                     }, 3000);
+            }).fail(function (error) {
+
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location ='@Url.Action("Logout", "Account")'; return;
+               }
+            });
+      });
+      $("#btnReopenFinancialTwoFilesConfirmation").on("click", function () {
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ReopenDirectPurchaseTenderOffersFinancialCheckingAsync", "Tender")',
+            {
+               tenderIdString: '@tenderIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+               setTimeout(function () {
+                  location.reload();
+                     }, 3000);
+            }).fail(function (error) {
+
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location ='@Url.Action("Logout", "Account")'; return;
+               }
+            });
+      });
+
+      $("#btnSendConfirmation").on("click", function () {
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("SendDirectPurchaseTenderOffersCheckingToApproveAsync", "Tender")',
+            {
+               tenderIdString: '@tenderIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $("#myModal").modal("hide");
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                setTimeout(function () {
+                   window.location = '@Url.Action("TenderIndexCheckingDirectPuchaseStage", "Tender")';
+                 }, 3000);
+            }).fail(function (error) {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      $("#btnSendTechTwoFilesConfirmation").on("click", function () {
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("SendDirectPurchaseTenderOffersTechnicalCheckingToApproveAsync", "Tender")',
+            {
+               tenderIdString: '@tenderIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $("#myModal").modal("hide");
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                setTimeout(function () {
+                   window.location = '@Url.Action("TenderIndexCheckingDirectPuchaseStage", "Tender")';
+                 }, 3000);
+            }).fail(function (error) {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      $("#btnSendFinancialTwoFilesConfirmation").on("click", function () {
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("SendDirectPurchaseTenderOffersFinanceCheckingToApproveAsync", "Tender")',
+            {
+               tenderIdString: '@tenderIdString',
+               __RequestVerificationToken: token
+            }).done(function () {
+               $('#LoadingSite').fadeOut();
+               $("#myModal").modal("hide");
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                setTimeout(function () {
+                   window.location = '@Url.Action("TenderIndexCheckingDirectPuchaseStage", "Tender")';
+                 }, 3000);
+            }).fail(function (error) {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+            });
+
+      $("#btnApproveConfirmation").on("click", function () {
+         $("#txtActivationNoValidation").hide();
+         if (@Model.TenderTypeId != @((int)Enums.TenderType.CurrentDirectPurchase)) {
+            $('#txtApproveLC').hide()
+            if ($('#chLCValue').prop("checked") != true) {
+               $('#txtApproveLC').show();
+               return false;
+            }
+         }
+         if (!$("#txtActivationNo").val()) {
+            $("#txtActivationNoValidation").show();
+            //AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.InvalidValue)', alertMessageType.Danger);
+            return;
+         }
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ApproveDirectPurchaseTenderOffersCheckingAsync", "Tender")',
+            {
+               tenderIdString: '@tenderIdString',
+               verificationCode: $("#txtActivationNo").val(),
+               __RequestVerificationToken: token
+            }).done(function () {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                 setTimeout(function () {
+                   window.location = '@Url.Action("TenderIndexCheckingDirectPuchaseStage", "Tender")';
+                 }, 3000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      $("#btnApproveTechTwoFilesConfirmation").on("click", function () {
+         $("#txtActivationNoValidation").hide();
+         if (!$("#txtActivationNo").val()) {
+            $("#txtActivationNoValidation").show();
+            //AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.InvalidValue)', alertMessageType.Danger);
+            return;
+         }
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ApproveDirectPurchaseTenderOffersTechnicalCheckingAsync", "Tender")',
+            {
+               tenderIdString: '@tenderIdString',
+               verificationCode: $("#txtActivationNo").val(),
+               __RequestVerificationToken: token
+            }).done(function () {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                 setTimeout(function () {
+                   window.location = '@Url.Action("TenderIndexCheckingDirectPuchaseStage", "Tender")';
+                 }, 3000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+      $("#btnApproveFinancialTwoFilesConfirmation").on("click", function () {
+         $("#txtActivationNoValidation").hide();
+         if (@Model.TenderTypeId != @((int)Enums.TenderType.CurrentDirectPurchase)) {
+            $('#txtApproveLC').hide()
+            if ($('#chLCValue').prop("checked") != true) {
+               $('#txtApproveLC').show();
+               return false;
+            }
+         }
+         if (!$("#txtActivationNo").val()) {
+            $("#txtActivationNoValidation").show();
+            //AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.SharedResources.ErrorMessages.InvalidValue)', alertMessageType.Danger);
+            return;
+         }
+         $('#LoadingSite').fadeIn();
+         $.post('@Url.Action("ApproveDirectPurchaseTenderOffersFinanceCheckingAsync", "Tender")',
+            {
+               tenderIdString: '@tenderIdString',
+               verificationCode: $("#txtActivationNo").val(),
+               __RequestVerificationToken: token
+            }).done(function () {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                 setTimeout(function () {
+                   window.location = '@Url.Action("TenderIndexCheckingDirectPuchaseStage", "Tender")';
+                 }, 3000);
+            }).fail(function (error) {
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            });
+      });
+
+      $("#btnRejectConfirmation").on("click", function () {
+         $("#divRejectReason").show();
+         $("#btnApproveConfirmation").hide();
+         var rejectionReason = $("#txtRejectionReason").val();
+         $("#txtRejectionReasonValidation").hide();
+         if (rejectionReason.trim() == '')
+         {
+            $("#txtRejectionReasonValidation").show();
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            type: "Post",
+            url: '@Url.Action("RejectDirectPurchaseTenderOffersReportAsync", "Tender")',
+            data: {
+               tenderIdString: '@tenderIdString', rejectionReason: rejectionReason,
+               __RequestVerificationToken: token  },
+            success: function () {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                 setTimeout(function () {
+                   window.location = '@Url.Action("TenderIndexCheckingDirectPuchaseStage", "Tender")';
+                 }, 3000);
+            },
+            error: function (error) {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            }
+         });
+      });
+      $("#btnRejectTechTwoFilesConfirmation").on("click", function () {
+         $("#divRejectReason").show();
+         $("#btnApproveConfirmation").hide();
+         var rejectionReason = $("#txtRejectionReason").val();
+         $("#txtRejectionReasonValidation").hide();
+         if (rejectionReason.trim() == '')
+         {
+            $("#txtRejectionReasonValidation").show();
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            type: "Post",
+            url: '@Url.Action("RejectDirectPurchaseTenderOffersTechnicalCheckingAsync", "Tender")',
+            data: {
+               tenderIdString: '@tenderIdString',
+               rejectionReason: rejectionReason,
+               __RequestVerificationToken: token  },
+            success: function () {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                 setTimeout(function () {
+                   window.location = '@Url.Action("TenderIndexCheckingDirectPuchaseStage", "Tender")';
+                 }, 3000);
+            },
+            error: function (error) {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            }
+         });
+      });
+      $("#btnRejectFinancialTwoFilesConfirmation").on("click", function () {
+         $("#divRejectReason").show();
+         $("#btnApproveConfirmation").hide();
+         var rejectionReason = $("#txtRejectionReason").val();
+         $("#txtRejectionReasonValidation").hide();
+         if (rejectionReason.trim() == '')
+         {
+            $("#txtRejectionReasonValidation").show();
+            return false;
+         }
+         $('#LoadingSite').fadeIn();
+         $.ajax({
+            type: "Post",
+            url: '@Url.Action("RejectDirectPurchaseTenderOffersFinanceCheckingAsync", "Tender")',
+            data: {
+               tenderIdString: '@tenderIdString',
+               rejectionReason: rejectionReason,
+               __RequestVerificationToken: token  },
+            success: function () {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               AlertFun('@Html.Raw(MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ProgressDoneSuccessfully)', alertMessageType.Success);
+                 setTimeout(function () {
+                   window.location = '@Url.Action("TenderIndexCheckingDirectPuchaseStage", "Tender")';
+                 }, 3000);
+            },
+            error: function (error) {
+               $("#myModal").modal("hide");
+               $('#LoadingSite').fadeOut();
+               if (error.responseText != "Logout") {
+                  AlertFun(error.responseJSON.message, alertMessageType.Danger);
+               }
+               else if (error.responseText == "Logout") {
+                  window.location = '/account/logout'; return;
+               }
+            }
+         });
+      });
+
+      function createVerificationCode() {
+         document.getElementById('timer').innerHTML = 05 + ":" + 00;
+         startTimer();
+         $.post('/Tender/CreateVerificationCode', { tenderIdString: '@tenderIdString', __RequestVerificationToken: token }).fail(function (error) {
+            if (error.responseText != "Logout") {
+               AlertFun(error.responseJSON.message, alertMessageType.Danger);
+            }
+            else if (error.responseText == "Logout") {
+               window.location = '/account/logout'; return;
+            }
+            $("#changeRequestModal").modal('hide');
+            $("#myModal").modal('hide');
+         });
+      }
+      function checkSecond(sec) {
+         if (sec < 10 && sec >= 0) { sec = "0" + sec };
+         if (sec < 0) { sec = "59" };
+         return sec;
+      }
+      function checkTime(min, sec, myVar) {
+         if (min <= 0 && sec <= 0) {
+            $("#btnResendVerificationCode").prop("disabled", false);
+            clearTimeout(myVar)
+         };
+         return sec;
+      }
+      var myVar;
+      function startTimer() {
+         clearTimeout(myVar);
+         var presentTime = document.getElementById('timer').innerHTML;
+         var timeArray = presentTime.split(/[:]+/);
+         var m = timeArray[0];
+         var s = checkSecond((timeArray[1] - 1));
+         if (s == 59) { m = m - 1 }
+         document.getElementById('timer').innerHTML = m + ":" + s;
+         myVar = setTimeout(startTimer, 1000);
+         checkTime(m, s, myVar);
+         if (m < 0 && s > 0) {
+            document.getElementById('timerChangeRequest').innerHTML = "0:00";
+            return false;
+         }
+      }
+      var OffersCheck = new Vue({
+         el: '#OffersCheckConfirmGrid',
+         data: {
+            InvitationsOffersCheck: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            sort: '@canFilterOnNPA' == 'True' && '@Model.NPCalcHaveBeenDone' == 'True' ? 'OfferWeightAfterCalcNPA' : 'FinalPriceAfterDiscount',
+            resource_url: '/Tender/CheckTenderOffersPagingAsync?tenderIdString=' + '@tenderIdString' + '&Sort=' + '@SortCriteria',
+            queryString: ''
+         },
+         methods: {
+             getSupplierInfo: function (CR) {
+               getSupplierInfo(CR);
+            },
+            updateResource: function (data) {
+               this.InvitationsOffersCheck = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            viewOfferDirectPurchaseDetails: function (id) {
+               return '/Offer/ViewOfferDirectPurchaseDetails/' + id;
+            },
+            viewDirectPurchaseOffersChecking: function (id) {
+               return '/Offer/DirectPurchaseOfferChecking/' + '@tenderIdString' + '/' + id;
+            },
+            SortByOfferPrice: function () {
+               if (this.sort != "FinalPriceAfterDiscount") {
+                  this.sort = "FinalPriceAfterDiscount";
+                  this.resource_url = '/Tender/CheckTenderOffersPagingAsync?' + this.queryString + '&Sort=' + this.sort + '&tenderIdString=' + '@tenderIdString';
+               }
+            },
+            SortByOfferPriceAfterNPA: function () {
+               if (this.sort != "OfferWeightAfterCalcNPA") {
+                  this.sort = "OfferWeightAfterCalcNPA";
+                  this.resource_url = '/Tender/CheckTenderOffersPagingAsync?' + this.queryString + '&Sort='+ this.sort + '&tenderIdString=' +'@tenderIdString';
+               }
+            },
+         }
+      });
+   </script>
+}
+
+

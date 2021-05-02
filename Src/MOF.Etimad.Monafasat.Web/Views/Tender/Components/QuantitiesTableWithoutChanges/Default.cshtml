@@ -1,0 +1,85 @@
+@*@using Microsoft.Extensions.Configuration;
+   @using System.IO;*@
+@using Microsoft.Extensions.Options;
+@inject IOptionsSnapshot<RootConfiguration> rootConfiguration;
+@model MOF.Etimad.Monafasat.ViewModel.QuantityTableStepDTO
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderDetails;
+   //IConfiguration _configuration = _configuration = ConfigurationHelper.GetConfiguration(Directory.GetCurrentDirectory());
+   var _rootConfiguration = rootConfiguration.Value;
+   var localContentManualForGov = _rootConfiguration.LocalContentFilesConfiguration.LocalContentManualForGov;
+   var localContentManualForCommittee = _rootConfiguration.LocalContentFilesConfiguration.LocalContentManualForCommittee; //_configuration.GetSection("LocalContentFiles:LocalContentManualForCommittee").Value;
+}
+<div class="row" id="QuantitiesTable">
+   <div class="col-12">
+      <h4 class="text-primary">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.QuantityTables</h4>
+   </div>
+   @*<div class="col-12">
+         <a target="_blank" href="/Upload/GetFile?id=@nationalProductsList" rel="lightbox" alt="عرض الملف" title="عرض الملف">تحميل الملف</a><br />
+      </div>*@
+   <div class="col-md-6 col-sm-12 col-xs-12">
+      <ul class="list-group form-details-list">
+         @if (Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender && Model.TenderTypeId != (int)Enums.TenderType.NationalTransformationProjects
+&& !User.IsInRole(RoleNames.DataEntry) && !User.IsInRole(RoleNames.Auditer) && !User.IsInRole(RoleNames.supplier) && !User.IsInRole(RoleNames.PreQualificationCommitteeSecretary) && !User.IsInRole(RoleNames.PreQualificationCommitteeManager))
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     الدليل الإرشادي لتطبيق المعادلات الحسابية الخاصة بأفضليات المحتوى المحلى
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <a target="_blank" href="@localContentManualForCommittee" rel="lightbox" alt="عرض الملف" title="عرض الملف">تحميل الملف</a><br />
+                  </div>
+               </div>
+            </li>
+         }
+         @if (Model.TenderTypeId != (int)Enums.TenderType.CurrentDirectPurchase && Model.TenderTypeId != (int)Enums.TenderType.CurrentTender &&
+            (User.IsInRole(RoleNames.DataEntry) || User.IsInRole(RoleNames.Auditer) || User.IsInRole(RoleNames.PurshaseSpecialist) || User.IsInRole(RoleNames.EtimadOfficer)))
+         {
+            <li class="list-group-item">
+               <div class="row">
+                  <div class="col-4 etd-item-title">
+                     الدليل الإرشادي للجهات الحكومية لتضمين متطلبات المحتوى المحلي
+                  </div>
+                  <div class="col-8 etd-item-info">
+                     <span>
+                        <a target="_blank" href="@localContentManualForGov" rel="lightbox" alt="عرض الملف" title="عرض الملف">تحميل الملف</a><br />
+                     </span>
+                  </div>
+               </div>
+            </li>
+         }
+@*<div class="row">
+      <a target="_blank" href="/Upload/GetFile?id=@nationalProductsList" rel="lightbox" alt="عرض الملف" title="عرض الملف">تحميل قائمة المنتجات الوطنية</a>
+   </div>*@
+         <li class="list-group-item">
+            <div class="row">
+               <div class="col-4 etd-item-title">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AreAlternativeOfferAccepted
+               </div>
+               <div class="col-8 etd-item-info">
+                  <span>
+                     @if (Model.HasAlternativeOffer)
+                     {
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AlternativeOffer
+                     }
+                     else
+                     {
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.NoAlternativeOffer
+                     }
+                  </span>
+               </div>
+            </div>
+         </li>
+      </ul>
+   </div>
+   <div class="clearfix"></div>
+   <div class="card-collapse col-12">
+      @Html.Partial("~/Views/Tender/_QuantityTablesCreate.cshtml")
+   </div>
+</div>
+<script>
+   function RedirectURL(ids, names) {
+      window.open("/Upload/getfile/" + ids + ":" + names, '_blank');
+   }
+</script>

@@ -1,0 +1,220 @@
+@model MOF.Etimad.Monafasat.ViewModel.PrePlanningModel
+@using  MOF.Etimad.Monafasat.SharedKernel;
+@{
+   ViewData["Title"] = MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.PrePlanningManagement;
+}
+
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "PrePlanning")">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.PrePlanning</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.PrePlanningResources.DisplayInputs.PrePlanningManagement</li>
+      </ol>
+   </nav>
+}
+@using (Html.BeginForm())
+{
+   @Html.AntiForgeryToken()
+
+   <div class="card">
+      <div class="card-body">
+         <input type="hidden" asp-for="EncyptedPrePlanningId" />
+         <input asp-for="StatusId" id="hdnStatusId" type="hidden" />
+         <div class="row" id="relationalForm">
+            <div class="col-lg-12 col-sm-12 col-xs-12">
+               <span class="badge badge-primary pull-right">
+                  @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CreatedBy
+                  : <i class="material-icons" style="font-size: 11px;padding: 2px;display: inline;">person</i>
+                  @{
+                     if (string.IsNullOrEmpty(Model.EncyptedPrePlanningId) || MOF.Etimad.Monafasat.SharedKernal.Util.Encrypt(0) == Model.EncyptedPrePlanningId)
+                     {
+                        @(User.FullName()) }
+                     else
+                     {
+                        @Model.CreatedBy
+                     } }
+               </span>
+
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="ProjectName" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                  <input asp-for="ProjectName" class="form-control" onchange="return blockSpecialChar(event)" name="ProjectName" id="ProjectName" />
+                  <span asp-validation-for="ProjectName" class="text-danger"></span>
+               </div>
+            </div>
+
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="InsideKSA" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <div class="form-check">
+                     <label class="form-check-label">
+                        <input asp-for="InsideKSA" id="InsideKSA1" name="InsideKSA" onclick="showareas();" checked="checked" class="form-check-input" type="radio" value="true">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InsideKSA
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                     <label class="form-check-label">
+                        <input class="form-check-input" type="radio" onclick="showcountries();" id="InsideKSA2" asp-for="InsideKSA" name="InsideKSA" value="false">
+                        @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OutsideKSA
+                        <span class="circle">
+                           <span class="check"></span>
+                        </span>
+                     </label>
+                  </div>
+                  <span asp-validation-for="InsideKSA" id="InsideKSASpan" class="text-danger"></span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" id="divTenderAreas">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="Areas" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <select asp-for="PrePlanningAreaIDs" name="PrePlanningAreaIDs" data-live-search="true" id="dD_TenderAreas" class="selectpicker" required
+                          asp-items="@(new SelectList(Model.Areas, "Id", "Name"))" data-style="select-with-transition" data-size="7"></select>
+               </div>
+               <span asp-validation-for="PrePlanningAreaIDs" class="text-danger"></span>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" id="divTenderCountries">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="Countries" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <select asp-for="PrePlanningCountriesIDs" name="PrePlanningCountriesIDs" data-live-search="true" id="dD_TenderCountries" class="selectpicker" required
+                          asp-items="@(new SelectList(Model.Countries, "CountryId", "Name"))" data-style="select-with-transition" data-size="7"></select>
+               </div>
+               <span asp-validation-for="PrePlanningCountriesIDs" class="text-danger"></span>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="ProjectNature" class="label bmd-label-static noSpecial"></label><span class="text-danger">*</span>
+                  <input asp-for="ProjectNature" class="form-control" onchange="return blockSpecialChar(event)" name="ProjectNature" id="ProjectNature" />
+                  <span asp-validation-for="ProjectNature" class="text-danger"></span>
+               </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="ProjectTypesIDs" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <select asp-for="ProjectTypesIDs" name="ProjectTypesIDs" id="dD_ProjectTypeId" data-live-search="true" required class="selectpicker" data-style="select-with-transition"
+                          asp-items="@(Model.ProjectTypesList)" data-size="7"></select>
+               </div>
+               <span asp-validation-for="ProjectTypesIDs" class="text-danger"></span>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="YearQuarterId" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <select data-live-search="true" asp-for="YearQuarterId" name="YearQuarterId"
+                          asp-items="@(new SelectList(Model.YearQuarters, "Id", "Name"))" id="dD_YearQuarterId" class="selectpicker" data-style="select-with-transition" data-size="7">
+                     <option value="">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Select</option>
+                  </select>
+               </div>
+               <span asp-validation-for="YearQuarterId" class="text-danger"></span>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+               <h5 class="text-dark-green" style="margin-top:10px">
+                  <label asp-for="Duration" class="text-dark-green"></label>
+               <span class="text-danger">*</span></h5>
+               <div class="row">
+                  <div class="col-4">
+                     <div class="form-group bmd-form-group p-0">
+                        <label asp-for="DurationInDays" class="label bmd-label-static noSpecial"></label>
+                        <input asp-for="DurationInDays" class="form-control allow-numric" name="DurationInDays" id="DurationInDays" data-maxlength="2" />
+                        <span asp-validation-for="DurationInDays" class="text-danger"></span>
+                     </div>
+                  </div>
+                  <div class="col-4">
+                     <div class="form-group bmd-form-group p-0">
+                        <label asp-for="DurationInMonths" class="label bmd-label-static noSpecial"></label>
+                        <input asp-for="DurationInMonths" class="form-control allow-numric" name="DurationInMonths" id="DurationInMonths" data-maxlength="2" />
+                        <span asp-validation-for="DurationInMonths" class="text-danger"></span>
+                     </div>
+                  </div>
+                  <div class="col-4">
+                     <div class="form-group bmd-form-group p-0">
+                        <label asp-for="DurationInYears" class="label bmd-label-static noSpecial"></label>
+                        <input asp-for="DurationInYears" class="form-control allow-numric" name="DurationInYears" id="DurationInYears" data-maxlength="2" />
+                        <span asp-validation-for="DurationInYears" class="text-danger"></span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-12">
+               <div class="form-group bmd-form-group">
+                  <label asp-for="ProjectDescription" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                  <textarea asp-for="ProjectDescription" name="ProjectDescription" class="form-control" rows="6"></textarea>
+               </div>
+               <span asp-validation-for="ProjectDescription" class="text-danger"></span>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col">
+         <button id="btnSave" type="submit" class="btn btn-primary">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Save
+         </button>
+         <a href="@Url.Action("Index", "PrePlanning")" class="btn pull-right btn-outline-primary" id="btnBack">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+         </a>
+      </div>
+   </div>
+
+   <div class="clearfix"></div>
+}
+@section scripts
+   {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<script>
+   $(document).ready(function () {
+      if ($("input[name='InsideKSA']:checked").val() == "true") {
+         $("#divTenderCountries").hide();
+         $("#divTenderAreas").show();
+      }
+      else {
+         $("#divTenderCountries").show();
+         $("#divTenderAreas").hide();
+      }
+   });
+
+   $('#DurationInYears').keyup(validateMaxLength);
+   $('#DurationInDays').keyup(validateMaxLength);
+   $('#DurationInMonths').keyup(validateMaxLength);
+
+   function validateMaxLength() {
+      var text = $(this).val();
+      var maxlength = $(this).data('maxlength');
+
+      if (maxlength > 0) {
+         $(this).val(text.substr(0, maxlength));
+      }
+   }
+
+   function blockSpecialChar(e) {
+      if (fixing)
+         return;
+      fixing = true;
+      var newString = "";
+      var stringValue = $(e.currentTarget).val();
+      for (var i = 0; i < stringValue.length; i++) {
+         var k = stringValue[i];
+         var iChars = "!@@#$%^&*()+=-[]\\\';,./{}|\":<>?_×÷،ٍِِِِِ’َ؟?‘ًَُ~ٍِـ`";
+         if (iChars.indexOf(k) == -1)
+            newString = newString + k;
+      }
+      $(e.currentTarget).val(newString);
+      fixing = false;
+   }
+   function showcountries() {
+      $("select[name='TenderAreaIDs']").val('').selectpicker("refresh");
+      $("#divTenderCountries").show();
+      $("#divTenderAreas").hide();
+      $("#divTenderCountries").prop('required', true);
+      $("#divTenderAreas").prop('required', false);
+   }
+   function showareas() {
+      $("select[name='TenderCountriesIDs']").val('').selectpicker("refresh");
+      $("#divTenderCountries").hide();
+      $("#divTenderAreas").show();
+      $("#divTenderCountries").prop('required', false);
+      $("#divTenderAreas").prop('required', true);
+   }
+</script>

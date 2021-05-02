@@ -1,0 +1,73 @@
+
+<div class="table-responsive">
+   <table id="OffersExtendValidityTable" class="table table-striped text-center" summary="desc">
+      <thead class="text-center">
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SupplierName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.CR</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.PlaintRequestApplyDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.EscalationDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.PlaintReason </th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Attachments</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BankGuarantee</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status</th>
+
+
+            <th scope="col" class="text-center"> تاريخ رفض الجهه</th>
+            <th scope="col" class="text-center">سبب رفض الجهه</th>
+            @*<th scope="col" class="text-center">قرار اللجنه</th>*@
+
+
+
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options</th>
+         </tr>
+      </thead>
+      <tbody class="text-center" v-if="plaints && plaints.length > 0">
+         <tr v-for="(plaint, $index) in plaints">
+            <td class="text-center" data-label="#"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td class="text-center" @@click="getSupplierInfo(plaint.selectedCr)" style="cursor:pointer" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName"> {{plaint.selectedCrName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialName"> {{plaint.selectedCr}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{plaint.creationDate}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{plaint.escalationDate}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{plaint.plaintReason}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Attachments">
+               <div v-for="(att, $index) in plaint.attachmentList">
+                  <span>
+                     <a href="#" @@click="RedirectURL(att.fileNetReferenceId,att.name);return false;"> {{att.name}} </a>
+                  </span>
+               </div>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.BankGuarantee">
+               <span>
+                  <a href="#" v-if='plaint.escalationAttachments' @@click="RedirectURL(plaint.escalationAttachments.fileNetReferenceId,plaint.escalationAttachments.name);return false;"> {{plaint.escalationAttachments.name}} </a>
+               </span>
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status"> {{plaint.escalationStatusName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{plaint.agencyRejectionDate}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{plaint.agencyRejectionReason}} </td>
+            @*<td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.CommercialNumber"> {{plaint.committeeDesision}} </td>*@
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Status"> {{plaint.statusName}} </td>
+            <td data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Options">
+               <div class="dropdown">
+                  <button class="btn btn-primary btn-link btn-just-icon " data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i> <div class="ripple-container"></div></button>
+                  <div class="dropdown-menu dropdown-menu-left" x-placement="bottom-end">
+                     <a v-if="plaint.plaintReason" :href="CheckEscalationRequestData(plaint.plainRequestId)" class="dropdown-item"> <i class="material-icons">format_list_bulleted</i>  @MOF.Etimad.Monafasat.Resources.CommunicationRequest.DisplayInputs.RequestDetails</a>
+                  </div>
+               </div>
+            </td>
+ 
+      </tbody>
+      <tbody v-if="plaints.length == 0">
+         <tr>
+            <td colspan="9">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table>
+   <pagination :visible_pages="3" ref="vpaginator" :resource_url="resource_url" @@update="updateResource"></pagination>
+</div>
+
+

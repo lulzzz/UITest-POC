@@ -1,0 +1,96 @@
+@using MOF.Etimad.Monafasat.SharedKernel;
+
+<div class="table-responsive tenderGridHight">
+   <table class="table  table-striped" id="TenderTable"   summary="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.DataShow"  >
+      <thead>
+         <tr>
+            <th scope="col" class="text-center">#</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletPrice</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SubmtionDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate</th>
+            <th scope="col" class="text-center">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersCheckingDate</th> 
+            <th scope="col" style="width:130px" class="text-center">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Actions</th>
+         </tr>
+      </thead>
+      <tbody v-if="Tenders && Tenders.length > 0">
+         <tr v-for="(tender, $index) in Tenders">
+            <td data-label="#" class="text-center"> {{ (currentPage -1) * (pageSize) +  $index + 1}} </td>
+            <td class="text-center" v-if="tender.tenderName.length > 100" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName"><a :href="detailsUrl(tender.tenderIdString)">{{tender.tenderName.substring(0, 100) + ' ...'}}</a> </td>
+            <td class="text-center" v-else data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderName"><a :href="detailsUrl(tender.tenderIdString)">{{tender.tenderName}}</a> </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderType"> {{tender.tenderTypeName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.AgencyName"> {{tender.agencyName}} - {{tender.branchName}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderStatus">
+               @Html.Partial("_VROTenderStatus.cshtml")
+            </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.TenderNumber"> {{tender.tenderNumber}} </td>
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ConditionsBookletPrice"> {{tender.conditionsBookletPrice}} </td>
+
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.SubmtionDate">
+               <div class="text-center" style="width:75px">
+                  <span v-if="tender.submitionDate"> {{tender.submitionDate.split('T')[0]}} <br /></span>
+                  <span v-if="tender.submitionDateHijri && tender.submitionDate"> {{tender.submitionDateHijri}}</span>
+               </div>
+                  
+            </td>
+
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastEnqueriesDate">
+               <div class="text-center" style="width:75px">
+                  <span v-if="tender.lastEnqueriesDate"> {{tender.lastEnqueriesDate.split('T')[0]}}<br /> </span>
+                  <span v-if="tender.lastEnqueriesDateHijri && tender.lastEnqueriesDate"> {{tender.lastEnqueriesDateHijri}}</span>
+               </div>
+              
+            </td>
+
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.LastOfferPresentationDate">
+               <div class="text-center" style="width:75px">
+                  <span v-if="tender.lastOfferPresentationDate"> {{tender.lastOfferPresentationDate.split('T')[0]}}<br /></span>
+                  <span v-if="tender.lastOfferPresentationDateHijri && tender.lastOfferPresentationDate"> {{tender.lastOfferPresentationDateHijri}} <br /> {{tender.lastOfferPresentationDate.split('T')[1].substring(0,5)}} </span>
+               </div>
+              
+            </td>
+            <td v-if="tender.offersOpeningDate" class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate">
+               <div class="text-center" style="width:75px">
+                  <span v-if="tender.offersOpeningDate"> {{tender.offersOpeningDate.split('T')[0]}} <br /></span>
+                  <span v-if="tender.offersOpeningDateHijri && tender.offersOpeningDate"> {{tender.offersOpeningDateHijri}}       <br /> {{tender.offersOpeningDate.split('T')[1].substring(0,5)}}  </span>
+               </div>
+              
+            </td>
+            <td v-else class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersOpeningDate">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist
+            </td>
+            <td v-if="tender.offersCheckingDate" class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.ChooseCheckingDate">
+               <div class="text-center" style="width:75px">
+                  <span v-if="tender.offersCheckingDate"> {{tender.offersCheckingDate.split('T')[0]}} <br /></span>
+                  <span v-if="tender.OffersCheckingDateHijri && tender.offersCheckingDate"> {{tender.OffersCheckingDateHijri}}       <br /> {{tender.offersCheckingDate.split('T')[1].substring(0,5)}}  </span>
+               </div>
+              
+            </td>
+            <td v-else class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OffersCheckingDate">
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NotExist
+            </td>
+            
+            <td class="text-center" data-label="@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Actions"> 
+               <a :href="detailsUrl(tender.tenderIdString)" class="btn btn-sm btn-primary">
+                  @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Details
+               </a>
+            </td>
+         </tr>
+      </tbody>
+      <tbody v-else>
+         <tr>
+            <td colspan="13" class="text-center">
+               <i class="text-primary material-icons" style="font-size:3rem">report</i> 
+               <br />
+               @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.NoData
+            </td>
+         </tr>
+      </tbody>
+   </table> 
+</div>

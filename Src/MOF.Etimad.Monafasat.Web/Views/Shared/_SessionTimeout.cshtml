@@ -1,0 +1,22 @@
+
+
+<div class="modal" tabindex="-1" role="dialog" id="sessiontimeoutmodal" data-backdrop="static">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">    @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.UserSession</h5>
+            @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>*@
+         </div>
+         <div class="modal-body">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SessionTimeOut&nbsp;<span id="seconds"></span>&nbsp;@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Second<br />
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.SessionTimeOutExtend
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-sm"  onclick="SessionExpireAlert()"  id="btnrenewsession"  >   @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Renew</button>
+            <a  href="@Url.ActionLink("Logout","Account")" class="btn btn-danger btn-link" >  تسجيل خروج </a>
+         </div>
+      </div>
+   </div>
+</div>

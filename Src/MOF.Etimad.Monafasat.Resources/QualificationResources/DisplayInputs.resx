@@ -1,0 +1,718 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Activity" xml:space="preserve">
+    <value>النشاط</value>
+  </data>
+  <data name="ActiveQualifications" xml:space="preserve">
+    <value>التأهيلات النشطة</value>
+  </data>
+  <data name="Addresses" xml:space="preserve">
+    <value>العناوين</value>
+  </data>
+  <data name="ApplyingDocuments" xml:space="preserve">
+    <value>وثائق التقديم</value>
+  </data>
+  <data name="AllQualifications" xml:space="preserve">
+    <value>جميع دعوات التأهيل</value>
+  </data>
+  <data name="BasicData" xml:space="preserve">
+    <value>المعلومات الأساسية</value>
+  </data>
+  <data name="CheckApproveRequestWillSent" xml:space="preserve">
+    <value>سيتم  ارسال طلب اعتماد نتائج وثائق التأهيل</value>
+  </data>
+  <data name="CheckOfferConfirm" xml:space="preserve">
+    <value>تفاصيل تأكيد فحص التأهيل</value>
+  </data>
+  <data name="CheckOfferConfirmStage" xml:space="preserve">
+    <value>تأكيد مرحلة فحص طلبات التأهيل</value>
+  </data>
+  <data name="CheckOfferDetails" xml:space="preserve">
+    <value>تفاصيل فحص التأهيل</value>
+  </data>
+  <data name="CommercialName" xml:space="preserve">
+    <value>الإسم التجارى للشركة</value>
+  </data>
+  <data name="CommercialNumber" xml:space="preserve">
+    <value>رقم السجل التجارى</value>
+  </data>
+  <data name="BreadCrumb" xml:space="preserve">
+    <value>تقديم وثائق التأهيل</value>
+  </data>
+  <data name="CategorizationField" xml:space="preserve">
+    <value>مجال التصنيف</value>
+  </data>
+  <data name="ConditionsBookletPrice" xml:space="preserve">
+    <value>قيمة الكراسة</value>
+  </data>
+  <data name="EndedQualifications" xml:space="preserve">
+    <value>دعوات التأهيل المكتملة</value>
+  </data>
+  <data name="ConfrimCheckResults" xml:space="preserve">
+    <value>تاكيد نتائج الفحص</value>
+  </data>
+  <data name="EstablishingActions" xml:space="preserve">
+    <value>أعمال  الإنشاء</value>
+  </data>
+  <data name="ExecutionPlace" xml:space="preserve">
+    <value>مكان التنفيذ</value>
+  </data>
+  <data name="GovAgencyName" xml:space="preserve">
+    <value>الجهة الحكومية</value>
+  </data>
+  <data name="InsideKSA" xml:space="preserve">
+    <value>داخل المملكة</value>
+  </data>
+  <data name="LastDocumentApplyingDate" xml:space="preserve">
+    <value>آخر موعد لتقديم وثائق التأهيل</value>
+  </data>
+  <data name="LastEnquiresDate" xml:space="preserve">
+    <value>آخر موعد لإستلام إستفسارات الموردين وإضافة الملحقات</value>
+  </data>
+  <data name="Locations" xml:space="preserve">
+    <value>المناطق</value>
+  </data>
+  <data name="Logo" xml:space="preserve">
+    <value>شعار الجهة</value>
+  </data>
+  <data name="MaintenanceOperationActions" xml:space="preserve">
+    <value>أعمال الصيانة والتشغيل</value>
+  </data>
+  <data name="Matched" xml:space="preserve">
+    <value>مطابق</value>
+  </data>
+  <data name="NotMatched" xml:space="preserve">
+    <value>غير مطابق</value>
+  </data>
+  <data name="OfferNotTechnicallyEvaluated" xml:space="preserve">
+    <value>لم يتم التقييم الفني</value>
+  </data>
+  <data name="OutsideKSA" xml:space="preserve">
+    <value>خارج المملكة</value>
+  </data>
+  <data name="PleaseEnterRejectionReason" xml:space="preserve">
+    <value>الرجاء إدخال سبب الرفض</value>
+  </data>
+  <data name="PleaseEnterVerificationCode" xml:space="preserve">
+    <value>الرجاء إدخال رمز التحقق</value>
+  </data>
+  <data name="PreQualification" xml:space="preserve">
+    <value>التأهيل المسبق</value>
+  </data>
+  <data name="PostQualification" xml:space="preserve">
+    <value>التأهيل اللاحق</value>
+  </data>
+  <data name="PageTitle" xml:space="preserve">
+    <value>تقديم وثائق التأهيل</value>
+  </data>
+  <data name="PreQualificationDetails" xml:space="preserve">
+    <value>تفاصيل دعوة التأهيل</value>
+  </data>
+  <data name="Qualification" xml:space="preserve">
+    <value>دعوات التأهيل</value>
+  </data>
+  <data name="PreQualificationResult" xml:space="preserve">
+    <value>نتيجة وثائق التأهيل</value>
+  </data>
+  <data name="ProgressDoneSuccessfully" xml:space="preserve">
+    <value>تمت العملية بنجاح</value>
+  </data>
+  <data name="QualificationActivity" xml:space="preserve">
+    <value>النشاط</value>
+  </data>
+  <data name="QualificationDates" xml:space="preserve">
+    <value>تواريخ دعوة التأهيل</value>
+  </data>
+  <data name="QualificationEvaluationDate" xml:space="preserve">
+    <value>تاريخ ووقت تقييم وثائق التأهيل</value>
+  </data>
+  <data name="QualificationName" xml:space="preserve">
+    <value>اسم دعوة التأهيل</value>
+  </data>
+  <data name="QualificationNumber" xml:space="preserve">
+    <value>الرقم المرجعي لدعوة التأهيل</value>
+  </data>
+  <data name="RejectionConfirm" xml:space="preserve">
+    <value>تأكيد الرفض</value>
+  </data>
+  <data name="RejectionReason" xml:space="preserve">
+    <value>سبب الرفض</value>
+  </data>
+  <data name="RemainingTime" xml:space="preserve">
+    <value>الوقت المتبقي لتقديم وثائق التأهيل</value>
+  </data>
+  <data name="ResendConfirmationCode" xml:space="preserve">
+    <value>إعادة إرسال رمز التحقق</value>
+  </data>
+  <data name="RestartCheckOffers" xml:space="preserve">
+    <value>إعادة فتح فحص طلبات التأهيل</value>
+  </data>
+  <data name="SendToApprove" xml:space="preserve">
+    <value>إرسال للإعتماد</value>
+  </data>
+  <data name="TechnicalEvaluation" xml:space="preserve">
+    <value>الفحص</value>
+  </data>
+  <data name="WillConfirmOpen" xml:space="preserve">
+    <value>سيتم تأكيد الفتح</value>
+  </data>
+  <data name="WillOpen" xml:space="preserve">
+    <value>في حال التأكيد, حالة التأهيل ستصبح (مرحلة فتح العروض)
+ولن يتمكن الموردين من شراء التأهيل بعد ذلك, او تقديم عروض</value>
+  </data>
+  <data name="WillReopen" xml:space="preserve">
+    <value>سيتم  إعادة الفتح</value>
+  </data>
+  <data name="WillSentToApprove" xml:space="preserve">
+    <value>سيتم الإرسال للإعتماد</value>
+  </data>
+  <data name="FavoriteQualifications" xml:space="preserve">
+    <value>دعوات التأهيل المفضلة</value>
+  </data>
+  <data name="QualificationEvaluationTime" xml:space="preserve">
+    <value>وقت تقييم  وثائق التأهيل</value>
+  </data>
+  <data name="AddQualification" xml:space="preserve">
+    <value>إنشاء دعوه تأهيل</value>
+  </data>
+  <data name="UnderstablishedStageQualifications" xml:space="preserve">
+    <value>دعوات تأهيل تحت الاجراء</value>
+  </data>
+  <data name="CheckStagePreQualifications" xml:space="preserve">
+    <value>دعوات تأهيل في مرحلة الفحص</value>
+  </data>
+  <data name="QualificationType" xml:space="preserve">
+    <value>مستوى التأهيل</value>
+  </data>
+  <data name="ConfirmDelete" xml:space="preserve">
+    <value>هل أنت متأكد من حذف التأهيل؟</value>
+  </data>
+  <data name="DeleteQualification" xml:space="preserve">
+    <value>حذف التأهيل</value>
+  </data>
+  <data name="QualificationStatus" xml:space="preserve">
+    <value>حالة دعوة التأهيل</value>
+  </data>
+  <data name="DisplayQualificationsOption" xml:space="preserve">
+    <value>خيارات إظهار دعوات التأهيل</value>
+  </data>
+  <data name="SubmtionDate" xml:space="preserve">
+    <value>تاريخ نشر دعوة التأهيل</value>
+  </data>
+  <data name="LastQualificationPresentationDate" xml:space="preserve">
+    <value>آخر موعد لتقديم  وثائق التأهيل</value>
+  </data>
+  <data name="NoRejectedReason" xml:space="preserve">
+    <value>لا يوجد</value>
+  </data>
+  <data name="NotChecked" xml:space="preserve">
+    <value>لم يتم الفحص</value>
+  </data>
+  <data name="MyQualifications" xml:space="preserve">
+    <value>دعوات التأهيل الخاصة بي</value>
+  </data>
+  <data name="PreQualificationNews" xml:space="preserve">
+    <value>أخبار الدعوة</value>
+  </data>
+  <data name="PublishDate" xml:space="preserve">
+    <value>تاريخ نشر دعوة التأهيل</value>
+  </data>
+  <data name="CancelRequests" xml:space="preserve">
+    <value>طلبات الإلغاء</value>
+  </data>
+  <data name="ModifyRequests" xml:space="preserve">
+    <value>طلبات التعديل</value>
+  </data>
+  <data name="ApplyQualificationDocument" xml:space="preserve">
+    <value>تقديم وثائق التاهيل</value>
+  </data>
+  <data name="ViewQualificationDocument" xml:space="preserve">
+    <value>عرض وثائق التاهيل</value>
+  </data>
+  <data name="CheckingCommitteeName" xml:space="preserve">
+    <value>اسم لجنة الفحص </value>
+  </data>
+  <data name="TechnicalOrganizationName" xml:space="preserve">
+    <value>اسم اللجنة الفنية</value>
+  </data>
+  <data name="LastOfferPresentationDate" xml:space="preserve">
+    <value>اخر  موعد  لتقديم   وثائق التأهيل</value>
+  </data>
+  <data name="OffersCheckingDate" xml:space="preserve">
+    <value>اخر موعد لتقييم وثائق التأهيل</value>
+  </data>
+  <data name="QualificationDocumentsResult" xml:space="preserve">
+    <value>نتيجة وثائق التأهيل</value>
+  </data>
+  <data name="CheckTechnicalEvaluation" xml:space="preserve">
+    <value>فحص اوراق التأهيل</value>
+  </data>
+  <data name="ReopenCheck" xml:space="preserve">
+    <value>إعادة فحص أوراق  وثائق التأهيل</value>
+  </data>
+  <data name="ReviewData" xml:space="preserve">
+    <value>مراجعة وتدقيق البيانات</value>
+  </data>
+  <data name="PublishedBy" xml:space="preserve">
+    <value>نشرت من خلال</value>
+  </data>
+  <data name="ActiveQualification" xml:space="preserve">
+    <value>دعوات التأهيل الحالية</value>
+  </data>
+  <data name="EndedQualification" xml:space="preserve">
+    <value>دعوات التأهيل المكتملة</value>
+  </data>
+  <data name="LastApplyDocumentTime" xml:space="preserve">
+    <value>اخر وقت لتقديم الوثائق</value>
+  </data>
+  <data name="CancelQualification" xml:space="preserve">
+    <value>إلغاء التأهيل</value>
+  </data>
+  <data name="ExtendDates" xml:space="preserve">
+    <value>تمديد تواريخ دعوة التأهيل</value>
+  </data>
+  <data name="ReviewCancelQualification" xml:space="preserve">
+    <value>مراجعة طلب إلغاء التأهيل</value>
+  </data>
+  <data name="PreQualificaton" xml:space="preserve">
+    <value>دعوة التأهيل</value>
+  </data>
+  <data name="PostQualificaionDetails" xml:space="preserve">
+    <value>تفاصيل التأهيل اللاحق</value>
+  </data>
+  <data name="AddEditPostQualification" xml:space="preserve">
+    <value>إضافة / تعديل التاهيل اللاحق</value>
+  </data>
+  <data name="Received" xml:space="preserve">
+    <value>مستلم</value>
+  </data>
+  <data name="CheckOffersCommittee" xml:space="preserve">
+    <value>لجنه فحص العروض</value>
+  </data>
+  <data name="PostQualificationEvaluationDate" xml:space="preserve">
+    <value>تاريخ تقييم وثائق التأهيل</value>
+  </data>
+  <data name="PostQualificationLastEnquiryDate" xml:space="preserve">
+    <value>اخر موعد لإستلام الاستفسارات</value>
+  </data>
+  <data name="QualificationLastQualificationPresentationDate" xml:space="preserve">
+    <value>اخر موعد لتقديم وثائق التأهيل</value>
+  </data>
+  <data name="ApproveSendQualificationDocument" xml:space="preserve">
+    <value>أعتماد وارسال وثائق التأهيل</value>
+  </data>
+  <data name="ReviewCheckingData" xml:space="preserve">
+    <value>مراجعة نتائج  وثائق التأهيل</value>
+  </data>
+  <data name="Large" xml:space="preserve">
+    <value>مرتفع</value>
+  </data>
+  <data name="LargeThan" xml:space="preserve">
+    <value>اكبر مــن</value>
+  </data>
+  <data name="Medium" xml:space="preserve">
+    <value>متوسط</value>
+  </data>
+  <data name="NumberOfEmplyess" xml:space="preserve">
+    <value>عدد الموظفين</value>
+  </data>
+  <data name="NumberOfExisitngProjects" xml:space="preserve">
+    <value>عدد المشاريع القائمة</value>
+  </data>
+  <data name="NumberOfExperianceYears" xml:space="preserve">
+    <value>عدد سنوات الخبرة في مجال طلب التأهيل</value>
+  </data>
+  <data name="NumberOfProjects" xml:space="preserve">
+    <value>عدد المشاريع المنفذة خلال الثلاث سنوات الأخيرة في مجال طلب التأهيل</value>
+  </data>
+  <data name="ReslutAvrageEvaluationProjectPerformance" xml:space="preserve">
+    <value>معدل نتائج تقييمات الأداء في المشاريع السابقة مع الجهات الحكومية في مجال طلب التأهيل</value>
+  </data>
+  <data name="Small" xml:space="preserve">
+    <value>منخفض</value>
+  </data>
+  <data name="SmallerThan" xml:space="preserve">
+    <value>أقــل مــن</value>
+  </data>
+  <data name="SudianEmplyeePercentage" xml:space="preserve">
+    <value>نسبة الموظفين السعوديين</value>
+  </data>
+  <data name="TotalProjectsValueInThreeYears" xml:space="preserve">
+    <value>إجمالي قيمة المشاريع خلال الثلاث سنوات الأخيرة في مجال طلب التأهيل</value>
+  </data>
+  <data name="ValueOfexisitingProjects" xml:space="preserve">
+    <value>قيمة المشاريع القائمة</value>
+  </data>
+  <data name="CashPercentage" xml:space="preserve">
+    <value>نسبة النقدية</value>
+  </data>
+  <data name="LiquidityRatioMax" xml:space="preserve">
+    <value>نسبة السيولة السريعة</value>
+  </data>
+  <data name="Weight" xml:space="preserve">
+    <value>الوزن</value>
+  </data>
+  <data name="CashRate" xml:space="preserve">
+    <value>نسبة النقدية  (لآخر سنة مالية)</value>
+  </data>
+  <data name="EvaluationStandard" xml:space="preserve">
+    <value>معيار التقييم</value>
+  </data>
+  <data name="ExistingContractualObligations" xml:space="preserve">
+    <value>الالتزامات التعاقدية القائمة</value>
+  </data>
+  <data name="FinancialCapacity" xml:space="preserve">
+    <value>القدرات المالية</value>
+  </data>
+  <data name="FinancialPerformanceIndicators" xml:space="preserve">
+    <value>مؤشرات الأداء المالية</value>
+  </data>
+  <data name="HR" xml:space="preserve">
+    <value>الموارد البشرية</value>
+  </data>
+  <data name="LiquidityRatio" xml:space="preserve">
+    <value>نسبة السيولة السريعة  (لآخر سنة مالية)</value>
+  </data>
+  <data name="MainWeightUnit" xml:space="preserve">
+    <value>وحدة الوزن الرئيسية</value>
+  </data>
+  <data name="NumberOfPoints" xml:space="preserve">
+    <value>نقاط التأهيل</value>
+  </data>
+  <data name="NumberOfSudianEmployess" xml:space="preserve">
+    <value>عدد الموظفين السعودين</value>
+  </data>
+  <data name="PreviousExperience" xml:space="preserve">
+    <value>الخبرات السابقة</value>
+  </data>
+  <data name="Quality" xml:space="preserve">
+    <value>الجودة</value>
+  </data>
+  <data name="QualityAssuranceStandards" xml:space="preserve">
+    <value>ما هى معايير ضمان الجودة</value>
+  </data>
+  <data name="TechnicalAndAdministrativeCapacity" xml:space="preserve">
+    <value>القدرات الفنية والإدارية</value>
+  </data>
+  <data name="ValueExistingProjectsCapacityByClassification" xml:space="preserve">
+    <value>قيمة المشاريع القائمة</value>
+  </data>
+  <data name="Availible" xml:space="preserve">
+    <value>يوجد</value>
+  </data>
+  <data name="EnvironmentGuide" xml:space="preserve">
+    <value>دليل البيئة والصحة والسلامة</value>
+  </data>
+  <data name="EnvironmentGuideNotAvailible" xml:space="preserve">
+    <value>لا يوجد</value>
+  </data>
+  <data name="Failed" xml:space="preserve">
+    <value>لم يجتاز الاختبار</value>
+  </data>
+  <data name="GuaranteeNotAvailible" xml:space="preserve">
+    <value>لا يوجد</value>
+  </data>
+  <data name="High" xml:space="preserve">
+    <value>مرتفع</value>
+  </data>
+  <data name="IsoCertificate" xml:space="preserve">
+    <value>شهادة ايزو (ISO)</value>
+  </data>
+  <data name="Low" xml:space="preserve">
+    <value>منخفض</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>لا</value>
+  </data>
+  <data name="NotAvailible" xml:space="preserve">
+    <value>لا يوجد</value>
+  </data>
+  <data name="OSHA" xml:space="preserve">
+    <value>شهادة OSHA أو OSHAS</value>
+  </data>
+  <data name="QualityGuarantee" xml:space="preserve">
+    <value>دليل جودة</value>
+  </data>
+  <data name="SaudiEmployeesNumber" xml:space="preserve">
+    <value>عدد الموظفين السعوديين</value>
+  </data>
+  <data name="Stable" xml:space="preserve">
+    <value>ثابت</value>
+  </data>
+  <data name="Succeeded" xml:space="preserve">
+    <value>ناجح</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>نعم</value>
+  </data>
+  <data name="AccountsReceivable" xml:space="preserve">
+    <value>الحسابات مستحقة القبض</value>
+  </data>
+  <data name="CashEquivalents" xml:space="preserve">
+    <value>النقدية ومكافئات النقدية</value>
+  </data>
+  <data name="CurrentLiabilities" xml:space="preserve">
+    <value>الالتزامات المتداولة</value>
+  </data>
+  <data name="EnvironmentHealthSafety" xml:space="preserve">
+    <value>البيئة والصحة والسلامة</value>
+  </data>
+  <data name="CurrentAssets" xml:space="preserve">
+    <value>الموجودات المتداولة</value>
+  </data>
+  <data name="TradeRate" xml:space="preserve">
+    <value>نسبة التداول  (لآخر سنة مالية)</value>
+  </data>
+  <data name="Insurance" xml:space="preserve">
+    <value>التأمين</value>
+  </data>
+  <data name="InsuranceGeneralCommercialResponsibility" xml:space="preserve">
+    <value>تأمين المسؤولية التجارية العامة</value>
+  </data>
+  <data name="InsuranceLiability" xml:space="preserve">
+    <value>تأمين المسؤولية ضد الغير</value>
+  </data>
+  <data name="InsuranceProfessionalCompensation" xml:space="preserve">
+    <value>تأمين التعويض المهنى</value>
+  </data>
+  <data name="ObligationsRation" xml:space="preserve">
+    <value>نسبة الإلتزامات  (لآخر سنة مالية)</value>
+  </data>
+  <data name="ProfitabilityRate" xml:space="preserve">
+    <value>معدل التغيير التراكمي لمعدل الربحية</value>
+  </data>
+  <data name="range" xml:space="preserve">
+    <value>النطاق</value>
+  </data>
+  <data name="NumberOfPointsAndNumberOfTenderPoints" xml:space="preserve">
+    <value>نقاط المورد \ نقاط التأهيل</value>
+  </data>
+  <data name="QualificationEvaluation" xml:space="preserve">
+    <value>نقاط التقييم</value>
+  </data>
+  <data name="PreQualificationCommitteeName" xml:space="preserve">
+    <value>اسم لجنة التأهيل</value>
+  </data>
+  <data name="BeforePreviousYear" xml:space="preserve">
+    <value>السنة قبل الماضية</value>
+  </data>
+  <data name="CurrentYear" xml:space="preserve">
+    <value>السنة الحالية</value>
+  </data>
+  <data name="previousYear" xml:space="preserve">
+    <value>السنة الماضية</value>
+  </data>
+  <data name="LastOfferCheckingTime" xml:space="preserve">
+    <value>اخر وقت لتقييم وثائق التأهيل</value>
+  </data>
+  <data name="QualificationLastQualificationPresentationTime" xml:space="preserve">
+    <value>اخر وقت لتقديم وثائق التأهيل</value>
+  </data>
+  <data name="ApproveSendQualificationDocumentForManager" xml:space="preserve">
+    <value>اعتماد نتائج وثائق التأهيل</value>
+  </data>
+  <data name="QualificationWasCancle" xml:space="preserve">
+    <value>تم الغاء التأهيل</value>
+  </data>
+  <data name="AllProject" xml:space="preserve">
+    <value>المشاريع</value>
+  </data>
+  <data name="Assetslbl" xml:space="preserve">
+    <value>الأصول المتداولة</value>
+  </data>
+  <data name="BalanceSheet" xml:space="preserve">
+    <value>بيان الميزانية العمومية</value>
+  </data>
+  <data name="btnAddProject" xml:space="preserve">
+    <value>اضافة مشروع</value>
+  </data>
+  <data name="FinanacialDetails" xml:space="preserve">
+    <value>البيانات المالية</value>
+  </data>
+  <data name="InsuranceCoverage" xml:space="preserve">
+    <value>مستوي التغطية</value>
+  </data>
+  <data name="InsuranceCoverageEndDate" xml:space="preserve">
+    <value>تاريخ انتهاء التغطية</value>
+  </data>
+  <data name="InsuranceProvider" xml:space="preserve">
+    <value>مقدم التأمين</value>
+  </data>
+  <data name="LastFinancialDetailsForThreeYear" xml:space="preserve">
+    <value>البيانات المالية لآخر 3 سنوات مالية</value>
+  </data>
+  <data name="lblFinancialcapabilities" xml:space="preserve">
+    <value>القدرات المالية</value>
+  </data>
+  <data name="lblNetProfit" xml:space="preserve">
+    <value>صافي الارباح</value>
+  </data>
+  <data name="lbltechnicalCapablities" xml:space="preserve">
+    <value>القدرات الفنية والإدارية</value>
+  </data>
+  <data name="lblTotalassets" xml:space="preserve">
+    <value>مجموع الموجودات</value>
+  </data>
+  <data name="lblTotalLiabilities" xml:space="preserve">
+    <value>مجموع المطلوبات</value>
+  </data>
+  <data name="lblTotalRevenue" xml:space="preserve">
+    <value>مجموع الإيرادات</value>
+  </data>
+  <data name="QualificationDetails" xml:space="preserve">
+    <value>التفـاصيل</value>
+  </data>
+  <data name="AppliedSuppliers" xml:space="preserve">
+    <value>الموردين المقدمين على التأهيل</value>
+  </data>
+  <data name="lblSupplierCr" xml:space="preserve">
+    <value>السجل التجاري</value>
+  </data>
+  <data name="lblSupplierName" xml:space="preserve">
+    <value>اسم المورد</value>
+  </data>
+  <data name="EnteredCapacities" xml:space="preserve">
+    <value>القدرات المدخلة</value>
+  </data>
+  <data name="PrequalificationStatus" xml:space="preserve">
+    <value>حالة التأهيل</value>
+  </data>
+  <data name="SupportingDocuments" xml:space="preserve">
+    <value>الوثائق الداعمة</value>
+  </data>
+  <data name="QualificationShowResultsDate" xml:space="preserve">
+    <value>موعد إعلان المؤهلين (تاريخ)</value>
+  </data>
+  <data name="QualificationShowResultsDateAndTime" xml:space="preserve">
+    <value>تاريخ ووقت إعلان المؤهلين</value>
+  </data>
+  <data name="QualificationShowResultsTime" xml:space="preserve">
+    <value>موعد إعلان المؤهلين (وقت)</value>
+  </data>
+  <data name="AcquiredPoints" xml:space="preserve">
+    <value>النقاط المكتسبة</value>
+  </data>
+  <data name="QualificationEvaluationDateOnly" xml:space="preserve">
+    <value>موعد تقييم وثائق التأهيل (تاريخ)</value>
+  </data>
+  <data name="QualificationEvaluationTimeOnly" xml:space="preserve">
+    <value>موعد تقييم وثائق التأهيل (وقت)</value>
+  </data>
+</root>

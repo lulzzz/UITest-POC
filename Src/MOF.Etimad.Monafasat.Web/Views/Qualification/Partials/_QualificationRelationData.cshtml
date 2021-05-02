@@ -1,0 +1,95 @@
+@model MOF.Etimad.Monafasat.ViewModel.PreQualificationSavingModel
+@using res = MOF.Etimad.Monafasat.Resources;
+
+<div class="col-12">
+   <div class="row">
+      <div class="card">
+         <div class="card-body">
+            <div class="row">
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <input type="hidden" asp-for="TenderIdString" />
+                  <input asp-for="TenderStatusId" id="hfTenderStatus" type="hidden" />
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="InsideKSA" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <div class="form-check">
+                        <label class="form-check-label">
+                           <input asp-for="InsideKSA" id="InsideKSA1" name="InsideKSA" onclick="showareas(1);" checked="checked" class="form-check-input" type="radio" value="true">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.InsideKSA
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                        <label class="form-check-label">
+                           <input class="form-check-input" type="radio" onclick="showcountries(1);" id="InsideKSA2" asp-for="InsideKSA" name="InsideKSA" value="false">
+                           @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OutsideKSA
+                           <span class="circle">
+                              <span class="check"></span>
+                           </span>
+                        </label>
+                     </div>
+                     <span asp-validation-for="InsideKSA" id="InsideKSASpan" class="text-danger"></span>
+                  </div>
+               </div>
+               <div id="divTenderAreas" class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="Areas" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <select asp-for="TenderAreaIDs" name="TenderAreaIDs" data-live-search="true" id="dD_TenderAreas" class="selectpicker"
+                             asp-items="@(new SelectList(Model.Areas, "Id", "Name"))" data-style="select-with-transition" data-size="7"></select>
+                  </div>
+                  <span asp-validation-for="TenderAreaIDs" class="text-danger"></span>
+               </div>
+               <div id="divTenderCountries" class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="Countries" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <select asp-for="TenderCountriesIDs" name="TenderCountriesIDs" data-live-search="true" id="dD_TenderCountries" class="selectpicker"
+                             asp-items="@(new SelectList(Model.Countries, "Id", "Name"))" data-style="select-with-transition" data-size="7"></select>
+                  </div>
+                  <span asp-validation-for="TenderCountriesIDs" class="text-danger"></span>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label label asp-for="ConstructionWorks" class="label bmd-label-static"></label>
+                     <select asp-for="TenderConstructionWorkIDs" data-live-search="true" class="selectpicker"
+                             asp-items="@ViewBag.ListOfConstructioWorks" data-style="select-with-transition" data-size="7"></select>
+                  </div>
+                  <span asp-validation-for="TenderConstructionWorkIDs" class="text-danger"></span>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label label asp-for="MaintenanceWorks" class="label bmd-label-static"></label>
+                     <select asp-for="TenderMentainanceRunnigWorkIDs" data-live-search="true" class="selectpicker"
+                             asp-items="@(new SelectList(Model.MaintenanceWorks, "MaintenanceRunningWorkId", "Name"))" data-style="select-with-transition" data-size="7"></select>
+                  </div>
+                  <span asp-validation-for="TenderMentainanceRunnigWorkIDs" class="text-danger"></span>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label label asp-for="TenderActivitieIDs" class="label bmd-label-static"></label><span class="text-danger">*</span>
+                     <select asp-for="TenderActivitieIDs" name="TenderActivitieIDs" data-live-search="true" class="selectpicker" data-style="select-with-transition"
+                             asp-items="@ViewBag.ListOfActivities" multiple data-size="7"></select>
+                  </div>
+                  <span asp-validation-for="TenderActivitieIDs" class="text-danger"></span>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="ActivityDescription" class="label bmd-label-static"></label>
+                     <input asp-for="ActivityDescription" data-val="false" class="form-control" name="ActivityDescription" id="tb_ActivityDescription" />
+                  </div>
+               </div>
+               <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group bmd-form-group">
+                     <label asp-for="Details" class="label bmd-label-static"></label>
+                     <textarea asp-for="Details" class="form-control" data-val="false" rows="3"></textarea>
+                  </div>
+                  <span asp-validation-for="Details" class="text-danger"></span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div>
+   <button type="button" class="btn btn-default  prev-tab" onclick="prevTab()">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.Previous</button>
+   <button type="button" class="btn btn-primary  next-tab" onclick="nextTab()">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.Next</button>
+</div>

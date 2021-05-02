@@ -1,0 +1,160 @@
+@using res = MOF.Etimad.Monafasat.Resources
+@using MOF.Etimad.Monafasat.SharedKernel;
+@model MOF.Etimad.Monafasat.ViewModel.Offer.OpenOfferStage.OfferDetailsDisplayModel
+@{
+   ViewData["Title"] = @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails;
+}
+<style>
+   .table-responsive {
+      min-height: 100%;
+   }
+</style>
+@section breadcrumb
+   {
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="@Url.Action("Index", "Tender")">@MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.MainPage</a></li>
+         <li class="breadcrumb-item active" aria-current="page">@MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.OfferDetails</li>
+      </ol>
+   </nav>
+}
+<ul class="nav nav-pills nav-pills-icons etd-wiz-tabs" role="tablist">
+   @if (!(Model.TenderTypeId == (int)Enums.TenderType.Competition || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender))
+   {
+      <li class="nav-item">
+         <a class="nav-link active" href="#financialOfferDetails" role="tab" data-toggle="tab">
+            <i class="material-icons">table_chart</i>
+            @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.FinancialOfferDetails
+         </a>
+      </li>
+   }
+   @if (!Model.IsSolidarity)
+   {
+      <li class="nav-item">
+         <a class="nav-link " href="#documentsAttachments" role="tab" data-toggle="tab">
+            <i class="material-icons">assignment</i>
+            @MOF.Etimad.Monafasat.Resources.TenderResources.DisplayInputs.DocumentsAttachments
+         </a>
+      </li>
+   }
+   else
+   {
+      <li class="nav-item">
+         <a class="nav-link " href="#combinedSuppliers" role="tab" data-toggle="tab">
+            <i class="material-icons">assignment</i>
+            @MOF.Etimad.Monafasat.Resources.OfferResources.DisplayInputs.CombinedSuppliers
+         </a>
+      </li>
+   }
+</ul>
+<div class="tab-content tab-space p-0">
+   <div class="tab-pane active" id="financialOfferDetails">
+      @if (!(Model.TenderTypeId == (int)Enums.TenderType.Competition || Model.TenderTypeId == (int)Enums.TenderType.ReverseBidding || Model.TenderTypeId == (int)Enums.TenderType.FirstStageTender))
+      {
+         <div class="card">
+            <div class="card-body">
+               <div id="divQuantityTable">
+               </div>
+            </div>
+         </div>
+         @if (Model.TenderTypeId == (int)Enums.TenderType.CurrentDirectPurchase || Model.TenderTypeId == (int)Enums.TenderType.CurrentTender)
+         {
+            <div class="card">
+               <div class="card-body">
+                  <h5 class="title text-primary">@res.OfferResources.DisplayInputs.DiscountAndNotes</h5>
+                  <div class="row">
+                     <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.Discount</label>
+                           <label class="form-control">@Model.Discount</label>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group bmd-form-group">
+                           <label class="label bmd-label-static">@res.OfferResources.DisplayInputs.Notes</label>
+                           <label class="form-control">@Model.DiscountNotes</label>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         }
+      }
+   </div>
+
+   @if (!Model.IsSolidarity)
+   {
+      <div class="tab-pane " id="documentsAttachments">
+         @await Component.InvokeAsync("OfferAttachmentsDetailsDisplay", new { combinedId = Model.CombinedIdString })
+      </div>
+   }
+   else
+   {
+      <div class="tab-pane " id="combinedSuppliers">
+         @Html.Partial("~/Views/Offer/Partial/OpenningOffers/_CombinedSuppliersDetailsReadOnly.cshtml")
+      </div>
+   }
+   <div class="row">
+      <div class="col">
+         <a class="btn btn-outline-primary btn-link pull-right" onclick="back()">
+            @MOF.Etimad.Monafasat.Resources.SharedResources.DisplayInputs.BackButton
+         </a>
+      </div>
+   </div>
+</div>
+@section scripts{
+   <script src="~/Etimad-UI/assets/js/jquery.unobtrusive-ajax.js"></script>
+   <script>
+      $(document).ready(function () {
+         GetTablesDisplay();
+         $('#combinedSuppliers').on('click', function () {
+         });
+      });
+      var _isNegotiation = false;
+      if ('@Model.IsNegotiation' == 'True') {
+         _isNegotiation = true;
+      }
+      function GetTablesDisplay() {
+         $.ajax({
+            type: "GET",
+            url: "/Offer/GetQuantityTablesDisplayComponent",
+            data: { offerIdString: "@Model.OfferIdString", allowEdit: false, isNegotiation: _isNegotiation },
+            cache: false,
+            global: false,
+            success: function (html) {
+               $('#divQuantityTable').html(html);
+               $('#LoadingSite').fadeOut();
+            }
+         });
+      }
+      var appss = new Vue({
+         el: '#CombinedSuppliersGrid',
+         data: {
+            CombinedSuppliersDetails: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 10,
+            resource_url: '/Offer/GetCombinedSuppliersGridAsync?OfferIdString=' + '@Model.OfferIdString',
+            queryString: ''
+         },
+         methods: {
+            updateResource: function (data) {
+               this.CombinedSuppliersDetails = data;
+               this.totalCount = this.$refs.vpaginator.totalCount;
+               this.currentPage = this.$refs.vpaginator.currentPage;
+               this.pageSize = this.$refs.vpaginator.pageSize;
+            },
+            SelectSupplier: function (CombinedIdString) {
+               return '/Offer/CombinedSuppliersDetailsReadOnly/' + '@Model.OfferIdString' + '/' + '@Model.TenderIdString' + '/' + CombinedIdString;
+            }
+         }
+      });
+      function back() {
+         location.href = '@Model.PreviusAction';
+      }
+   </script>
+}
+
+
